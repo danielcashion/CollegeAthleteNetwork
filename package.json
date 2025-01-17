@@ -1,6 +1,6 @@
 {
-  "name": "athletenetwork",
-  "version": "0.1.0",
+  "name": "thecollegeathletenetwork.org",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

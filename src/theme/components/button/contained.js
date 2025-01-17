@@ -20,7 +20,7 @@ import typography from "@/theme/base/typography";
 // Material Dashboard 2 PRO React Helper Functions
 import pxToRem from "@/theme/functions/pxToRem";
 
-const { white, text, info, secondary, primary } = colors;
+const { white,  secondary, primary } = colors;
 const { size } = typography;
 
 const contained = {

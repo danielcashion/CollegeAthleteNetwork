@@ -17,7 +17,7 @@ import ConstrainedWidth from "../ConstrainedWidth";
 import Logo from "../../../public/Logos/CANLogo1200x1200White.png";
 
 
-const Footer = styled("footer")(({ theme }) => ({
+const Footer = styled("footer")(() => ({
   color: "#ED2327", // `${theme.palette.primary.main}`,
   background: "#1C315F",// `${theme.palette.primary.main}`,
   marginTop: "118px",

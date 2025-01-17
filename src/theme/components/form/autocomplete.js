@@ -24,7 +24,7 @@ import pxToRem from "@/theme/functions/pxToRem";
 
 const { lg } = boxShadows;
 const { size } = typography;
-const { text, white, transparent, light, dark, gradients } = colors;
+const { text, white, transparent, light, dark } = colors;
 const { borderRadius } = borders;
 
 const autocomplete = {
