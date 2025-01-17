@@ -1,4 +1,11 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div>
+<h2><span style="color:#ED3237;">Welcome to The College Athlete Network Repository!</span></h2>
+<hr style="border: 1px solid black; margin: 20px 0;">
+</div>
+
+<div align="center">
+<img src="https://clubsportsorganization.s3.us-east-1.amazonaws.com/misc/TheCollegeAthleteNetwork/TheCollegeAthleteNetwork-Color1200X1200.png" alt="The College Athlete Network" width="400" height="400"/>
+</div>
 
 ## Getting Started
 
