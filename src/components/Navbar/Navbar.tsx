@@ -6,7 +6,7 @@ import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-gradient-to-r from-[#1C315F] to-[#3A5F85] text-white">
+    <nav className="bg-gradient-to-r from-[#CCCBCB] to-[#3A5F85] text-white">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-2">
