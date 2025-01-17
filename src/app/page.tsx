@@ -2,7 +2,8 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import Logo from "../../public/Logos/CANLogo1200x1200.png";
+import Logo from "../../public/Logos/CANLogo1200x1200White.png";
+
 
 export default function Home() {
   return (

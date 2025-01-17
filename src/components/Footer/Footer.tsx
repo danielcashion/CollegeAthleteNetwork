@@ -177,8 +177,8 @@ const AppFooter: React.FC = () => {
                   }}
                 />
                 <InfoText variant="body1">
-                  <MenuItemText href="mailto:support@clublacrosse.org">
-                    support@clublacrosse.org
+                  <MenuItemText href="mailto:info@collegeathletenetwork.org">
+                    info@collegeathletenetwork.org
                   </MenuItemText>
                 </InfoText>
               </Box>
