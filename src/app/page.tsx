@@ -16,9 +16,9 @@ export default function Home() {
               Empowering College Athletes
             </h1>
             <p className="text-lg md:text-2xl font-light">
-              Your School's Current & Historic Athletic Team Rosters, merged
-              with updated LinkedIn Experience Data. You building a Stronger
-              School Network.
+              Your School&apos;s Current & Historic Athletic Team Rosters,
+              merged with updated LinkedIn Experience Data. You building a
+              Stronger School Network.
             </p>
           </div>
         </section>
@@ -31,7 +31,7 @@ export default function Home() {
           <p className="text-justify text-xl leading-relaxed text-[#1C315F]">
             We bridge the gap between athlete rosters and professional networks.
             By sourcing college roster data from public platforms, researching
-            and linking athletes' LinkedIn profiles, and merging this
+            and linking athletes&apos; LinkedIn profiles, and merging this
             information into a single, curated database, we provide partner
             universities with an up-to-date knowledge base of their athlete
             network. Our platform tracks the geographical locations and
@@ -62,7 +62,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h3 className="font-bold text-xl mb-2 text-[#ED3237] ">
-                  If You’re Using a Spreadsheet:
+                  If You&apos;re Using a Spreadsheet:
                 </h3>
                 <ul className="list-disc list-inside space-y-2">
                   <li>It quickly becomes outdated.</li>
@@ -74,7 +74,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-bold text-xl mb-2 text-[#ED3237]">
-                  If You’re Using a Generic App:
+                  If You&apos;re Using a Generic App:
                 </h3>
                 <ul className="list-disc list-inside space-y-2">
                   <li>Most vendors leave data management to the school.</li>
@@ -94,12 +94,12 @@ export default function Home() {
             <p className="text-lg leading-relaxed mb-8">
               Our platform connects athletes across all sports at your
               university, creating a robust, institution-wide professional
-              network. Here’s why this matters:
+              network. Here&apos;s why this matters:
             </p>
             <ul className="list-disc list-inside text-left max-w-3xl mx-auto">
               <li>
                 <strong>Resilience:</strong> Coaches come and go, but your
-                school’s network remains intact and growing.
+                school&apos;s network remains intact and growing.
               </li>
               <li>
                 <strong>Cross-Sport Connections:</strong> Athletes connect with
@@ -121,7 +121,7 @@ export default function Home() {
           </h2>
           <p className="text-lg leading-relaxed mb-8 text-[#1C315F] text-center">
             Maintaining athlete data is a time-consuming, complex challenge that
-            demands specialized skills and effort. That’s where we come in:
+            demands specialized skills and effort. That&apos;s where we come in:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -129,8 +129,8 @@ export default function Home() {
                 Decades of Expertise
               </h3>
               <p style={{ color: "#1C315F", textAlign: "center" }}>
-                With 30 years of experience, we’ve perfected the art of data
-                curation.
+                With 30 years of experience, we&apos;ve perfected the art of
+                data curation.
               </p>
             </div>
             <div className="text-center">
