@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   List,
   ListItem,
@@ -16,10 +16,9 @@ import { styled } from "@mui/system";
 import ConstrainedWidth from "../ConstrainedWidth";
 import Logo from "../../../public/Logos/CANLogo1200x1200White.png";
 
-
 const Footer = styled("footer")(() => ({
   color: "#ED2327", // `${theme.palette.primary.main}`,
-  background: "#1C315F",// `${theme.palette.primary.main}`,
+  background: "#1C315F", // `${theme.palette.primary.main}`,
   marginTop: "118px",
 }));
 
@@ -48,11 +47,6 @@ const MenuListItemLeft = styled(ListItem)({
 const MenuListItemRight = styled(ListItem)({
   flexDirection: "column",
   alignItems: "flex-end",
-});
-
-const LogoImage = styled(Image)({
-  width: "121px",
-  height: "108px",
 });
 
 const MenuItemText = styled("a")({
@@ -111,6 +105,16 @@ const MailIcon = styled(Mail)({
 });
 
 const AppFooter: React.FC = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <Footer>
       <ConstrainedWidth>
@@ -133,7 +137,13 @@ const AppFooter: React.FC = () => {
                   <ListItemText primary="Terms of Service" />
                 </MenuItemText>
               </MenuListItemLeft>
-              <LogoImage src={Logo.src} height={120} width={120} alt="Logo" />
+              <Image
+                src={Logo}
+                height={110}
+                width={110}
+                alt="Logo"
+                priority={true}
+              />
               <MenuListItemRight>
                 <MenuItemText href="mailto:support@clublacrosse.org">
                   <ListItemText primary="Support" />
@@ -150,32 +160,17 @@ const AppFooter: React.FC = () => {
             <Divider />
             <FooterInfo>
               <Box display="flex" alignItems="center">
-                <LocationOnIcon
-                  sx={{
-                    color: "white",
-                    marginRight: 8,
-                  }}
-                />
+                <LocationOnIcon />
                 <InfoText variant="body1">
                   One World Trade Center, Suite 8500, New York NY 10007
                 </InfoText>
               </Box>
               <Box display="flex" alignItems="center">
-                <PhoneIcon
-                  sx={{
-                    color: "white",
-                    marginRight: 8,
-                  }}
-                />
+                <PhoneIcon />
                 <InfoText variant="body1">+1.212.377.7020</InfoText>
               </Box>
               <Box display="flex" alignItems="center">
-                <MailIcon
-                  sx={{
-                    color: "white",
-                    marginRight: 8,
-                  }}
-                />
+                <MailIcon />
                 <InfoText variant="body1">
                   <MenuItemText href="mailto:info@collegeathletenetwork.org">
                     info@collegeathletenetwork.org
