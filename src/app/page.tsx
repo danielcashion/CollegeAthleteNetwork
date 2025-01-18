@@ -1,8 +1,27 @@
-// import Image from "next/image";
+import Image from "next/image";
 import "../styles/customStyles.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-// import Logo from "../../public/Logos/CANLogo1200x1200White.png";
+import Carousel from "@/components/LandingPage/Carousel";
+import AthleteImage from "../../public/images/college-athletes-1.jpg";
+
+import {
+  FaGlobe,
+  FaDatabase,
+  FaHandshakeSimple,
+  FaArrowRight,
+  FaUniversalAccess,
+} from "react-icons/fa6";
+import {
+  FaMapMarkedAlt,
+  FaUsers,
+  FaUser,
+  FaShieldAlt,
+  FaHistory,
+  FaCogs,
+} from "react-icons/fa";
+import { BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
   return (
@@ -10,19 +29,26 @@ export default function Home() {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white text-center py-12">
-          <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
+          <div className="w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Powering College Athletes Networks
             </h1>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <h2 className="text-3xl font-semibold mb-4">
               By Providing their Data Needs
-            </h1>
+            </h2>
             <p className="text-lg md:text-2xl font-light">
               Your School&apos;s Current & Historic Athletic Team Rosters,
               merged with updated LinkedIn Experience Data. You building a
               Stronger School Network.
             </p>
+          </div>
+          <div className="w-full lg:w-[50%]">
+            <Image
+              src={AthleteImage}
+              alt="College Athletes"
+              className="rounded-lg w-full object-cover"
+            />
           </div>
         </section>
 
@@ -48,41 +74,108 @@ export default function Home() {
             width={800}
             height={400}
           /> */}
+
+          <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
+              <FaGlobe size={80} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl font-medium">
+                Global Network of Athletes
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
+              <FaMapMarkedAlt size={80} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl font-medium">Career Mapping</p>
+            </div>
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
+              <FaDatabase size={80} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl font-medium">
+                Comprehensive Athlete Database
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
+              <FaHandshakeSimple size={80} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl font-medium">
+                University Partnerships
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Why Is It Hard? Section */}
-        <section className="bg-[#1C315F] py-12 text-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-8 text-[#ED3237] small-caps">
-              Why Is It Hard?
-            </h2>
-            <p className="text-lg leading-relaxed mb-4">
-              Athletes change jobs frequently—on average, every 3.1 years in the
-              first 15 years after graduation. For a network of 225 athletes,
-              this means tracking and updating data for around 70 individuals
-              annually.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-bold text-xl mb-2 text-[#ED3237] ">
-                  If You&apos;re Using a Spreadsheet:
-                </h3>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>It quickly becomes outdated.</li>
-                  <li>
-                    Confusion arises from multiple versions of the same
-                    document.
-                  </li>
-                </ul>
+        <section className="bg-[#1C315F] py-16 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-2.png')] opacity-5 bg-cover bg-center" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
+                Why Is It Hard?
+              </h2>
+
+              <div className="flex items-start justify-center mb-12 space-x-4">
+                <FaUsers className="w-8 h-8 min-w-8 min-h-8 text-[#ED3237]" />
+                <p className="text-xl leading-relaxed">
+                  Athletes change jobs frequently—on average, every{" "}
+                  <span className="text-[#ED3237] font-semibold">
+                    3.1 years
+                  </span>{" "}
+                  in the first 15 years after graduation. For a network of{" "}
+                  <span className="text-[#ED3237] font-semibold">
+                    225 athletes
+                  </span>
+                  , this means tracking and updating data for around{" "}
+                  <span className="text-[#ED3237] font-semibold">
+                    70 individuals
+                  </span>
+                  annually.
+                </p>
               </div>
-              <div>
-                <h3 className="font-bold text-xl mb-2 text-[#ED3237]">
-                  If You&apos;re Using a Generic App:
-                </h3>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>Most vendors leave data management to the school.</li>
-                  <li>But staying up to date is the hardest part!</li>
-                </ul>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
+                  <div className="flex items-start mb-4 space-x-3">
+                    <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
+                    <h3 className="font-bold text-2xl text-[#ED3237]">
+                      If You&apos;re Using a Spreadsheet:
+                    </h3>
+                  </div>
+                  <ul className="space-y-4">
+                    <li className="flex items-start space-x-3">
+                      <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
+                      <span className="text-lg">
+                        It quickly becomes outdated.
+                      </span>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
+                      <span className="text-lg">
+                        Confusion arises from multiple versions of the same
+                        document.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
+                  <div className="flex items-start mb-4 space-x-3">
+                    <TbAppWindowFilled className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
+                    <h3 className="font-bold text-2xl text-[#ED3237]">
+                      If You&apos;re Using a Generic App:
+                    </h3>
+                  </div>
+                  <ul className="space-y-4">
+                    <li className="flex items-start space-x-3">
+                      <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
+                      <span className="text-lg">
+                        Most vendors leave data management to the school.
+                      </span>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
+                      <span className="text-lg">
+                        But staying up to date is the hardest part!
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -91,65 +184,88 @@ export default function Home() {
         {/* Unified Network Section */}
         <section className="py-12 bg-gradient-to-r from-[#ED3237] to-[#1C315F] text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-6 small-caps">
+            <h2 className="text-3xl font-bold mb-4 small-caps">
               Build a Unified, Enduring Athlete Network
             </h2>
-            <p className="text-lg leading-relaxed mb-8">
+            <p className="text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
               Our platform connects athletes across all sports at your
               university, creating a robust, institution-wide professional
               network. Here&apos;s why this matters:
             </p>
-            <ul className="list-disc list-inside text-left max-w-3xl mx-auto">
-              <li>
-                <strong>Resilience:</strong> Coaches come and go, but your
-                school&apos;s network remains intact and growing.
-              </li>
-              <li>
-                <strong>Cross-Sport Connections:</strong> Athletes connect with
-                peers and alumni from other sports, unlocking mentorship and
-                career opportunities.
-              </li>
-              <li>
-                <strong>Institutional Memory:</strong> Your school—not an
-                individual—owns the data, ensuring long-term benefits.
-              </li>
-            </ul>
+            <div className="grid gap-6 max-w-3xl mx-auto text-left">
+              <div className="flex items-start space-x-4">
+                <FaShieldAlt className="w-6 h-6 flex-shrink-0 mt-1" />
+                <div>
+                  <span className="font-semibold">Resilience:</span> Coaches
+                  come and go, but your school&apos;s network remains intact and
+                  growing.
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <FaUser className="w-6 h-6 flex-shrink-0 mt-1" />
+                <div>
+                  <span className="font-semibold">
+                    Cross-Sport Connections:
+                  </span>{" "}
+                  Athletes connect with peers and alumni from other sports,
+                  unlocking mentorship and career opportunities.
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <FaDatabase className="w-6 h-6 flex-shrink-0 mt-1" />
+                <div>
+                  <span className="font-semibold">Institutional Memory:</span>{" "}
+                  Your school—not an individual—owns the data, ensuring
+                  long-term benefits.
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full max-w-7xl mx-auto mt-8">
+              <Carousel />
+            </div>
           </div>
         </section>
 
         {/* Why Choose Us Section */}
-        <section className="container mx-auto px-4 py-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-[#ED3237] small-caps">
+        <section className="container mx-auto px-4 pt-12">
+          <h2 className="text-4xl font-bold text-center mb-8 text-[#ED3237] small-caps">
             Why Choose College Athlete Network?
           </h2>
-          <p className="text-lg leading-relaxed mb-8 text-[#1C315F] text-center">
+          <p className="text-lg leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
             Maintaining athlete data is a time-consuming, complex challenge that
             demands specialized skills and effort. That&apos;s where we come in:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
-              <h3 className="font-bold text-xl mb-2 text-[#ED3237]">
+              <FaHistory size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Decades of Expertise
               </h3>
-              <p style={{ color: "#1C315F", textAlign: "center" }}>
+              <p className="text-[#1C315F] text-center">
                 With 30 years of experience, we&apos;ve perfected the art of
                 data curation.
               </p>
             </div>
             <div className="text-center">
-              <h3 className="font-bold text-xl mb-2 text-[#ED3237]">
+              <FaCogs size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Proven Algorithms
               </h3>
-              <p style={{ color: "#1C315F" }}>
+              <p className="text-[#1C315F] text-center">
                 Our advanced algorithms ensure your network stays accurate and
                 up-to-date.
               </p>
             </div>
             <div className="text-center">
-              <h3 className="font-bold text-xl mb-2 text-[#ED3237]">
+              <FaUniversalAccess
+                size={60}
+                className="text-[#ED3237] mx-auto mb-4"
+              />
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Effortless Access
               </h3>
-              <p style={{ color: "#1C315F" }}>
+              <p className="text-[#1C315F] text-center">
                 We deliver critical information in a simple, user-friendly
                 format.
               </p>
