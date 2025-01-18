@@ -12,8 +12,11 @@ export default function Home() {
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white text-center py-12">
           <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+              Powering College Athletes Networks
+            </h1>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Empowering College Athletes
+              By Providing their Data Needs
             </h1>
             <p className="text-lg md:text-2xl font-light">
               Your School&apos;s Current & Historic Athletic Team Rosters,
