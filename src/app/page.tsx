@@ -2,6 +2,7 @@ import Image from "next/image";
 import "../styles/customStyles.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import Carousel from "@/components/LandingPage/Carousel";
 import AthleteImage from "../../public/images/college-athletes-1.jpg";
 
 import {
@@ -74,24 +75,24 @@ export default function Home() {
             height={400}
           /> */}
 
-          <div className="w-full flex flex-row gap-20 justify-center items-start mt-8 mb-4">
-            <div className="flex flex-col gap-2">
+          <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaGlobe size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
                 Global Network of Athletes
               </p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaMapMarkedAlt size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">Career Mapping</p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
                 Comprehensive Athlete Database
               </p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaHandshakeSimple size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
                 University Partnerships
@@ -218,6 +219,10 @@ export default function Home() {
                   long-term benefits.
                 </div>
               </div>
+            </div>
+
+            <div className="w-full max-w-7xl mx-auto mt-8">
+              <Carousel />
             </div>
           </div>
         </section>
