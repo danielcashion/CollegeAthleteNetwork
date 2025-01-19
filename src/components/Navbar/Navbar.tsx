@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
               Contact Us
             </p>
           </Link>
-          <Link href="/signup">
+          {/* <Link href="/signup">
             <button
               className={`text-white px-4 py-2 rounded  transition-colors duration-300 ${
                 isScrolled
@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
             >
               Sign Up
             </button>
-          </Link>
+          </Link> */}
         </div>
 
         {/* Social Media Icons */}
