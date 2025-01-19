@@ -11,6 +11,7 @@ import {
   FaHandshakeSimple,
   FaArrowRight,
   FaUniversalAccess,
+  FaCode,
 } from "react-icons/fa6";
 import {
   FaMapMarkedAlt,
@@ -19,8 +20,11 @@ import {
   FaShieldAlt,
   FaHistory,
   FaCogs,
+  FaLinkedin,
+  FaSitemap,
+  FaCheckSquare,
 } from "react-icons/fa";
-import { BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import { BsFileEarmarkSpreadsheet, BsFileEarmarkSpreadsheetFill, BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
 import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
@@ -39,8 +43,10 @@ export default function Home() {
             </h2>
             <p className="text-lg md:text-2xl font-light">
               Your School&apos;s Current & Historic Athletic Team Rosters,
-              merged with updated LinkedIn Experience Data. You building a
-              Stronger School Network.
+              merged with updated LinkedIn Experience Data.
+            </p>
+            <p className="text-lg md:text-2xl ma:2 font-light">
+              You building a Stronger School Network.
             </p>
           </div>
           <div className="w-full lg:w-[50%]">
@@ -77,25 +83,25 @@ export default function Home() {
 
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaGlobe size={80} className="mx-auto text-[#1C315F]" />
+              <BsFileEarmarkSpreadsheetFill size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
-                Global Network of Athletes
+                Current & Historic Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaMapMarkedAlt size={80} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl font-medium">Career Mapping</p>
+              <FaLinkedin size={80} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl font-medium">Athletes Mapped to their LinkedIn Profiles</p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
-                Comprehensive Athlete Database
+                Continuously Refreshed Athlete Employers, Titles, Locations
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaHandshakeSimple size={80} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl font-medium">
-                University Partnerships
+                University & Employer Partnerships
               </p>
             </div>
           </div>
@@ -238,7 +244,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
-              <FaHistory size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <FaSitemap size={60} className="text-[#ED3237] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Decades of Expertise
               </h3>
@@ -248,7 +254,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <FaCogs size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <FaCode size={60} className="text-[#ED3237] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Proven Algorithms
               </h3>
@@ -258,7 +264,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <FaUniversalAccess
+              <FaCheckSquare
                 size={60}
                 className="text-[#ED3237] mx-auto mb-4"
               />
