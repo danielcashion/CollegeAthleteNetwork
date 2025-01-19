@@ -41,7 +41,7 @@ export default function Home() {
                 merged and continuously updated with LinkedIn Experience Data.
               </p>
               <p className="text-lg md:text-2xl text-right font-light">
-                Your Teams Building a Stronger School Network.
+                Your Athletes Building & Benefiting from a Stronger School Network.
               </p>
 
           </div>
