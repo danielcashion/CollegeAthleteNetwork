@@ -240,7 +240,7 @@ export default function Home() {
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Decades of Expertise
               </h3>
-              <p className="text-[#1C315F] text-center">
+              <p className="text-[#1C315F] text-xl text-center">
                 With 30 years of experience, we&apos;ve perfected the art of
                 data curation.
               </p>
@@ -250,7 +250,7 @@ export default function Home() {
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Proven Algorithms
               </h3>
-              <p className="text-[#1C315F] text-center">
+              <p className="text-[#1C315F] text-xl text-center">
                 Our advanced algorithms ensure your network stays accurate and
                 up-to-date.
               </p>
@@ -261,11 +261,10 @@ export default function Home() {
                 className="text-[#1C315F] mx-auto mb-4"
               />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
-                Exceptional Athlete Experience
+                Exceptional Experience
               </h3>
-              <p className="text-[#1C315F] text-center">
-                We deliver critical information in a simple, user-friendly
-                format.
+              <p className="text-[#1C315F] text-xl text-center">
+                Your athletes work hard. They deserve to benefit from the network your university can provide.
               </p>
             </div>
           </div>
