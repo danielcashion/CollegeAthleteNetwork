@@ -107,35 +107,35 @@ export default function Home() {
               <div className="flex items-start justify-center mb-12 space-x-4">
                 <FaUsers className="w-8 h-8 min-w-8 min-h-8 text-[#ED3237]" />
                 <p className="text-xl leading-relaxed">
-                  Athletes change jobs frequently—on average, every{" "}
+                  After Graduating, athletes change jobs, on average, every{" "}
                   <span className="text-[#ED3237] font-semibold">
                     3.1 years
                   </span>{" "}
                   in the first 15 years after graduation. For a network of{" "}
                   <span className="text-[#ED3237] font-semibold">
-                    225 athletes
+                    2,000 athletes 
                   </span>
-                  , this means tracking and updating data for around{" "}
+                  (a relatively small school network), this means tracking and updating data for around 
                   <span className="text-[#ED3237] font-semibold">
-                    70 individuals
+                     700 individuals 
                   </span>
-                  annually.
+                    annually.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
-                    <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
+                    <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]">
-                      If You&apos;re Using a Spreadsheet:
+                      If You&apos;re Alumni Database is actually a bad Spreadsheet:
                     </h3>
                   </div>
                   <ul className="space-y-4">
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        It quickly becomes outdated.
+                        It quickly becomes outdated. Nobody wants to own updating it.
                       </span>
                     </li>
                     <li className="flex items-start space-x-3">
@@ -152,20 +152,20 @@ export default function Home() {
                   <div className="flex items-start mb-4 space-x-3">
                     <TbAppWindowFilled className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]">
-                      If You&apos;re Using a Generic App:
+                      If You&apos;re Using am App where YOU supply the Data:
                     </h3>
                   </div>
                   <ul className="space-y-4">
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        Most vendors leave data management to the school.
+                        Data curation is 99% of the problem. Other vendors delegate it to you.
                       </span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        But staying up to date is the hardest part!
+                        The curation of the data is what makes the network work!
                       </span>
                     </li>
                   </ul>
