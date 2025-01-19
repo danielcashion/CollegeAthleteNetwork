@@ -31,17 +31,17 @@ export default function Home() {
         <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
           <div className="w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Powering College Athletes Networks
+              Powering The Professional Networks of Collegiate Athletes
             </h1>
             <h2 className="text-3xl font-semibold mb-4">
-              By Providing their Data Needs
+              We Provide All their Data Fuel
             </h2>
-            <p className="text-lg md:text-2xl mb-6 font-light">
-                Your School&apos;s Current & Historic Athletic Team Rosters,
-                merged with updated LinkedIn Experience Data.
+            <p className="text-lg md:text-2xl text-right mb-6 font-light">
+                Your School&apos;s Athletic Team Rosters,
+                merged and continuously updated with LinkedIn Experience Data.
               </p>
-              <p className="text-lg md:text-2xl font-light">
-                You building a Stronger School Network.
+              <p className="text-lg md:text-2xl text-right font-light">
+                Your Teams Building a Stronger School Network.
               </p>
 
           </div>
@@ -228,13 +228,13 @@ export default function Home() {
           </h2>
           <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
             Maintaining athlete data is a time-consuming, complex challenge that
-            demands specialized skills and effort. That&apos;s where we come in:
+            demands specialized skills and continuous effort. That&apos;s where we come in:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
               <FaSitemap size={60} className="text-[#1C315F] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
-                Decades of Expertise
+                Serious Expertise
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
                 With 30 years of experience, we&apos;ve perfected the art of
