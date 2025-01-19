@@ -34,7 +34,7 @@ export default function Home() {
               Powering The Professional Networks of Collegiate Athletes
             </h1>
             <h2 className="text-3xl font-semibold mb-4">
-              We Provide All their Data Fuel
+              We Provide All Their Data Fuel
             </h2>
             <p className="text-lg md:text-xl text-right mb-6 font-light">
                 Your School&apos;s Athletic Team Rosters,
@@ -56,7 +56,7 @@ export default function Home() {
 
         {/* What We Do Section */}
         <section className="container mx-auto px-4 py-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
+          <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
             What We Do
           </h2>
           <p className="text-justify text-xl leading-relaxed text-[#1C315F]">
@@ -100,7 +100,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-2.png')] opacity-5 bg-cover bg-center" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
+              <h2 className="text-5xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
                 Why Is It Hard?
               </h2>
 
@@ -178,7 +178,7 @@ export default function Home() {
         {/* Unified Network Section */}
         <section className="py-12 bg-gradient-to-r from-[#ED3237] to-[#1C315F] text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-4 small-caps">
+            <h2 className="text-5xl font-bold mb-4 small-caps">
               Build a Unified, Enduring Athlete Network
             </h2>
             <p className="text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
@@ -223,7 +223,7 @@ export default function Home() {
 
         {/* Why Choose Us Section */}
         <section className="container mx-auto px-4 pt-12">
-          <h2 className="text-4xl font-bold text-center mb-8 text-[#ED3237] small-caps">
+          <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] small-caps">
             Why Choose College Athlete Network?
           </h2>
           <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
