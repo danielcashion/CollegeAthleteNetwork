@@ -73,35 +73,27 @@ export default function Home() {
             professional journeys (past and present) of your college athletes,
             creating a living map of their careers.
           </p>
-          {/* <Image
-            src="/images/athlete-network.jpg" // Replace with actual image path
-            alt="Athlete Network"
-            className="rounded-lg shadow-lg mx-auto"
-            width={800}
-            height={400}
-          /> */}
-
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <BsFileEarmarkSpreadsheetFill size={80} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl font-medium">
-                Current & Historic Athlete Rosters
+              <BsFileEarmarkSpreadsheetFill size={70} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl text-[#1C315F] font-medium">
+                We Source Current & Historic Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaLinkedin size={80} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl font-medium">Athletes Mapped to their LinkedIn Profiles</p>
+              <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl text-[#1C315F] font-medium">We Map Athletes to their LinkedIn Profiles</p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaDatabase size={80} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl font-medium">
-                Continuously Refreshed Athlete Employers, Titles, Locations
+              <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl text-[#1C315F] font-medium">
+                We Continuously Refresh Athlete Employers, Titles, Locations
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaHandshakeSimple size={80} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl font-medium">
-                University & Employer Partnerships
+              <FaHandshakeSimple size={70} className="mx-auto text-[#1C315F]" />
+              <p className="text-center text-xl text-[#1C315F] font-medium">
+                We Actively Partner with Athletic Directors, Teams, & Employers
               </p>
             </div>
           </div>
