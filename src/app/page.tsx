@@ -41,13 +41,14 @@ export default function Home() {
             <h2 className="text-3xl font-semibold mb-4">
               By Providing their Data Needs
             </h2>
-            <p className="text-lg md:text-2xl font-light">
-              Your School&apos;s Current & Historic Athletic Team Rosters,
-              merged with updated LinkedIn Experience Data.
-            </p>
-            <p className="text-lg md:text-2xl ma:2 font-light">
-              You building a Stronger School Network.
-            </p>
+            <p className="text-lg md:text-2xl mb-6 font-light">
+                Your School&apos;s Current & Historic Athletic Team Rosters,
+                merged with updated LinkedIn Experience Data.
+              </p>
+              <p className="text-lg md:text-2xl font-light">
+                You building a Stronger School Network.
+              </p>
+
           </div>
           <div className="w-full lg:w-[50%]">
             <Image
@@ -61,7 +62,7 @@ export default function Home() {
         {/* What We Do Section */}
         <section className="container mx-auto px-4 py-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
-            What Do We Do?
+            What We Do
           </h2>
           <p className="text-justify text-xl leading-relaxed text-[#1C315F]">
             We bridge the gap between athlete rosters and professional networks.
