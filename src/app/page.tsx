@@ -6,25 +6,20 @@ import Carousel from "@/components/LandingPage/Carousel";
 import AthleteImage from "../../public/images/college-athletes-1.jpg";
 
 import {
-  FaGlobe,
   FaDatabase,
   FaHandshakeSimple,
   FaArrowRight,
-  FaUniversalAccess,
   FaCode,
 } from "react-icons/fa6";
 import {
-  FaMapMarkedAlt,
   FaUsers,
   FaUser,
   FaShieldAlt,
-  FaHistory,
-  FaCogs,
   FaLinkedin,
   FaSitemap,
   FaCheckSquare,
 } from "react-icons/fa";
-import { BsFileEarmarkSpreadsheet, BsFileEarmarkSpreadsheetFill, BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import { BsFileEarmarkSpreadsheetFill, BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
 import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
