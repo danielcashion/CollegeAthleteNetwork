@@ -76,23 +76,23 @@ export default function Home() {
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <BsFileEarmarkSpreadsheetFill size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#1C315F] font-medium">
+              <p className="text-center text-xl text-[#ED3237] font-medium">
                 We Source Current & Historic Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#1C315F] font-medium">We Map Athletes to their LinkedIn Profiles</p>
+              <p className="text-center text-xl text-[#ED3237] font-medium">We Map Athletes to their LinkedIn Profiles</p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#1C315F] font-medium">
+              <p className="text-center text-xl text-[#ED3237] font-medium">
                 We Continuously Refresh Athlete Employers, Titles, Locations
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaHandshakeSimple size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#1C315F] font-medium">
+              <p className="text-center text-xl text-[#ED3237] font-medium">
                 We Actively Partner with Athletic Directors, Teams, & Employers
               </p>
             </div>
@@ -230,13 +230,13 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-8 text-[#ED3237] small-caps">
             Why Choose College Athlete Network?
           </h2>
-          <p className="text-lg leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
+          <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
             Maintaining athlete data is a time-consuming, complex challenge that
             demands specialized skills and effort. That&apos;s where we come in:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
-              <FaSitemap size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <FaSitemap size={60} className="text-[#1C315F] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Decades of Expertise
               </h3>
@@ -246,7 +246,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <FaCode size={60} className="text-[#ED3237] mx-auto mb-4" />
+              <FaCode size={60} className="text-[#1C315F] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
                 Proven Algorithms
               </h3>
@@ -258,10 +258,10 @@ export default function Home() {
             <div className="text-center">
               <FaCheckSquare
                 size={60}
-                className="text-[#ED3237] mx-auto mb-4"
+                className="text-[#1C315F] mx-auto mb-4"
               />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
-                Effortless Access
+                Exceptional Athlete Experience
               </h3>
               <p className="text-[#1C315F] text-center">
                 We deliver critical information in a simple, user-friendly
