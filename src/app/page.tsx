@@ -36,11 +36,11 @@ export default function Home() {
             <h2 className="text-3xl font-semibold mb-4">
               We Provide All their Data Fuel
             </h2>
-            <p className="text-lg md:text-2xl text-right mb-6 font-light">
+            <p className="text-lg md:text-xl text-right mb-6 font-light">
                 Your School&apos;s Athletic Team Rosters,
                 merged and continuously updated with LinkedIn Experience Data.
               </p>
-              <p className="text-lg md:text-2xl text-right font-light">
+              <p className="text-lg md:text-xl text-right font-light">
                 Your Athletes Building & Benefiting from a Stronger School Network.
               </p>
 
