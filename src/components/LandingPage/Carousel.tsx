@@ -5,7 +5,7 @@ import Image from "next/image";
 const Carousel = () => {
   const brandImages = [
     {
-      src: "/images/college-athletes-2.png",
+      src: "/images/college-athletes-2.jpg",
     },
     {
       src: "/images/college-athletes-3.png",
