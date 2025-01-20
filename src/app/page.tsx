@@ -3,7 +3,7 @@ import "../styles/customStyles.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Carousel from "@/components/LandingPage/Carousel";
-import AthleteImage from "../../public/images/YaleMensLax.jpeg";
+import AthleteImage from "../../public/images/college-athletes-2.jpg";
 
 import {
   FaDatabase,
