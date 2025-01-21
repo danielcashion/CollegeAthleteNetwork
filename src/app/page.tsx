@@ -160,7 +160,7 @@ export default function Home() {
                   <div className="flex items-start mb-4 space-x-3">
                     <TbAppWindowFilled className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]">
-                      If You&apos;re Using am App where YOU supply the Data:
+                      If You&apos;re Using an App where YOU supply the Data:
                     </h3>
                   </div>
                   <ul className="space-y-4">
@@ -174,7 +174,7 @@ export default function Home() {
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        The curation of the data is what makes the network work!
+                        The curation of the data is what makes the network work and we own the delivery, not you!
                       </span>
                     </li>
                   </ul>
@@ -190,7 +190,7 @@ export default function Home() {
             <h2 className="text-5xl font-bold mb-4 small-caps">
               Build a Unified, Enduring Athlete Network
             </h2>
-            <p className="text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
+            <p className="text-xl leading-relaxed mb-8 max-w-3xl mx-auto">
               Our platform connects athletes across all sports at your
               university, creating a robust, institution-wide professional
               network. Here&apos;s why this matters:
