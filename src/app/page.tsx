@@ -134,8 +134,8 @@ export default function Home() {
                   <div className="flex items-start mb-4 space-x-3">
                     <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]">
-                      If Your Alumni Database is actually a bad
-                      Spreadsheet:
+                      If Your Alumni &quot;Database&quot; is actually a simple
+                      and stale Spreadsheet:
                     </h3>
                   </div>
                   <ul className="space-y-4">
