@@ -37,15 +37,15 @@ export default function Home() {
               We Provide All Their Data Fuel
             </h2>
             <p className="text-lg md:text-xl text-right mb-6 font-light">
-                Your School&apos;s Athletic Team Rosters,
-                merged and continuously updated with LinkedIn Experience Data.
-              </p>
-              <p className="text-lg md:text-xl text-right font-light">
-                Your Athletes Building & Benefiting from a Stronger School Network.
-              </p>
-
+              Your School&apos;s Athletic Team Rosters, merged and continuously
+              updated with LinkedIn Experience Data.
+            </p>
+            <p className="text-lg md:text-xl text-right font-light">
+              Empower your athletes. Strengthen your school. Future-proof your
+              school’s network.
+            </p>
           </div>
-          <div className="w-full lg:w-[50%]">
+          <div className="w-full lg:w-[40%]">
             <Image
               src={AthleteImage}
               alt="College Athletes"
@@ -71,14 +71,19 @@ export default function Home() {
           </p>
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <BsFileEarmarkSpreadsheetFill size={70} className="mx-auto text-[#1C315F]" />
+              <BsFileEarmarkSpreadsheetFill
+                size={70}
+                className="mx-auto text-[#1C315F]"
+              />
               <p className="text-center text-xl text-[#ED3237] font-medium">
                 We Source Current & Historic Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#ED3237] font-medium">We Map Athletes to their LinkedIn Profiles</p>
+              <p className="text-center text-xl text-[#ED3237] font-medium">
+                We Map Athletes to their LinkedIn Profiles
+              </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
@@ -113,13 +118,14 @@ export default function Home() {
                   </span>{" "}
                   in the first 15 years after graduation. For a network of{" "}
                   <span className="text-[#ED3237] font-semibold">
-                    2,000 athletes 
+                    2,000 athletes
                   </span>
-                  (a relatively small school network), this means tracking and updating data for around 
+                  (a relatively small school network), this means tracking and
+                  updating data for around
                   <span className="text-[#ED3237] font-semibold">
-                     700 individuals 
+                    700 individuals
                   </span>
-                    annually.
+                  annually.
                 </p>
               </div>
 
@@ -128,14 +134,16 @@ export default function Home() {
                   <div className="flex items-start mb-4 space-x-3">
                     <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]">
-                      If You&apos;re Alumni Database is actually a bad Spreadsheet:
+                      If You&apos;re Alumni Database is actually a bad
+                      Spreadsheet:
                     </h3>
                   </div>
                   <ul className="space-y-4">
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        It quickly becomes outdated. Nobody wants to own updating it.
+                        It quickly becomes outdated. Nobody wants to own
+                        updating it.
                       </span>
                     </li>
                     <li className="flex items-start space-x-3">
@@ -159,7 +167,8 @@ export default function Home() {
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        Data curation is 99% of the problem. Other vendors delegate it to you.
+                        Data curation is 99% of the problem. Other vendors
+                        delegate it to you.
                       </span>
                     </li>
                     <li className="flex items-start space-x-3">
@@ -228,7 +237,8 @@ export default function Home() {
           </h2>
           <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
             Maintaining athlete data is a time-consuming, complex challenge that
-            demands specialized skills and continuous effort. That&apos;s where we come in:
+            demands specialized skills and continuous effort. That&apos;s where
+            we come in:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
@@ -260,7 +270,8 @@ export default function Home() {
                 Exceptional Experience
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
-                Your athletes work hard. They deserve to benefit from the network your university can provide.
+                Your athletes work hard. They deserve to benefit from the
+                network your university can provide.
               </p>
             </div>
           </div>
