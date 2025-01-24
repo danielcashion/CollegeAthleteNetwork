@@ -19,7 +19,6 @@ import Logo from "../../../public/Logos/CANLogo1200x1200White.png";
 const Footer = styled("footer")(() => ({
   color: "#ED2327", // `${theme.palette.primary.main}`,
   background: "#1C315F", // `${theme.palette.primary.main}`,
-  marginTop: "118px",
 }));
 
 const FooterContainer = styled("div")({
@@ -122,11 +121,7 @@ const AppFooter: React.FC = () => {
           <MuiBoxRoot>
             <MenuList>
               <MenuListItemLeft>
-                <MenuItemText
-                  href="https://www.tourneymaster.org/privacy-policy/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <MenuItemText href="/privacy-policy" target="_blank">
                   <ListItemText primary="Privacy Policy" />
                 </MenuItemText>
                 <MenuItemText
