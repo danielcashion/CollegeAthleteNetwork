@@ -121,11 +121,7 @@ const AppFooter: React.FC = () => {
           <MuiBoxRoot>
             <MenuList>
               <MenuListItemLeft>
-                <MenuItemText
-                  href="https://www.tourneymaster.org/privacy-policy/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <MenuItemText href="/privacy-policy" target="_blank">
                   <ListItemText primary="Privacy Policy" />
                 </MenuItemText>
                 <MenuItemText
