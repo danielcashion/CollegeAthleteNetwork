@@ -138,7 +138,7 @@ export default function DataTables({ data }: { data: any[] }) {
                     fontWeight: "bold",
                   }}
                 >
-                  % Covered
+                  % Mapped
                 </TableCell>
               </Tooltip>
               <Tooltip

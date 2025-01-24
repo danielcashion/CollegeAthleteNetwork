@@ -68,7 +68,7 @@ function DataRow({ row }: { row: UniversityRow }) {
           {formatNumber(row.totalLinkedInProfiles)}
         </TableCell>
         <TableCell align="center" sx={{ fontSize: "medium" }}>
-          {((row.totalLinkedInProfiles / row.totalAthletes)*100).toFixed(1)}%
+          {((row.totalLinkedInProfiles / row.totalAthletes) * 100).toFixed(1)}%
         </TableCell>
         <TableCell align="center" sx={{ fontSize: "medium" }}>
           {formatNumber(row.totalRosters)}
@@ -125,6 +125,15 @@ function DataRow({ row }: { row: UniversityRow }) {
                         fontSize: "medium",
                       }}
                     >
+                      % Mapped
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "medium",
+                      }}
+                    >
                       # of Roster Years
                     </TableCell>
                     <TableCell
@@ -159,6 +168,14 @@ function DataRow({ row }: { row: UniversityRow }) {
                       </TableCell>
                       <TableCell align="center" sx={{ fontSize: "medium" }}>
                         {sportItem.num_found}
+                      </TableCell>
+                      <TableCell align="center" sx={{ fontSize: "medium" }}>
+                        {sportItem.num_total > 0
+                          ? `${(
+                              (sportItem.num_found / sportItem.num_total) *
+                              100
+                            ).toFixed(1)}%`
+                          : "N/A"}
                       </TableCell>
                       <TableCell align="center" sx={{ fontSize: "medium" }}>
                         {sportItem.num_rosters}
