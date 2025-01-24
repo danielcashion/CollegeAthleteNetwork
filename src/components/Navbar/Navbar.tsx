@@ -52,12 +52,12 @@ const Navbar: React.FC = () => {
               Sample Data
             </p>
           </Link>
-          <Link href="/about-us">
+          <Link href="/">
             <p className="hover:text-gray-300 transition-colors duration-300">
               About Us
             </p>
           </Link>
-          <Link href="/contact-us">
+          <Link href="/">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Contact Us
             </p>
