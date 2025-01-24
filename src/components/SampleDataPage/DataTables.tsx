@@ -61,7 +61,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                Total No. Sports
+                Total No. Sports (M&W)
               </TableCell>
               <TableCell
                 align="center"
