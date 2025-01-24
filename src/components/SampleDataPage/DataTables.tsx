@@ -61,7 +61,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                Total No. Sports (M&W)
+                Total # Sports (M&W)
               </TableCell>
               <TableCell
                 align="center"
@@ -71,7 +71,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                No. of Athletes
+                # of Athletes
               </TableCell>
               <TableCell
                 align="center"
@@ -81,7 +81,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                No. of LinkedIn Profiles
+                # of LinkedIn Profiles
               </TableCell>
               <TableCell
                 align="center"
@@ -101,7 +101,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                No. of Rosters
+                # of Rosters
               </TableCell>
               <TableCell
                 align="center"
@@ -111,7 +111,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                First year
+                Earliest Roster
               </TableCell>
               <TableCell
                 align="center"
@@ -121,7 +121,7 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                Last year
+                Most Recent Roster
               </TableCell>
             </TableRow>
           </TableHead>
