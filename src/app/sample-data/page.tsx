@@ -1,23 +1,23 @@
-// import axios from "axios";
+import axios from "axios";
 import SampleDataTopSection from "@/components/SampleDataPage/SampleDataTopSection";
 import DataTables from "@/components/SampleDataPage/DataTables";
 
 const SampleDataPage = async () => {
   try {
-    // const response = await axios.get(
-    //   `https://api.tourneymaster.org/publicprod/sport_coverage`
-    // );
+    const response = await axios.get(
+      `https://api.tourneymaster.org/publicprod/sport_coverage`
+    );
 
-    // const universityData = response.data;
+    const universityData = response.data;
 
     return (
       <div className="flex flex-col">
         <SampleDataTopSection />
-        <DataTables />
+        <DataTables data={universityData} />
       </div>
     );
   } catch (error) {
-    console.error("Error fetching user files:", error);
+    console.error("Error fetching data:", error);
 
     return (
       <div className="flex flex-col">
