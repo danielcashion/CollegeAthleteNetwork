@@ -158,7 +158,12 @@ function DataRow({ row }: { row: UniversityRow }) {
                 </TableHead>
                 <TableBody>
                   {row.sports.map((sportItem, index) => (
-                    <TableRow key={`${sportItem.sport}-${index}`}>
+                    <TableRow
+                      key={`${sportItem.sport}-${index}`}
+                      sx={{
+                        backgroundColor: index % 2 === 0 ? "#FFF" : "#E5E5E5", // Apply color based on index
+                      }}
+                    >
                       <TableCell />
                       <TableCell align="left" sx={{ fontSize: "medium" }}>
                         {sportItem.sport}
