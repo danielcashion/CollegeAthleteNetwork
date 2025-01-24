@@ -1,7 +1,5 @@
 import Image from "next/image";
 import "../styles/customStyles.css";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
 import Carousel from "@/components/LandingPage/Carousel";
 import AthleteImage from "../../public/images/college-athletes-2.jpg";
 
@@ -19,13 +17,15 @@ import {
   FaSitemap,
   FaCheckSquare,
 } from "react-icons/fa";
-import { BsFileEarmarkSpreadsheetFill, BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import {
+  BsFileEarmarkSpreadsheetFill,
+  BsFillFileEarmarkSpreadsheetFill,
+} from "react-icons/bs";
 import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
   return (
-    <div className="bg-[#CCCBCB] min-h-screen">
-      <Navbar />
+    <div className="bg-[#CCCBCB]">
       <main>
         {/* Hero Section */}
         <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
@@ -174,7 +174,8 @@ export default function Home() {
                     <li className="flex items-start space-x-3">
                       <FaArrowRight className="w-4 h-4 min-w-4 min-h-4 text-white mt-1" />
                       <span className="text-lg">
-                        The curation of the data is what makes the network work and we own the delivery, not you!
+                        The curation of the data is what makes the network work
+                        and we own the delivery, not you!
                       </span>
                     </li>
                   </ul>
@@ -231,7 +232,7 @@ export default function Home() {
         </section>
 
         {/* Why Choose Us Section */}
-        <section className="container mx-auto px-4 pt-12">
+        <section className="container mx-auto px-4 pt-16 pb-20">
           <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] small-caps">
             Why Choose College Athlete Network?
           </h2>
@@ -277,7 +278,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

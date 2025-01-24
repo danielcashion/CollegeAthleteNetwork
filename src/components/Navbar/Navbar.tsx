@@ -47,6 +47,11 @@ const Navbar: React.FC = () => {
               Home
             </p>
           </Link>
+          <Link href="/sample-data">
+            <p className="hover:text-gray-300 transition-colors duration-300">
+              Sample Data
+            </p>
+          </Link>
           <Link href="/about-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               About Us
