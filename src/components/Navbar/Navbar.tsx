@@ -30,14 +30,16 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto flex justify-between items-center py-2 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <Image
-            className="hover:scale-110 transition-transform duration-300 object-contain"
-            src={Logo.src}
-            priority
-            alt="College Athlete Network"
-            width={200}
-            height={200}
-          />
+          <Link href="/">
+            <Image
+              className="hover:scale-110 transition-transform duration-300 object-contain"
+              src={Logo.src}
+              priority
+              alt="College Athlete Network"
+              width={200}
+              height={200}
+            />
+          </Link>
         </div>
 
         {/* Navigation Items */}
