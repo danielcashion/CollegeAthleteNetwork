@@ -68,6 +68,9 @@ function DataRow({ row }: { row: UniversityRow }) {
           {formatNumber(row.totalLinkedInProfiles)}
         </TableCell>
         <TableCell align="center" sx={{ fontSize: "medium" }}>
+          {((row.totalLinkedInProfiles / row.totalAthletes)*100).toFixed(1)}%
+        </TableCell>
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
           {formatNumber(row.totalRosters)}
         </TableCell>
         <TableCell align="center" sx={{ fontSize: "medium" }}>

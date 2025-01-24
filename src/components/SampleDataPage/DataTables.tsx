@@ -91,6 +91,16 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
+                % Covered
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  color: "white",
+                  fontSize: "medium",
+                  fontWeight: "bold",
+                }}
+              >
                 No. of Rosters
               </TableCell>
               <TableCell
