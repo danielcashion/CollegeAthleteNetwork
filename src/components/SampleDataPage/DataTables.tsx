@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import Tooltip from "@mui/material/Tooltip";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,6 +18,17 @@ export default function DataTables({ data }: { data: any[] }) {
     if (!data || data.length === 0) return [];
     return prepareData(data);
   }, [data]);
+
+    const headerTooltips = {
+      university: "The name of the university",
+      totalSports: "Unique sports. If the schools has Men & Women teams, it is counted as one sport",
+      athletes: "The number of unique athletes",
+      linkedInProfiles: "The number of athletes we found with LinkedIn profiles",
+      coverage: "The percentage of athletes covered on LinkedIn",
+      rosters: "The total number of rosters",
+      earliestRoster: "The year of the earliest roster",
+      recentRoster: "The year of the most recent roster",
+    };
 
   return (
     <div className="container mx-auto py-16">
@@ -53,56 +65,101 @@ export default function DataTables({ data }: { data: any[] }) {
               >
                 University
               </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  color: "white",
-                  fontSize: "medium",
-                  fontWeight: "bold",
-                }}
+              <Tooltip
+                title={
+                  <span style={{ display: "block", textAlign: "center" }}>
+                    {headerTooltips.totalSports}
+                  </span>
+                }
+                placement="top"
               >
-                Total # Sports (M&W)
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  color: "white",
-                  fontSize: "medium",
-                  fontWeight: "bold",
-                }}
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    fontSize: "medium",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Total # Sports (M&W)
+                </TableCell>
+              </Tooltip>
+              <Tooltip
+                title={
+                  <span style={{ display: "block", textAlign: "center" }}>
+                    {headerTooltips.totalSports}
+                  </span>
+                }
+                placement="top"
               >
-                # of Athletes
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  color: "white",
-                  fontSize: "medium",
-                  fontWeight: "bold",
-                }}
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    fontSize: "medium",
+                    fontWeight: "bold",
+                  }}
+                >
+                  # of Athletes
+                </TableCell>
+              </Tooltip>
+              <Tooltip
+                title={
+                  <span style={{ display: "block", textAlign: "center" }}>
+                    {headerTooltips.linkedInProfiles}
+                  </span>
+                }
+                placement="top"
               >
-                # of LinkedIn Profiles
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  color: "white",
-                  fontSize: "medium",
-                  fontWeight: "bold",
-                }}
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    fontSize: "medium",
+                    fontWeight: "bold",
+                  }}
+                >
+                  # of LinkedIn Profiles
+                </TableCell>
+              </Tooltip>
+              <Tooltip
+                title={
+                  <span style={{ display: "block", textAlign: "center" }}>
+                    {headerTooltips.coverage}
+                  </span>
+                }
+                placement="top"
               >
-                % Covered
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  color: "white",
-                  fontSize: "medium",
-                  fontWeight: "bold",
-                }}
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    fontSize: "medium",
+                    fontWeight: "bold",
+                  }}
+                >
+                  % Mapped
+                </TableCell>
+              </Tooltip>
+              <Tooltip
+                title={
+                  <span style={{ display: "block", textAlign: "center" }}>
+                    {headerTooltips.rosters}
+                  </span>
+                }
+                placement="top"
               >
-                # of Rosters
-              </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    fontSize: "medium",
+                    fontWeight: "bold",
+                  }}
+                >
+                  # of Rosters
+                </TableCell>
+              </Tooltip>
               <TableCell
                 align="center"
                 sx={{
