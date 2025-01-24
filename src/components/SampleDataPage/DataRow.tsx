@@ -25,11 +25,15 @@ interface UniversityRow {
   totalSports: number;
   totalAthletes: number;
   totalLinkedInProfiles: number;
-  totalRoosters: number;
+  totalRosters: number;
   firstYear: number;
   lastYear: number;
   sports: SportItem[];
 }
+
+const formatNumber = (num: number) =>
+  new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(num);
+
 
 function DataRow({ row }: { row: UniversityRow }) {
   const [open, setOpen] = React.useState(false);
@@ -54,22 +58,22 @@ function DataRow({ row }: { row: UniversityRow }) {
           </IconButton>
         </TableCell>
         <TableCell sx={{ fontSize: "medium" }}>{row.universityName}</TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
           {row.totalSports}
         </TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
-          {row.totalAthletes}
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
+          {formatNumber(row.totalAthletes)}
         </TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
-          {row.totalLinkedInProfiles}
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
+          {formatNumber(row.totalLinkedInProfiles)}
         </TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
-          {row.totalRoosters}
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
+          {formatNumber(row.totalRosters)}
         </TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
           {row.firstYear}
         </TableCell>
-        <TableCell align="left" sx={{ fontSize: "medium" }}>
+        <TableCell align="center" sx={{ fontSize: "medium" }}>
           {row.lastYear}
         </TableCell>
       </TableRow>
@@ -79,7 +83,7 @@ function DataRow({ row }: { row: UniversityRow }) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 2, width: "100%" }}>
-              <p className="text-[18px]">Sports Categorized</p>
+              {/* <p className="text-[18px]">Sports </p> */}
               <Table size="medium" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -109,7 +113,7 @@ function DataRow({ row }: { row: UniversityRow }) {
                         fontSize: "medium",
                       }}
                     >
-                      Total LinkedIn Profiles
+                      Mapped LinkedIn Profiles
                     </TableCell>
                     <TableCell
                       align="center"
@@ -118,7 +122,7 @@ function DataRow({ row }: { row: UniversityRow }) {
                         fontSize: "medium",
                       }}
                     >
-                      Total Roosters
+                      # of Roster Years
                     </TableCell>
                     <TableCell
                       align="center"
@@ -127,7 +131,7 @@ function DataRow({ row }: { row: UniversityRow }) {
                         fontSize: "medium",
                       }}
                     >
-                      First Year
+                      First Roster Year
                     </TableCell>
                     <TableCell
                       align="center"
@@ -136,7 +140,7 @@ function DataRow({ row }: { row: UniversityRow }) {
                         fontSize: "medium",
                       }}
                     >
-                      Last Year
+                      Most Recent Roster Year
                     </TableCell>
                   </TableRow>
                 </TableHead>

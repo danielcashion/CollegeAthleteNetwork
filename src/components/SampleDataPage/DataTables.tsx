@@ -20,9 +20,12 @@ export default function DataTables({ data }: { data: any[] }) {
 
   return (
     <div className="container mx-auto py-16">
-      <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
-        Sample Data
+      <h2 className="text-5xl font-bold text-center mb-4 text-[#ED3237] tracking-wider small-caps">
+        Actual Data on a Few Sample Universities
       </h2>
+      <h5 className="text-xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
+        As of Jan 2025
+      </h5>
 
       <TableContainer className="shadow-lg bg-white rounded-2xl">
         <Table aria-label="collapsible table">
@@ -48,20 +51,20 @@ export default function DataTables({ data }: { data: any[] }) {
                   fontWeight: "bold",
                 }}
               >
-                University Name
+                University
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",
                   fontWeight: "bold",
                 }}
               >
-                Total Sports
+                Total No. Sports
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",
@@ -71,7 +74,7 @@ export default function DataTables({ data }: { data: any[] }) {
                 No. of Athletes
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",
@@ -81,17 +84,17 @@ export default function DataTables({ data }: { data: any[] }) {
                 No. of LinkedIn Profiles
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",
                   fontWeight: "bold",
                 }}
               >
-                No. of Roosters
+                No. of Rosters
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",
@@ -101,7 +104,7 @@ export default function DataTables({ data }: { data: any[] }) {
                 First year
               </TableCell>
               <TableCell
-                align="left"
+                align="center"
                 sx={{
                   color: "white",
                   fontSize: "medium",

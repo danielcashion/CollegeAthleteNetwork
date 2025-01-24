@@ -17,7 +17,7 @@ export const prepareData = (data: any[]) => {
         totalSports: 0,
         totalAthletes: 0,
         totalLinkedInProfiles: 0,
-        totalRoosters: 0,
+        totalRosters: 0,
         firstYear: Infinity, // will keep track of min year
         lastYear: -Infinity, // will keep track of max year
       };
@@ -37,7 +37,7 @@ export const prepareData = (data: any[]) => {
 
       univData.totalLinkedInProfiles += sportItem.num_found;
 
-      univData.totalRoosters += sportItem.num_rosters;
+      univData.totalRosters += sportItem.num_rosters;
 
       const fy = parseInt(sportItem.first_roster, 10);
       const ly = parseInt(sportItem.max_roster, 10);
