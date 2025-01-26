@@ -234,7 +234,7 @@ export default function Home() {
         {/* Why Choose Us Section */}
         <section className="container mx-auto px-4 pt-16 pb-20">
           <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] small-caps">
-            Why Choose College Athlete Network?
+            Why Choose The CollegeAthleteNetwork.org?
           </h2>
           <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
             Maintaining athlete data is a time-consuming, complex challenge that
