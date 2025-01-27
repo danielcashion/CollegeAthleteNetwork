@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
   }
 
   const emailParams = {
-    Source: from_address,
+    Source: `College Athlete Network Admin <${from_address}>`,
     Destination: {
       ToAddresses: [to_address],
     },
