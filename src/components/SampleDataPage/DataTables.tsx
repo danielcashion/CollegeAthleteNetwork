@@ -32,11 +32,11 @@ export default function DataTables({ data }: { data: any[] }) {
 
   return (
     <div className="container mx-auto py-16">
-      <h2 className="text-5xl font-bold text-center mb-4 text-[#ED3237] tracking-wider small-caps">
+      <h3 className="text-5xl font-bold text-center mb-4 text-[#ED3237] tracking-wider small-caps">
         Actual Data on a Few Sample Universities
-      </h2>
+      </h3>
       <h5 className="text-xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
-        As of Jan 2025
+        Data as of Jan 2025
       </h5>
 
       <TableContainer className="shadow-lg bg-white rounded-2xl">
