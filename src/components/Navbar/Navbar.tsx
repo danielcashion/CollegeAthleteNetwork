@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
               About Us
             </p>
           </Link>
-          <Link href="/">
+          <Link href="/contact-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Contact Us
             </p>
@@ -78,26 +78,26 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Social Media Icons */}
-        <div className="hidden md:flex space-x-4">
+        {/* <div className="hidden md:flex space-x-4">
           <a href="#" rel="noopener noreferrer">
             <FaFacebook
               className="text-gray-300 hover:text-white transition-colors duration-300"
               size={25}
             />
-          </a>
-          <a href="#" rel="noopener noreferrer">
+          </a> */}
+        {/* <a href="#" rel="noopener noreferrer">
             <FaTwitter
               className="text-gray-300 hover:text-white transition-colors duration-300"
               size={25}
             />
-          </a>
-          <a href="#" rel="noopener noreferrer">
+          </a> */}
+        {/* <a href="#" rel="noopener noreferrer">
             <FaInstagram
               className="text-gray-300 hover:text-white transition-colors duration-300"
               size={25}
             />
           </a>
-        </div>
+        </div> */}
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">

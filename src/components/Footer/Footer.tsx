@@ -140,11 +140,11 @@ const AppFooter: React.FC = () => {
                 priority={true}
               />
               <MenuListItemRight>
-                <MenuItemText href="mailto:support@clublacrosse.org">
+                <MenuItemText href="mailto:support@collegeathletenetwork.org">
                   <ListItemText primary="Support" />
                 </MenuItemText>
                 <MenuItemText
-                  href="https://www.tourneymaster.org/about/"
+                  href="https://www.collegeathletenetwork.org/about/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
