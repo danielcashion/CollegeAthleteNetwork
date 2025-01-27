@@ -233,14 +233,22 @@ export default function Home() {
 
         {/* Why Choose Us Section */}
         <section className="container mx-auto px-4 pt-16 pb-20">
-          <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] small-caps">
-            Why Choose The College Athlete Network?
+          <h2 className="text-5xl font-bold text-center mb-1 text-[#ED3237] small-caps">
+            Why Choose The
           </h2>
-          <p className="text-2xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
-            Maintaining athlete data is a time-consuming, complex challenge that
-            demands specialized skills and continuous effort. That&apos;s where
-            we come in:
+          <h2 className="text-4xl font-bold text-center mb-4 text-[#ED3237] small-caps">
+            CollegeAthleteNetwork.org?
+          </h2>
+          <p className="text-3xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
+            Maintaining professional data on your athletes is a time-consuming, never-ending headache that
+            demands continuous effort.
           </p>
+
+          <p className="text-2xl leading-relaxed mb-2 text-[#1C315F] text-center max-w-2xl mx-auto tracking-wide">
+  This is where we become your trusted teammate.
+</p>
+
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
               <FaSitemap size={60} className="text-[#1C315F] mx-auto mb-4" />
@@ -249,16 +257,16 @@ export default function Home() {
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
                 With 30 years of experience, we&apos;ve perfected the art of
-                data collection and curation.
+                data curation. We know this is hard, which is why we have productionalized the process.
               </p>
             </div>
             <div className="text-center">
               <FaCode size={60} className="text-[#1C315F] mx-auto mb-4" />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
-                Proven Algorithms
+                Repeatable & Dependable
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
-                Our advanced algorithms ensure your network stays accurate and
+                Our proven algorithms & ongoing sanity checks ensure your network stays accurate and
                 up-to-date.
               </p>
             </div>
@@ -268,7 +276,7 @@ export default function Home() {
                 className="text-[#1C315F] mx-auto mb-4"
               />
               <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
-                Exceptional Experience
+                Providing an Exceptional Experience
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
                 Your athletes work hard. They deserve to benefit from the
