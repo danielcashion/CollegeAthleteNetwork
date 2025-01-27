@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+// import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
