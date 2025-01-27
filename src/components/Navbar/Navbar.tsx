@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+// import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
               About Us
             </p>
           </Link>
-          <Link href="/">
+          <Link href="/contact-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Contact Us
             </p>
@@ -85,13 +85,13 @@ const Navbar: React.FC = () => {
               size={25}
             />
           </a> */}
-          {/* <a href="#" rel="noopener noreferrer">
+        {/* <a href="#" rel="noopener noreferrer">
             <FaTwitter
               className="text-gray-300 hover:text-white transition-colors duration-300"
               size={25}
             />
           </a> */}
-          {/* <a href="#" rel="noopener noreferrer">
+        {/* <a href="#" rel="noopener noreferrer">
             <FaInstagram
               className="text-gray-300 hover:text-white transition-colors duration-300"
               size={25}
