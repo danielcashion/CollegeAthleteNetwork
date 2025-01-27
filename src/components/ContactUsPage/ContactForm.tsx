@@ -28,13 +28,33 @@ const ContactForm = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Real-time email validation feedback
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+    }
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(false);
     setSuccess(false);
+
+    // Validate the email format using a regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setLoading(false);
+      setError(true);
+      console.error("Invalid email format");
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact-form", {
@@ -61,6 +81,7 @@ const ContactForm = () => {
     }
   };
 
+
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-6 py-20 px-10 bg-[#F2F5F7]">
       <div className="flex flex-col items-center w-full lg:w-[730px]">
@@ -81,7 +102,7 @@ const ContactForm = () => {
           </Link>
         </div>
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.959537602129!2d-74.01573587356741!3d40.712998737553896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a197c06b7cb%3A0x40a06c78f79e5de6!2sOne%20World%20Trade%20Center!5e1!3m2!1sen!2s!4v1738000435693!5m2!1sen!2s"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3851.19875304904!2d-74.0127638!3d40.7124175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25b5b489d1a5f%3A0xd961b48e6ec74116!2sThe%20Club%20Sports%20Organization%20LLC!5e1!3m2!1sen!2sus!4v1738003747865!5m2!1sen!2sus"
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
