@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/* this function prepares the data recieved from the api at 
+/* this function prepares the data received from the api at 
 https://api.tourneymaster.org/publicprod/sport_coverage 
 into a format to be used in the collapsible data table */
 export const prepareData = (data: any[]) => {
@@ -28,10 +28,9 @@ export const prepareData = (data: any[]) => {
 
   // compute the totals for each university
   Object.values(grouped).forEach((univData: any) => {
-    const uniqueSports = new Set<string>();
-
     univData.sports.forEach((sportItem: any) => {
-      uniqueSports.add(sportItem.sport);
+      // Increment the totalSports count for each sport entry
+      univData.totalSports += 1;
 
       univData.totalAthletes += sportItem.num_total;
 
@@ -49,8 +48,6 @@ export const prepareData = (data: any[]) => {
         univData.lastYear = ly;
       }
     });
-
-    univData.totalSports = uniqueSports.size;
 
     // Convert Infinity / -Infinity to something readable if needed
     if (univData.firstYear === Infinity) univData.firstYear = 0;
