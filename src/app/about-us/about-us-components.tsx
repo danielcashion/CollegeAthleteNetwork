@@ -1,6 +1,8 @@
 import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
-import CANColorLogo from "../../public/Logos/CANLogo1200X1200Color.png";
+import CANColorLogo from "../../../public/Logos/CANLogo1200X1200Color.png";
+// import CANColorLogo from "../../public/Logos/CANLogo1200X1200Color.png";
+
 
 export const AboutUsSection = () => (
   <Box
