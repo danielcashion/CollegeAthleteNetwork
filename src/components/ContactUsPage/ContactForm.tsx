@@ -12,6 +12,12 @@ import {
 } from "@mui/material";
 import { AccountCircle, Email, School, Phone, Mail } from "@mui/icons-material";
 
+// Utility function for email validation
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -21,20 +27,33 @@ const ContactForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Real-time email validation feedback
+    if (name === "email" && !validateEmail(value)) {
+      setError("Invalid email format");
+    } else {
+      setError(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(false);
+    setError(null);
     setSuccess(false);
+
+    if (!validateEmail(formData.email)) {
+      setLoading(false);
+      setError("Invalid email format");
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact-form", {
@@ -50,12 +69,10 @@ const ContactForm = () => {
         setFormData({ name: "", email: "", message: "", university_name: "" });
       } else {
         const data = await response.json();
-        console.error("Error:", data.message);
         throw new Error(data.message || "Failed to send message");
       }
     } catch (err) {
-      setError(true);
-      console.error("Submission error:", err);
+      setError(err instanceof Error ? err.message : "Submission error");
     } finally {
       setLoading(false);
     }
@@ -81,7 +98,7 @@ const ContactForm = () => {
           </Link>
         </div>
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.959537602129!2d-74.01573587356741!3d40.712998737553896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a197c06b7cb%3A0x40a06c78f79e5de6!2sOne%20World%20Trade%20Center!5e1!3m2!1sen!2s!4v1738000435693!5m2!1sen!2s"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3851.19875304904!2d-74.0127638!3d40.7124175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25b5b489d1a5f%3A0xd961b48e6ec74116!2sThe%20Club%20Sports%20Organization%20LLC!5e1!3m2!1sen!2sus!4v1738003747865!5m2!1sen!2sus&z=5"
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
@@ -128,7 +145,7 @@ const ContactForm = () => {
                 />
                 <TextField
                   fullWidth
-                  label="Name"
+                  label="Your Name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -154,7 +171,7 @@ const ContactForm = () => {
                 />
                 <TextField
                   fullWidth
-                  label="University Affiliation"
+                  label="University Affiliation/Athlete Alumni"
                   name="university_name"
                   value={formData.university_name}
                   onChange={handleChange}
@@ -186,6 +203,8 @@ const ContactForm = () => {
                   onChange={handleChange}
                   type="email"
                   required
+                  error={!!error}
+                  helperText={error}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "8px",
@@ -238,7 +257,7 @@ const ContactForm = () => {
               )}
               {error && (
                 <Alert severity="error" sx={{ marginTop: 2 }}>
-                  Failed to send the message. Please try again.
+                  {error}
                 </Alert>
               )}
             </Box>
