@@ -19,8 +19,8 @@ const OurSolution = () => {
                 </h3>
               </div>
               <p className="text-xl mt-2">
-                Empower connections with a robust networking platform designed
-                to bring athletes, coaches, and recruiters together seamlessly.
+                Empower connections with a insightful networking platform designed
+                to bring athletes, coaches, and job opportunies together quickly & easily.
               </p>
             </div>
 
@@ -32,8 +32,7 @@ const OurSolution = () => {
                 </h3>
               </div>
               <p className="text-xl mt-2">
-                Utilize advanced filtering tools to find the best matches
-                tailored to specific needs and preferences.
+                Utilize filtering by city, state, industry, sport, title, company, industry, graduation year, etc., to find the best people within your Universities Network for your next big role.
               </p>
             </div>
           </div>

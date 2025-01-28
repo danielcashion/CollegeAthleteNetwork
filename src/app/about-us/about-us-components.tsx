@@ -18,7 +18,7 @@ export const AboutUsSection = () => (
       About Us
     </Typography>
     <Typography variant="h5" gutterBottom sx={{ fontWeight: 500, mb: 4 }}>
-      Empowering Athletes, Building Futures
+      Empowering Athletes, Building Professional Networks
     </Typography>
     <Typography
       variant="body1"
