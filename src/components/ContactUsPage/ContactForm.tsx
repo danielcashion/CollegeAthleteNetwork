@@ -12,6 +12,12 @@ import {
 } from "@mui/material";
 import { AccountCircle, Email, School, Phone, Mail } from "@mui/icons-material";
 
+// Utility function for email validation
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -21,7 +27,7 @@ const ContactForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,29 +36,22 @@ const ContactForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Real-time email validation feedback
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) {
-        setError(true);
-      } else {
-        setError(false);
-      }
+    if (name === "email" && !validateEmail(value)) {
+      setError("Invalid email format");
+    } else {
+      setError(null);
     }
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(false);
+    setError(null);
     setSuccess(false);
 
-    // Validate the email format using a regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!validateEmail(formData.email)) {
       setLoading(false);
-      setError(true);
-      console.error("Invalid email format");
+      setError("Invalid email format");
       return;
     }
 
@@ -70,17 +69,14 @@ const ContactForm = () => {
         setFormData({ name: "", email: "", message: "", university_name: "" });
       } else {
         const data = await response.json();
-        console.error("Error:", data.message);
         throw new Error(data.message || "Failed to send message");
       }
     } catch (err) {
-      setError(true);
-      console.error("Submission error:", err);
+      setError(err instanceof Error ? err.message : "Submission error");
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-6 py-20 px-10 bg-[#F2F5F7]">
@@ -149,7 +145,7 @@ const ContactForm = () => {
                 />
                 <TextField
                   fullWidth
-                  label="Name"
+                  label="Your Name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -175,7 +171,7 @@ const ContactForm = () => {
                 />
                 <TextField
                   fullWidth
-                  label="University Affiliation"
+                  label="University Affiliation/Athlete Alumni"
                   name="university_name"
                   value={formData.university_name}
                   onChange={handleChange}
@@ -207,6 +203,8 @@ const ContactForm = () => {
                   onChange={handleChange}
                   type="email"
                   required
+                  error={!!error}
+                  helperText={error}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "8px",
@@ -259,7 +257,7 @@ const ContactForm = () => {
               )}
               {error && (
                 <Alert severity="error" sx={{ marginTop: 2 }}>
-                  Failed to send the message. Please try again.
+                  {error}
                 </Alert>
               )}
             </Box>
