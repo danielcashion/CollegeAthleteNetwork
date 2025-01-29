@@ -99,7 +99,7 @@ export default function CorporatePartnersPage() {
                 a powerful network of high-achievers.
               </p>
               <p className="text-lg mb-6">
-                We've seen numerous success stories of alumni hiring fellow
+                We&apos;ve seen numerous success stories of alumni hiring fellow
                 athletes at their firms, fostering a culture of excellence and
                 mutual understanding.
               </p>
