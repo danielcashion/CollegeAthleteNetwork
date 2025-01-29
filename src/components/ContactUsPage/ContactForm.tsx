@@ -252,7 +252,7 @@ const ContactForm = () => {
               {/* Success & Error Alerts */}
               {success && (
                 <Alert severity="success" sx={{ marginTop: 2 }}>
-                  Message sent successfully!
+                  Message sent successfully! You will hear from us soon!
                 </Alert>
               )}
               {error && (
