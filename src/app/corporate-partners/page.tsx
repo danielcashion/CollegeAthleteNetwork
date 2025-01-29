@@ -16,10 +16,10 @@ export default function CorporatePartnersPage() {
         <section className="text-white pt-28 bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-16">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 mx-auto w-full max-w-[800px] ">
-              Hire College Athletes: Resilient, Driven, Team-Oriented Talent
+              Directly Hire College Athletes: Resilient, Driven, Team-Oriented Talent
             </h1>
             <p className="text-xl mb-12">
-              Tap into an exclusive network of former college athletes and
+              Tap into an exclusive network of current and former college athletes and
               alumni to find top-tier talent for your company.
             </p>
             <div className="space-x-4">
@@ -42,10 +42,10 @@ export default function CorporatePartnersPage() {
         {/* Why College Athletes Make Exceptional Employees */}
         <section className="py-16 bg-gray-100">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              Why College Athletes Make Exceptional Employees
-            </h2>
-            <p className="text-lg mb-6 text-center">
+            <h1 className="text-4xl font-bold mb-8 text-center">
+              College Athletes Make Exceptional Employees
+            </h1>
+            <p className="text-xl ml-5 mr-5 mb-6 text-center">
               Athletes are high-achievers who bring leadership, discipline, and
               teamwork into the workplace. Hiring from this pool gives companies
               a competitive edge in attracting resilient professionals.
@@ -157,15 +157,20 @@ export default function CorporatePartnersPage() {
         {/* How It Works */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center">
+            <h2 className="text-5xl font-bold mb-8 text-center">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+            <div className="grid md:grid-cols-4 gap-8 md:gap-12">
               {[
+                {
+                  title: "Join our Network",
+                  description:
+                    "Contact us. We then onboard your firm to The College Athlete Network.",
+                },
                 {
                   title: "Post a Job",
                   description:
-                    "List your openings specifically targeting our network of college athletes.",
+                    "List your openings specifically targeting profiles (Universities, Majors, sports) in our network.",
                 },
                 {
                   title: "Browse & Connect",
