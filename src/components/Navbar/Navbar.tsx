@@ -59,6 +59,11 @@ const Navbar: React.FC = () => {
               About Us
             </p>
           </Link>
+          <Link href="/corporate-partners">
+            <p className="hover:text-gray-300 transition-colors duration-300">
+              Corporate Partners
+            </p>
+          </Link>
           <Link href="/contact-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Contact Us
