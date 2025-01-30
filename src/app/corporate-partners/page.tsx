@@ -14,15 +14,16 @@ export default function CorporatePartnersPage() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="text-white pt-28 bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-16">
-          <div className="container mx-auto px-4 text-center">
+          <div className="container mx-auto px-4 text-center flex flex-col">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 mx-auto w-full max-w-[800px] ">
-              Directly Hire College Athletes: Resilient, Driven, Team-Oriented Talent
+              Directly Hire College Athletes: Resilient, Driven, Team-Oriented
+              Talent
             </h1>
             <p className="text-xl mb-12">
-              Tap into an exclusive network of current and former college athletes and
-              alumni to find top-tier talent for your company.
+              Tap into an exclusive network of current and former college
+              athletes and alumni to find top-tier talent for your company.
             </p>
-            <div className="space-x-4">
+            <div className="flex flex-col md:flex-row mx-auto gap-4">
               <Link
                 href="/contact-us"
                 className="bg-white text-[#1C315F] text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-[#1c315f] hover:text-white transition duration-200"

@@ -79,7 +79,7 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-6 py-20 px-10 bg-[#F2F5F7]">
+    <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-6 py-20 px-4 md:px-10 bg-[#F2F5F7]">
       <div className="flex flex-col items-center w-full lg:w-[730px]">
         <div className="flex flex-col sm:flex-row gap-6 w-full">
           <Link
