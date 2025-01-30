@@ -25,7 +25,7 @@ import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
   return (
-    <div className="bg-[#CCCBCB]">
+    <div className="bg-[#CCCBCB] overflow-x-hidden">
       <main>
         {/* Hero Section */}
         <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
@@ -56,7 +56,7 @@ export default function Home() {
 
         {/* What We Do Section */}
         <section className="container mx-auto px-4 py-12">
-          <h2 className="text-5xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
             What We Do
           </h2>
           <p className="text-justify text-xl leading-relaxed text-[#1C315F]">
@@ -105,7 +105,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-2.png')] opacity-5 bg-cover bg-center" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-5xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
+              <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
                 Why Is It Hard?
               </h2>
 
@@ -188,7 +188,7 @@ export default function Home() {
         {/* Unified Network Section */}
         <section className="py-12 bg-gradient-to-r from-[#ED3237] to-[#1C315F] text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-5xl font-bold mb-4 small-caps">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 small-caps">
               Build a Unified, Enduring Athlete Network
             </h2>
             <p className="text-xl leading-relaxed mb-8 max-w-3xl mx-auto">
@@ -233,21 +233,20 @@ export default function Home() {
 
         {/* Why Choose Us Section */}
         <section className="container mx-auto px-4 pt-16 pb-20">
-          <h2 className="text-5xl font-bold text-center mb-1 text-[#ED3237] small-caps">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-1 text-[#ED3237] small-caps">
             Why Choose The
           </h2>
-          <h2 className="text-4xl font-bold text-center mb-4 text-[#ED3237] small-caps">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#ED3237] small-caps">
             CollegeAthleteNetwork.org?
           </h2>
-          <p className="text-3xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
-            Maintaining professional data on your athletes is a time-consuming, never-ending headache that
-            demands continuous effort.
+          <p className="text-2xl md:text-3xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
+            Maintaining professional data on your athletes is a time-consuming,
+            never-ending headache that demands continuous effort.
           </p>
 
           <p className="text-2xl leading-relaxed mb-2 text-[#1C315F] text-center max-w-2xl mx-auto tracking-wide">
-  This is where we become your trusted teammate.
-</p>
-
+            This is where we become your trusted teammate.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
@@ -257,7 +256,8 @@ export default function Home() {
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
                 With 30 years of experience, we&apos;ve perfected the art of
-                data curation. We know this is hard, which is why we have productionalized the process.
+                data curation. We know this is hard, which is why we have
+                productionalized the process.
               </p>
             </div>
             <div className="text-center">
@@ -266,8 +266,8 @@ export default function Home() {
                 Repeatable & Dependable
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
-                Our proven algorithms & ongoing sanity checks ensure your network stays accurate and
-                up-to-date.
+                Our proven algorithms & ongoing sanity checks ensure your
+                network stays accurate and up-to-date.
               </p>
             </div>
             <div className="text-center">
