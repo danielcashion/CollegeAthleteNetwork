@@ -7,6 +7,12 @@
 <img src="https://clubsportsorganization.s3.us-east-1.amazonaws.com/misc/TheCollegeAthleteNetwork/TheCollegeAthleteNetwork-Color1200X1200.png" alt="The College Athlete Network" width="400" height="400"/>
 </div>
 
+## 📚 Table of Contents
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Getting Started
 
 First, run the development server:
