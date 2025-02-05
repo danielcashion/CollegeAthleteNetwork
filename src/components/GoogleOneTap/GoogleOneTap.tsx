@@ -19,9 +19,6 @@ declare global {
   }
 }
 
-const GOOGLE_CLIENT_ID =
-  "727817156664-jftuem6k4fmbppdu9escna5eicai2kph.apps.googleusercontent.com";
-
 export default function GoogleOneTap() {
   const { data: session } = useSession(); // Commented out NextAuth session check
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
@@ -43,7 +40,7 @@ export default function GoogleOneTap() {
     if (window.google) {
       try {
         window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID!,
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
           callback: handleCredentialResponse,
           context: "signin",
           ux_mode: "popup",
