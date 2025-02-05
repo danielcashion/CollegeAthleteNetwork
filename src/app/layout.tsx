@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import AuthProvider from "@/providers/AuthProvider";
+import GoogleOneTap from "@/components/GoogleOneTap/GoogleOneTap";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,10 +19,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "The College Athlete Network",
   description: "Generating your network for teams and employers",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
 };
 
 export default function RootLayout({
@@ -33,9 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <GoogleOneTap />
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
