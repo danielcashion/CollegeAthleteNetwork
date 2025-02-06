@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const payload = ticket.getPayload();
+
         if (!payload) {
           throw new Error("No payload found");
         }
@@ -64,9 +65,13 @@ export const authOptions: NextAuthOptions = {
           const newMemberPayload = {
             member_id: newMemberId,
             google_sub: googleSub,
+            member_name: payload.name,
+            given_name: payload.name,
+            family_name: payload.family_name,
+            picture: payload.picture,
+            email_verified: "1",
             role: "user",
             email: payload.email,
-            preferred_email: payload.email,
             created_datetime: new Date().toISOString(),
           };
 

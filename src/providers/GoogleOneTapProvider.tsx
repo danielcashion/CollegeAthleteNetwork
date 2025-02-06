@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import React, { createContext, useCallback, useState, useEffect } from "react";
 import Script from "next/script";
+import { signIn, useSession } from "next-auth/react";
 
 declare global {
   interface Window {
@@ -20,7 +21,19 @@ declare global {
   }
 }
 
-export default function GoogleOneTap() {
+interface GoogleOneTapContextProps {
+  triggerOneTap: () => void;
+}
+
+export const GoogleOneTapContext = createContext<GoogleOneTapContextProps>({
+  triggerOneTap: () => {},
+});
+
+export default function GoogleOneTapProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { data: session } = useSession();
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
 
@@ -33,8 +46,8 @@ export default function GoogleOneTap() {
     });
   }, []);
 
-  const initializeGoogleOneTap = useCallback(() => {
-    if (window.google) {
+  const triggerOneTap = useCallback(() => {
+    if (window.google && isGoogleScriptLoaded) {
       try {
         window.google.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
@@ -61,33 +74,32 @@ export default function GoogleOneTap() {
           console.log(
             "FedCM request already in progress. Waiting before retrying..."
           );
-          setTimeout(initializeGoogleOneTap, 1000);
+          setTimeout(triggerOneTap, 1000);
         } else {
           console.error("Error initializing Google One Tap:", error);
         }
       }
     }
-  }, [handleCredentialResponse]);
+  }, [handleCredentialResponse, isGoogleScriptLoaded]);
 
   useEffect(() => {
-    if (isGoogleScriptLoaded) {
-      initializeGoogleOneTap();
-    }
-  }, [isGoogleScriptLoaded, initializeGoogleOneTap]);
-
-  useEffect(() => {
-    if (session) {
+    if (!session && isGoogleScriptLoaded) {
+      triggerOneTap();
+    } else if (session) {
       window.google?.accounts.id.cancel();
     }
-  }, [session]);
+  }, [session, isGoogleScriptLoaded, triggerOneTap]);
 
   return (
-    <Script
-      src="https://accounts.google.com/gsi/client"
-      async
-      defer
-      onLoad={() => setIsGoogleScriptLoaded(true)}
-      strategy="afterInteractive"
-    />
+    <GoogleOneTapContext.Provider value={{ triggerOneTap }}>
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        async
+        defer
+        onLoad={() => setIsGoogleScriptLoaded(true)}
+        strategy="afterInteractive"
+      />
+      {children}
+    </GoogleOneTapContext.Provider>
   );
 }
