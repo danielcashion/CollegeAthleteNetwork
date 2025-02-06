@@ -1,8 +1,8 @@
 "use client";
 
-import React, { createContext, useCallback, useState } from "react";
+import React, { createContext, useCallback, useState, useEffect } from "react";
 import Script from "next/script";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 declare global {
   interface Window {
@@ -32,6 +32,7 @@ export default function GoogleOneTapProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session } = useSession();
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
 
   const handleCredentialResponse = useCallback((response: any) => {
@@ -78,6 +79,14 @@ export default function GoogleOneTapProvider({
       }
     }
   }, [handleCredentialResponse, isGoogleScriptLoaded]);
+
+  useEffect(() => {
+    if (!session && isGoogleScriptLoaded) {
+      triggerOneTap();
+    } else if (session) {
+      window.google?.accounts.id.cancel();
+    }
+  }, [session, isGoogleScriptLoaded, triggerOneTap]);
 
   return (
     <GoogleOneTapContext.Provider value={{ triggerOneTap }}>
