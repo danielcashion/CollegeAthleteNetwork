@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { OAuth2Client } from "google-auth-library";
@@ -23,7 +25,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         credential: { label: "Google One Tap Credential", type: "text" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials || !credentials.credential) {
           throw new Error("No credential provided");
         }
