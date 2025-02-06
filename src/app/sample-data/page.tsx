@@ -5,7 +5,7 @@ import DataTables from "@/components/SampleDataPage/DataTables";
 const SampleDataPage = async () => {
   try {
     const response = await axios.get(
-      `https://api.tourneymaster.org/publicprod/sport_coverage`
+      `${process.env.API_BASE_URL}/sport_coverage`
     );
 
     const universityData = response.data;
