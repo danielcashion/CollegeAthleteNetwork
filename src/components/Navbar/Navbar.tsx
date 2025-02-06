@@ -115,18 +115,18 @@ const Navbar: React.FC = () => {
               />
               {showDropdown && (
                 <div className="pt-2">
-                  <div className="absolute right-0 w-48 bg-white text-black rounded shadow-lg py-2">
-                    <p className="px-4 font-medium">
+                  <div className="absolute right-0 w-[220px] bg-white text-black rounded shadow-lg py-2">
+                    <p className="px-4 font-medium line-clamp-1">
                       {(session.user as any).name}
                     </p>
-                    <p className="px-4 text-sm">
+                    <p className="px-4 text-sm line-clamp-1">
                       {(session.user as any).email}
                     </p>
                     <button
                       onClick={() => signOut()}
-                      className="mt-2 text-sm w-full text-left px-4 py-1 hover:bg-gray-200"
+                      className="mt-2 text-sm w-full text-left px-4 py-1"
                     >
-                      <div className="flex flex-row items-center gap-2">
+                      <div className="bg-gradient-to-br from-[#1C315F] to-[#ED3237] text-white p-2 rounded flex flex-row items-center gap-2">
                         <MdOutlineLogout size={20} />
                         Sign Out
                       </div>

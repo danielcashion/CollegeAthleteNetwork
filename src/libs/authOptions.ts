@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
         let memberData;
         try {
           const res = await fetch(
-            `${process.env.MEMBERS_API_ENDPOINT}?google_sub=${googleSub}`
+            `${process.env.MEMBERS_API_ENDPOINT}?email=${payload.email}`
           );
           const data = await res.json();
           memberData = data && data.length ? data[0] : null;
