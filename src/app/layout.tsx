@@ -5,7 +5,6 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import AuthProvider from "@/providers/AuthProvider";
-// import GoogleOneTapProvider from "@/components/GoogleOneTap/GoogleOneTapProvider";
 import GoogleOneTapProvider from "@/providers/GoogleOneTapProvider";
 
 const geistSans = Geist({
