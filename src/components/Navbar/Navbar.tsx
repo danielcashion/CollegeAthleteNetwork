@@ -1,20 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+// Navbar.tsx
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
-
+import { GoogleOneTapContext } from "@/providers/GoogleOneTapProvider";
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
 import { MdOutlineLogout } from "react-icons/md";
 
+interface CustomUser {
+  id: string;
+  member_id: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  email: string;
+  picture: string;
+  role: string;
+}
+
+interface CustomSession {
+  user: CustomUser;
+  expires: string;
+}
+
 const Navbar: React.FC = () => {
   const { data: session } = useSession();
+  const { triggerOneTap } = useContext(GoogleOneTapContext);
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [activeSession, setActiveSession] = useState<CustomSession | null>(
+    null
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +41,7 @@ const Navbar: React.FC = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleMobileMenu = () => {
@@ -37,7 +54,8 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (session) {
-      console.log("Sesssion user: ", session);
+      console.log("Session user: ", session);
+      setActiveSession(session as CustomSession);
     }
   }, [session]);
 
@@ -100,15 +118,14 @@ const Navbar: React.FC = () => {
               Contact Us
             </p>
           </Link>
-          {session && (
-            // Wrap the profile image in a container that listens for hover events.
+          {activeSession ? (
             <div
               className="relative"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
               <Image
-                src={(session.user as any).picture}
+                src={activeSession.user.picture}
                 alt="user"
                 width={45}
                 height={45}
@@ -119,10 +136,10 @@ const Navbar: React.FC = () => {
                 <div className="pt-2">
                   <div className="absolute right-0 w-[220px] bg-white text-black rounded shadow-lg py-2">
                     <p className="px-4 font-medium line-clamp-1">
-                      {(session.user as any).name}
+                      {activeSession.user.name}
                     </p>
                     <p className="px-4 text-sm line-clamp-1">
-                      {(session.user as any).email}
+                      {activeSession.user.email}
                     </p>
                     <button
                       onClick={() => signOut()}
@@ -137,18 +154,14 @@ const Navbar: React.FC = () => {
                 </div>
               )}
             </div>
-          )}
-          {/* <Link href="/signup">
+          ) : (
             <button
-              className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
-                isScrolled
-                  ? "bg-[#1C315F] hover:bg-[#f0807f]"
-                  : "bg-[#F25C54] hover:bg-[#f0807f]"
-              }`}
+              onClick={triggerOneTap}
+              className="py-[6px] px-6 rounded bg-[#1C315F] text-white"
             >
-              Sign Up
+              Login
             </button>
-          </Link> */}
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -159,7 +172,6 @@ const Navbar: React.FC = () => {
             aria-label="Toggle Menu"
           >
             {isMobileMenuOpen ? (
-              // Close Icon
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -241,18 +253,6 @@ const Navbar: React.FC = () => {
               Contact Us
             </p>
           </Link>
-          {/* <Link href="/signup">
-            <button
-              onClick={closeMobileMenu}
-              className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
-                isScrolled
-                  ? "bg-[#1C315F] hover:bg-[#f0807f]"
-                  : "bg-[#F25C54] hover:bg-[#f0807f]"
-              }`}
-            >
-              Sign Up
-            </button>
-          </Link> */}
         </div>
       </div>
 

@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const payload = ticket.getPayload();
-        console.log("Payload: ", payload);
+
         if (!payload) {
           throw new Error("No payload found");
         }

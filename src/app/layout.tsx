@@ -1,10 +1,12 @@
+// layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import AuthProvider from "@/providers/AuthProvider";
-import GoogleOneTap from "@/components/GoogleOneTap/GoogleOneTap";
+// import GoogleOneTapProvider from "@/components/GoogleOneTap/GoogleOneTapProvider";
+import GoogleOneTapProvider from "@/providers/GoogleOneTapProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <GoogleOneTap />
-          <Navbar />
-          {children}
-          <Footer />
+          <GoogleOneTapProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </GoogleOneTapProvider>
         </AuthProvider>
       </body>
     </html>
