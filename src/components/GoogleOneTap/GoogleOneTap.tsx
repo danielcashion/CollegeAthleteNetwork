@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
-import { signIn, useSession } from "next-auth/react"; // NextAuth parts commented out
+import { signIn, useSession } from "next-auth/react";
 import Script from "next/script";
 
 declare global {
@@ -20,20 +21,16 @@ declare global {
 }
 
 export default function GoogleOneTap() {
-  const { data: session } = useSession(); // Commented out NextAuth session check
+  const { data: session } = useSession();
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
-  console.log(session); // You can uncomment this for debugging if needed
 
   const handleCredentialResponse = useCallback((response: any) => {
-    // Original NextAuth signIn code (commented out):
-    signIn("google", {
+    signIn("credentials", {
       credential: response.credential,
       redirect: false,
     }).catch((error) => {
       console.error("Error signing in:", error);
     });
-
-    console.log("Google One Tap credential response:", response);
   }, []);
 
   const initializeGoogleOneTap = useCallback(() => {
@@ -45,21 +42,9 @@ export default function GoogleOneTap() {
           context: "signin",
           ux_mode: "popup",
           auto_select: false,
-          use_fedcm_for_prompt: true,
         });
-
         window.google.accounts.id.prompt((notification: any) => {
-          if (notification.isNotDisplayed()) {
-            console.log(
-              "One Tap was not displayed:",
-              notification.getNotDisplayedReason()
-            );
-          } else if (notification.isSkippedMoment()) {
-            console.log(
-              "One Tap was skipped:",
-              notification.getSkippedReason()
-            );
-          } else if (notification.isDismissedMoment()) {
+          if (notification.isDismissedMoment()) {
             console.log(
               "One Tap was dismissed:",
               notification.getDismissedReason()
@@ -90,10 +75,8 @@ export default function GoogleOneTap() {
     }
   }, [isGoogleScriptLoaded, initializeGoogleOneTap]);
 
-  //   Removed session-based cancellation of the One Tap prompt
   useEffect(() => {
     if (session) {
-      // If user is signed in, cancel any ongoing One Tap prompts
       window.google?.accounts.id.cancel();
     }
   }, [session]);

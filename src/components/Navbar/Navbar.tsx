@@ -2,12 +2,17 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
-// import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { MdOutlineLogout } from "react-icons/md";
 
 const Navbar: React.FC = () => {
+  const { data: session } = useSession();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +31,21 @@ const Navbar: React.FC = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  useEffect(() => {
+    if (session) {
+      console.log("Sesssion user: ", session);
+    }
+  }, [session]);
+
+  // Handlers for dropdown visibility on hover
+  const handleMouseEnter = () => {
+    setShowDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowDropdown(false);
   };
 
   return (
@@ -78,9 +98,47 @@ const Navbar: React.FC = () => {
               Contact Us
             </p>
           </Link>
+          {session && (
+            // Wrap the profile image in a container that listens for hover events.
+            <div
+              className="relative"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Image
+                src={(session.user as any).picture}
+                alt="user"
+                width={45}
+                height={45}
+                className="object-cover rounded-full cursor-pointer"
+                unoptimized
+              />
+              {showDropdown && (
+                <div className="pt-2">
+                  <div className="absolute right-0 w-48 bg-white text-black rounded shadow-lg py-2">
+                    <p className="px-4 font-medium">
+                      {(session.user as any).name}
+                    </p>
+                    <p className="px-4 text-sm">
+                      {(session.user as any).email}
+                    </p>
+                    <button
+                      onClick={() => signOut()}
+                      className="mt-2 text-sm w-full text-left px-4 py-1 hover:bg-gray-200"
+                    >
+                      <div className="flex flex-row items-center gap-2">
+                        <MdOutlineLogout size={20} />
+                        Sign Out
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
           {/* <Link href="/signup">
             <button
-              className={`text-white px-4 py-2 rounded  transition-colors duration-300 ${
+              className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
                 isScrolled
                   ? "bg-[#1C315F] hover:bg-[#f0807f]"
                   : "bg-[#F25C54] hover:bg-[#f0807f]"
@@ -91,28 +149,7 @@ const Navbar: React.FC = () => {
           </Link> */}
         </div>
 
-        {/* Social Media Icons */}
-        {/* <div className="hidden md:flex space-x-4">
-          <a href="#" rel="noopener noreferrer">
-            <FaFacebook
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-          <a href="#" rel="noopener noreferrer">
-            <FaTwitter
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-          <a href="#" rel="noopener noreferrer">
-            <FaInstagram
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-        </div> */}
-
+        {/* Mobile Menu Toggle */}
         <div className="lg:hidden">
           <button
             onClick={toggleMobileMenu}
@@ -155,6 +192,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-[#ED3237] transform transition-transform duration-300 ease-in-out ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
@@ -213,27 +251,6 @@ const Navbar: React.FC = () => {
               Sign Up
             </button>
           </Link> */}
-          {/* Social Media Icons */}
-          {/* <div className="flex space-x-4 mt-4">
-            <a href="#" rel="noopener noreferrer">
-              <FaFacebook
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-            <a href="#" rel="noopener noreferrer">
-              <FaTwitter
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-            <a href="#" rel="noopener noreferrer">
-              <FaInstagram
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-          </div> */}
         </div>
       </div>
 
