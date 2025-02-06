@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
             member_id: newMemberId,
             google_sub: googleSub,
             member_name: payload.name,
-            given_name: payload.name,
+            given_name: payload.given_name,
             family_name: payload.family_name,
             picture: payload.picture,
             email_verified: "1",
