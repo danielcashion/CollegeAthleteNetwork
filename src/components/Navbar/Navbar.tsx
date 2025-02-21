@@ -201,7 +201,7 @@ const Navbar: React.FC = () => {
               Contact Us
             </p>
           </Link>
-          {/* <Link href="/signup">
+          <Link href="http://members.collegeathletenetwork.org/">
             <button
               onClick={closeMobileMenu}
               className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
@@ -210,9 +210,9 @@ const Navbar: React.FC = () => {
                   : "bg-[#F25C54] hover:bg-[#f0807f]"
               }`}
             >
-              Sign Up
+              Athlete/Coach Login
             </button>
-          </Link> */}
+          </Link>
           {/* Social Media Icons */}
           {/* <div className="flex space-x-4 mt-4">
             <a href="#" rel="noopener noreferrer">
