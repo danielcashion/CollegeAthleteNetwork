@@ -26,7 +26,7 @@ const CollegeLogosCarousel = () => {
       src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Middlebury.png",
     },
     {
-      src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Hobart-William-Smith.png",
+      src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/HobartWilliamSmith.png",
     },
   ];
 
