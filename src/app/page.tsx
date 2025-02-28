@@ -65,9 +65,9 @@ export default function Home() {
             and linking athletes&apos; LinkedIn profiles, and merging this
             information into a single, curated database, we provide partner
             universities with an up-to-date knowledge base of their athlete
-            network. Our platform tracks the geographical locations and
-            professional journeys (past and present) of your college athletes,
-            creating a living map of their careers.
+            network. Our platform curates the geographical locations and
+            professional journeys data (past &amp; present) of your college&apos;
+            athletes, creating a actionable network for your university.
           </p>
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
