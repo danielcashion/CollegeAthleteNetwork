@@ -12,7 +12,7 @@ import {
 import {
   FaUsers,
   FaUser,
-  FaShieldAlt,
+FaShieldAlt,
   FaLinkedin,
   FaSitemap,
   FaCheckSquare,
@@ -42,7 +42,7 @@ export default function Home() {
             </p>
             <p className="text-lg md:text-xl text-right font-light">
               Empower your athletes. Strengthen your school. Future-proof your
-              school’s network.
+              school&apos;s network.
             </p>
           </div>
           <div className="w-full lg:w-[40%]">
@@ -289,3 +289,8 @@ export default function Home() {
     </div>
   );
 }
+
+export const metadata = {
+  title: 'The College Athlete Network - Home',
+  description: 'Discover and connect with athletes from your university',
+};
