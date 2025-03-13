@@ -37,7 +37,7 @@ export default function DataTables({ data }: { data: any[] }) {
         Actual Data on a Few Sample Universities
       </h3>
       <h5 className="text-xl font-bold text-center mb-8 text-[#ED3237] tracking-wider small-caps">
-        Data as of Jan 2025
+        Data as of March 2025
       </h5>
 
       <TableContainer className="shadow-lg bg-white rounded-2xl">
