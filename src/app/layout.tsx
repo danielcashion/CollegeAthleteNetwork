@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import { NextWebVitalsMetric } from 'next/app';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,7 +52,7 @@ export default function RootLayout({
   );
 }
 
-export function reportWebVitals(metric: any) {
+export function reportWebVitals(metric: NextWebVitalsMetric) {
   console.log(metric);
   // You can send this data to your analytics service
 }
