@@ -41,15 +41,16 @@ export const AthleteChecklistItems = [
   },
   {
     id: 5,
-    title: 'Create Your "Availability" on College Athlete Network',
+    title:
+      'Create Your "Availability" on <a href="https://members.collegeathletenetwork.org/login" target="_blank" className="hover:underline" rel="noopener noreferrer">College Athlete Network</a>',
     icon: <FaCalendarCheck className="text-[#4CAF50] text-3xl" />,
     content:
-      'Employers and athlete alumni are looking for motivated candidates like you. By posting your "Availability" on CollegeAthleteNetwork, you increase your visibility to potential employers and mentors who can advocate for you in the hiring process.',
+      'Employers and athlete alumni are looking for motivated candidates like you. By posting your "Availability" on <a href="https://members.collegeathletenetwork.org/login" target="_blank" className="hover:underline" rel="noopener noreferrer">College Athlete Network</a>, you increase your visibility to potential employers and mentors who can advocate for you in the hiring process.',
   },
   {
     id: 6,
     title:
-      "Utilize Your College Athlete Network to Grow Your LinkedIn Connections",
+      'Utilize Your <a href="https://members.collegeathletenetwork.org/login" target="_blank" className="hover:underline" rel="noopener noreferrer">College Athlete Network</a> to Grow Your LinkedIn Connections',
     icon: <FaUsers className="text-[#FF9800] text-3xl" />,
     content:
       "Networking is key to unlocking job opportunities. Connect with fellow athletes from your college and expand your LinkedIn network. A strong professional network increases your exposure to job openings and insider insights about companies and industries.",
@@ -59,7 +60,7 @@ export const AthleteChecklistItems = [
     title: "Research Companies and Connect with Athlete Employees",
     icon: <FaBuilding className="text-[#607D8B] text-3xl" />,
     content:
-      "Use your College Athlete Network to identify companies where fellow athletes are employed. Reach out to them for informational interviews, learn about company cultures, and gain referrals. Having an internal advocate significantly increases your chances of securing an interview.",
+      'Use your <a href="https://members.collegeathletenetwork.org/login" target="_blank" className="hover:underline" rel="noopener noreferrer">College Athlete Network</a> to identify companies where fellow athletes are employed. Reach out to them for informational interviews, learn about company cultures, and gain referrals. Having an internal advocate significantly increases your chances of securing an interview.',
   },
   {
     id: 8,
@@ -73,6 +74,6 @@ export const AthleteChecklistItems = [
     title: "Leverage Your Network by Geographical Location",
     icon: <FaMapMarkerAlt className="text-[#F44336] text-3xl" />,
     content:
-      "If you have a preferred city or region, search your College Athlete Network by location. Find and connect with fellow athletes in those areas who can introduce you to local hiring managers and help uncover job opportunities that may not be publicly advertised.",
+      'If you have a preferred city or region, search your <a href="https://members.collegeathletenetwork.org/login" target="_blank" className="hover:underline" rel="noopener noreferrer">College Athlete Network</a> by location. Find and connect with fellow athletes in those areas who can introduce you to local hiring managers and help uncover job opportunities that may not be publicly advertised.',
   },
 ];

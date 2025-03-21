@@ -82,15 +82,19 @@ export default function AthleteChecklist() {
                     <h3 className="text-2xl font-bold text-[#1C315F] mb-4 flex flex-col sm:flex-row items-center">
                       <span
                         className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white rounded-full 
-                                  w-10 min-w-10 h-10 min-h-10 flex items-center justify-center mr-4 shadow-md"
+                 w-10 min-w-10 h-10 min-h-10 flex items-center justify-center mr-4 shadow-md"
                       >
                         {step.id}
                       </span>
-                      {step.title}
+
+                      <span
+                        dangerouslySetInnerHTML={{ __html: step.title }}
+                      ></span>
                     </h3>
-                    <p className="text-gray-700 leading-relaxed">
-                      {step.content}
-                    </p>
+                    <p
+                      className="text-gray-700 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: step.content }}
+                    ></p>
                   </div>
                 </div>
               </div>
