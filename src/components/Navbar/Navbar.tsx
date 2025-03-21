@@ -63,6 +63,11 @@ const Navbar: React.FC = () => {
               Sample Data
             </p>
           </Link>
+          <Link href="/athlete-checklist">
+            <p className="hover:text-gray-300 transition-colors duration-300">
+              Athlete Checklist
+            </p>
+          </Link>
           <Link href="/about-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               About Us
