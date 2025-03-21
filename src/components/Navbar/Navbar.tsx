@@ -63,9 +63,9 @@ const Navbar: React.FC = () => {
               Sample Data
             </p>
           </Link>
-          <Link href="/about-us">
+          <Link href="/athlete-checklist">
             <p className="hover:text-gray-300 transition-colors duration-300">
-              About Us
+              Athlete Checklist
             </p>
           </Link>
           <Link href="/corporate-partners">
@@ -73,6 +73,12 @@ const Navbar: React.FC = () => {
               Corporate Partners
             </p>
           </Link>
+          <Link href="/about-us">
+            <p className="hover:text-gray-300 transition-colors duration-300">
+              About Us
+            </p>
+          </Link>
+
           <Link href="/contact-us">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Contact Us
@@ -87,7 +93,7 @@ const Navbar: React.FC = () => {
                   : "bg-[#F25C54] hover:bg-[#f0807f]"
               }`}
             >
-              Athlete/Coach Login
+              Login
             </button>
           </Link>
         </div>
@@ -178,14 +184,6 @@ const Navbar: React.FC = () => {
               Sample Data
             </p>
           </Link>
-          <Link href="/about-us">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              About Us
-            </p>
-          </Link>
           <Link href="/corporate-partners">
             <p
               onClick={closeMobileMenu}
@@ -194,6 +192,15 @@ const Navbar: React.FC = () => {
               Corporate Partners
             </p>
           </Link>
+          <Link href="/about-us">
+            <p
+              onClick={closeMobileMenu}
+              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
+            >
+              About Us
+            </p>
+          </Link>
+
           <Link href="/contact-us">
             <p
               onClick={closeMobileMenu}
@@ -211,7 +218,7 @@ const Navbar: React.FC = () => {
                   : "bg-[#F25C54] hover:bg-[#f0807f]"
               }`}
             >
-              Athlete/Coach Login
+              Login
             </button>
           </Link>
           {/* Social Media Icons */}
