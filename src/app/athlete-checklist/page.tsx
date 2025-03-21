@@ -105,14 +105,14 @@ export default function AthleteChecklist() {
         <div className="bg-white rounded-lg shadow-lg p-8 mt-16 flex flex-col md:flex-row items-center">
           <div className="w-full md:w-[60%] pr-10">
             <h3 className="text-3xl font-bold text-[#1C315F] mb-4">
-              Conclusion
+              Never Lose Your Focus; Your College Athlete Network is part of Your Net Worth
             </h3>
             <p className="mb-10 text-lg text-gray-700 leading-relaxed">
               Your college athlete status is more than a title—it&apos;s a
               powerful advantage in the job market. By strategically using your
               College Athlete Network, you can create meaningful connections,
               open doors to new opportunities, and position yourself for career
-              success. Start today, and let your athlete network work for you!
+              success. Start today, and let your college&apos;s athlete network work for you!
             </p>
             <Link
               href={"https://members.collegeathletenetwork.org/"}
