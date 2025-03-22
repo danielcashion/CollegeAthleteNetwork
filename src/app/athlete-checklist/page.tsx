@@ -13,7 +13,7 @@ export default function AthleteChecklist() {
           Athlete Checklist
         </h1>
         <h2 className="text-3xl font-semibold mb-4">
-          Unlocking Your Career Potential with Your College Athlete Network
+          9 Proven and Actionable Steps to Unlock your Career Potential by Intelligently Leveraging Your School&apos;s Athlete Network.
         </h2>
       </div>
 
