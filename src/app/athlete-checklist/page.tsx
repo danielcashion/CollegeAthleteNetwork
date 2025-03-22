@@ -10,11 +10,11 @@ export default function AthleteChecklist() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Athlete Checklist
-        </h1>
-        <h2 className="text-3xl font-semibold mb-4">
-          9 Proven and Actionable Steps to Unlock your Career Potential by Intelligently Leveraging Your School&apos;s Athlete Network.
-        </h2>
+          9 Proven and Actionable Steps
+        </h1> 
+        <h3 className="text-3xl font-semibold mb-4">
+           Unlock your Career Potential by Intelligently Leveraging Your School&apos;s Athlete Network using our solution.
+        </h3>
       </div>
 
       <div className="container mx-auto px-4 py-12">
