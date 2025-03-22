@@ -74,6 +74,6 @@ export const AthleteChecklistItems = [
     title: "Leverage Your Network by Geographical Location",
     icon: <FaMapMarkerAlt className="text-[#F44336] text-3xl" />,
     content:
-      'Do you target a certain city or region for professional prospecting? Then search <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network</a> by geography. We literally provide a live map of your network. Find and connect with fellow athletes in these areas who want to network with you. Increasing the strength of the network is in everyone’s intent. We just provide the map...',
+      'Do you target a certain city or region for professional prospecting? Then search <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network</a> by geography. We literally provide a live map of your network. Find and connect with fellow athletes in these areas who want to network with you. Increasing the strength of the network is in everyone’s intent. We just make it actionable...',
   },
 ];
