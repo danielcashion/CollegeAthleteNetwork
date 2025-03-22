@@ -64,16 +64,16 @@ export const AthleteChecklistItems = [
   },
   {
     id: 8,
-    title: "Explore Industries and Develop Your Personal Brand",
+    title: "Explore Industries and Intelligently Expand your Network",
     icon: <FaLightbulb className="text-[#FFC107] text-3xl" />,
     content:
-      "If you're still exploring career paths, look at industries where fellow college athletes have succeeded. Connect with them to gain insights and build relationships. By actively engaging with professionals in these industries, you'll start developing your personal brand and positioning yourself as a strong candidate.",
+      'Whether you are a current student or alum, explore an industry or specific companies within  <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network </a> where fellow college athletes currently succeed. Connect with them to gain insights and build relationships. By actively engaging with your athlete network in these industries, you will expand personal brand and positioning yourself as the leader you are.',
   },
   {
     id: 9,
     title: "Leverage Your Network by Geographical Location",
     icon: <FaMapMarkerAlt className="text-[#F44336] text-3xl" />,
     content:
-      'If you have a preferred city or region, search your <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a> by location. Find and connect with fellow athletes in those areas who can introduce you to local hiring managers and help uncover job opportunities that may not be publicly advertised.',
+      'Do you target a certain city or region for professional prospecting? Then search <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network</a> by geography. We literally provide a live map of your network. Find and connect with fellow athletes in these areas who want to network with you. Increasing the strength of the network is in everyone’s intent. We just make it actionable...',
   },
 ];
