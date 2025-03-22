@@ -42,7 +42,7 @@ export const AthleteChecklistItems = [
   {
     id: 5,
     title:
-      'Create Your "Availability" on <a href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a>',
+      'Create Your "Availability" and explore current "Opportunities" within you <a href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a>',
     icon: <FaCalendarCheck className="text-[#4CAF50] text-3xl" />,
     content:
       'Employers and athlete alumni are looking for motivated candidates like you. By posting your "Availability" on <a href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a>, you increase your visibility to potential employers and mentors who can advocate for you in the hiring process.',
