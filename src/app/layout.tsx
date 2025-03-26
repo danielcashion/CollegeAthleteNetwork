@@ -17,13 +17,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "The College Athlete Network",
-  description: "Generating your network for teams and employers",
+  description:
+    "Generating your school&apos;s network for athletes and employers",
   keywords:
-    "college athletes, universities, sports recruitment, athlete network",
+    "college athletes, athlete recruitment, athlete network, college sports, college recruitment, college athlete network, college athlete recruitment",
   openGraph: {
     title: "College Athlete Network",
     description:
-      "Connect with college athletes, universities and opportunities across the nation",
+      "We power the athletes, alumns, and professional opportunities network for college Athletic Programs.",
     type: "website",
     locale: "en_US",
     url: "https://www.collegeathletenetwork.org",
@@ -54,5 +55,4 @@ export default function RootLayout({
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   console.log(metric);
-  // You can send this data to your analytics service
 }
