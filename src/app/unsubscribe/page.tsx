@@ -80,10 +80,10 @@ export default function UnsubscribePage() {
         <div className="min-h-[80vh]">
           <div className="max-w-md mx-auto mt-12 p-6 border border-gray-300 rounded shadow">
             <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
-              Dear {data.email_address}
+              Hey there, {data.email_address}
             </h3>
             <p className="text-lg mb-8 text-center">
-              You are already Unsubscribed!
+              You have already unsubscribed from our distribution list!
             </p>
           </div>
         </div>

@@ -68,6 +68,11 @@ const Navbar: React.FC = () => {
               Athlete Checklist
             </p>
           </Link>
+          <Link href="/data-transparency">
+            <p className="hover:text-gray-300 transition-colors duration-300">
+              Data Transparency
+            </p>
+          </Link>
           <Link href="/corporate-partners">
             <p className="hover:text-gray-300 transition-colors duration-300">
               Corporate Partners

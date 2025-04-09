@@ -63,9 +63,9 @@ export default function Home() {
             We bridge the gap between athlete rosters and professional networks.
             By sourcing college roster data from public platforms, researching
             and linking athletes&apos; LinkedIn profiles, and merging this
-            information into a single, curated database, we provide partner
-            universities with an up-to-date knowledge base of their athlete
-            network. Our platform curates the geographical locations and
+            information into a single, user-friendly workflow, we provide partner
+            universities and their athletes with an up-to-date knowledge graph of their athlete
+            network. Our platform curates and organizes the geographical locations and
             professional journeys data (past &amp; present) of your college&apos;
             athletes, creating a actionable network for your university.
           </p>
@@ -76,19 +76,19 @@ export default function Home() {
                 className="mx-auto text-[#1C315F]"
               />
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Source Current & Historic Athlete Rosters
+                We Source Current & Historic Public Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Map Athletes to their LinkedIn Profiles
+                We Map these Athletes to their LinkedIn and other Public datasets
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Continuously Refresh Athlete Employers, Titles, Locations
+                We Refresh Athlete Employers, Titles, Locations every 60 days.
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
