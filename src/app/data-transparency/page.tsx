@@ -20,12 +20,12 @@ export default function DataTransparency() {
           Data Transparency & Compliance
         </h1>
         <div className="mx-auto w-full max-w-4xl">
-          <p className="text-xl text-white text-center">
+          <p className="text-2xl text-white text-center">
             At <strong>The College Athlete Network</strong>, we are committed to
             supporting universities and their athletes with integrity,
             transparency, and respect for compliance boundaries.
           </p>
-          <p className="text-xl text-white mt-5 text-center">
+          <p className="text-2xl text-white mt-5 text-center">
             We understand that Athletic Departments must operate with care and
             accountability. That&apos;s why we&apos;ve structured our platform
             to be <strong>100% compliant, hands-off, and worry-free</strong> for
@@ -40,10 +40,10 @@ export default function DataTransparency() {
 
       <div className="max-w-6xl mx-auto px-6 -mt-10 relative z-10">
         <div className="bg-white rounded-xl shadow-xl p-8 mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <FaShieldAlt size={60} className="text-5xl text-[#1C315F]" />
+          <div className="flex items-center justify-center mb-2">
+            <FaShieldAlt size={80} className="text-5xl text-[#1C315F]" />
           </div>
-          <p className="text-center text-gray-700 text-lg max-w-3xl mx-auto">
+          <p className="text-center text-[#1C315F] text=bold text-2xl max-w-3xl mx-auto">
             Our platform operates with complete independence from universities
             while supporting athlete career development. We maintain strict data
             boundaries that protect institutions from compliance concerns.
@@ -51,8 +51,8 @@ export default function DataTransparency() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <h2 className="text-3xl font-bold text-center mb-12 text-[#1C315F]">
+      <div className="max-w-6xl mx-auto px-6 ">
+        <h2 className="text-4xl font-bold text-center mb-12 text-[#1C315F]">
           For University Stakeholders
         </h2>
 
@@ -116,13 +116,13 @@ export default function DataTransparency() {
         </div>
       </div>
 
-      <div className="bg-gray-100 py-16 my-16">
+      <div className="bg-gray-100 py-8 my-16 mb-8">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center justify-center mb-8">
             <div className="w-12 h-12 rounded-full bg-[#1C315F] flex items-center justify-center mr-4">
               <FaCheckCircle className="text-2xl text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-[#1C315F]">
+            <h2 className="text-4xl font-bold text-[#1C315F]">
               Key Compliance Assurances
             </h2>
           </div>
@@ -133,7 +133,9 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-2">All Data is Public</h3>
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2">
+                    All Data is Public
+                  </h3>
                   <p className="text-gray-700">
                     We use only publicly available data sources, such as
                     official team rosters, alumni publications, media guides,
@@ -151,14 +153,14 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-2">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2">
                     No Data Sharing or Transfers
                   </h3>
                   <p className="text-gray-700">
-                    Universities are not sent copies of the data. All data is
+                    Universities are never sent any copies or parts of the data. All data is
                     hosted and maintained on our platform solely by our team in
                     our secured environment. Your institution remains completely
-                    separate from data collection and data custody.
+                    separate from our data collection and data custody.
                   </p>
                 </div>
               </div>
@@ -168,7 +170,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-2">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2">
                     Universities Never Take Possession of Data
                   </h3>
                   <p className="text-gray-700">
@@ -184,7 +186,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-2">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2">
                     No Legal or Operational Burden
                   </h3>
                   <p className="text-gray-700">
@@ -200,7 +202,7 @@ export default function DataTransparency() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-16">
+      <div className="max-w-6xl mx-auto px-6 pb-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-[#1C315F] mb-4">
             Why Universities Partner With Us
