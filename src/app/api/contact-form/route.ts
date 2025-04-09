@@ -12,7 +12,7 @@ const sesClient = new SESClient({
 });
 
 const to_address = "daniel.cashion.nyc@gmail.com" // process.env.EMAIL_TO;
-const from_address = "Admin@clublacrosse.org" //process.env.EMAIL_FROM;
+const from_address = "admin@collegeathletenetwork.org" //process.env.EMAIL_FROM;
 
 export async function POST(request: NextRequest) {
   if (!to_address || !from_address) {
