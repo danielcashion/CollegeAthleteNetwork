@@ -107,8 +107,8 @@ export default function DataTransparency() {
                 We operate entirely independently of the university. While
                 roster data is publicly available through your websites, we do
                 not ask for it, and we never imply any institutional ownership
-                of our platform. That clear boundary protects your brand, avoids
-                compliance risk, and enables you to champion career success
+                of it on our platform. That clear boundary protects your brand, avoids
+                compliance complexities, and enables you to champion your Athlete Network
                 without assuming additional responsibility.
               </p>
             </div>
