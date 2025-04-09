@@ -82,7 +82,7 @@ export default function Home() {
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Map these Athletes to their LinkedIn Profiles and other datasets
+                We Map these Athletes to their LinkedIn and other Public datasets
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
