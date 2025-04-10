@@ -205,7 +205,7 @@ export default function DataTransparency() {
       <div className="max-w-6xl mx-auto px-6 pb-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-[#1C315F] mb-4">
-            Why Universities Partner With Us
+            Why Universities Partner With <strong className="text-[#ED3237]">The College Athlete Network</strong>
           </h2>
           <div className="w-24 h-1 bg-[#ED3237] mx-auto"></div>
         </div>
@@ -216,11 +216,11 @@ export default function DataTransparency() {
               <FaTrophy className="text-2xl text-[#1C315F]" />
             </div>
             <h3 className="text-xl font-bold mb-4 text-[#1C315F]">
-              Celebrate Alumni Success
+              Upwardly Manage Your School's Athlete Network
             </h3>
             <p className="text-gray-700">
-              Our platform showcases the incredible career journeys of your
-              former athletes — a powerful tool for recruiting, fundraising, and
+              Our platform productionalizes the incredible career journeys of your
+              current and former athletes — a powerful tool for recruiting, fundraising, and
               school pride.
             </p>
           </div>
@@ -230,12 +230,12 @@ export default function DataTransparency() {
               <FaNetworkWired className="text-2xl text-[#ED3237]" />
             </div>
             <h3 className="text-xl font-bold mb-4 text-[#ED3237]">
-              Support Career Outcomes
+              Drive the Outcomes Within Your Athlete Network
             </h3>
             <p className="text-gray-700">
               Student-athletes and alumni use the network to connect, share job
-              opportunities, and build professional bridges within your
-              community.
+              opportunities &amp; availabilities, and solidifies professional bridges within your
+              athlete network.
             </p>
           </div>
 
@@ -244,7 +244,7 @@ export default function DataTransparency() {
               <FaChartLine className="text-2xl text-[#1C315F]" />
             </div>
             <h3 className="text-xl font-bold mb-4 text-[#1C315F]">
-              Drive Engagement Without Risk
+              Drive Engagement With no Internal Effort or Compliance Complexities
             </h3>
             <p className="text-gray-700">
               You get all the upside — visibility, engagement, career impact —
@@ -259,7 +259,7 @@ export default function DataTransparency() {
           <div className="flex justify-center mb-6">
             <FaHandshake className="text-5xl" />
           </div>
-          <h2 className="text-3xl font-bold mb-6">Ready to Partner With Us?</h2>
+          <h2 className="text-4xl font-bold mb-6">Ready to Partner With Us?</h2>
           <p className="text-xl mb-8">
             Join the growing network of universities supporting their
             athletes&apos; career journeys with zero compliance risk.
