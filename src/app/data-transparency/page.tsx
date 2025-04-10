@@ -216,7 +216,7 @@ export default function DataTransparency() {
               <FaTrophy className="text-2xl text-[#1C315F]" />
             </div>
             <h3 className="text-xl font-bold mb-4 text-[#1C315F]">
-              Upwardly Manage Your School's Athlete Network
+              Upwardly Manage Your School&amp;s Athlete Network
             </h3>
             <p className="text-gray-700">
               Our platform productionalizes the incredible career journeys of your
