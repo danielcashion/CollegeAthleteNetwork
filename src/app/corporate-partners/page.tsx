@@ -210,8 +210,8 @@ export default function CorporatePartnersPage() {
                 Join the Network
               </Link>
             </div>
-            <p className="mt-4 text-sm">
-              For alumni and employers ready to make a difference
+            <p className="mt-4 text-xl">
+              For alumni and employers who are ready to hire from an exceptional talent pool
             </p>
           </div>
         </section>
