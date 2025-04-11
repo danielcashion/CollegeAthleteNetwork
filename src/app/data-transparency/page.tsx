@@ -203,11 +203,11 @@ export default function DataTransparency() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-[#1C315F] mb-4">
-            Why Universities Partner With <strong className="text-[#ED3237]">The College Athlete Network</strong>
+            Why Universities Partner With The College Athlete Network?
           </h2>
-          <div className="w-24 h-1 bg-[#ED3237] mx-auto"></div>
+          <div className="w-[75%] h-1 bg-[#ED3237] mx-auto"></div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -216,10 +216,10 @@ export default function DataTransparency() {
               <FaTrophy className="text-2xl text-[#1C315F]" />
             </div>
             <h3 className="text-xl font-bold mb-4 text-[#1C315F]">
-              Upwardly Manage Your School&amp;s Athlete Network
+              Upwardly Manage Your School&apos;s Athlete Network
             </h3>
             <p className="text-gray-700">
-              Our platform productionalizes the incredible career journeys of your
+              Our platform <strong className="text-[#ED3237]">productionalizes</strong> the incredible career journeys of your
               current and former athletes — a powerful tool for recruiting, fundraising, and
               school pride.
             </p>
@@ -233,8 +233,8 @@ export default function DataTransparency() {
               Drive the Outcomes Within Your Athlete Network
             </h3>
             <p className="text-gray-700">
-              Student-athletes and alumni use the network to connect, share job
-              opportunities &amp; availabilities, and solidifies professional bridges within your
+              Student-athletes and alumni use the network to connect, share <strong className="text-[#ED3237]">job
+              opportunities &amp; availabilities</strong>, and solidifies professional bridges within your
               athlete network.
             </p>
           </div>
@@ -248,7 +248,7 @@ export default function DataTransparency() {
             </h3>
             <p className="text-gray-700">
               You get all the upside — visibility, engagement, career impact —
-              with zero administrative risk or responsibility.
+              with <strong className="text-[#ed3237]">zero administrative headache, risk or responsibility.</strong>
             </p>
           </div>
         </div>
