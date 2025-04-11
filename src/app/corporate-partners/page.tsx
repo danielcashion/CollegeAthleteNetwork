@@ -43,15 +43,15 @@ export default function CorporatePartnersPage() {
         {/* Why College Athletes Make Exceptional Employees */}
         <section className="py-16 bg-gray-100">
           <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold mb-8 text-center">
+            <h1 className="text-4xl font-bold mb-8 text-center text-[#1c315f]">
               College Athletes Make Exceptional Employees
             </h1>
-            <p className="text-xl ml-5 mr-5 mb-6 text-center">
+            <p className="text-xl ml-5 mr-5 mb-6 text-center text-[#1c315f]">
               Athletes are high-achievers who bring leadership, discipline, and
               teamwork into the workplace. Hiring from this pool gives companies
               a competitive edge in attracting resilient professionals.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 text-[#1c315f] lg:grid-cols-4 gap-8">
               {[
                 {
                   title: "Work Ethic",
@@ -89,17 +89,17 @@ export default function CorporatePartnersPage() {
         {/* Alumni-Driven Hiring */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4 text-center">
+            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]">
               Alumni: Help Build the Next Generation of Leaders
             </h2>
             <div className="max-w-3xl mx-auto">
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4 text-[#1c315f]">
                 Alumni play a crucial role in mentoring and hiring athletes from
                 their alma mater. Companies with alumni in leadership roles can
                 actively recruit like-minded talent with shared values, creating
                 a powerful network of high-achievers.
               </p>
-              <p className="text-lg mb-6">
+              <p className="text-lg mb-6 text-[#1c315f]">
                 We&apos;ve seen numerous success stories of alumni hiring fellow
                 athletes at their firms, fostering a culture of excellence and
                 mutual understanding.
@@ -126,11 +126,11 @@ export default function CorporatePartnersPage() {
         <section className="pb-16 pt-10 bg-gray-100">
           <div className="container mx-auto px-4">
             <FaCrown size={60} className="mx-auto text-[#1c315f] mb-4" />
-            <h2 className="text-3xl font-bold mb-4 text-center">
+            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]">
               Connect with a Network of Like-Minded Leaders
             </h2>
             <div className="max-w-3xl mx-auto">
-              <ul className="list-disc pl-6 mb-6 space-y-2 text-lg">
+              <ul className="text-[#1c315f] list-disc pl-6 mb-6 space-y-2 text-lg">
                 <li>
                   Partner firms gain direct access to a talent pool of
                   disciplined and driven individuals.
@@ -158,10 +158,10 @@ export default function CorporatePartnersPage() {
         {/* How It Works */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-5xl font-bold mb-8 text-center">
+            <h2 className="text-[#1c315f] text-5xl font-bold mb-8 text-center">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-4 gap-8 md:gap-12">
+            <div className="grid md:grid-cols-4 gap-8 md:gap-12 text-[#1c315f]">
               {[
                 {
                   title: "Join our Network",
@@ -210,8 +210,8 @@ export default function CorporatePartnersPage() {
                 Join the Network
               </Link>
             </div>
-            <p className="mt-4 text-sm">
-              For alumni and employers ready to make a difference
+            <p className="mt-4 text-xl">
+              For alumni and employers who are ready to hire from an exceptional talent pool
             </p>
           </div>
         </section>

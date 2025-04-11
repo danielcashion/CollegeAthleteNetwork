@@ -14,7 +14,10 @@ const SampleDataPage = async () => {
       <div className="flex flex-col">
         <SampleDataTopSection />
         <DataTables data={universityData} />
-        <h2 className="flex text-xl justify-center mb-3 color-[#1C315F]">The only representations we make regarding the above data is that it is accurate.</h2>
+        <h2 className="flex text-lg justify-center mb-3 text-[#1C315F]">
+          The only representations we make regarding the above data is that it
+          is accurate.
+        </h2>
       </div>
     );
   } catch (error) {
