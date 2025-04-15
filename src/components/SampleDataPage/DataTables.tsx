@@ -88,7 +88,7 @@ export default function DataTables({ data }: { data: any[] }) {
               <Tooltip
                 title={
                   <span style={{ display: "block", textAlign: "center" }}>
-                    {headerTooltips.totalSports}
+                    {headerTooltips.athletes}
                   </span>
                 }
                 placement="top"
