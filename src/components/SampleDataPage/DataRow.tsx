@@ -169,10 +169,10 @@ function DataRow({ row }: { row: UniversityRow }) {
                         {sportItem.sport}
                       </TableCell>
                       <TableCell align="center" sx={{ fontSize: "medium" }}>
-                        {sportItem.num_total}
+                        {sportItem.num_total.toLocaleString("en-US")}
                       </TableCell>
                       <TableCell align="center" sx={{ fontSize: "medium" }}>
-                        {sportItem.num_found}
+                        {sportItem.num_found.toLocaleString("en-US")}
                       </TableCell>
                       <TableCell align="center" sx={{ fontSize: "medium" }}>
                         {sportItem.num_total > 0
