@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from 'next/app';
+import LogUserIP from "@/components/UserAudit/LogUserIP";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +49,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <LogUserIP />
       </body>
     </html>
   );
