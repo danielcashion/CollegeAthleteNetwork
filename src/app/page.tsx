@@ -287,7 +287,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <LogUserIP />
         </section>
       </main>
     </div>
