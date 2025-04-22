@@ -23,6 +23,9 @@ const CollegeLogosCarousel = () => {
       src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Logos/Duke.png",
     },
     {
+      src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/images/Michigan.png",
+    },
+    {
       src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/PENN_logo.png",
     },
     {

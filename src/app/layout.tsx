@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import { NextWebVitalsMetric } from 'next/app';
+import { NextWebVitalsMetric } from "next/app";
+import LogUserIP from "@/components/UserAudit/LogUserIP";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   keywords:
     "college athletes, athlete recruitment, athlete network, college sports, college recruitment, college athlete network, college athlete recruitment",
   openGraph: {
-    title: "College Athlete Network",
+    title: "The College Athlete Network",
     description:
       "We power the athletes, alumns, and professional opportunities network for college Athletic Programs.",
     type: "website",
@@ -48,6 +50,8 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <LogUserIP />
+        <Analytics />
       </body>
     </html>
   );
