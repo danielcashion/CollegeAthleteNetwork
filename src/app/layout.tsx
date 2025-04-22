@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   keywords:
     "college athletes, athlete recruitment, athlete network, college sports, college recruitment, college athlete network, college athlete recruitment",
   openGraph: {
-    title: "College Athlete Network",
+    title: "The College Athlete Network",
     description:
       "We power the athletes, alumns, and professional opportunities network for college Athletic Programs.",
     type: "website",
