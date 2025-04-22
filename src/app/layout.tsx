@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import { NextWebVitalsMetric } from 'next/app';
+import { NextWebVitalsMetric } from "next/app";
 import LogUserIP from "@/components/UserAudit/LogUserIP";
 
 const geistSans = Geist({
@@ -50,6 +51,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <LogUserIP />
+        <Analytics />
       </body>
     </html>
   );
