@@ -22,7 +22,6 @@ import {
   BsFillFileEarmarkSpreadsheetFill,
 } from "react-icons/bs";
 import { TbAppWindowFilled } from "react-icons/tb";
-import LogUserIP from "@/components/UserAudit/LogUserIP";
 
 export default function Home() {
   return (
