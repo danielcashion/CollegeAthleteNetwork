@@ -17,8 +17,17 @@ const EmailSteps = () => {
 
   return (
     <div className="w-full flex flex-col py-10 px-4">
-      <p className="text-center text-xl font-medium mb-6">
+      <p className="text-center text-2xl text-[#1C315F] font-medium w-full max-w-5xl mx-auto mb-6">
+        Our clients have seen great success by activating their network with
+        these email campaigns templates. We have productionalized the process
+        and provide it as a way to engage a university&apos;s network after it
+        has been onboarded.
+      </p>
+      <p className="text-center text-xl text-[#1C315F] font-medium mb-2">
         Each step contains an email template for you to get started!
+      </p>
+      <p className="text-center text-xl text-[#1C315F] font-medium mb-6">
+        Leverage ours or create your own! Here are some examples.
       </p>
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4">
         {EmailCommunicationSteps.map((step: any, i: number) => {
@@ -30,7 +39,7 @@ const EmailSteps = () => {
                 onClick={() => toggleStep(i)}
                 className="w-full border rounded-lg flex items-center justify-between p-4 bg-gray-100"
               >
-                <h2 className="text-lg font-medium">
+                <h2 className="text-lg text-[#1C315F] font-medium">
                   Step {step.step}: {step.title}
                 </h2>
                 {isOpen ? (

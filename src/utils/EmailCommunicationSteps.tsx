@@ -1,51 +1,51 @@
 export const EmailCommunicationSteps: any = [
   {
     step: 1,
-    title: "Current Athletes Get Notified",
-    from: "name@example.com",
-    to: "athletes@collegeathletenetwork.org",
+    title: "Current Athletes Get Notified; Existence of Structured Network & to Create Their Availabilities",
+    from: "AthleticDepartment@<yourschool>.edu",
+    to: "<AllAthletes>@<yourschool>.edu",
     audience: "Current Athletes",
     subject: "Let Our University Athlete Network Work for You!",
     body: `
         <p>Hi {{First Name}},</p>
-        <p>Your next opportunity could come from someone who wore the same jersey. Here's how to tap into it:</p>
-        <h2>Step 1: Create Your Availability</h2>
-        <p>Tell us what you're looking for—job interests, location, goals. It only takes a minute.</p>
+        <p>Your next opportunity could come from someone who wore the same jersey. Our University's Athlete Network is stronger than others because we have a great process using The College Athlete Network. Here's how to tap into it:</p>
+        <h2>Step 1: Login & Create Your "Availability" on our network at <a style="color:#ED3237;" href="https://members.collegeathletenetwork.org">www.collegeathletenetwork.org</a> </h2>
+        <p>First, tell us if you are looking. Then tell us what you're looking for—job interests, location, goals. It only takes a minute.</p>
         <h2>Step 2: Your Department Tracks Progress</h2>
-        <p>Your coaches and staff are making sure every athlete gets the same shot. When your checklist is done, your info is shared.</p>
+        <p>Your coaches and staff are making sure every athlete gets the same shot. When your checklist is done, we will engage with you to start matching you with our network opportunities.</p>
         <h2>Step 3: Coaches Activate the Network</h2>
-        <p>Once everyone's ready, coaches give the green light—and your Availability goes live to our national network.</p>
+        <p>Once checklists are complete, coaches give the green light—and your Availability goes live to our University's +5,000 athlete network.</p>
         <h2>Step 4: Opportunities Come to You</h2>
-        <p>Alumni, fans, and companies check out the Network to find athletes just like you. If there's a match, they'll reach out.</p>
+        <p>Alumni and our Corporate Partners check out the Network to find athletes just like you. If there's a match, they'll reach out.</p>
         <h2>Step 5: Career Connections Happen</h2>
         <p>This is where the magic happens—real jobs, real people, real momentum.</p>
         <h2>Step 6: Your Program Gets Paid</h2>
-        <p>When you get hired, the company gives back to your athletic program—covering what they would've paid a recruiter.</p>
-        <p>You're not just building your future. You're helping the next generation of athletes too.</p>
+        <p>When you get hired, the hiring company can make a contribution back to our athletic program— we typically guidance is 25% of what they would've paid a recruiter.</p>
+        <p>You're not just building your future. You're helping the next generation of our athletes too.</p>
         <p><a href="https://members.collegeathletenetwork.org/" target="_blank" style="margin: 10px 0 ; display:inline-block;padding:5px 10px;background-color:#007bff;color:#ffffff;text-decoration:none;border-radius:4px;">Create My Availability</a></p>
-        <p>Let's do this,<br/>{{Your Name}}<br/>{{Your University Name}}</p>
+        <p>Let's do this!<br/>{{Your Name}}<br/>{{Your University Name}}</p>
       `,
   },
   {
     step: 2,
     title: "Student Athlete Alums Template",
-    from: "name@example.com",
-    to: "alumnis@collegeathletenetwork.org",
+    from: "AthleteAlumNetwork@<yourschool>.edu",
+    to: "<AllAthleteAlumni>@<yourschool>.edu",
     audience: "Student Athlete Alums",
     subject: "Hire Top Talent. Support Your Alma Mater. No Recruiter Fees.",
     body: `
         <p>Hi {{First Name}},</p>
         <p>We've made it easy—and meaningful—for you to hire exceptional talent from your alma mater's athlete network. Here's how it works:</p>
         <h2>Step 1: Athletes &amp; Alums Share Their Availabilities</h2>
-        <p>Current and former athletes create short profiles with their career interests, goals, and locations.</p>
+        <p>Current and former athletes create short profiles with their career interests, goals, locations, and time frames.</p>
         <h2>Step 2: The Athletic Department Curates Participation</h2>
-        <p>Coaches and staff ensure the profiles are up-to-date, accurate, and complete—no guesswork.</p>
+        <p>Coaches and AD staff encourages the athletes to keep their Availability status up-to-date—no guesswork.</p>
         <h2>Step 3: The Network Goes Live</h2>
-        <p>Once coaches verify the data, the full network of athlete Availabilities becomes accessible to participants like you.</p>
+        <p>As athletes complete their checklists & Availabilities, the network of athlete Availabilities continues to match our athletes with great oppotunities within our network.</p>
         <h2>Step 4: You Match Opportunities to Talent</h2>
-        <p>Search by industry, skillset, or location—and connect with highly motivated athletes ready for the next step.</p>
+        <p>Search by industry, company, or location—and connect with highly motivated athletes ready for the next step.</p>
         <h2>Step 5: Everyone Wins</h2>
-        <p>You get trusted, high-character hires without paying recruiter fees.</p>
+        <p>You get trusted, high-character hires without paying large recruiter fees!</p>
         <h2>Step 6: You Pay It Forward</h2>
         <p>Instead of paying a recruiter, you make a tax-deductible contribution to the athletic program that produced your new hire. It's a win for your company and a win for your team.</p>
         <p>No recruiters. No friction. Just real connections—with purpose.</p>
@@ -56,11 +56,11 @@ export const EmailCommunicationSteps: any = [
   {
     step: 3,
     title: "Corporate Development Template",
-    from: "name@example.com",
-    to: "corporates@collegeathletenetwork.org",
-    audience: "Corporate Development",
+    from: "CorporateSponsorships@<yourschool>.edu",
+    to: "<CorporateSponsorsEmail>@CorporateDomain.com",
+    audience: "Corporate Engagtement",
     subject:
-      "Hire Exceptional Talent—And Partner with a Program That's Redefining Alumni Engagement",
+      "Direct Access to our Athlete Talent Pool; Hire Exceptional Talent—And Partner with us; We really Innovate for our Corporate Partners!",
     body: `
         <p>Dear {{First Name}},</p>
         <p>{{University Name}} is taking an innovative step forward—connecting its deep network of athletes and alumni directly to companies like yours in a way that drives hiring, diversity, and goodwill, without recruiter fees.</p>

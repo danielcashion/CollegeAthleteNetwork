@@ -8,16 +8,39 @@ export type NavItem = {
 
 export const navbarItems: NavItem[] = [
   { name: "Home", link: "/", type: "link" },
-  { name: "Communications", link: "/communications", type: "link" },
   {
-    name: "Data",
+    name: "Network Data",
     type: "noLink",
     subItems: [
-      { name: "Sample Data", link: "/sample-data", type: "link" },
-      { name: "Data Transparency", link: "/data-transparency", type: "link" },
+      {
+        name: "Sample University Coverage",
+        link: "/sample-data",
+        type: "link",
+      },
+      {
+        name: "Data Transparency & Compliance",
+        link: "/data-transparency",
+        type: "link",
+      },
     ],
   },
-  { name: "Athlete Checklist", link: "/athlete-checklist", type: "link" },
+
+  {
+    name: "Network Engagement & Activation",
+    type: "noLink",
+    subItems: [
+      {
+        name: "Athlete Checklists & Management",
+        link: "/athlete-checklist",
+        type: "link",
+      },
+      {
+        name: "Network Communications",
+        link: "/communications",
+        type: "link",
+      },
+    ],
+  },
   { name: "Corporate Partners", link: "/corporate-partners", type: "link" },
   { name: "About Us", link: "/about-us", type: "link" },
   { name: "Contact Us", link: "/contact-us", type: "link" },
