@@ -8,6 +8,7 @@ export type NavItem = {
 
 export const navbarItems: NavItem[] = [
   { name: "Home", link: "/", type: "link" },
+  { name: "Communications", link: "/communications", type: "link" },
   {
     name: "Data",
     type: "noLink",
