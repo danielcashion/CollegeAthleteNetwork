@@ -166,22 +166,22 @@ export default function CorporatePartnersPage() {
                 {
                   title: "Join our Network",
                   description:
-                    "Contact us. We then onboard your firm to The College Athlete Network.",
+                    "Contact us or your corporate lead at your partner universities. We can then onboard your firm to The College Athlete Network.",
                 },
                 {
-                  title: "Post a Job",
+                  title: 'Post an "Opportunity"',
                   description:
-                    "List your openings specifically targeting profiles (Universities, Majors, sports) in our network.",
+                    "Post your company's openings to our network, specifically targeting profiles (Universities, sports, etc.) in university networks.",
                 },
                 {
-                  title: "Browse & Connect",
+                  title: 'Browse Athlete "Availabilities"',
                   description:
-                    "Search profiles based on school, sport, skills, and location.",
+                    "Search profiles based on school, sport, skills, and location. We match good people with good firms.",
                 },
                 {
                   title: "Hire Exceptional Talent",
                   description:
-                    "Engage with candidates and bring them onto your team.",
+                    "Engage with candidates and bring them onto your team. Hiring from the network is free and you avoid large recruiter fees.",
                 },
               ].map((step, index) => (
                 <div key={index} className="text-center">
