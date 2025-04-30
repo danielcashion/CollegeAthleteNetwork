@@ -60,18 +60,20 @@ const EmailUi: React.FC<EmailUiProps> = ({ data }) => {
 
       <div className="bg-white rounded-b-xl">
         <div className="p-4 pb-0 space-y-3">
-          <div className="flex items-center border-b border-gray-200 pb-2">
-            <div className="w-20 text-gray-500 font-medium">From:</div>
-            <div className="flex-1 text-gray-700">{data.from}</div>
+          <div className="flex items-start border-b border-gray-200 pb-2">
+            <div className="w-20 min-w-20 text-gray-500 font-medium">From:</div>
+            <div className="flex-1 text-gray-700 break-all">{data.from}</div>
           </div>
 
-          <div className="flex items-center border-b border-gray-200 pb-2">
-            <div className="w-20 text-gray-500 font-medium">To:</div>
-            <div className="flex-1 text-gray-700">{data.to}</div>
+          <div className="flex items-start border-b border-gray-200 pb-2">
+            <div className="w-20 min-w-20 text-gray-500 font-medium">To:</div>
+            <div className="flex-1 text-gray-700 break-all">{data.to}</div>
           </div>
 
-          <div className="flex items-center border-b border-gray-200 pb-2 relative">
-            <div className="w-20 text-gray-500 font-medium">Subject:</div>
+          <div className="flex items-start border-b border-gray-200 pb-2 relative">
+            <div className="w-20 min-w-20 text-gray-500 font-medium">
+              Subject:
+            </div>
             <div className="flex-1 font-medium pr-6 break-words">
               {data.subject}
             </div>
@@ -79,7 +81,7 @@ const EmailUi: React.FC<EmailUiProps> = ({ data }) => {
             <button
               onClick={handleCopySubject}
               title={subjectCopied ? "Copied!" : "Copy subject"}
-              className="absolute right-4 top-[10px] -translate-y-1/2 p-1 rounded hover:bg-gray-100"
+              className="absolute right-0 md:right-4 top-[10px] -translate-y-1/2 p-1 rounded hover:bg-gray-100"
             >
               {subjectCopied ? (
                 <FaCheck size={16} className="text-green-500" />
