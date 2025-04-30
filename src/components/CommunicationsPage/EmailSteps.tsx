@@ -16,7 +16,10 @@ const EmailSteps = () => {
   };
 
   return (
-    <div className="w-full flex py-20 px-4">
+    <div className="w-full flex flex-col py-10 px-4">
+      <p className="text-center text-xl font-medium mb-6">
+        Each step contains an email template for you to get started!
+      </p>
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4">
         {EmailCommunicationSteps.map((step: any, i: number) => {
           const isOpen = openSteps.includes(i);
