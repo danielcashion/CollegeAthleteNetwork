@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AthleteChecklistItems } from "@/utils/AthleteChecklist";
 
 import AthleteImage1 from "../../../public/images/athlete-1.jpg";
-import AthleteImage2 from "../../../public/images/athletes-3.png";
+import AthleteImage2 from "../../../public/images/StanfordWaterPolo.jpg";
 
 export default function AthleteChecklist() {
   return (

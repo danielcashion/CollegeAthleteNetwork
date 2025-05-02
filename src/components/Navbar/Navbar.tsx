@@ -2,128 +2,109 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FaAngleDown } from "react-icons/fa6";
+import { IoMenu, IoClose } from "react-icons/io5";
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
-// import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { NavItem, navbarItems } from "../../utils/navbarItems";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const toggleSubMenu = (name: string) =>
+    setOpenSubMenus((prev) => ({ ...prev, [name]: !prev[name] }));
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+  const renderDesktopItem = (item: NavItem) => {
+    const commonProps = {
+      target: item.target,
+      rel: item.target === "_blank" ? "noopener noreferrer" : undefined,
+    };
+
+    if (item.type === "link") {
+      return (
+        <Link key={item.name} href={item.link!} {...commonProps}>
+          <p className="hover:text-gray-300 transition-colors duration-300 cursor-pointer">
+            {item.name}
+          </p>
+        </Link>
+      );
+    }
+
+    if (item.type === "button") {
+      return (
+        <Link key={item.name} href={item.link!} {...commonProps}>
+          <button
+            onClick={closeMobileMenu}
+            className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
+              isScrolled
+                ? "bg-[#1C315F] hover:bg-[#f0807f]"
+                : "bg-[#F25C54] hover:bg-[#f0807f]"
+            }`}
+          >
+            {item.name}
+          </button>
+        </Link>
+      );
+    }
+
+    return (
+      <div key={item.name} className="relative group">
+        <button className="flex items-center gap-1 hover:text-gray-300 transition-colors duration-300">
+          {item.name} <FaAngleDown />
+        </button>
+        <div className="absolute left-0 w-[200px] bg-[#ED3237]/90 backdrop-blur-md rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-300">
+          {item.subItems?.map((sub) => (
+            <Link
+              key={sub.name}
+              href={sub.link!}
+              target={sub.target}
+              rel={sub.target === "_blank" ? "noopener noreferrer" : undefined}
+            >
+              <p
+                onClick={closeMobileMenu}
+                className="block px-4 py-2 text-white hover:text-gray-300 transition-colors duration-300"
+              >
+                {sub.name}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
     <nav
       className={`fixed top-0 left-0 z-20 w-full transition-all duration-300 ${
         isScrolled
-          ? "bg-[#ED3237]/70 backdrop-blur-md shadow-md"
+          ? "bg-[#ED3237] lg:bg-[#ED3237]/70 lg:backdrop-blur-md shadow-md"
           : "bg-transparent"
       }`}
     >
       <div className="container mx-auto flex justify-between items-center py-2 px-6">
-        {/* Logo */}
-        <div className="flex items-center space-x-2">
-          <Link href="/">
-            <Image
-              className="hover:scale-110 transition-transform duration-300 object-contain"
-              src={Logo.src}
-              priority
-              alt="College Athlete Network"
-              width={200}
-              height={200}
-            />
-          </Link>
-        </div>
+        <Link href="/">
+          <Image
+            className="hover:scale-110 transition-transform duration-300 object-contain"
+            src={Logo.src}
+            priority
+            alt="College Athlete Network"
+            width={200}
+            height={200}
+          />
+        </Link>
 
-        {/* Navigation Items */}
         <div className="hidden lg:flex items-center space-x-6 text-lg text-white">
-          <Link href="/">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Home
-            </p>
-          </Link>
-          <Link href="/sample-data">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Sample Data
-            </p>
-          </Link>
-          <Link href="/athlete-checklist">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Athlete Checklist
-            </p>
-          </Link>
-          <Link href="/data-transparency">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Data Transparency
-            </p>
-          </Link>
-          <Link href="/corporate-partners">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Corporate Partners
-            </p>
-          </Link>
-          <Link href="/about-us">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              About Us
-            </p>
-          </Link>
-
-          <Link href="/contact-us">
-            <p className="hover:text-gray-300 transition-colors duration-300">
-              Contact Us
-            </p>
-          </Link>
-          <Link href="http://members.collegeathletenetwork.org/">
-            <button
-              onClick={closeMobileMenu}
-              className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
-                isScrolled
-                  ? "bg-[#1C315F] hover:bg-[#f0807f]"
-                  : "bg-[#F25C54] hover:bg-[#f0807f]"
-              }`}
-            >
-              Login
-            </button>
-          </Link>
+          {navbarItems.map(renderDesktopItem)}
         </div>
-
-        {/* Social Media Icons */}
-        {/* <div className="hidden md:flex space-x-4">
-          <a href="#" rel="noopener noreferrer">
-            <FaFacebook
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-          <a href="#" rel="noopener noreferrer">
-            <FaTwitter
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-          <a href="#" rel="noopener noreferrer">
-            <FaInstagram
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-              size={25}
-            />
-          </a>
-        </div> */}
 
         <div className="lg:hidden">
           <button
@@ -132,130 +113,72 @@ const Navbar: React.FC = () => {
             aria-label="Toggle Menu"
           >
             {isMobileMenuOpen ? (
-              // Close Icon
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             ) : (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              <IoMenu className="w-6 h-6" />
             )}
           </button>
         </div>
       </div>
 
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-[#ED3237] transform transition-transform duration-300 ease-in-out ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        } z-30 lg:hidden`}
-      >
-        <div className="flex flex-col items-start space-y-4 p-6">
-          <Link href="/">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              Home
-            </p>
-          </Link>
-          <Link href="/sample-data">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              Sample Data
-            </p>
-          </Link>
-          <Link href="/corporate-partners">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              Corporate Partners
-            </p>
-          </Link>
-          <Link href="/about-us">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              About Us
-            </p>
-          </Link>
+        className={`fixed inset-0 bg-[#ffffff44] backdrop-blur-sm z-20 lg:hidden transition-opacity duration-300 ${
+          isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={closeMobileMenu}
+      />
 
-          <Link href="/contact-us">
-            <p
-              onClick={closeMobileMenu}
-              className="text-white text-lg hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              Contact Us
-            </p>
-          </Link>
-          <Link href="http://members.collegeathletenetwork.org/">
-            <button
-              onClick={closeMobileMenu}
-              className={`text-white px-4 py-2 rounded transition-colors duration-300 ${
-                isScrolled
-                  ? "bg-[#1C315F] hover:bg-[#f0807f]"
-                  : "bg-[#F25C54] hover:bg-[#f0807f]"
-              }`}
-            >
-              Login
-            </button>
-          </Link>
-          {/* Social Media Icons */}
-          {/* <div className="flex space-x-4 mt-4">
-            <a href="#" rel="noopener noreferrer">
-              <FaFacebook
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-            <a href="#" rel="noopener noreferrer">
-              <FaTwitter
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-            <a href="#" rel="noopener noreferrer">
-              <FaInstagram
-                className="text-gray-300 hover:text-white transition-colors duration-300"
-                size={25}
-              />
-            </a>
-          </div> */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 bg-[#ED3237] transform transition-transform duration-300 ease-in-out z-30 lg:hidden ${
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col items-start space-y-4 p-6 text-white">
+          {navbarItems.map((item) => (
+            <div key={item.name} className="w-full">
+              {item.subItems && item.subItems.length > 0 ? (
+                <>
+                  <button
+                    onClick={() => toggleSubMenu(item.name)}
+                    className="w-full flex items-center justify-between font-medium py-2 hover:text-gray-300 transition-colors duration-300"
+                  >
+                    <span>{item.name}</span>
+                    <FaAngleDown
+                      className={`transform transition-transform duration-200 ${
+                        openSubMenus[item.name] ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  <div
+                    className={`w-full pl-4 space-y-2 overflow-hidden transition-max-height duration-300 ease-in-out ${
+                      openSubMenus[item.name] ? "max-h-40" : "max-h-0"
+                    }`}
+                  >
+                    {item.subItems.map((sub) => (
+                      <Link
+                        key={sub.name}
+                        href={sub.link!}
+                        onClick={closeMobileMenu}
+                        className="block py-1 hover:text-gray-300 transition-colors duration-300"
+                      >
+                        {sub.name}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href={item.link!}
+                  onClick={closeMobileMenu}
+                  className="block font-medium py-2 hover:text-gray-300 transition-colors duration-300"
+                >
+                  {item.name}
+                </Link>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-          onClick={closeMobileMenu}
-        ></div>
-      )}
     </nav>
   );
 };
