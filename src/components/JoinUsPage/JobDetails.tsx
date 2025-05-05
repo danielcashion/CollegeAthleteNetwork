@@ -75,8 +75,8 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
       <div className="w-full py-8 px-6 sm:p-8 min-h-screen flex flex-col items-center justify-center gap-4 ">
         <Image src={Logo} alt="CAN Logo" className="w-[200px] object-contain" />
 
-        <h2 className="text-2xl font-bold text-center">
-          Job Application Sent Successfully !
+        <h2 className="text-2xl text-[#1C315F]font-bold text-center">
+          Job Application Sent Successfully. You will be hearing from us soon!
         </h2>
       </div>
     );

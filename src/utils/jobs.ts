@@ -15,7 +15,7 @@ export const jobs: Job[] = [
     longDescription:
       "We’re seeking a strategic and relationship-driven individual to lead partnerships with athletic departments in Power Five conferences. This role involves identifying key decision-makers, initiating and nurturing relationships, and developing collaborative agreements that support athlete engagement and platform growth.",
     requirements:
-      "3+ years in partnership development or collegiate athletics. Strong communication skills. Deep familiarity with NCAA conferences, especially Big 10, SEC, and ACC.",
+      "5+ years in partnership development or collegiate athletics. Strong communication skills. Deep familiarity with NCAA conferences, especially Big 10, SEC, and ACC.",
   },
   {
     position: "University Partnerships Lead",
@@ -25,7 +25,7 @@ export const jobs: Job[] = [
     longDescription:
       "Join our growing team to lead outreach and partnerships with academically focused conferences. You’ll help craft outreach strategies, coordinate presentations, and foster trust with athletic departments at prestigious institutions to support their student-athletes' career development.",
     requirements:
-      "3+ years in partnership or business development roles. Experience with academic or athletic institutions. Familiarity with The Big East, Ivy League, and NESCAC preferred.",
+      "5+ years in partnership or business development roles. Experience with academic or athletic institutions. Familiarity with The Big East, Ivy League, and NESCAC preferred.",
   },
   {
     position: "UX/UI Designer",
@@ -44,6 +44,6 @@ export const jobs: Job[] = [
     longDescription:
       "The Data Analyst will support the integrity of our athlete database by building scalable data-cleaning pipelines, assisting with reporting, and verifying data accuracy. This role is ideal for someone passionate about clean, actionable data and process improvement.",
     requirements:
-      "1-3 years of experience in data analysis. Proficiency in SQL and Python. Familiarity with data cleaning techniques and QA processes. Attention to detail is a must.",
+      "1-3 years of experience in data analysis. Proficiency in SQL, Python, Git, and AWS IaaS. Familiarity with data cleaning techniques and QA processes. Attention to detail is a must.",
   },
 ];
