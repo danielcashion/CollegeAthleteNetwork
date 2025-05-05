@@ -10,35 +10,27 @@ const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Update visible count and max index based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        // Mobile: 1 testimonial
         setVisibleCount(1);
       } else if (window.innerWidth < 1024) {
-        // Tablet: 2 testimonials
         setVisibleCount(2);
       } else {
-        // Desktop: 3 testimonials
         setVisibleCount(3);
       }
     };
 
-    // Initial setup
     handleResize();
 
-    // Add event listener
     window.addEventListener("resize", handleResize);
 
-    // Clean up
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Update max index when visible count changes
   useEffect(() => {
     setMaxIndex(testimonials.length - visibleCount);
-    // Reset current index if it's out of bounds after resize
+
     if (currentIndex > testimonials.length - visibleCount) {
       setCurrentIndex(0);
     }
@@ -112,7 +104,6 @@ const Testimonials: React.FC = () => {
             </div>
           </div>
 
-          {/* On desktop, buttons appear on the sides */}
           <button
             onClick={goToPrevious}
             className="lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 lg:-translate-x-4 lg:md:-translate-x-8 bg-blueMain text-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow z-10 hidden lg:block"
@@ -129,7 +120,6 @@ const Testimonials: React.FC = () => {
             <FaAngleRight size={22} />
           </button>
 
-          {/* On mobile and tablet, buttons appear below the slides */}
           <div className="flex justify-center mt-6 space-x-4 lg:hidden">
             <button
               onClick={goToPrevious}
