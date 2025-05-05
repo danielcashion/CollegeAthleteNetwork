@@ -4,6 +4,9 @@ import { Job } from "@/utils/jobs";
 import { IoClose } from "react-icons/io5";
 import { TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
+import Logo from "../../../public/Logos/CANLogo1200X1200Color.png";
+import Image from "next/image";
 
 const StyledTextField = styled(TextField)(() => ({
   "& .MuiOutlinedInput-root": {
@@ -13,7 +16,7 @@ const StyledTextField = styled(TextField)(() => ({
 
 type jobDetailProps = {
   job: Job;
-  setSelectedJob: any;
+  setSelectedJob: (job: Job | null) => void;
 };
 
 const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
@@ -27,23 +30,57 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
     coverLetter: "",
     otherInfo: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setApplicantInfo((prev: any) => ({ ...prev, [name]: value }));
+    setApplicantInfo((p: any) => ({ ...p, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const application = {
-      jobInfo: job,
-      ...applicantInfo,
-    };
-    console.log("Submitting application:", application);
+    try {
+      const res = await fetch("/api/job-application", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobInfo: job,
+          ...applicantInfo,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Submission failed");
+
+      setSuccess(true);
+
+      setTimeout(() => setSelectedJob(null), 5000);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (success) {
+    return (
+      <div className="w-full py-8 px-6 sm:p-8 min-h-screen flex flex-col items-center justify-center gap-4 ">
+        <Image src={Logo} alt="CAN Logo" className="w-[200px] object-contain" />
+
+        <h2 className="text-2xl font-bold text-center">
+          Job Application Sent Successfully !
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full py-8 px-6 sm:p-8 min-h-screen flex flex-col">
@@ -143,11 +180,28 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
             multiline
             rows={4}
           />
+          {error && (
+            <p className="py-2 text-[#ff2200] font-medium">Error: {error}</p>
+          )}
           <button
             type="submit"
-            className="py-2 px-4 text-center text-lg font-medium w-full rounded-lg bg-blueMain text-white border border-blueMain hover:bg-white hover:text-blueMain transitions duration-200"
+            disabled={loading}
+            className="relative py-2 px-4 text-lg font-medium w-full rounded-lg bg-blueMain text-white hover:bg-white hover:text-blueMain transition duration-200"
           >
-            Submit Application
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Submit Application"
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSelectedJob(null)}
+            disabled={loading}
+            className="py-2 px-4 text-lg font-medium w-full rounded-lg bg-white text-blueMain border border-blueMain hover:bg-gray-200 transition duration-200"
+          >
+            Cancel
           </button>
         </form>
       </div>

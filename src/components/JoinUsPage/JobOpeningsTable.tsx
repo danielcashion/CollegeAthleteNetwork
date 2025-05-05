@@ -172,7 +172,7 @@ const JobOpeningsTable: React.FC<Props> = ({ jobs }) => {
         open={!!selectedJob}
         onClose={() => setSelectedJob(null)}
       >
-        <div className="w-[300px] sm:w-[480px] md:w-[600px]">
+        <div className="w-[600px]">
           <JobDetails job={selectedJob} setSelectedJob={setSelectedJob} />
         </div>
       </Drawer>
