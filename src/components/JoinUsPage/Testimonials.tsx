@@ -162,7 +162,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
   return (
     <div className="bg-white h-full rounded-lg shadow-[0px_0px_8px_2px_#00000022] p-8 flex flex-col items-center text-center">
       <blockquote className="mb-4 text-gray-700 italic">
-        "{testimonial.quote}"
+        &quot;{testimonial.quote}&quot;
       </blockquote>
 
       <div className="mt-auto">
