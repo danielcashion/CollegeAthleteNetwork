@@ -1,7 +1,6 @@
 import React from "react";
 import JoinUsTopSection from "@/components/JoinUsPage/JoinUsTopSection";
 import OurStory from "@/components/JoinUsPage/WhyUs";
-import OurMission from "@/components/AboutUsPage/OurMission";
 import CurrentOpenings from "@/components/JoinUsPage/CurrentOpenings";
 
 const JoinUsPage: React.FC = () => {
@@ -10,7 +9,6 @@ const JoinUsPage: React.FC = () => {
       <JoinUsTopSection />
       <OurStory />
       <CurrentOpenings />
-      <OurMission />
     </div>
   );
 };
