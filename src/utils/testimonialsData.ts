@@ -45,6 +45,6 @@ export const testimonials: Testimonial[] = [
     role: "Current D1 Volleyball Player",
     university: "PAC-12 Conference University",
     quote:
-      "As a student-athlete, I developed skills that employers value. The College Athlete Network helped me articulate those skills and connect with companies that appreciate my background.",
+      "As a student-athlete being recruited, I was expecting a formal network solution and I got one!  The College Athlete Network provides my teammates and I all the people and all the data we need to land our dream jobs.=.",
   },
 ];
