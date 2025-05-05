@@ -9,7 +9,7 @@ export type NavItem = {
 export const navbarItems: NavItem[] = [
   { name: "Home", link: "/", type: "link" },
   {
-    name: "Network Data",
+    name: "Athlete Network Data",
     type: "noLink",
     subItems: [
       {
@@ -26,7 +26,7 @@ export const navbarItems: NavItem[] = [
   },
 
   {
-    name: "Network Engagement & Activation",
+    name: "Athlete Network Engagement & Activation",
     type: "noLink",
     subItems: [
       {
@@ -42,8 +42,28 @@ export const navbarItems: NavItem[] = [
     ],
   },
   { name: "Corporate Partners", link: "/corporate-partners", type: "link" },
-  { name: "About Us", link: "/about-us", type: "link" },
-  { name: "Contact Us", link: "/contact-us", type: "link" },
+  {
+    name: "About",
+    type: "noLink",
+    subItems: [
+      {
+        name: "About Us",
+        link: "/about-us",
+        type: "link",
+      },
+      {
+        name: "Contact Us",
+        link: "/contact-us",
+        type: "link",
+      },
+      {
+        name: "Join Us",
+        link: "/join-us",
+        type: "link",
+      },
+    ],
+  },
+
   {
     name: "Login",
     link: "http://members.collegeathletenetwork.org/",
