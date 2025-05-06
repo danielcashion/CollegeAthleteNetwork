@@ -85,7 +85,7 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
   return (
     <div className="w-full py-8 px-6 sm:p-8 min-h-screen flex flex-col">
       <div className="flex flex-row items-center justify-between gap-4">
-        <h2 className="text-3xl font-bold text-blueMain">Job Details</h2>
+        <h2 className="text-3xl font-bold text-[#1C315F]">Job Details</h2>
         <button
           onClick={() => setSelectedJob(null)}
           className="p-[8px] rounded-full hover:bg-gray-100"
@@ -95,29 +95,28 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
-        <div className="bg-gray-100 rounded-xl p-6">
-          <h3 className="text-2xl font-bold">{job?.position}</h3>
+        <div className="bg-gray-100 rounded-xl shadow-xl p-6">
+          <h3 className="text-2xl text-[#1C315F] font-bold">{job?.position}; {"  "}{job?.positionType}</h3>
           <p className="text-lg">{job?.shortDescription}</p>
-        </div>
-        <div className="bg-gray-100 rounded-xl p-6">
-          <h3 className="text-lg font-bold">Description:</h3>
+        <p className="text-md font-bold text-[#1C315F]">Location: {job?.location}</p></div>
+        <div className="bg-gray-100 rounded-xl shadow-xl p-6">
+          <h3 className="text-lg text-[#1C315F] font-bold">Description:</h3>
           <p className="text-lg">{job?.longDescription}</p>
         </div>
-        <div className="bg-gray-100 rounded-xl p-6">
-          <h3 className="text-lg font-bold">Requirements:</h3>
+        <div className="bg-gray-100 rounded-xl shadow-xl p-6">
+          <h3 className="text-lg text-[#1C315F] font-bold">Requirements:</h3>
           <p className="text-lg">{job?.requirements}</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 mt-6">
         <h3 className="text-3xl font-bold text-center text-blueMain">
-          Apply Now
+          Apply Now!
         </h3>
         <p className="text-center text-lg">
-          Do you find yourself fit for the job? Apply now by filling the
-          information below
+          Do you find yourself fit for the job? Apply now by filling out the below information.
         </p>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+        <form onSubmit={handleSubmit} className="flex shadow-xl flex-col gap-4 mt-4">
           <StyledTextField
             label="Full Name"
             name="fullName"
@@ -125,13 +124,13 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
             onChange={handleChange}
             required
           />
-          <StyledTextField
+          {/* <StyledTextField
             label="Location"
             name="location"
             value={applicantInfo.location}
             onChange={handleChange}
             required
-          />
+          /> */}
           <StyledTextField
             label="Email"
             name="email"
@@ -155,7 +154,7 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
             onChange={handleChange}
           />
           <StyledTextField
-            label="About You"
+            label="Tell us about yourself"
             name="aboutYou"
             value={applicantInfo.aboutYou}
             onChange={handleChange}
@@ -164,16 +163,16 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
             rows={4}
           />
           <StyledTextField
-            label="Cover Letter"
+            label="Skills/Experience"
             name="coverLetter"
             value={applicantInfo.coverLetter}
             onChange={handleChange}
             required
             multiline
-            rows={6}
+            rows={4}
           />
           <StyledTextField
-            label="Other Information"
+            label="Anything else you want to share?"
             name="otherInfo"
             value={applicantInfo.otherInfo}
             onChange={handleChange}
