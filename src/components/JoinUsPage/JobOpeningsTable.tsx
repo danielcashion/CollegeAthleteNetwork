@@ -144,7 +144,7 @@ const JobOpeningsTable: React.FC<Props> = ({ jobs }) => {
               onClick={() => handleSort("shortDescription")}
               className="px-6 py-4 cursor-pointer hover:text-blue-600"
             >
-              <div className="flex items-center gap-1">
+              <div className="flex items-center hover:text-blue-600 gap-1">
                 Short Description <SortIcon column="shortDescription" />
               </div>
             </th>
