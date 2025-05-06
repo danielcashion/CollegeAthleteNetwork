@@ -18,7 +18,7 @@ export const testimonials: Testimonial[] = [
   {
     id: 2,
     name: "Kale Catching",
-    role: "Former D1 Basketball Player",
+    role: "Current D1 Basketball Player",
     university: "ACC Conference University",
     quote:
       "Transitioning from college sports to a professional career was daunting, but The College Athlete Network made it seamless. The mapping of the athlete network, along with the checklists they provide are invaluable.",
@@ -26,8 +26,8 @@ export const testimonials: Testimonial[] = [
   {
     id: 3,
     name: "Emma Rodriguez",
-    role: "Former Track & Field Athlete",
-    university: "Stanford University",
+    role: "Current Track & Field Athlete",
+    university: "SEC Conference University",
     quote:
       "I was worried about life after athletics, but this platform connected me with my school&apos;s athlete network. All of them had been in my shoes and we very friendly when called upon. Highly recommend this to all college athletes.",
   },
@@ -37,13 +37,13 @@ export const testimonials: Testimonial[] = [
     role: "Former Football Athlete",
     university: "Big 10 Conference University",
     quote:
-      "The network's university-specific connections helped me leverage my athletic experience in job interviews. I'm now working at a company due to my university's athlete network.",
+      "The network's university-specific connections helped me leverage my athletic experience in job interviews. I'm now working at a company because of my university's use of The College Athlete Network.",
   },
   {
     id: 5,
     name: "Kylie Miller",
     role: "Current D1 Volleyball Player",
-    university: "PAC-12 Conference University",
+    university: "Big East Conference University",
     quote:
       "As a student-athlete being recruited, I was expecting a formal network solution. I got one!  The College Athlete Network provides my teammates and I all the people and all the data we need to land our dream jobs.",
   },
