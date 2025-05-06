@@ -160,8 +160,8 @@ const JobOpeningsTable: React.FC<Props> = ({ jobs }) => {
               } hover:bg-blue-50 transition`}
             >
               <td className="px-6 py-4 hover:text-blue-600 text-lg">{job.position}</td>
-              <td className="px-6 py-4 text-lg">{job.location}</td>
-              <td className="px-6 py-4 text-lg">{job.shortDescription}</td>
+              <td className="px-6 py-4 hover:text-blue-600 text-lg">{job.location}</td>
+              <td className="px-6 py-4 hover:text-blue-600 text-lg">{job.shortDescription}</td>
             </tr>
           ))}
         </tbody>  
