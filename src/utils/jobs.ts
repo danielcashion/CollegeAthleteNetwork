@@ -38,7 +38,7 @@ export const jobs: Job[] = [
       "2+ years of experience in UX/UI design. Proficiency in Figma or similar tools. Strong portfolio demonstrating responsive design and user-centered thinking. Passion for athlete engagement is a plus.",
   },
   {
-    position: "Data Analyst",
+    position: "Data Analyst I",
     location: "New York, NY",
     shortDescription: "Assist with data QA and cleaning algorithms.",
     longDescription:
