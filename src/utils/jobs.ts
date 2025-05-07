@@ -1,6 +1,7 @@
 export interface Job {
   position: string;
   location: string;
+  positionType: string;
   shortDescription: string;
   longDescription: string;
   requirements: string;
@@ -10,6 +11,7 @@ export const jobs: Job[] = [
   {
     position: "University Partnerships Lead",
     location: "Remote",
+    positionType: "Full-time",
     shortDescription:
       "Build relationships with athletic departments in The Big 10, SEC, and ACC Conferences.",
     longDescription:
@@ -20,6 +22,7 @@ export const jobs: Job[] = [
   {
     position: "University Partnerships Lead",
     location: "Remote",
+    positionType: "Full-time",
     shortDescription:
       "Build relationships with athletic departments in The Big East, Ivy, and NESCAC Conferences.",
     longDescription:
@@ -30,6 +33,7 @@ export const jobs: Job[] = [
   {
     position: "UX/UI Designer",
     location: "New York, NY",
+    positionType: "Full-time",
     shortDescription:
       "Assist with digital campaigns focused on athlete outreach.",
     longDescription:
@@ -40,6 +44,7 @@ export const jobs: Job[] = [
   {
     position: "Data Analyst I",
     location: "New York, NY",
+    positionType: "Full-time",
     shortDescription: "Assist with data QA and cleaning algorithms.",
     longDescription:
       "The Data Analyst will support the integrity of our athlete database by building scalable data-cleaning pipelines, assisting with reporting, and verifying data accuracy. This role is ideal for someone passionate about clean, actionable data and process improvement.",

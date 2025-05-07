@@ -144,7 +144,7 @@ const JobOpeningsTable: React.FC<Props> = ({ jobs }) => {
               onClick={() => handleSort("shortDescription")}
               className="px-6 py-4 cursor-pointer hover:text-blue-600"
             >
-              <div className="flex items-center gap-1">
+              <div className="flex items-center hover:text-blue-600 gap-1">
                 Short Description <SortIcon column="shortDescription" />
               </div>
             </th>
@@ -159,14 +159,14 @@ const JobOpeningsTable: React.FC<Props> = ({ jobs }) => {
                 idx % 2 === 0 ? "bg-white" : "bg-gray-50"
               } hover:bg-blue-50 transition`}
             >
-              <td className="px-6 py-4 hover:text-blue-600 text-lg">
+              <td className="px-6 py-4 hover:text-blue-600 hover:text-blue-600 text-lg">
                 {job.position}
               </td>
-              <td className="px-6 py-4 text-lg">{job.location}</td>
-              <td className="px-6 py-4 text-lg">{job.shortDescription}</td>
+              <td className="px-6 py-4 hover:text-blue-600 text-lg">{job.location}</td>
+              <td className="px-6 py-4 hover:text-blue-600 text-lg">{job.shortDescription}</td>
             </tr>
           ))}
-        </tbody>
+        </tbody>  
       </table>
 
       <Drawer
