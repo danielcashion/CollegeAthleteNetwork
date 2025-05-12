@@ -104,7 +104,7 @@ export default function Home() {
 
         {/* Why Is It Hard? Section */}
         <section className="bg-[#1C315F] py-16 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-2.png')] opacity-5 bg-cover bg-center" />
+          <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-3.png')] opacity-5 bg-cover bg-center" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
