@@ -120,12 +120,12 @@ export default function Home() {
                   </span>{" "}
                   in the first 15 years after graduation. For a network of{" "}
                   <span className="text-[#ED3237] font-semibold">
-                    2,000 athletes
+                    3,000 athletes
                   </span>
                   (a relatively small school network), this means tracking and
                   updating data for around
                   <span className="text-[#ED3237] font-semibold">
-                    700 individuals
+                    {" "}1,200 individuals{" "}
                   </span>
                   annually.
                 </p>
