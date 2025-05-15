@@ -3,17 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+
+// TO <DO>
+// 1. Add a API request to GET the university_meta data
+// 2. Add a API request to GET the survey_questions for each survey_id
+// 3. Add a API request to POST the survey responses
+
 const questions = [
-  "I want to stay connected with other athletes from my university after graduation.",
-  "My university does not currently offer an easy or effective way for athletes to stay connected.",
-  "I would benefit from a private online network made specifically for athletes and alumni from my university.",
-  "I would use a platform that helps me connect with former athletes for mentorship, career advice, or job opportunities.",
-  "I feel disconnected from other athletes who came before or after me at my university.",
-  "Athletes have different career journeys than the general student population and need a dedicated support network.",
-  "A university-backed athlete network would help me transition from sports to a career more confidently.",
-  "Seeing what other athletes from my university are doing professionally would motivate and inspire me.",
-  "I would be more likely to stay engaged with my athletic program if this kind of network existed.",
-  "My university should invest in a platform that connects its current and former athletes in a meaningful way.",
+    {"I want to stay connected with other athletes from my university after graduation.",
+    "My university does not currently offer an easy or effective way for athletes to stay connected.",
+    "I would benefit from a private online network made specifically for athletes and alumni from my university.",
+    "I would use a platform that helps me connect with former athletes for mentorship, career advice, or job opportunities.",
+    "I feel disconnected from other athletes who came before or after me at my university.",
+    "Athletes have different career journeys than the general student population and need a dedicated support network.",
+    "A university-backed athlete network would help me transition from sports to a career more confidently.",
+    "Seeing what other athletes from my university are doing professionally would motivate and inspire me.",
+    "I would be more likely to stay engaged with my athletic program if this kind of network existed.",
+    "My university should invest in a platform that connects its current and former athletes in a meaningful way.",
 ];
 
 export default function SurveyPage() {
