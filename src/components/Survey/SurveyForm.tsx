@@ -24,7 +24,7 @@ export default function SurveyForm({
       : null
   );
 
-  console.log("questions: ", questions);
+  const [email, setEmail] = useState<string>("");
 
   const [isSticky, setIsSticky] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +87,7 @@ export default function SurveyForm({
           university_name: "yale",
           question_id: response?.question_id,
           response_value: response?.answer,
+          email: email || "",
         })
       );
 
@@ -149,7 +150,7 @@ export default function SurveyForm({
 
       <div className="p-6 pt-4">
         {questions?.length ? (
-          <div className="space-y-10">
+          <div className="space-y-6">
             {questions.map((question, index) => (
               <div
                 key={question.question_id}
@@ -239,6 +240,29 @@ export default function SurveyForm({
             <p className="text-gray-500">No questions available</p>
           </div>
         )}
+
+        <div className="mt-6 mb-6 p-6 rounded-lg border border-gray-200">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-medium text-gray-800">
+                Would you like to stay updated? (Optional)
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                Enter your email if you'd like to receive further updates about
+                this initiative.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <input
+              type="email"
+              placeholder="your.email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueMain focus:border-blueMain outline-none transition-all"
+            />
+          </div>
+        </div>
 
         <div className="flex justify-end space-x-4 mt-8">
           <button

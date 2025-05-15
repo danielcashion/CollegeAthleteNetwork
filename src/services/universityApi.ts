@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
 export interface SurveyQuestion {
   row_id: number;
   survey_id: string;
   question_id: string;
   question: string;
-  question_type: 'scale' | 'text' | 'multiple_choice' | string; // you can expand possible values
+  question_type: "scale" | "text" | "multiple_choice" | string; // you can expand possible values
   is_active_YN: number; // could be boolean if your backend allows
   created_by: string;
   created_datetime: string; // ISO date string
@@ -24,7 +24,7 @@ export const getUniversityMeta = async ({
     );
     return response.data[0];
   } catch (error) {
-    console.error('Error fetching teams of university:', error);
+    console.error("Error fetching teams of university:", error);
     throw error;
   }
 };
@@ -40,7 +40,7 @@ export const getSurveyQuestions = async ({
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching university meta data:', error);
+    console.error("Error fetching university meta data:", error);
     throw error;
   }
 };
@@ -50,6 +50,8 @@ export const postSurvey = async (payload: {
   university_name: string;
   question_id: string;
   response_value: string | number | null;
+  email: string | null;
+  ip_address?: string | null;
 }) => {
   try {
     await axios.post(
@@ -57,7 +59,7 @@ export const postSurvey = async (payload: {
       payload
     );
   } catch (error) {
-    console.error('Error posting surbey data:', error);
+    console.error("Error posting surbey data:", error);
     throw error;
   }
 };
