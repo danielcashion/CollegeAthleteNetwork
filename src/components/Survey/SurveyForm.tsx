@@ -1,10 +1,11 @@
 "use client";
-
+import Link from "next/link";
 import { postSurvey, type SurveyQuestion } from "@/services/universityApi";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { FaCheck } from "react-icons/fa6";
+import { ImSpinner8 } from "react-icons/im";
 
 export default function SurveyForm({
   questions,
@@ -13,108 +14,124 @@ export default function SurveyForm({
 }: {
   questions: SurveyQuestion[] | null;
   university_name: string;
-  survey_id: any;
+  survey_id: string | any;
 }) {
   const router = useRouter();
+  const cookieKey = `${university_name}-${survey_id}`;
+
   const [responses, setResponses] = useState<
     { question_id: string; answer: number | string | null }[] | null
   >(
     questions?.length
-      ? questions?.map((question) => ({
-          question_id: question.question_id,
-          answer: null,
-        }))
+      ? questions.map((q) => ({ question_id: q.question_id, answer: null }))
       : null
   );
-
   const [email, setEmail] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
   const [isSticky, setIsSticky] = useState(false);
+  const [alreadyFilled, setAlreadyFilled] = useState<boolean>(false);
   const [surveySubmitted, setSurveySubmitted] = useState<boolean>(false);
   const headerRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const setCookie = (name: string, value: string, days = 365) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(
+      value
+    )}; expires=${expires}; path=/`;
+  };
+
+  const getCookie = (name: string) => {
+    return document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(name + "="))
+      ?.split("=")[1];
+  };
+
+  useEffect(() => {
+    if (getCookie(cookieKey)) {
+      setAlreadyFilled(true);
+    }
+  }, [cookieKey]);
 
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
-
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
-      },
+      ([entry]) => setIsSticky(!entry.isIntersecting),
       { threshold: 0, rootMargin: "-1px 0px 0px 0px" }
     );
-
     const sentinel = document.createElement("div");
-    sentinel.style.height = "1px";
-    sentinel.style.width = "100%";
-    sentinel.style.position = "absolute";
-    sentinel.style.top = "0";
-    sentinel.style.left = "0";
-
-    if (header.parentNode) {
-      header.parentNode.insertBefore(sentinel, header);
-    }
-
+    Object.assign(sentinel.style, {
+      height: "1px",
+      width: "100%",
+      position: "absolute",
+      top: "0",
+      left: "0",
+    });
+    header.parentNode?.insertBefore(sentinel, header);
     observer.observe(sentinel);
-
     return () => {
       observer.disconnect();
-      if (sentinel.parentNode) {
-        sentinel.parentNode.removeChild(sentinel);
-      }
+      sentinel.parentNode?.removeChild(sentinel);
     };
   }, []);
 
   useEffect(() => {
-    const getUserIp = async () => {
-      const ipRes = await fetch("https://api.ipify.org?format=json");
-      const { ip } = await ipRes.json();
-
-      setIpAddress(ip);
-    };
-
-    getUserIp();
+    (async () => {
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const { ip } = await ipRes.json();
+        setIpAddress(ip);
+      } catch {}
+    })();
   }, []);
 
   const handleAnswerChange = (
     index: number,
     value: { question_id: string; answer: number | string | null }
   ) => {
-    if (responses) {
-      const updated = [...responses];
-      updated[index] = value;
-      setResponses(updated);
-    }
+    if (!responses) return;
+    const updated = [...responses];
+    updated[index] = value;
+    setResponses(updated);
+  };
+
+  const getCompletedCount = () => {
+    if (!responses) return 0;
+    return responses.filter((r) => r.answer !== null).length;
   };
 
   const handleSubmit = async () => {
-    if (responses) {
-      const notAllFilled = responses?.some(
-        (response) => response.answer === null
-      );
-      if (notAllFilled) {
-        alert("Please answer all the questions");
-        return;
-      }
-      const promises = responses?.map((response) =>
-        postSurvey({
-          survey_id: survey_id,
-          university_name: university_name,
-          question_id: response?.question_id,
-          response_value: response?.answer,
-          email: email || "",
-          ip_address: ipAddress || "",
-        })
-      );
+    if (!responses) return;
+    if (responses.some((r) => r.answer === null)) {
+      alert("Please answer all the questions");
+      return;
+    }
 
-      try {
-        await Promise.all(promises);
+    setLoading(true);
 
-        setSurveySubmitted(true);
-      } catch (error) {
-        console.error("Something went wrong submitting the survey:", error);
-        alert("There was an error submitting your feedback. Please try again.");
-      }
+    try {
+      await Promise.all(
+        responses.map((response) =>
+          postSurvey({
+            survey_id,
+            university_name,
+            question_id: response.question_id,
+            response_value: response.answer!,
+            email: email || "",
+            ip_address: ipAddress || "",
+          })
+        )
+      );
+      setSurveySubmitted(true);
+      setCookie(cookieKey, cookieKey);
+      setTimeout(() => router.push("/"), 4900);
+    } catch (error) {
+      console.error("Something went wrong submitting the survey:", error);
+      alert("There was an error submitting your feedback. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,20 +139,36 @@ export default function SurveyForm({
     router.push("/");
   };
 
-  const getCompletedCount = () => {
-    if (!responses) return 0;
-    return responses.filter((response) => response.answer !== null).length;
-  };
+  if (alreadyFilled) {
+    return (
+      <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
+        <FaCheck size={100} className="text-blueMain" />
+        <p className="text-center text-3xl font-bold">
+          You&apos;ve already filled out this survey.
+        </p>
+        <Link
+          href={"/"}
+          className="bg-blueMain text-white py-2 px-6 text-xl font-semibold rounded"
+        >
+          Go to Home Page
+        </Link>
+      </div>
+    );
+  }
 
-  return surveySubmitted ? (
-    <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
-      <FaCheck size={100} className="text-blueMain" />
-      <p className="text-center text-3xl font-bold">
-        Thank you for submitting the survey!
-      </p>
-      <p>You will be redirected to the home in about 5 seconds ...</p>
-    </div>
-  ) : (
+  if (surveySubmitted) {
+    return (
+      <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
+        <FaCheck size={100} className="text-blueMain" />
+        <p className="text-center text-3xl font-bold">
+          Thank you for submitting the survey!
+        </p>
+        <p>You will be redirected to the home in about 5 seconds …</p>
+      </div>
+    );
+  }
+
+  return (
     <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 relative">
       <div
         ref={headerRef}
@@ -169,12 +202,12 @@ export default function SurveyForm({
                   : 0
               }%`,
             }}
-          ></div>
+          />
         </div>
       </div>
 
       <div className="p-6 pt-4">
-        {questions?.length ? (
+        {questions && questions.length > 0 ? (
           <div className="space-y-6">
             {questions.map((question, index) => (
               <div
@@ -196,7 +229,6 @@ export default function SurveyForm({
                         university_name
                       )}
                     </h3>
-
                     {responses && responses[index].answer !== null && (
                       <div className="flex items-center mt-1 text-emerald-600 text-sm font-medium">
                         <CheckCircle2 className="w-4 h-4 mr-1" />
@@ -206,7 +238,7 @@ export default function SurveyForm({
                   </div>
                 </div>
 
-                {question?.question_type === "scale" && (
+                {question.question_type === "scale" && (
                   <div className="mt-4">
                     <div className="flex justify-between text-sm text-gray-500 mb-2">
                       <span>Strongly Disagree</span>
@@ -223,14 +255,11 @@ export default function SurveyForm({
                               answer: value,
                             })
                           }
-                          className={`
-                          py-2 rounded-md transition-all duration-200 font-medium
-                          ${
+                          className={`py-2 rounded-md transition-all duration-200 font-medium ${
                             responses && responses[index].answer === value
                               ? "bg-blueMain text-white shadow-md"
                               : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                          }
-                        `}
+                          }`}
                         >
                           {value}
                         </button>
@@ -239,7 +268,7 @@ export default function SurveyForm({
                   </div>
                 )}
 
-                {question?.question_type === "input" && (
+                {question.question_type === "input" && (
                   <div className="mt-4">
                     <textarea
                       rows={4}
@@ -273,8 +302,8 @@ export default function SurveyForm({
                 Would you like to stay updated? (Optional)
               </h3>
               <p className="text-sm text-gray-500 mt-1">
-                Enter your email if you'd like to receive further updates about
-                this initiative.
+                Enter your email if you&apos;d like to receive further updates
+                about this initiative.
               </p>
             </div>
           </div>
@@ -300,14 +329,20 @@ export default function SurveyForm({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={!responses || responses.some((r) => r.answer === null)}
+            disabled={
+              !responses || responses.some((r) => r.answer === null) || loading
+            }
             className={`px-5 py-2.5 bg-blueMain text-white rounded-lg font-medium transition-colors ${
               !responses || responses.some((r) => r.answer === null)
                 ? "opacity-70 cursor-not-allowed"
-                : "hover:bg-blue-700 text-white"
+                : "hover:bg-blue-700"
             }`}
           >
-            Submit Feedback
+            {loading ? (
+              <ImSpinner8 size={20} className="animate-spin" />
+            ) : (
+              "Submit Feedback"
+            )}
           </button>
         </div>
       </div>

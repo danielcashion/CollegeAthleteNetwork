@@ -28,6 +28,10 @@ export default async function SurveyPage({
     ? await getSurveyQuestions({ survey_id: survey_id as string })
     : null;
 
+  if (surveyQuestion.length === 0) {
+    redirect("/");
+  }
+
   return (
     <div className="">
       <div className="pt-24 pb-10 flex flex-col items-center justify-center gap-5 mb-5 bg-gradient-to-r from-[#1C315F] to-[#ED3237]">
