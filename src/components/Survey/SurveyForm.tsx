@@ -74,13 +74,16 @@ export default function SurveyForm({
         questions.map((question, index) => (
           <div key={question.question_id} className="mb-8">
             <label className="block text-lg font-medium mb-2 text-white">
-              {index + 1}.{' '}
-              {question.question?.replace('{university_name}', university_name)}
+              {index + 1}.{" "}
+              {question.question?.replace("{university_name}", university_name)}
             </label>
             <div className="flex items-center space-x-4">
-              {question?.question_type === 'scale' && (
+              {question?.question_type === "scale" && (
                 <>
-                  <span className="text-sm text-gray-600">1</span>
+                  <span className="text-sm text-white w-40">
+                    Strongly Disagree
+                  </span>
+                  <span className="text-sm text-white">1</span>
                   <input
                     type="range"
                     min={1}
@@ -98,15 +101,19 @@ export default function SurveyForm({
                     }
                     className="w-full"
                   />
-                  <span className="text-sm text-gray-600">10</span>
-                  <span className="ml-4 text-gray-800 font-semibold w-8 text-center">
-                    {responses ? responses[index]?.answer : 5}
+                  <span className="text-sm text-white">10</span>
+                  <span className="text-sm text-white w-40">
+                    Strongly Agree
+                  </span>
+                  <span className="ml-4 text-white font-semibold w-32 text-center">
+                    Your answer: {responses ? responses[index]?.answer : 5}
                   </span>
                 </>
               )}
-              {question?.question_type === 'input' && (
+              {question?.question_type === "input" && (
                 <textarea
                   rows={4}
+                  placeholder="Please tell us what you think here..."
                   onChange={(e) =>
                     handleSliderChange(index, {
                       question_id: question.question_id,
