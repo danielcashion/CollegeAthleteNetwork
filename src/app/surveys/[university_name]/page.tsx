@@ -51,6 +51,7 @@ export default async function SurveyPage({
           <SurveyForm
             questions={surveyQuestion}
             university_name={data.university_name ?? ""}
+            survey_id={survey_id}
           />
         )}
       </div>

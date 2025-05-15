@@ -4,13 +4,16 @@ import { postSurvey, type SurveyQuestion } from "@/services/universityApi";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { FaCheck } from "react-icons/fa6";
 
 export default function SurveyForm({
   questions,
   university_name,
+  survey_id,
 }: {
   questions: SurveyQuestion[] | null;
   university_name: string;
+  survey_id: any;
 }) {
   const router = useRouter();
   const [responses, setResponses] = useState<
@@ -25,8 +28,9 @@ export default function SurveyForm({
   );
 
   const [email, setEmail] = useState<string>("");
-
+  const [ipAddress, setIpAddress] = useState<string>("");
   const [isSticky, setIsSticky] = useState(false);
+  const [surveySubmitted, setSurveySubmitted] = useState<boolean>(false);
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,6 +65,17 @@ export default function SurveyForm({
     };
   }, []);
 
+  useEffect(() => {
+    const getUserIp = async () => {
+      const ipRes = await fetch("https://api.ipify.org?format=json");
+      const { ip } = await ipRes.json();
+
+      setIpAddress(ip);
+    };
+
+    getUserIp();
+  }, []);
+
   const handleAnswerChange = (
     index: number,
     value: { question_id: string; answer: number | string | null }
@@ -83,17 +98,19 @@ export default function SurveyForm({
       }
       const promises = responses?.map((response) =>
         postSurvey({
-          survey_id: "surv_303",
-          university_name: "yale",
+          survey_id: survey_id,
+          university_name: university_name,
           question_id: response?.question_id,
           response_value: response?.answer,
           email: email || "",
+          ip_address: ipAddress || "",
         })
       );
 
       try {
         await Promise.all(promises);
-        alert("Thank you for your feedback!");
+
+        setSurveySubmitted(true);
       } catch (error) {
         console.error("Something went wrong submitting the survey:", error);
         alert("There was an error submitting your feedback. Please try again.");
@@ -110,7 +127,15 @@ export default function SurveyForm({
     return responses.filter((response) => response.answer !== null).length;
   };
 
-  return (
+  return surveySubmitted ? (
+    <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
+      <FaCheck size={100} className="text-blueMain" />
+      <p className="text-center text-3xl font-bold">
+        Thank you for submitting the survey!
+      </p>
+      <p>You will be redirected to the home in about 5 seconds ...</p>
+    </div>
+  ) : (
     <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 relative">
       <div
         ref={headerRef}
