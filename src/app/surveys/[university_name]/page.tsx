@@ -1,14 +1,10 @@
-import SurveyForm from '@/components/Survey/SurveyForm';
+import SurveyForm from "@/components/Survey/SurveyForm";
 import {
   getSurveyQuestions,
   getUniversityMeta,
-} from '@/services/universityApi';
-import Image from 'next/image';
-
-// TO <DO>
-// 1. Add a API request to GET the university_meta data
-// 2. Add a API request to GET the survey_questions for each survey_id
-// 3. Add a API request to POST the survey responses
+} from "@/services/universityApi";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function SurveyPage({
   params,
@@ -20,6 +16,10 @@ export default async function SurveyPage({
   const { university_name } = await params;
   const { survey_id } = (await searchParams) || undefined;
 
+  if (!survey_id) {
+    redirect("/");
+  }
+
   const data = university_name
     ? await getUniversityMeta({ university_name })
     : null;
@@ -29,8 +29,8 @@ export default async function SurveyPage({
     : null;
 
   return (
-    <div className=" p-6 pt-24 bg-gradient-to-r from-[#1C315F] to-[#ED3237]">
-      <div className="flex flex-col items-center justify-center gap-5 mb-5">
+    <div className="">
+      <div className="pt-24 pb-10 flex flex-col items-center justify-center gap-5 mb-5 bg-gradient-to-r from-[#1C315F] to-[#ED3237]">
         <Image
           src={data?.logo_url}
           alt={data.university_name}
@@ -41,17 +41,19 @@ export default async function SurveyPage({
           {data.university_name}&apos;s Athlete Network Survey
         </h1>
         <h2 className="text-2xl font-bold mb-6 text-center text-white">
-                  Survey Topic: How Strong is the Athlete Network Offering at {data.university_name }?
+          Survey Topic: How Strong is the Athlete Network Offering at{" "}
+          {data.university_name}?
         </h2>
       </div>
 
-      {surveyQuestion?.length && (
-        <SurveyForm
-          questions={surveyQuestion}
-          university_name={data.university_name ?? ""}
-          // primaryColor={data?.primary_hex ?? 'blue'}
-        />
-      )}
+      <div className="bg-[#F9FAFB]">
+        {surveyQuestion?.length && (
+          <SurveyForm
+            questions={surveyQuestion}
+            university_name={data.university_name ?? ""}
+          />
+        )}
+      </div>
     </div>
   );
 }
