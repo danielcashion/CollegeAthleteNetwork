@@ -20,7 +20,7 @@ export const getUniversityMeta = async ({
 }) => {
   try {
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/university_meta?university_name=${university_name}`
+      `${process.env.BASE_API}/university_meta?university_name=${university_name}`
     );
     return response.data[0];
   } catch (error) {
@@ -36,7 +36,7 @@ export const getSurveyQuestions = async ({
 }) => {
   try {
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/survey_questions?survey_id=${survey_id}`
+      `${process.env.BASE_API}/survey_questions?survey_id=${survey_id}`
     );
     return response.data;
   } catch (error) {

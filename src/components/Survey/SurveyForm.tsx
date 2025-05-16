@@ -17,7 +17,7 @@ export default function SurveyForm({
   survey_id: string | any;
 }) {
   const router = useRouter();
-  const cookieKey = `${university_name}-${survey_id}`;
+  const cookieKey = `CollegeAthleteNetwork-${university_name}-${survey_id}`;
 
   const [responses, setResponses] = useState<
     { question_id: string; answer: number | string | null }[] | null
@@ -129,7 +129,9 @@ export default function SurveyForm({
       setTimeout(() => router.push("/"), 4900);
     } catch (error) {
       console.error("We are so sorry, but something went wrong submitting the survey:", error);
-      alert("There was an error submitting your feedback. Please try again.");
+      alert(
+        "We are so sorry, but something went wrong submitting the survey. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -303,11 +305,10 @@ export default function SurveyForm({
           <div className="flex items-start gap-3 mb-4">
             <div className="flex-1">
               <h3 className="text-lg font-medium text-gray-800">
-                Would you like to stay updated? (Optional)
+                Would you like to join our mailing list? (Optional)
               </h3>
               <p className="text-sm text-gray-500 mt-1">
-                Enter your email if you&apos;d like to receive further updates
-                about this initiative.
+                Enter your email if you&apos;d like to keep current.
               </p>
             </div>
           </div>
