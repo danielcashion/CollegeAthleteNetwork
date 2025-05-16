@@ -98,14 +98,23 @@ export default function SurveyForm({
   };
 
   const getCompletedCount = () => {
-    if (!responses) return 0;
-    return responses.filter((r) => r.answer !== null).length;
+    if (!responses || !questions) return 0;
+    return responses.filter(
+      (r, idx) => questions[idx].required_YN === 1 && r.answer !== null
+    ).length;
+  };
+
+  const getTotalRequired = () => {
+    return questions ? questions.filter((q) => q.required_YN === 1).length : 0;
   };
 
   const handleSubmit = async () => {
-    if (!responses) return;
-    if (responses.some((r) => r.answer === null)) {
-      alert("Please answer all the questions.");
+    if (!responses || !questions) return;
+    const incomplete = responses.some(
+      (r, idx) => questions[idx].required_YN === 1 && r.answer === null
+    );
+    if (incomplete) {
+      alert("Please answer all the required questions.");
       return;
     }
 
@@ -128,7 +137,10 @@ export default function SurveyForm({
       setCookie(cookieKey, cookieKey);
       setTimeout(() => router.push("/"), 4900);
     } catch (error) {
-      console.error("We are so sorry, but something went wrong submitting the survey:", error);
+      console.error(
+        "We are so sorry, but something went wrong submitting the survey:",
+        error
+      );
       alert(
         "We are so sorry, but something went wrong submitting the survey. Please try again."
       );
@@ -149,7 +161,7 @@ export default function SurveyForm({
           You&apos;ve already filled out this survey!
         </p>
         <p className="text-center text-[#1C315F] text-lg font-bold">
-          Sorry, only 1 entry per survery, please...
+          Sorry, only 1 entry per survey, please...
         </p>
         <Link
           href={"/"}
@@ -169,7 +181,8 @@ export default function SurveyForm({
           Thank you for submitting your survey!
         </p>
         <p className="text-center text-[#1C315F] text-xl font-bold">
-          You will be redirected to our homepage in about 5 seconds …</p>
+          You will be redirected to our homepage in about 5 seconds …
+        </p>
       </div>
     );
   }
@@ -194,7 +207,7 @@ export default function SurveyForm({
             <div className="flex items-center gap-1">
               <span className="text-redMain">{getCompletedCount()}</span>
               <span className="text-gray-400">/</span>
-              <span className="text-gray-600">{questions?.length || 0}</span>
+              <span className="text-gray-600">{getTotalRequired()}</span>
             </div>
           </div>
         </div>
@@ -203,8 +216,8 @@ export default function SurveyForm({
             className="bg-blueMain h-full rounded-full transition-all duration-300"
             style={{
               width: `${
-                questions?.length
-                  ? (getCompletedCount() / questions.length) * 100
+                getTotalRequired()
+                  ? (getCompletedCount() / getTotalRequired()) * 100
                   : 0
               }%`,
             }}
@@ -335,10 +348,21 @@ export default function SurveyForm({
             type="button"
             onClick={handleSubmit}
             disabled={
-              !responses || responses.some((r) => r.answer === null) || loading
+              !responses ||
+              !questions ||
+              responses.some(
+                (r, idx) =>
+                  questions[idx].required_YN === 1 && r.answer === null
+              ) ||
+              loading
             }
             className={`px-5 py-2.5 bg-blueMain text-white rounded-lg font-medium transition-colors ${
-              !responses || responses.some((r) => r.answer === null)
+              !responses ||
+              !questions ||
+              responses.some(
+                (r, idx) =>
+                  questions[idx].required_YN === 1 && r.answer === null
+              )
                 ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700"
             }`}
