@@ -41,13 +41,17 @@ export default async function SurveyPage({
           height={100}
           width={100}
         />
-        <h1 className="text-4xl font-bold mb-2 text-center text-white">
+        <h1 className="text-5xl font-bold mb-2 text-center text-white">
           {data.university_name}&apos;s Athlete Network Survey
         </h1>
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">
+        <h2 className="text-3xl font-bold mb-2 text-center text-white">
           Survey Topic: How Strong is the Athlete Network Offering at{" "}
           {data.university_name}?
         </h2>
+        <h3 className="text-lg font-bold mb-6 text-center text-white">
+          Please note that this survey is anonymous and will not be shared with
+          anyone outside of the {data.university_name} Athletic Department.
+        </h3>
       </div>
 
       <div className="bg-[#F9FAFB]">

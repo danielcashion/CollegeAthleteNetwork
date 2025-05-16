@@ -167,7 +167,7 @@ export default function SurveyForm({
           Thank you for submitting your survey!
         </p>
         <p className="text-center text-[#1C315F] text-xl font-bold">
-          You will be redirected to the home in about 5 seconds …</p>
+          You will be redirected to our homepage in about 5 seconds …</p>
       </div>
     );
   }
