@@ -291,7 +291,8 @@ export default function SurveyForm({
                   <div className="mt-4">
                     <textarea
                       rows={4}
-                      placeholder="Please tell us what you think here..."
+                      placeholder="Enter text here..."
+                      maxLength={400}
                       onChange={(e) =>
                         handleAnswerChange(index, {
                           question_id: question.question_id,
@@ -303,6 +304,9 @@ export default function SurveyForm({
                       }
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueMain outline-none transition-all"
                     />
+                    <div className="flex justify-end mt-1 text-sm text-gray-500">
+                      {((responses?.[index].answer as string) || "").length}/400
+                    </div>
                   </div>
                 )}
               </div>
