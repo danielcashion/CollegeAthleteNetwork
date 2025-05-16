@@ -128,7 +128,7 @@ export default function SurveyForm({
       setCookie(cookieKey, cookieKey);
       setTimeout(() => router.push("/"), 4900);
     } catch (error) {
-      console.error("Something went wrong submitting the survey:", error);
+      console.error("We are so sorry, but something went wrong submitting the survey:", error);
       alert("There was an error submitting your feedback. Please try again.");
     } finally {
       setLoading(false);
@@ -142,15 +142,18 @@ export default function SurveyForm({
   if (alreadyFilled) {
     return (
       <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
-        <FaCheck size={100} className="text-blueMain" />
-        <p className="text-center text-3xl font-bold">
-          You&apos;ve already filled out this survey.
+        <FaCheck size={100} className="text-[#ed3237]" />
+        <p className="text-center text-[#1C315F] text-3xl font-bold">
+          You&apos;ve already filled out this survey!
+        </p>
+        <p className="text-center text-[#1C315F] text-lg font-bold">
+          Sorry, only 1 entry per survery, please...
         </p>
         <Link
           href={"/"}
           className="bg-blueMain text-white py-2 px-6 text-xl font-semibold rounded"
         >
-          Go to Home Page
+          Take me to the Home Page
         </Link>
       </div>
     );
@@ -160,10 +163,11 @@ export default function SurveyForm({
     return (
       <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
         <FaCheck size={100} className="text-blueMain" />
-        <p className="text-center text-3xl font-bold">
-          Thank you for submitting the survey!
+        <p className="text-center text-[#1C315F] text-3xl font-bold">
+          Thank you for submitting your survey!
         </p>
-        <p>You will be redirected to the home in about 5 seconds …</p>
+        <p className="text-center text-[#1C315F] text-xl font-bold">
+          You will be redirected to the home in about 5 seconds …</p>
       </div>
     );
   }
