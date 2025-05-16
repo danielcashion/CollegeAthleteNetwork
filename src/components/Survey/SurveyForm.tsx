@@ -105,7 +105,7 @@ export default function SurveyForm({
   const handleSubmit = async () => {
     if (!responses) return;
     if (responses.some((r) => r.answer === null)) {
-      alert("Please answer all the questions");
+      alert("Please answer all the questions.");
       return;
     }
 
