@@ -11,6 +11,7 @@ export interface SurveyQuestion {
   created_datetime: string; // ISO date string
   updated_by: string | null;
   updated_datetime: string | null;
+  required_YN: string | number;
 }
 
 export const getUniversityMeta = async ({
