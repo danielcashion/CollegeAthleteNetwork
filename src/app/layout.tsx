@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from "next/app";
 import LogUserIP from "@/components/UserAudit/LogUserIP";
+import CanVideoModal from "@/components/Modals/CanVideoModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <CanVideoModal />
         <LogUserIP />
         <Analytics />
       </body>
