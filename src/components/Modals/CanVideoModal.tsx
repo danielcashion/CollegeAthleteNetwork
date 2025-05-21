@@ -59,9 +59,13 @@ const CanVideoModal = () => {
     >
       <div
         ref={modalRef}
-        className={`rounded-xl shadow-2xl w-full max-w-6xl overflow-hidden transition-all duration-300 ${
-          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+        className={`rounded-xl shadow-2xl w-full max-w-6xl overflow-hidden transition-all duration-500 transform
+    ${
+      isVisible
+        ? "scale-100 opacity-100 translate-x-0 translate-y-0"
+        : "scale-50 opacity-0 -translate-x-[40vw] -translate-y-[40vh]"
+    }
+  `}
       >
         <div className="relative">
           <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white p-4 flex justify-center items-center">
@@ -75,7 +79,7 @@ const CanVideoModal = () => {
               />
 
               <h2 className="text-xl sm:text-2xl font-bold text-white">
-                We Power Your Network
+                We Power Your College Athlete Network
               </h2>
             </div>
           </div>
@@ -104,7 +108,7 @@ const CanVideoModal = () => {
 
           <div className="p-2 bg-gray-50 text-center">
             <p className="text-gray-600 text-sm">
-              © {new Date().getFullYear()} College Athlete Network
+              © {new Date().getFullYear()} The College Athlete Network, LLC
             </p>
           </div>
         </div>
