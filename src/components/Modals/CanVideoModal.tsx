@@ -79,7 +79,7 @@ const CanVideoModal = () => {
               />
 
               <h2 className="text-xl sm:text-2xl font-bold text-white">
-                We Power Your College Athlete Network
+                Our Data Powers Successful College Athlete Networks. Period.
               </h2>
             </div>
           </div>
