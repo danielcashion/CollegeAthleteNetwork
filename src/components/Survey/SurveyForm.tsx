@@ -19,13 +19,24 @@ export default function SurveyForm({
   const router = useRouter();
   const cookieKey = `CollegeAthleteNetwork-${university_name}-${survey_id}`;
 
+  const sortedQuestions = questions
+    ? [...questions].sort((a, b) =>
+        Number(a.question_id) > Number(b.question_id) ? 1 : -1
+      )
+    : null;
+
   const [responses, setResponses] = useState<
     { question_id: string; answer: number | string | null }[] | null
   >(
-    questions?.length
-      ? questions.map((q) => ({ question_id: q.question_id, answer: null }))
+    sortedQuestions?.length
+      ? sortedQuestions.map((q) => ({
+          question_id: q.question_id,
+          answer: null,
+        }))
       : null
   );
+
+
   const [email, setEmail] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
   const [isSticky, setIsSticky] = useState(false);
@@ -98,20 +109,20 @@ export default function SurveyForm({
   };
 
   const getCompletedCount = () => {
-    if (!responses || !questions) return 0;
+    if (!responses || !sortedQuestions) return 0;
     return responses.filter(
-      (r, idx) => questions[idx].required_YN === 1 && r.answer !== null
+      (r, idx) => sortedQuestions[idx].required_YN === 1 && r.answer !== null
     ).length;
   };
 
   const getTotalRequired = () => {
-    return questions ? questions.filter((q) => q.required_YN === 1).length : 0;
+    return sortedQuestions ? sortedQuestions.filter((q) => q.required_YN === 1).length : 0;
   };
 
   const handleSubmit = async () => {
-    if (!responses || !questions) return;
+    if (!responses || !sortedQuestions) return;
     const incomplete = responses.some(
-      (r, idx) => questions[idx].required_YN === 1 && r.answer === null
+      (r, idx) => sortedQuestions[idx].required_YN === 1 && r.answer === null
     );
     if (incomplete) {
       alert("Please answer all the required questions.");
@@ -226,9 +237,9 @@ export default function SurveyForm({
       </div>
 
       <div className="p-6 pt-4">
-        {questions && questions.length > 0 ? (
+        {sortedQuestions && sortedQuestions.length > 0 ? (
           <div className="space-y-6">
-            {questions.map((question, index) => (
+            {sortedQuestions.map((question, index) => (
               <div
                 key={question.question_id}
                 className={`p-6 rounded-lg border ${
