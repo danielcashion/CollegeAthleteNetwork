@@ -125,8 +125,7 @@ const AppFooter: React.FC = () => {
                   <ListItemText primary="Privacy Policy" />
                 </MenuItemText>
                 <MenuItemText
-                  href="https://www.tourneymaster.org/terms-of-service/"
-                  target="_blank"
+                  href="/terms-of-service"
                   rel="noopener noreferrer"
                 >
                   <ListItemText primary="Terms of Service" />
