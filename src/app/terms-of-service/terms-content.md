@@ -2,7 +2,7 @@
 
 **Last Updated: January 1st, 2025**
 
-Welcome to The College Athlete Network, LLC (“we,” “us,” or “The College Athlete Network”). These Terms and Conditions (“Terms”) govern your use of our website ([CollegeAthleteNetwork.org](https://CollegeAthleteNetwork.org)), mobile apps, and related services (collectively, the “Service”). By accessing or using the Service, you agree to these Terms and our [Privacy Policy](https://CollegeAthleteNetwork.org/privacy-policy). If you don’t agree, please do not use the Service.
+Welcome to The College Athlete Network, LLC (“we,” “us,” or “The College Athlete Network”). These Terms and Conditions (“Terms”) govern your use of our website ([CollegeAthleteNetwork.org](https://www.collegeAthleteNetwork.org)), mobile apps, and related services (collectively, the “Service”). By accessing or using the Service, you agree to these Terms and our [Privacy Policy](https://www.CollegeAthleteNetwork.org/privacy-policy). If you don’t agree, please do not use the Service.
 
 We may update these Terms from time to time. We’ll notify you of significant changes via email or a website notice, and your continued use of the Service after such changes means you accept the updated Terms. Please review this page periodically.
 
@@ -86,7 +86,7 @@ If your content is removed due to a DMCA notice, you may submit a counter-notice
 
 ## 3. Privacy and Data Security
 
-We care about your privacy. By using the Service, you consent to the collection, use, and sharing of your information as described in our [Privacy Policy](https://CollegeAthleteNetwork.org/privacy-policy). Key points:  
+We care about your privacy. By using the Service, you consent to the collection, use, and sharing of your information as described in our [Privacy Policy](https://www.CollegeAthleteNetwork.org/privacy-policy). Key points:  
 - We collect personal information like your name, email, and profile data to provide the Service.  
 - We don’t sell your data to third parties.  
 - Organizations using the Service must comply with privacy laws and obtain your consent before collecting or sharing your data.  
@@ -112,7 +112,7 @@ The Service may include links to third-party websites, ads, or content from Orga
 ## 6. Paid Services and Payments
 
 ### 6.1 Paid Features
-Some features require payment. If you use these, you agree to our [Subscriber Terms and Conditions](https://CollegeAthleteNetwork.org/subscriber-terms) and any related order forms. If there’s a conflict, the Subscriber Terms prevail for paid features.
+Some features require payment. If you use these, you agree to our Subscriber Terms and Conditions and any related order forms. If there’s a conflict, the Subscriber Terms prevail for paid features.
 
 ### 6.2 Payments to Organizations
 If you pay an Organization through the Service (e.g., for registration fees), the transaction is between you and the Organization. Contact the Organization directly for refunds or disputes. We’re not responsible for incorrect charges or unfulfilled orders.
