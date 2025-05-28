@@ -264,7 +264,7 @@ const TermsOfService = () => {
         </div>
       </section>
 
-      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service">
         <article className="prose prose-lg max-w-none text-gray-600">
           <p className="italic font-semibold mb-2">
             Last Updated: January 1st, 2025
