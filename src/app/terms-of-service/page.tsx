@@ -1,9 +1,8 @@
 import React from 'react';
-import { MDXRemote } from 'next-mdx-remote';
-import { serialize } from 'next-mdx-remote/serialize';
 import Link from 'next/link';
 import { promises as fs } from 'fs';
 import path from 'path';
+import MDXContent from './MDXContent';
 
 export const metadata = {
   title: 'Terms and Conditions | The College Athlete Network',
@@ -13,7 +12,6 @@ export const metadata = {
 const TermsPage = async () => {
   const filePath = path.join(process.cwd(), 'src/app/terms-of-service/terms-content.md');
   const source = await fs.readFile(filePath, 'utf8');
-  const mdxSource = await serialize(source);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -27,7 +25,7 @@ const TermsPage = async () => {
       {/* Main Content */}
       <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <article className="prose prose-lg max-w-none">
-          <MDXRemote {...mdxSource} />
+          <MDXContent source={source} />
         </article>
       </main>
 
