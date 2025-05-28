@@ -9,15 +9,18 @@ const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Terms of Service
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          The College Athlete Network
+        </h1>
+        <h1 className="text-4xl md:text-4xl font-bold mb-4 font-variant-small-caps">
+          Our Terms of Service
         </h1>
       </div>
 
       <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         <div className="bg-white border border-gray-200 rounded p-4 mb-6">
           <div
-            className="cursor-pointer font-semibold text-gray-800 text-lg flex items-center justify-between"
+            className="cursor-pointer font-semibold text-gray-800 text-2xl flex items-center justify-between"
             onClick={() => setShowTable(!showTable)}
           >
             Table of Contents
@@ -278,10 +281,11 @@ const TermsOfService = () => {
               href="https://www.CollegeAthleteNetwork.org"
               className="text-blue-600 hover:underline"
             >
-              CollegeAthleteNetwork.org
+              www.CollegeAthleteNetwork.org
             </Link>
-            ), mobile apps, and related services (collectively, the “Service”).
-            By accessing or using the Service, you agree to these Terms and our{" "}
+            ), any of our mobile apps, and all related services (collectively,
+            the “Service”). By accessing or using the Service, you also agree to
+            these Terms and our{" "}
             <Link
               href="https://www.CollegeAthleteNetwork.org/privacy-policy"
               className="text-blue-600 hover:underline"
@@ -303,7 +307,7 @@ const TermsOfService = () => {
             <li>You must be at least 13 years old to use the Service.</li>
             <li>
               Your data&apos;s security matters to us, and we&apos;ll never sell
-              it to third parties.
+              any of your data to any third parties.
             </li>
             <li>
               Disputes are resolved through arbitration, not court, and you
@@ -359,10 +363,10 @@ const TermsOfService = () => {
             <li>
               Notify us immediately at{" "}
               <Link
-                href="mailto:support@CollegeAthleteNetwork.org"
+                href="mailto:admin@CollegeAthleteNetwork.org"
                 className="text-blue-600 hover:underline"
               >
-                support@CollegeAthleteNetwork.org
+                admin@CollegeAthleteNetwork.org
               </Link>{" "}
               if you suspect unauthorized use of your account.
             </li>
@@ -399,7 +403,7 @@ const TermsOfService = () => {
           <ul className="list-disc list-inside mb-4">
             <li>
               Copy, distribute, or scrape any part of the Service without
-              permission.
+              explicit permission.
             </li>
             <li>
               Use automated tools (e.g., bots, spiders) to access the Service,
