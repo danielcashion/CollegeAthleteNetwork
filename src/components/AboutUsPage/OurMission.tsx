@@ -29,7 +29,7 @@ const OurMission = () => {
 
         <Image
           src={AthletesImage}
-          alt="althletes image"
+          alt="athletes image"
           className="w-full max-w-[600px] rounded-xl mt-8 shadow-lg"
         />
       </div>

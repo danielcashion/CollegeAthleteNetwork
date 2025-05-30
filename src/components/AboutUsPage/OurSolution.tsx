@@ -20,7 +20,7 @@ const OurSolution = () => {
               </div>
               <p className="text-xl mt-2">
                 Empower connections with a insightful networking platform designed
-                to bring athletes, coaches, and job opportunies together quickly & easily.
+                to bring athletes, coaches, and job opportunities together quickly & easily.
               </p>
             </div>
 
