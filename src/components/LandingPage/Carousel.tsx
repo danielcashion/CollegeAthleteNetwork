@@ -8,16 +8,16 @@ const Carousel = () => {
       src: "/images/college-athletes-1.jpg",
     },
     {
-      src: "/images/college-athletes-3.png",
+      src: "/images/college-athletes-3.jpg",
     },
     {
-      src: "/images/college-athletes-4.png",
+      src: "/images/college-athletes-4.jpg",
     },
     {
-      src: "/images/college-athletes-5.png",
+      src: "/images/college-athletes-5.jpg",
     },
     {
-      src: "/images/college-athletes-6.png",
+      src: "/images/college-athletes-6.jpg",
     },
   ];
 

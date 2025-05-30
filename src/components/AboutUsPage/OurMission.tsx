@@ -1,5 +1,5 @@
 import Image from "next/image";
-import AthletesImage from "../../../public/images/college-athletes-4.png";
+import AthletesImage from "../../../public/images/college-athletes-4.jpg";
 
 const OurMission = () => {
   return (

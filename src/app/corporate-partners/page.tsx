@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import AthletesImage from "../../../public/images/athletes-2.png";
+import AthletesImage from "../../../public/images/athletes-2.jpg";
 import {
   FaCrown,
   FaArrowsTurnToDots,
