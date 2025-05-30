@@ -1,5 +1,5 @@
 import Image from "next/image";
-import AthletesImage from "../../../public/images/college-athletes-4.png";
+import AthletesImage from "../../../public/images/college-athletes-4.jpg";
 
 const OurMission = () => {
   return (
@@ -29,7 +29,7 @@ const OurMission = () => {
 
         <Image
           src={AthletesImage}
-          alt="althletes image"
+          alt="athletes image"
           className="w-full max-w-[600px] rounded-xl mt-8 shadow-lg"
         />
       </div>

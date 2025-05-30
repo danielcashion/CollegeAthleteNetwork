@@ -3,7 +3,7 @@ import { FaNetworkWired, FaFilter } from "react-icons/fa";
 const OurSolution = () => {
   return (
     <section className="bg-[#1C315F] py-16 text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-4.png')] opacity-5 bg-cover bg-center" />
+      <div className="absolute inset-0 bg-[url('../../public/images/college-athletes-4.jpg')] opacity-5 bg-cover bg-center" />
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-5xl font-bold text-center mb-12 text-[#ED3237] small-caps tracking-wider">
@@ -20,7 +20,7 @@ const OurSolution = () => {
               </div>
               <p className="text-xl mt-2">
                 Empower connections with a insightful networking platform designed
-                to bring athletes, coaches, and job opportunies together quickly & easily.
+                to bring athletes, coaches, and job opportunities together quickly & easily.
               </p>
             </div>
 
