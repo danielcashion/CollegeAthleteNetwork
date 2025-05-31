@@ -83,11 +83,11 @@ const ContactForm = () => {
       <div className="flex flex-col items-center w-full lg:w-[730px]">
         <div className="flex flex-col sm:flex-row gap-6 w-full">
           <Link
-            href={"mailto:info@collegeathletenetwork.org"}
+            href={"mailto:admin@collegeathletenetwork.org"}
             className="w-full rounded-lg border border-[#1C315F] bg-[#1C315F] text-white px-8 py-6 flex flex-col items-center gap-4 hover:bg-white hover:text-[#1c315f] transitions duration-200"
           >
             <Mail sx={{ fontSize: 60 }} />
-            <p className="text-lg">info@collegeathletenetwork.org</p>
+            <p className="text-lg">admin@collegeathletenetwork.org</p>
           </Link>
           <Link
             href={"tel:+12123777020"}

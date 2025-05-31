@@ -166,8 +166,8 @@ const AppFooter: React.FC = () => {
               <Box display="flex" alignItems="center">
                 <MailIcon />
                 <InfoText variant="body1">
-                  <MenuItemText href="mailto:info@collegeathletenetwork.org">
-                    info@collegeathletenetwork.org
+                  <MenuItemText href="mailto:admin@collegeathletenetwork.org">
+                    admin@collegeathletenetwork.org
                   </MenuItemText>
                 </InfoText>
               </Box>

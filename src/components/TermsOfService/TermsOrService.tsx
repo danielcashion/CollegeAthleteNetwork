@@ -518,10 +518,10 @@ const TermsOfService = () => {
             <p className="mb-4 text-gray-600">
               Email:{" "}
               <Link
-                href="mailto:info@CollegeAthleteNetwork.org"
+                href="mailto:admin@CollegeAthleteNetwork.org"
                 className="text-blue-600 hover:underline"
               >
-                info@CollegeAthleteNetwork.org
+                admin@CollegeAthleteNetwork.org
               </Link>
             </p>
           </div>
