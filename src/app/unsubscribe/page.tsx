@@ -3,6 +3,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CgSpinner } from "react-icons/cg";
+// Sample URL structure:
+// www.collegeathletenetwork.org/unsubscribe?id=bdcebdd7-2522-11f0-b73f-06f633821df3
 
 export default function UnsubscribePage() {
   const searchParams = useSearchParams();
