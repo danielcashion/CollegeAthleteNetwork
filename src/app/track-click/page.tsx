@@ -14,7 +14,11 @@ export default function TrackClickPage() {
     const row_id = searchParams.get("row_id");
 
     if (university_name && row_id && filename) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/log-click`, {
+      const is_active_YN = 1;
+      const created_by = 'admin';
+      const created_datetime = new Date().toISOString();
+
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/track_click`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,6 +27,9 @@ export default function TrackClickPage() {
           row_id,
           university: university_name,
           filename,
+          is_active_YN,
+          created_by,
+          created_datetime,
         }),
       }).catch((err) => {
         console.error("Failed to log click:", err);
