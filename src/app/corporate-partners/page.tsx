@@ -123,9 +123,9 @@ export default function CorporatePartnersPage() {
         </section>
 
         {/* Exclusive Network for Corporate Partner Firms */}
-        <section className="pb-16 pt-10 bg-gray-100">
+        <section className="pb-8 pt-4 bg-gray-100">
           <div className="container mx-auto px-4">
-            <FaCrown size={60} className="mx-auto text-[#1c315f] mb-4" />
+            <FaCrown size={60} className="mx-auto text-[#1c315f] mb-2" />
             <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]">
               Connect with a Network of Like-Minded Leaders
             </h2>
@@ -146,7 +146,7 @@ export default function CorporatePartnersPage() {
               <div className="text-center">
                 <Link
                   href="/contact-us"
-                  className="bg-[#ed3237] text-white text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ed3237] transition duration-200"
+                  className="bg-[#ed3237] text-white pt-2 text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ed3237] transition duration-200"
                 >
                   Become a Hiring Partner
                 </Link>
@@ -161,7 +161,7 @@ export default function CorporatePartnersPage() {
             <h2 className="text-[#1c315f] text-5xl font-bold mb-8 text-center">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-4 gap-8 md:gap-12 text-[#1c315f]">
+            <div className="grid md:grid-cols-5 gap-8 md:gap-12 text-[#1c315f]">
               {[
                 {
                   title: "Join our Network",
@@ -174,14 +174,19 @@ export default function CorporatePartnersPage() {
                     "Post your company's openings to our network, specifically targeting profiles (Universities, sports, etc.) in university networks.",
                 },
                 {
-                  title: 'Browse Athlete "Availabilities"',
+                  title: 'Browse Pool of Athlete "Availabilities"',
                   description:
-                    "Search profiles based on school, sport, skills, and location. We match good people with good firms.",
+                    "Search profiles based on school, sport, skills, and location. We match great people with great firms.",
                 },
                 {
                   title: "Hire Exceptional Talent",
                   description:
-                    "Engage with candidates and bring them onto your team. Hiring from the network is free and you avoid large recruiter fees.",
+                    "Engage with candidates and bring them onto your team. Hiring from the network avoids large recruiter fees.",
+                },
+                {
+                  title: "Contribute Back to Your Athletic Department",
+                  description:
+                    "By avoiding head hunting fees, you can contribute some funds to your athletic department. Optional, but encouraged.",
                 },
               ].map((step, index) => (
                 <div key={index} className="text-center">
@@ -211,7 +216,8 @@ export default function CorporatePartnersPage() {
               </Link>
             </div>
             <p className="mt-4 text-xl">
-              For alumni and employers who are ready to hire from an exceptional talent pool
+              For alumni and employers who are ready to hire from an exceptional
+              talent pool
             </p>
           </div>
         </section>
