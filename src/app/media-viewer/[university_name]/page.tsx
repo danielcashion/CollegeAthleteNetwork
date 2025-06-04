@@ -13,7 +13,7 @@ export default function ViewUniversityPpt() {
 
   useEffect(() => {
     if (file && universityName) {
-      const s3Url = `https://collegeathletenetwork.s3.amazonaws.com/media/presentations/${file}`;
+      const s3Url = `https://collegeathletenetwork.s3.amazonaws.com/media/ppts/${file}`;
       const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(s3Url)}`;
       setIframeUrl(viewerUrl);
 
@@ -39,7 +39,8 @@ export default function ViewUniversityPpt() {
           title="PowerPoint Viewer"
         />
       ) : (
-        <p>Loading presentation...</p>
+          <p>Loading presentation...</p>
+          
       )}
     </div>
   );

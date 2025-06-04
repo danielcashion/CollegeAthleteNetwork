@@ -16,7 +16,7 @@ export default function TrackClickPage() {
       fetch(`/api/log-click?row_id=${row_id}&university=${university_name}&filename=${filename}`);
 
       setTimeout(() => {
-        router.push(`/view-ppt/?file=${filename}`);
+        router.push(`/ppt-viewer/?file=${filename}`);
       }, 300);
     }
   }, [searchParams, router]);
