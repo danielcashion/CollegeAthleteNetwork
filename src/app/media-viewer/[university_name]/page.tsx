@@ -42,7 +42,7 @@ export default function ViewUniversityPpt() {
           className="mx-auto mt-10 bg-white shadow-lg"
         />
       ) : (
-        <p>Loading presentation...</p>
+        <p className="text-center mt-10 text-lg">Loading presentation...</p>
       )}
     </div>
   );
