@@ -1,4 +1,3 @@
-// app/network/[university]/page.tsx
 import { Metadata } from 'next';
 import Image from 'next/image';
 
@@ -18,11 +17,16 @@ function slugify(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
+// Generate static params for all universities
 export async function generateStaticParams() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/university_meta`);
   const universities: UniversityMeta[] = await res.json();
 
-  return universities.map((uni) => ({
+    const uniqueUniversities = Array.from(
+      new Map(universities.map((uni) => [uni.university_name, uni])).values()
+    );
+
+  return uniqueUniversities.map((uni) => ({
     university: slugify(uni.university_name),
     primary_hex: uni.primary_hex,
     secondary_hex: uni.secondary_hex,
@@ -31,6 +35,7 @@ export async function generateStaticParams() {
   }));
 }
 
+// Generate metadata for each university
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/university_meta`);
   const universities: UniversityMeta[] = await res.json(); 
@@ -40,16 +45,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!uni) {
     return {
       title: `${params.university_name} Athletic Network`,
-      description: `Explore ${params.university_name} athletes and professional opportunities!`,
+      description: `Explore ${params.university_name} athletes and professional opportunities and availabilities!`,
     };
   }
 
   return {
-    title: `${uni.university_name} Athletic Network | The College Athlete Network`,
-    description: `Explore ${uni.university_name}'s athlete and alumni career network.`,
+    title: `${uni.university_name} Athlete Network | The College Athlete Network`,
+    description: `Explore ${uni.university_name}'s athlete and alumni career and professional network.`,
     openGraph: {
-      title: `${uni.university_name} Athletic Network`,
-      description: `Connect with ${uni.university_name} athletes and alumni.`,
+      title: `${uni.university_name} Athlete Network`,
+      description: `The Professional Networking Site that connects ${uni.university_name} athletes.`,
       images: [uni.logo_url],
     },
   };
