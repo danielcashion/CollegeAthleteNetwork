@@ -2,6 +2,7 @@
 
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 export default function ViewUniversityPpt() {
   const params = useParams();
@@ -21,29 +22,59 @@ export default function ViewUniversityPpt() {
     }
   }, [file, universityName]);
 
-  if (!file) return <p>Missing file parameter.</p>;
+  if (!file) return <p>We are sorry, but the file you are looking for is not available.</p>;
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-6 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
-        <h1 className="text-4xl font-bold mb-4">
-          {universityName ? `${universityName} Presentation` : "Presentation"}
-        </h1>
-      </div>
-
-      {iframeUrl ? (
-        <iframe
-          src={iframeUrl}
-          width="835px"
-          height="650px"
-          frameBorder="0"
-          allowFullScreen
-          title="PowerPoint Viewer"
-          className="mx-auto mt-10 bg-white shadow-lg"
+    <>
+      <Head>
+        <title>{`Media Viewer for the ${universityName} Athlete Network`}</title>
+        <meta
+          name="description"
+          content={`Media Viewer for the ${universityName} Athletic Department`}
         />
-      ) : (
-        <p className="text-center mt-10 text-lg">Loading presentation...</p>
-      )}
-    </div>
+      </Head>
+
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+        <div className="w-full bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pt-20 pb-5 text-center shadow-md">
+          <h1 className="text-3xl mt-2 sm:text-4xl font-extrabold tracking-tight">
+            {universityName
+              ? `Custom Media Viewer for The ${universityName} Athlete Network`
+              : "Media Viewer"}
+          </h1>
+          <p className="text-3xl mt-4 max-w-2xl mx-auto font-bold text-white/80">
+            Current Topic:
+          </p>
+          <p className="text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
+            Summarizing the unique value The College Athlete
+            Network brings to the {universityName} Athletic Department & the{" "}
+            {universityName} Athlete Network.
+          </p>
+        </div>
+
+        <div className="w-full max-w-screen-lg px-4 sm:px-8 mt-5">
+          {iframeUrl ? (
+            <div className="relative w-full pb-[75%] rounded-2xl shadow-2xl border border-gray-200 bg-white overflow-hidden">
+              <iframe
+                src={iframeUrl}
+                className="absolute top-0 left-0 w-full h-full"
+                frameBorder="0"
+                allowFullScreen
+                title="PowerPoint Viewer"
+              />
+            </div>
+          ) : (
+            <p className="text-center text-lg text-gray-600 mt-10">
+              Loading presentation...
+            </p>
+          )}
+        </div>
+        <button
+          onClick={() => (window.location.href = "/contact-us")}
+          className="mt-6 bg-[#1C315F] text-[#FFFFFF] font-semibold px-6 py-2 rounded-full mb-10 shadow hover:bg-[#ED3237] transition"
+        >
+          Get in Touch
+        </button>
+      </div>
+    </>
   );
 }
