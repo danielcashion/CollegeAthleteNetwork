@@ -10,33 +10,35 @@ export default function TrackClickPage() {
 
   useEffect(() => {
     const university_name = searchParams.get("university_name");
-    const filename = searchParams.get("file_name");
+    const file_name = searchParams.get("file_name");
     const row_id = searchParams.get("row_id");
 
-    if (university_name && row_id && filename) {
+    if (university_name && row_id && file_name) {
       const is_active_YN = 1;
       const created_by = 'admin';
       const created_datetime = new Date().toISOString();
+      console.log(university_name, row_id, file_name, is_active_YN, created_by, created_datetime)
 
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/track_click`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           row_id,
-          university: university_name,
-          filename,
-          is_active_YN,
-          created_by,
-          created_datetime,
+          university_name: university_name,
+          file_name: file_name,
+          is_active_YN: is_active_YN,
+          created_by: created_by,
+          created_datetime: created_datetime,
         }),
+
       }).catch((err) => {
         console.error("Failed to log click:", err);
       });
 
       setTimeout(() => {
-        router.push(`/media-viewer/${university_name}?file=${filename}`);
+        router.push(`/media-viewer/${university_name}?file=${file_name}`);
       }, 300);
     } else {
       router.push("/");
