@@ -7,8 +7,20 @@ export default function sitemap() {
 async function generateSitemap() {
   try {
     const universities = await getUniqueUniversityMeta();
-
     const baseUrl = "https://www.collegeathletenetwork.org";
+
+    const staticPages = [
+      "about-us",
+      "athlete-checklist",
+      "communications",
+      "contact-us",
+      "corporate-partners",
+      "data-transparency",
+      "join-us",
+      "privacy-policy",
+      "sample-data",
+      "terms-of-service",
+    ];
 
     const sitemapEntries = [
       {
@@ -16,12 +28,15 @@ async function generateSitemap() {
         changeFrequency: "daily",
         priority: 1,
       },
-      {
-        url: `${baseUrl}/athlete-network`,
-        changeFrequency: "daily",
-        priority: 0.8,
-      },
 
+      // Static pages
+      ...staticPages.map((path) => ({
+        url: `${baseUrl}/${path}`,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      })),
+
+      // Dynamic university pages
       ...universities.map((university: any) => ({
         url: `${baseUrl}/athlete-network/${university.slug}`,
         changeFrequency: "weekly",
