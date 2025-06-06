@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
 import AthleteNetworkPageContent from "@/components/AthleteNetworkPage/AthleteNetworkPage";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: Promise<{ university_name: string }>;
 };
+
+function slugToText(slug: string) {
+  const decoded = decodeURIComponent(slug);
+  const text = decoded.replace(/-/g, " ");
+
+  return text;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { university_name } = await params;
@@ -12,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `${
       process.env.NEXT_PUBLIC_API_URL
     }/publicprod/university_meta?university_name=${encodeURIComponent(
-      university_name
+      slugToText(university_name)
     )}`,
     {
       next: { revalidate: 36000 },
@@ -47,7 +55,7 @@ export default async function UniversityPage({ params }: Props) {
     `${
       process.env.NEXT_PUBLIC_API_URL
     }/publicprod/university_meta?university_name=${encodeURIComponent(
-      university_name
+      slugToText(university_name)
     )}`
   );
 
@@ -55,9 +63,7 @@ export default async function UniversityPage({ params }: Props) {
 
   const university = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
 
-  if (!university) {
-    return <div className="p-8">University not found.</div>;
-  }
+  if (!university) redirect("/404");
 
   return <AthleteNetworkPageContent university={university} />;
 }
