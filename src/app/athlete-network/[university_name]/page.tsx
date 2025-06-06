@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!uni) {
     return {
-      title: `${university_name} Athletic Network`,
+      title: `${university_name} Athlete Network`,
       description: `Explore ${university_name} athletes and professional opportunities!`,
     };
   }
