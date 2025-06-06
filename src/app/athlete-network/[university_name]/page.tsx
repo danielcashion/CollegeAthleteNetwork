@@ -8,8 +8,9 @@ type Props = {
 
 function slugToText(slug: string) {
   const decoded = decodeURIComponent(slug);
-  const text = decoded.replace(/-/g, " ");
+  let text = decoded.replace(/-/g, " ");
 
+  text = text.replace(/\band\b/g, "&");
   return text;
 }
 
