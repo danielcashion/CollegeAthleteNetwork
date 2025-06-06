@@ -7,12 +7,11 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       {/* Hero Section */}
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl font-bold mb-4">
-          {university.university_name} Athletic Network
+          {university.university_name} Athlete Network
         </h1>
         <p className="text-lg mb-6">
           Connect with student-athletes, alumni, and supporters from{" "}
-          {university.university_name}. Discover jobs, mentorship, and lifelong
-          connections.
+          {university.university_name}. Discover jobs, professional opportunities, and lifelong connections.
         </p>
 
         <div className="flex gap-2">
@@ -450,7 +449,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       <section className="py-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-            Ready to Join the {university.university_name} Athletic Network?
+            Ready to Join the {university.university_name} Athlete Network?
           </h2>
           <p className="text-lg text-gray-600 mb-8">
             Take the next step in your career journey. Connect with thousands of{" "}
@@ -483,7 +482,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
           </div>
 
           <div className="mt-8 text-sm text-gray-500">
-            <p>Join over 5,000+ student-athletes already in the network</p>
+            <p>Join over 95,000+ student-athletes already in The College Athlete network</p>
           </div>
         </div>
       </section>

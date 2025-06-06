@@ -29,11 +29,11 @@ const OurSolution = () => {
               <div className="flex items-start mb-4 space-x-3">
                 <FaFilter className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
                 <h3 className="font-bold text-2xl text-[#ED3237]">
-                  Advanced Filtering
+                  Advanced Search
                 </h3>
               </div>
               <p className="text-xl mt-2">
-                Utilize filtering by city, state, industry, sport, title,
+                  Utilize filtering by city, state, industry, sport, 
                 company, industry, graduation year, etc., to find the best
                 people within your Universities Network for your next big role.
               </p>
