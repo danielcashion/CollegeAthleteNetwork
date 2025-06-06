@@ -40,6 +40,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 alt={`${university.university_name} athlete network`}
                 width={600}
                 height={500}
+                priority
                 className="w-full max-w-[300px] sm:max-w-[400px] max-h-[300px] object-contain m-auto"
               />
             </div>
@@ -131,51 +132,57 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-              <div
-                className="text-4xl lg:text-5xl font-bold mb-2"
-                style={{ color: university.primary_hex }}
-              >
-                {university.num_teams}
+          <div className="flex flex-col sm:flex-row items-start justify-center gap-8">
+            {university.num_teams && university.num_teams > 0 && (
+              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
+                <div
+                  className="text-4xl lg:text-5xl font-bold mb-2"
+                  style={{ color: university.primary_hex }}
+                >
+                  {university.num_teams}
+                </div>
+                <div className="text-gray-600 text-lg font-medium">
+                  Athletic Teams
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  Representing excellence across multiple sports
+                </p>
               </div>
-              <div className="text-gray-600 text-lg font-medium">
-                Athletic Teams
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Representing excellence across multiple sports
-              </p>
-            </div>
+            )}
 
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-              <div
-                className="text-4xl lg:text-5xl font-bold mb-2"
-                style={{ color: university.primary_hex }}
-              >
-                {university.num_rosters}
+            {university.num_rosters && university.num_rosters > 0 && (
+              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
+                <div
+                  className="text-4xl lg:text-5xl font-bold mb-2"
+                  style={{ color: university.primary_hex }}
+                >
+                  {university.num_rosters}
+                </div>
+                <div className="text-gray-600 text-lg font-medium">
+                  Active Rosters
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  Current team rosters across all sports
+                </p>
               </div>
-              <div className="text-gray-600 text-lg font-medium">
-                Active Rosters
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Current team rosters across all sports
-              </p>
-            </div>
+            )}
 
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-              <div
-                className="text-4xl lg:text-5xl font-bold mb-2"
-                style={{ color: university.primary_hex }}
-              >
-                {university.num_athletes.toLocaleString()}
+            {university.num_athletes && university.num_athletes > 0 && (
+              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
+                <div
+                  className="text-4xl lg:text-5xl font-bold mb-2"
+                  style={{ color: university.primary_hex }}
+                >
+                  {university.num_athletes.toLocaleString()}
+                </div>
+                <div className="text-gray-600 text-lg font-medium">
+                  Student-Athletes
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  Past and present athletes in our network
+                </p>
               </div>
-              <div className="text-gray-600 text-lg font-medium">
-                Student-Athletes
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Past and present athletes in our network
-              </p>
-            </div>
+            )}
           </div>
         </div>
       </section>

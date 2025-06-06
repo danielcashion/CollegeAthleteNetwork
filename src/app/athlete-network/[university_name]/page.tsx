@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       slugToText(university_name)
     )}`,
     {
-      next: { revalidate: 36000 },
+      next: { revalidate: 3600 },
     }
   );
   const arr: any = await res.json();
