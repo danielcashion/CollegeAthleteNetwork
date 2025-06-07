@@ -14,7 +14,7 @@ export default function ViewUniversityPpt() {
 
   useEffect(() => {
     if (file && universityName) {
-      const s3_Media_Domain = process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN; // https://d38njvi41lhhq.cloudfront.net
+      const s3_Media_Domain = "https://d38njvi41lhhq.cloudfront.net" // process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN; // 
       console.log("s3_Media_Domain: ", s3_Media_Domain);
       const s3Url = `${s3_Media_Domain}/${file}`;
       console.log("s3Url: ", s3Url);
