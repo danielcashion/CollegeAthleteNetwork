@@ -14,7 +14,10 @@ export default function ViewUniversityPpt() {
 
   useEffect(() => {
     if (file && universityName) {
-      const s3Url = `https://collegeathletenetwork.s3.us-east-1.amazonaws.com/ppts/${file}`;
+      const s3_Media_Domain = process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN; // https://d38njvi41lhhq.cloudfront.net
+      console.log("s3_Media_Domain: ", s3_Media_Domain);
+      const s3Url = `${s3_Media_Domain}/${file}`;
+      console.log("s3Url: ", s3Url);
       const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
         s3Url
       )}`;
