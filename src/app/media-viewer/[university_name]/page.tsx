@@ -12,18 +12,18 @@ export default function ViewUniversityPpt() {
   const file = searchParams.get("file");
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (file && universityName) {
-      const s3_Media_Domain = "https://d38njvi41lhhq.cloudfront.net" // process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN; // 
-      console.log("s3_Media_Domain: ", s3_Media_Domain);
-      const s3Url = `${s3_Media_Domain}/${file}`;
-      console.log("s3Url: ", s3Url);
-      const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-        s3Url
-      )}`;
-      setIframeUrl(viewerUrl);
-    }
-  }, [file, universityName]);
+useEffect(() => {
+  if (file && universityName) {
+    const s3_Media_Domain = "https://d38njvi41lhhq.cloudfront.net"; // process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN;
+    console.log("s3_Media_Domain: ", s3_Media_Domain);
+    const s3Url = `${s3_Media_Domain}/${file}`;
+    console.log("s3Url: ", s3Url);
+    const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+      s3Url
+    )}&wdPrint=0`;  //disable printing
+    setIframeUrl(viewerUrl);
+  }
+}, [file, universityName]);
 
   if (!file) return <p>We are sorry, but the file you are looking for is not available.</p>;
 
