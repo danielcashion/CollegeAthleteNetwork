@@ -45,7 +45,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             </div>
             <div className="order-1 lg:order-2 space-y-6">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                Join the {university.university_name} Network
+                Join the {university.university_name} Athleteetwork!
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Connect with thousands of {university.university_name}{" "}
