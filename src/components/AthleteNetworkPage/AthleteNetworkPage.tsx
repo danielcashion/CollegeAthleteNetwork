@@ -2,6 +2,7 @@ import Image from "next/image";
 import OurSolution from "../AboutUsPage/OurSolution";
 
 const AthleteNetworkPageContent = ({ university }: any) => {
+  console.log("university meta info: ", university);
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -11,7 +12,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
         </h1>
         <p className="text-lg mb-6">
           Connect with student-athletes, alumni, and supporters from{" "}
-          {university.university_name}. Discover jobs, professional opportunities, and lifelong connections.
+          {university.university_name}. Discover jobs, professional
+          opportunities, and lifelong connections.
         </p>
 
         <div className="flex gap-2">
@@ -45,7 +47,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             </div>
             <div className="order-1 lg:order-2 space-y-6">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                Take your place in the {university.university_name} Athlete Network!
+                Take your place in the {university.university_name} Athlete
+                Network!
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Connect with thousands of {university.university_name}{" "}
@@ -449,7 +452,10 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       <section className="py-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-            Ready to Join the {university.university_name} Athlete Network?
+            Ready to Join the{" "}
+            <a href={university.base_url || "#"} target="_blank">
+              {university.university_name} Athlete Network?
+            </a>
           </h2>
           <p className="text-lg text-gray-600 mb-8">
             Take the next step in your career journey. Connect with thousands of{" "}
@@ -482,7 +488,10 @@ const AthleteNetworkPageContent = ({ university }: any) => {
           </div>
 
           <div className="mt-8 text-sm text-gray-500">
-            <p>Join over 95,000+ student-athletes already in The College Athlete network</p>
+            <p>
+              Join over 95,000+ student-athletes already in The College Athlete
+              network
+            </p>
           </div>
         </div>
       </section>
