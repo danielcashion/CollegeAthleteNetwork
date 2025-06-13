@@ -1,5 +1,8 @@
 "use client";
 
+
+// Example of URL -> www.collegeathletenetwork.org/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&file_name=CollegeAthleteNetworkIntroduction-Yale.pptx
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { CgSpinner } from "react-icons/cg";
