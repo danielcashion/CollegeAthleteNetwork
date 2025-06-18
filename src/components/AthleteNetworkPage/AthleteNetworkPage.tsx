@@ -489,8 +489,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
 
           <div className="mt-8 text-sm text-gray-500">
             <p>
-              Join over 95,000+ student-athletes already in The College Athlete
-              network
+              Join over 101,000+ student-athletes already in The College Athlete
+              Network
             </p>
           </div>
         </div>
