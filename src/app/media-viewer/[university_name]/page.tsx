@@ -8,49 +8,57 @@ export default function ViewUniversityPpt() {
   const params = useParams();
   const searchParams = useSearchParams();
 
-  const universityName = params.university_name;
+  const rawUniversityName: any = params.university_name || "";
+
+  const decodedName = decodeURIComponent(rawUniversityName);
+  const displayedUniversityName = decodedName.replace(/-/g, " ");
+
   const file = searchParams.get("file");
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
-useEffect(() => {
-  if (file && universityName) {
-    const s3_Media_Domain = "https://d38njvi41lhhq.cloudfront.net"; // process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN;
-    console.log("s3_Media_Domain: ", s3_Media_Domain);
-    const s3Url = `${s3_Media_Domain}/${file}`;
-    console.log("s3Url: ", s3Url);
-    const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-      s3Url
-    )}&wdPrint=0`;  //disable printing
-    setIframeUrl(viewerUrl);
-  }
-}, [file, universityName]);
+  useEffect(() => {
+    if (file && rawUniversityName) {
+      const s3_Media_Domain = "https://d38njvi41lhhq.cloudfront.net"; // process.env.NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN;
+      console.log("s3_Media_Domain: ", s3_Media_Domain);
+      const s3Url = `${s3_Media_Domain}/${file}`;
+      console.log("s3Url: ", s3Url);
+      const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+        s3Url
+      )}&wdPrint=0`; //disable printing
+      setIframeUrl(viewerUrl);
+    }
+  }, [file, rawUniversityName]);
 
-  if (!file) return <p>We are sorry, but the file you are looking for is not available.</p>;
+  if (!file) {
+    return (
+      <p>We’re sorry, but the file you’re looking for is not available.</p>
+    );
+  }
 
   return (
     <>
       <Head>
-        <title>{`Media Viewer for the ${universityName} Athlete Network`}</title>
+        <title>
+          Media Viewer for the {displayedUniversityName} Athlete Network
+        </title>
         <meta
           name="description"
-          content={`Media Viewer for the ${universityName} Athletic Department`}
+          content={`Media Viewer for the ${displayedUniversityName} Athletic Department`}
         />
       </Head>
 
       <div className="min-h-screen bg-gray-50 flex flex-col items-center">
         <div className="w-full bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pt-20 pb-5 text-center shadow-md">
           <h1 className="text-3xl mt-2 sm:text-4xl font-extrabold tracking-tight">
-            {universityName
-              ? `Custom Media Viewer for The ${universityName} Athlete Network`
-              : "Media Viewer"}
+            {`Custom Media Viewer for The ${displayedUniversityName} Athlete Network`}
           </h1>
           <p className="text-3xl mt-4 max-w-2xl mx-auto font-bold text-white/80">
             Current Topic:
           </p>
           <p className="text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
-            Summarizing the unique value The College Athlete
-            Network brings to the {universityName} Athletic Department & the{" "}
-            {universityName} Athlete Network.
+            Summarizing the unique value The College Athlete Network brings to
+            the {displayedUniversityName} Athletic Department & the{" "}
+            {displayedUniversityName} Athlete Network.
           </p>
         </div>
 
