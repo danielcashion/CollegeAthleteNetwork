@@ -7,7 +7,7 @@ import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from "next/app";
 import LogUserIP from "@/components/UserAudit/LogUserIP";
 import CanVideoModal from "@/components/Modals/CanVideoModal";
-import { GoogleAnalytics } from "nextjs-google-analytics";
+import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,7 +55,7 @@ export default function RootLayout({
         <CanVideoModal />
         <LogUserIP />
         <Analytics />
-        <GoogleAnalytics trackPageViews gaMeasurementId="G-KKM0XYQD3D" />
+        <GoogleAnalyticsClient />
       </body>
     </html>
   );
