@@ -15,12 +15,13 @@ export default function TrackClickPage() {
     const university_name = searchParams.get("university_name");
     const file_name = searchParams.get("file_name");
     const row_id = searchParams.get("row_id");
+    const campaign_id = searchParams.get("campaign_id");
 
     if (university_name && row_id && file_name) {
       const is_active_YN = 1;
       const created_by = 'admin';
       const created_datetime = new Date().toISOString();
-      console.log(university_name, row_id, file_name, is_active_YN, created_by, created_datetime)
+      console.log(university_name, row_id, file_name, campaign_id, is_active_YN, created_by, created_datetime)
 
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
         method: "POST",
@@ -31,6 +32,7 @@ export default function TrackClickPage() {
           row_id,
           university_name: university_name,
           file_name: file_name,
+          campaign_id: campaign_id || null, // Optional, can be null
           is_active_YN: is_active_YN,
           created_by: created_by,
           created_datetime: created_datetime,
