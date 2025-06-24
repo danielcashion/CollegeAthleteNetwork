@@ -45,13 +45,24 @@ export default async function SurveyPage({
           {data.university_name}&apos;s Athlete Network Survey
         </h1>
         <h2 className="text-3xl font-bold mb-2 text-center text-white">
-          Survey Topic: How Strong is the Athlete Network Offering at{" "}
-          {data.university_name}?
+          Survey Topic: The Strength of the Athlete Network Offering at{" "}
+          {data.university_name}
         </h2>
-        <h3 className="text-lg font-bold mb-6 text-center text-white">
-          Please note that this survey is anonymous and will not be shared with
-          anyone outside of the {data.university_name} Athletic Department.
+        <h3 className="text-lg font-bold mb-1 text-center text-white">
+          This survey is anonymous and will not be shared with anyone outside of
+          the {data.university_name} Athletic Department.
         </h3>
+        <h2 className="text-lg font-bold text-center text-white">
+          Please also note that while we are actively seeking to provide our
+          services to {data.university_name}, we currently have <strong>no affiliation</strong>
+          {" "} with the university.
+        </h2>
+        <h4 className="text-lg font-bold mb-6 text-center text-white">
+          The College Athlete Network strengthens other universities&apos;
+          Athlete Networks, and we are{" "}
+          <strong>independently researching</strong> the offering at{" "}
+          {data.university_name}.
+        </h4>
       </div>
 
       <div className="bg-[#F9FAFB]">
