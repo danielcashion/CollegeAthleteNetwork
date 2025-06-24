@@ -149,7 +149,7 @@ export default function SurveyForm({
       setTimeout(() => router.push("/"), 4900);
     } catch (error) {
       console.error(
-        "We are so sorry, but something went wrong submitting the survey:",
+        "We are so sorry, but something went wrong submitting the survey. Please try again.",
         error
       );
       alert(
@@ -207,7 +207,7 @@ export default function SurveyForm({
         } pb-4 border-b border-gray-100 rounded-t-xl shadow-sm transition-padding duration-200`}
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Feedback Survey
+          User Feedback Survey
         </h2>
         <div className="flex items-center justify-between">
           <p className="text-gray-600">
@@ -343,7 +343,7 @@ export default function SurveyForm({
           <div className="mt-4">
             <input
               type="email"
-              placeholder="your.email@example.com"
+              placeholder="your.email@university.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueMain focus:border-blueMain outline-none transition-all"
