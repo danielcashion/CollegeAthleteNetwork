@@ -120,6 +120,8 @@ export default function SurveyForm({
       : 0;
   };
 
+  const totalRequired = getTotalRequired();
+
   const handleSubmit = async () => {
     if (!responses || !sortedQuestions) return;
     const incomplete = responses.some(
@@ -214,14 +216,16 @@ export default function SurveyForm({
           <p className="text-gray-600">
             Please answer all questions to submit your feedback
           </p>
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <span className="text-gray-600">Progress:</span>
-            <div className="flex items-center gap-1">
-              <span className="text-redMain">{getCompletedCount()}</span>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">{getTotalRequired()}</span>
+          {totalRequired > 0 && (
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <span className="text-gray-600">Progress:</span>
+              <div className="flex items-center gap-1">
+                <span className="text-redMain">{getCompletedCount()}</span>
+                <span className="text-gray-400">/</span>
+                <span className="text-gray-600">{getTotalRequired()}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="w-full bg-gray-100 h-2 rounded-full mt-2 overflow-hidden">
           <div
