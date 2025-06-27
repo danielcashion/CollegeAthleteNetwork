@@ -36,7 +36,6 @@ export default function SurveyForm({
       : null
   );
 
-
   const [email, setEmail] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
   const [isSticky, setIsSticky] = useState(false);
@@ -116,8 +115,12 @@ export default function SurveyForm({
   };
 
   const getTotalRequired = () => {
-    return sortedQuestions ? sortedQuestions.filter((q) => q.required_YN === 1).length : 0;
+    return sortedQuestions
+      ? sortedQuestions.filter((q) => q.required_YN === 1).length
+      : 0;
   };
+
+  const totalRequired = getTotalRequired();
 
   const handleSubmit = async () => {
     if (!responses || !sortedQuestions) return;
@@ -213,14 +216,16 @@ export default function SurveyForm({
           <p className="text-gray-600">
             Please answer all questions to submit your feedback
           </p>
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <span className="text-gray-600">Progress:</span>
-            <div className="flex items-center gap-1">
-              <span className="text-redMain">{getCompletedCount()}</span>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">{getTotalRequired()}</span>
+          {totalRequired > 0 && (
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <span className="text-gray-600">Progress:</span>
+              <div className="flex items-center gap-1">
+                <span className="text-redMain">{getCompletedCount()}</span>
+                <span className="text-gray-400">/</span>
+                <span className="text-gray-600">{getTotalRequired()}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="w-full bg-gray-100 h-2 rounded-full mt-2 overflow-hidden">
           <div
@@ -298,6 +303,67 @@ export default function SurveyForm({
                   </div>
                 )}
 
+                {question.question_type === "boolean" && (
+                  <div className="mt-4 space-y-2">
+                    <div className="flex gap-4">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleAnswerChange(index, {
+                            question_id: question.question_id,
+                            answer: "Yes",
+                          })
+                        }
+                        className={`px-4 py-2 rounded ${
+                          responses?.[index].answer
+                            ?.toString()
+                            .startsWith("Yes")
+                            ? "bg-blueMain text-white"
+                            : "bg-gray-100 hover:bg-gray-200"
+                        }`}
+                      >
+                        Yes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleAnswerChange(index, {
+                            question_id: question.question_id,
+                            answer: "No",
+                          })
+                        }
+                        className={`px-4 py-2 rounded ${
+                          responses?.[index].answer === "No"
+                            ? "bg-blueMain text-white"
+                            : "bg-gray-100 hover:bg-gray-200"
+                        }`}
+                      >
+                        No
+                      </button>
+                    </div>
+                    {responses?.[index].answer
+                      ?.toString()
+                      .startsWith("Yes") && (
+                      <textarea
+                        rows={3}
+                        placeholder="Tell us more…"
+                        maxLength={200}
+                        value={
+                          (responses[index].answer as string).split("| ")[1] ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleAnswerChange(index, {
+                            question_id: question.question_id,
+                            answer: `Yes | ${e.target.value}`,
+                          })
+                        }
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueMain outline-none transition-all"
+                      />
+                    )}
+                  </div>
+                )}
+
                 {question.question_type === "input" && (
                   <div className="mt-4">
                     <textarea
@@ -333,7 +399,8 @@ export default function SurveyForm({
           <div className="flex items-start gap-3 mb-4">
             <div className="flex-1">
               <h3 className="text-lg font-medium text-gray-800">
-                Would you like us to contact you to explore a corporate partnership or to learn more? (Optional)
+                Would you like us to contact you to explore a corporate
+                partnership or to learn more? (Optional)
               </h3>
               <p className="text-sm text-gray-500 mt-1">
                 Enter your email if you&apos;d like to keep current.
