@@ -346,7 +346,7 @@ export default function SurveyForm({
                       .startsWith("Yes") && (
                       <textarea
                         rows={3}
-                        placeholder="Tell us more…"
+                        placeholder="Any guidance you could provide would be greatly appreciated."
                         maxLength={200}
                         value={
                           (responses[index].answer as string).split("| ")[1] ||
