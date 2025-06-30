@@ -1,9 +1,5 @@
 "use client";
 
-// Example of URL ->
-// www.collegeathletenetwork.org/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&campaign_id=New%20User&file_name=CollegeAthleteNetworkIntroduction-Yale.pptx
-// http://localhost:3000/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&destination=surveys&survey_id=surv_303&campaign_id=New%20User
-
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { CgSpinner } from "react-icons/cg";
@@ -20,45 +16,53 @@ export default function TrackClickPage() {
     const campaign_id = searchParams.get("campaign_id") || null; // Optional, can be null
     const survey_id = searchParams.get("survey_id") || null; // Optional, can be null
 
-//
-    if (university_name && row_id && destination === "surveys" && survey_id) {
-      const is_active_YN = 1;
-      const created_by = 'admin';
-      const created_datetime = new Date().toISOString();
-      console.log(university_name, row_id, destination, survey_id, file_name, campaign_id, is_active_YN, created_by, created_datetime)
+    const created_by = "admin";
+    const created_datetime = new Date().toISOString();
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          row_id,
-          university_name: university_name,
-          destination: destination || null, // Optional, can be null
-          file_name: survey_id || null, // Optional, can be null
-          campaign_id: campaign_id || null, // Optional, can be null
-          created_by: created_by,
-          created_datetime: created_datetime,
-        }),
-
-      }).catch((err) => {
-        console.error("Failed to log click:", err);
-      });
-
-      setTimeout(() => {
-        if (destination === "surveys") {
-          router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
-          console.log(`Redirecting to survey: ${survey_id} for university: ${university_name}`);
-        } else if (destination === "media-viewer") {
-          router.push(`/media-viewer/${university_name}?file=${file_name}`);
-        } else {
-          router.push(`/media-viewer/${university_name}?file=${file_name}`); // Default case
-        }
-      }, 300);
-    } else {
+    // If essential params are missing, move to home
+    if (!university_name || !row_id || !destination) {
       router.push("/");
+      return;
     }
+
+    if (destination === "surveys" && !survey_id) {
+      router.push("/");
+      return;
+    }
+
+    if (destination === "media-viewer" && !file_name) {
+      router.push("/");
+      return;
+    }
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        row_id,
+        university_name: university_name,
+        destination: destination || null,
+        file_name: survey_id || null,
+        campaign_id: campaign_id || null,
+        created_by: created_by,
+        created_datetime: created_datetime,
+      }),
+    }).catch((err) => {
+      console.error("Failed to log click:", err);
+    });
+
+    // Routing
+    setTimeout(() => {
+      if (destination === "surveys") {
+        router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
+      } else if (destination === "media-viewer") {
+        router.push(`/media-viewer/${university_name}?file=${file_name}`);
+      } else {
+        router.push("/");
+      }
+    }, 300);
   }, [searchParams, router]);
 
   return (
