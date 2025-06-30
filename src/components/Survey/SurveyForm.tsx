@@ -209,8 +209,8 @@ export default function SurveyForm({
           isSticky ? "pt-24" : "pt-6"
         } pb-4 border-b border-gray-100 rounded-t-xl shadow-sm transition-padding duration-200`}
       >
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          User Feedback Survey
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          Survey Questions:
         </h2>
         <div className="flex items-center justify-between">
           <p className="text-gray-600">
@@ -346,7 +346,7 @@ export default function SurveyForm({
                       .startsWith("Yes") && (
                       <textarea
                         rows={3}
-                        placeholder="Tell us more…"
+                        placeholder="Any guidance you could provide would be greatly appreciated."
                         maxLength={200}
                         value={
                           (responses[index].answer as string).split("| ")[1] ||
