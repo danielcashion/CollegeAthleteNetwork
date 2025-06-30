@@ -2,7 +2,8 @@
 
 // Example of URL ->
 // www.collegeathletenetwork.org/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&campaign_id=New%20User&file_name=CollegeAthleteNetworkIntroduction-Yale.pptx
-// http://localhost:3000/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&destination=surveys&survey_id=surv_303
+// http://localhost:3000/track-click?row_id=aacc6762-3d84-11f0-b73f-06f633821df3&university_name=Yale&destination=surveys&survey_id=surv_303&campaign_id=New%20User
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { CgSpinner } from "react-icons/cg";
@@ -19,8 +20,8 @@ export default function TrackClickPage() {
     const campaign_id = searchParams.get("campaign_id") || null; // Optional, can be null
     const survey_id = searchParams.get("survey_id") || null; // Optional, can be null
 
-
-    if (university_name && row_id) {
+//
+    if (university_name && row_id && destination === "surveys" && survey_id) {
       const is_active_YN = 1;
       const created_by = 'admin';
       const created_datetime = new Date().toISOString();
@@ -35,7 +36,7 @@ export default function TrackClickPage() {
           row_id,
           university_name: university_name,
           destination: destination || null, // Optional, can be null
-          file_name: file_name || survey_id || null, // Optional, can be null
+          file_name: survey_id || null, // Optional, can be null
           campaign_id: campaign_id || null, // Optional, can be null
           created_by: created_by,
           created_datetime: created_datetime,
