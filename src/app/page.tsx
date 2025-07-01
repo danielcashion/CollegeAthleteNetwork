@@ -67,7 +67,7 @@ export default function Home() {
             partner universities and their athletes with an up-to-date knowledge
             graph of their athlete network. Our platform curates and organizes
             the geographical locations and professional journeys data (past
-            &amp; present) of your college&apos; athletes, creating a actionable
+            &amp; present) of your college&apos; athletes, creating an actionable
             network for your university.
           </p>
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
