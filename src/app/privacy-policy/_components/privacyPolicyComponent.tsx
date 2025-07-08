@@ -187,18 +187,7 @@ export default function PrivacyPolicyComponent() {
             <strong>&quot;Cookies&quot;</strong> are small files stored on your
             device (computer or mobile device).
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{ textAlign: "justify", color: "#1C315F" }}
-            paragraph
-          >
-            <strong>&quot;Data Controller&quot;</strong> means the natural or
-            legal person who (either alone or jointly or in common with other
-            persons) determines the purposes for which and the manner in which
-            any personal information are or are to be processed. For the purpose
-            of this Privacy Policy, we are a Data Controller of your Personal
-            Data.
-          </Typography>
+  
           <Typography
             variant="body1"
             sx={{ textAlign: "justify", color: "#1C315F" }}
