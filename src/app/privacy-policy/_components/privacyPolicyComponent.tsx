@@ -39,7 +39,7 @@ export default function PrivacyPolicyComponent() {
           sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
           gutterBottom
         >
-          Effective date: January 1st, 2025
+          Effective date: June 1st, 2025
         </Typography>
 
         <Typography
@@ -47,12 +47,13 @@ export default function PrivacyPolicyComponent() {
           sx={{ textAlign: "justify", color: "#1C315F" }}
           paragraph
         >
-          The College Athlete Network LLC (“The Company,” “us,” “we,” or “our”)
-          operates the www.collegeathletenetwork.org website (hereinafter
+          <strong>The College Athlete Network LLC </strong> (“The Company,”
+          “us,” “we,” or “our”) operates the{" "}
+          <strong>www.collegeathletenetwork.org</strong> website (hereinafter
           referred to as the “Service”). This page informs you of our policies
-          regarding the collection, use, and disclosure of personal data when
-          you use our Service and the choices you have associated with that
-          data.
+          regarding the collection, use, and disclosure of public and personal
+          data when you use our Service and the choices you have associated with
+          that data.
         </Typography>
 
         <Typography
@@ -60,11 +61,13 @@ export default function PrivacyPolicyComponent() {
           sx={{ textAlign: "justify", color: "#1C315F" }}
           paragraph
         >
-          We use your data to provide and improve the Service. By using the
-          Service, you agree to the collection and use of information in
-          accordance with this policy. Unless otherwise defined in this Privacy
-          Policy, the terms used in this Privacy Policy have the same meanings
-          as in our Terms and Conditions.
+          To provide and improve our Service, we use publicly sourced data
+          (e.g., publicly available team rosters, professional and educational
+          profile data, social media) as well as source data from 3rd parties.
+          By using the Service, you agree to the collection and use of
+          information in accordance with this policy. Unless otherwise defined
+          in this Privacy Policy, the terms used in this Privacy Policy have the
+          same meanings as in our Terms and Conditions.
         </Typography>
 
         <Section>
@@ -85,7 +88,6 @@ export default function PrivacyPolicyComponent() {
               "Your GDPR Data Protection Rights",
               "Service Providers",
               "Analytics",
-              "Advertising",
               "Payments",
               "Links to Other Sites",
               "Children's Privacy",
@@ -99,6 +101,50 @@ export default function PrivacyPolicyComponent() {
           </List>
         </Section>
 
+        <Section>
+          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+            Summary
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "justify", color: "#1C315F" }}
+            paragraph
+          >
+            At <strong>The College Athlete Network LLC</strong>, we greatly
+            value your privacy. This summary outlines how we handle your
+            information when you use our website,{" "}
+            <strong>www.collegeathletenetwork.org</strong>:
+          </Typography>
+          <List dense style={{ color: "#1C315F", fontSize: "18px" }}>
+            {[
+              "What We Collect: We collect personal details like your name, email, phone number, university, and sport(s) played, as well as public data from third-party sources (e.g., university rosters). We also gather usage data, like IP addresses and browsing activity, using cookies to improve your experience.",
+              "How We Use It: Your data helps us provide and enhance our services, offer personalized features, ensure security, and analyze usage. We do not sell or distribute your personal data to any third parties.",
+              "Your Rights: You can access, update, delete, or restrict your data. European users have additional GDPR rights, like data portability. Contact us at admin@collegeathletenetwork.org to exercise these rights.",
+              "Data Sharing: We use trusted providers like Stripe for payments and Google Analytics for insights, but your data remains confidential and isn’t shared beyond these services.",
+              "Security & Retention: We protect your data with encryption and other measures, retaining it only as long as needed (up to 36 months) or as required by law.",
+              "Children’s Privacy: Our service is not for users under 18, and we don’t knowingly collect their data.",
+            ].map((item) => (
+              <PrivacyListItem key={item}>
+                <ListItemText primary={item} sx={{ pl: 3, fontSize: "18px" }} />
+              </PrivacyListItem>
+            ))}
+          </List>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "justify", color: "#1C315F" }}
+            paragraph
+          >
+            For details, read our full Privacy Policy below. Questions? Email us
+            at{" "}
+            <strong>
+              <a href="mailto:admin@collegeathletenetwork.org">
+                admin@collegeathletenetwork.org
+              </a>
+            </strong>
+            .
+          </Typography>
+        </Section>
+
         {/* Definitions Section */}
         <Section>
           <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
@@ -109,7 +155,7 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Service</strong> means the www.collegeathletenetwork.org
+            <strong>"Service"</strong> means the www.collegeathletenetwork.org
             website and any future mobile application operated by The College
             Athlete Network LLC.
           </Typography>
@@ -118,18 +164,18 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Personal Data</strong> means data about a living individual
-            who can be identified from those data (or from those and other
-            information either in our possession or likely to come into our
-            possession).
+            <strong>"Personal Data"</strong> means data about a living
+            individual who can be identified from those data (or from those and
+            other information either in our possession or likely to come into
+            our possession).
           </Typography>
           <Typography
             variant="body1"
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Usage Data</strong> is data collected automatically, either
-            generated by the use of the Service or from the Service
+            <strong>"Usage Data"</strong> is data collected automatically,
+            either generated by the use of the Service or from the Service
             infrastructure itself (for example, the duration of a page visit).
           </Typography>
           <Typography
@@ -137,7 +183,7 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Cookies</strong> are small files stored on your device
+            <strong>"Cookies"</strong> are small files stored on your device
             (computer or mobile device).
           </Typography>
           <Typography
@@ -145,7 +191,7 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Data Controller</strong> means the natural or legal person
+            <strong>"Data Controller"</strong> means the natural or legal person
             who (either alone or jointly or in common with other persons)
             determines the purposes for which and the manner in which any
             personal information are or are to be processed. For the purpose of
@@ -156,7 +202,7 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Data Processors (or Service Providers) </strong>
+            <strong>"Data Processors (or Service Providers)" </strong>
             means the natural or legal person who (either alone or jointly or in
             common with other persons) determines the purposes for which and the
             manner in which any personal information are or are to be processed.
@@ -168,8 +214,8 @@ export default function PrivacyPolicyComponent() {
             sx={{ textAlign: "justify", color: "#1C315F" }}
             paragraph
           >
-            <strong>Data Subject (or User) </strong>is any living individual who
-            is using our Service and is the subject of Personal Data.
+            <strong>"Data Subject (or User)"</strong> is any living individual
+            who is using our Service and is the subject of Personal Data.
           </Typography>
         </Section>
 
@@ -223,12 +269,19 @@ export default function PrivacyPolicyComponent() {
             paragraph
           >
             We maintain and source publicly available professional, educational,
-            and personal contact information for our network users. We do not
-            wish to be contacted by users for purposes unrelated to the intended
-            use of this data. We do not sell or rent Personal Data to third
-            parties. Additionally, we do not require any university to provide
-            roster data; however, if a university chooses to do so, such data
-            will be kept strictly confidential.
+            and personal contact information for our athlete network users. We
+            do not wish to be contacted by users for purposes unrelated to the
+            intended use of this data. We do not and will not sell or distribute
+            any Personal Data to any third parties.
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "justify", color: "#1C315F" }}
+            paragraph
+          >
+            We do not require any university to provide roster data; however, if
+            a university chooses to do provide us with some of their additional
+            data, such data will be kept strictly confidential.
           </Typography>
 
           <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
@@ -347,6 +400,7 @@ export default function PrivacyPolicyComponent() {
             ))}
           </List>
         </Section>
+
         {/* GDPR */}
         <Section>
           <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
@@ -429,11 +483,11 @@ export default function PrivacyPolicyComponent() {
             paragraph
           >
             The Company will retain your Personal Data only for as long as is
-            necessary for the purposes set out in this Privacy Policy, but for
-            no more then 36 months on a rolling basis. We will retain and use
-            your Personal Data only to the extent necessary to comply with our
-            legal obligations, resolve disputes, and enforce our legal
-            agreements and policies.
+            necessary as described in this Privacy Policy, but for no more then
+            36 months on a rolling basis. We will retain and use your Personal
+            Data only to the extent necessary to comply with our legal
+            obligations, resolve disputes, and enforce our legal agreements and
+            policies.
           </Typography>
           <Typography
             variant="body1"
@@ -524,8 +578,8 @@ export default function PrivacyPolicyComponent() {
           >
             We provide paid products and/or services within the Service. In that
             case, we use a third-party service named Stripe for payment
-            processing (e.g. payment processors). Stripe&apos;s Privacy Policy
-            can be viewed at{" "}
+            processing (e.g. payment processors). Stripe's Privacy Policy can be
+            viewed at{" "}
             <a
               href="https://stripe.com/us/privacy"
               target="_blank"
@@ -587,6 +641,7 @@ export default function PrivacyPolicyComponent() {
             effective when they are posted on this page.
           </Typography>
         </Section>
+
         {/* Transfer of Data */}
         <Section>
           <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
@@ -746,7 +801,7 @@ export default function PrivacyPolicyComponent() {
             paragraph
           >
             If you have any questions about this Privacy Policy, please contact
-            us by email at admin@collegeathletenetwork.org.
+            us by email at <strong>admin@collegeathletenetwork.org</strong>.
           </Typography>
         </Section>
       </PrivacyContainer>
