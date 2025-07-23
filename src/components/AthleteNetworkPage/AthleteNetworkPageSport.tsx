@@ -3,7 +3,7 @@ import OurSolution from "../AboutUsPage/OurSolution";
 import Link from "next/link";
 
 const AthleteNetworkPageContent = ({ sportData }: any) => {
-  console.log("sportData", sportData);
+  // console.log("sportData", sportData);
 
   return (
     <main className="min-h-screen">
