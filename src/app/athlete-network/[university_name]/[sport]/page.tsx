@@ -78,5 +78,5 @@ export default async function universitySportsPage({ params }: Props) {
   if (filteredSportArr.length === 0) {
     redirect("/404");
   }
-  return <AthleteNetworkPageContentSport sportData={filteredSportArr} />;
+  return <AthleteNetworkPageContentSport sportData={filteredSportArr[0]} />;
 }
