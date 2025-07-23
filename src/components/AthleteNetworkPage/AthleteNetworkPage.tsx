@@ -46,17 +46,17 @@ const AthleteNetworkPageContent = ({ university }: any) => {
               />
             </div>
             <div className="order-1 lg:order-2 space-y-6">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                Take your place in the {university.university_name} {university.mascot} Athlete
+              <h2 className="text-3xl lg:text-4xl font-bold" style={{ color: university.primary_hex }}>
+                Take your proper place in the {university.university_name} {university.mascot} Athlete
                 Network!
               </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+               <p className="text-lg text-gray-600 leading-relaxed" style={{ color: university.primary_hex }}>
                 Connect with thousands of {university.university_name}{" "}
                 student-athletes, alumni, and supporters. Access exclusive
                 career opportunities, mentorship programs, and networking events
                 designed specifically for the athletic community.
               </p>
-              <div className="space-y-2">
+              <div className="space-y-2"  style={{ color: university.primary_hex }}>
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
@@ -126,8 +126,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       <section className="py-10 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              {university.university_name} by the Numbers
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"  style={{ color: university.primary_hex }}>
+              {university.university_name} {university.mascot} by the Numbers
             </h2>
             <p className="text-lg text-gray-600">
               Join a thriving community of student-athletes and alumni
@@ -193,7 +193,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       <section className="py-10 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"  style={{ color: university.primary_hex }}>
               How It Works
             </h2>
             <p className="text-lg text-gray-600">
