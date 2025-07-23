@@ -8,7 +8,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
       {/* Hero Section */}
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl font-bold mb-4">
-          {university.university_name} Athlete Network
+          {university.university_name} {university.mascot} Athlete Network
         </h1>
         <p className="text-lg mb-6">
           Connect with student-athletes, alumni, and supporters from{" "}
@@ -47,7 +47,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             </div>
             <div className="order-1 lg:order-2 space-y-6">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                Take your place in the {university.university_name} Athlete
+                Take your place in the {university.university_name} {university.mascot} Athlete
                 Network!
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed">

@@ -33,16 +33,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!uni) {
     return {
-      title: `${university_name} Athlete Network`,
-      description: `Explore ${university_name} athletes and professional opportunities!`,
+      title: `${uni.university_name} ${uni.mascot} Athlete Network | Connecting Students & Alumni`,
+      description: `Explore ${uni.university_name} athletes and professional opportunities!`,
     };
   }
 
   return {
-    title: `${uni.university_name} Athlete Network | The College Athlete Network`,
+    title: `${uni.university_name} ${uni.mascot} Athlete Network | The College Athlete Network`,
     description: `Explore ${uni.university_name}'s athlete and alumni career network.`,
     openGraph: {
-      title: `${uni.university_name} Athlete Network`,
+      title: `${uni.university_name} ${uni.mascot} Athlete Network`,
       description: `Connect with ${uni.university_name} athletes and alumni.`,
       images: [uni.logo_url],
     },
