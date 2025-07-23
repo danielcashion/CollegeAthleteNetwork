@@ -1,16 +1,9 @@
-// /app/[uni_sportsversity]/[sport]/page.tsx
 import type { Metadata } from "next";
 import AthleteNetworkPageContentSport from "@/components/AthleteNetworkPage/AthleteNetworkPageSport";
-// TODO: modify the new above component To Handle Individual Sports
 import { redirect } from "next/navigation";
 
-// 1. Get Data from the `/university_teams` endpoint
-// -> university_name, team_name, url, gender_id (1 = Mens, 2 = Womens), url (for the team), sponsor, sponsor_logo_url will be used to generate the page
-// 2. Get distinct combination of uni_sportsversity and sport, as each uni_sportsque sport will have its own page. (if there are basketball teams for both men and women, they will have the same sport page but different teams)
-// 3. Should include the URLs for Mens & Womens teams, but in the same way we did them before (not as a link that invites users to leave our page, but as a searchable link for google).
-
 type Props = {
-  params: Promise<{ university_name: string }>;
+  params: Promise<{ university_name: string; sport: string }>;
 };
 
 function slugToText(slug: string) {
@@ -51,27 +44,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${uni_sports.university_name} ${uni_sports.team_name} Athlete Network`,
       description: `Connect with ${uni_sports.university_name} ${uni_sports.team_name} athletes and alumni.`,
-      images: [uni_sports.logo_url],  // Logo is not currently there... it comes from `/university_meta`
+      images: [uni_sports.logo_url], // Logo is not currently there... it comes from `/university_meta`
     },
   };
 }
 
 export default async function universitySportsPage({ params }: Props) {
-  const { university_name } = await params;
+  const { university_name, sport } = await params;
 
-  const res = await fetch(
+  const decodedUni = slugToText(university_name);
+  const decodedSport = slugToText(sport);
+
+  const sportRes = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_teams?university_name=${encodeURIComponent(     // API ENDPOINT WILL CHANGE... Dan currently writing it.
-      slugToText(university_name)
+    }/publicprod/university_sport_seo?university_name=${encodeURIComponent(
+      decodedUni
     )}`
   );
 
-  const arr: any = await res.json();
+  const sportArrRaw: any = await sportRes.json();
 
-  const university = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
+  // parse the sport_details string into a JSON array
+  const sportArr: any = sportArrRaw.map((item: any) => ({
+    ...item,
+    sport_details: JSON.parse(item.sport_details),
+  }));
 
-  if (!university) redirect("/404");
+  const filteredSportArr = sportArr.filter(
+    (item: any) => item.sport.toLowerCase() === decodedSport.toLowerCase()
+  );
 
-  return <AthleteNetworkPageContentSport university={university} />;
+  if (filteredSportArr.length === 0) {
+    redirect("/404");
+  }
+  return <AthleteNetworkPageContentSport sportData={filteredSportArr} />;
 }
