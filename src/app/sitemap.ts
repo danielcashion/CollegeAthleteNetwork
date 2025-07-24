@@ -1,4 +1,5 @@
 import { getUniqueUniversityMeta } from "@/services/getUniqueUniversityMeta";
+import { getUniversitySportsList } from "@/services/getUniversitySports";
 
 export default function sitemap() {
   return generateSitemap();
@@ -7,6 +8,8 @@ export default function sitemap() {
 async function generateSitemap() {
   try {
     const universities = await getUniqueUniversityMeta();
+    const sportsList = await getUniversitySportsList();
+
     const baseUrl = "https://www.collegeathletenetwork.org";
 
     const staticPages = [
@@ -42,6 +45,21 @@ async function generateSitemap() {
         changeFrequency: "weekly",
         priority: 0.7,
       })),
+
+      // Dynamic sport pages
+      ...sportsList
+        .map(({ university_name, sport }) => {
+          const uni = universities.find(
+            (u: any) => u.university_name === university_name
+          );
+          if (!uni) return null;
+          return {
+            url: `${baseUrl}/athlete-network/${uni.slug}/${sport}`,
+            changeFrequency: "weekly",
+            priority: 0.6,
+          };
+        })
+        .filter(Boolean),
     ];
 
     return sitemapEntries;
