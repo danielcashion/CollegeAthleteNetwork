@@ -1,29 +1,32 @@
 import Image from "next/image";
 import OurSolution from "../AboutUsPage/OurSolution";
+import Link from "next/link";
 
-const AthleteNetworkPageContent = ({ university }: any) => {
-  console.log("university meta info: ", university);
+const AthleteNetworkPageContent = ({ sportData }: any) => {
+  // console.log("sportData", sportData);
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl font-bold mb-4">
-          {university.university_name} {university.mascot} Athlete Network
+          {sportData.university_name} {sportData.mascot} {sportData.sport}{" "}
+          Athlete Network
         </h1>
         <p className="text-lg mb-6">
           Connect with student-athletes, alumni, and supporters from{" "}
-          {university.university_name}. Discover jobs, professional
-          opportunities, and lifelong connections.
+          {sportData.university_name} {sportData.sport} Network. Discover jobs,
+          professional opportunities, and lifelong connections.
         </p>
 
         <div className="flex gap-2">
           {[
-            university.primary_hex,
-            university.secondary_hex,
-            university.tertiary_hex,
-          ].map((hex) => (
+            sportData.primary_hex,
+            sportData.secondary_hex,
+            sportData.tertiary_hex,
+          ].map((hex, i) => (
             <div
-              key={hex}
+              key={i}
               className="w-6 h-6 rounded-full border"
               style={{ backgroundColor: hex }}
             />
@@ -37,30 +40,40 @@ const AthleteNetworkPageContent = ({ university }: any) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex">
               <Image
-                src={university.logo_url || "/placeholder.svg"}
-                alt={`${university.university_name} athlete network`}
+                src={sportData.network_gif_url || "/placeholder.svg"}
+                alt={`${sportData.university_name} athlete network`}
                 width={600}
                 height={500}
                 priority
-                className="w-full max-w-[300px] sm:max-w-[400px] max-h-[300px] object-contain m-auto"
+                className="w-full max-w-[400px] sm:max-w-[600px] max-h-[600px] object-contain m-auto"
               />
             </div>
             <div className="order-1 lg:order-2 space-y-6">
-              <h2 className="text-3xl lg:text-4xl font-bold" style={{ color: university.primary_hex }}>
-                Take your proper place in the {university.university_name} {university.mascot} Athlete
-                Network!
+              <h2
+                className="text-3xl lg:text-4xl font-bold"
+                style={{ color: sportData.primary_hex }}
+              >
+                Take your proper place in the {sportData.university_name}{" "}
+                {sportData.mascot} {sportData.sport} Athlete Network!
               </h2>
-               <p className="text-lg text-gray-600 leading-relaxed" style={{ color: university.primary_hex }}>
-                Connect with thousands of {university.university_name}{" "}
-                student-athletes, alumni, and supporters. Access exclusive
-                career opportunities, mentorship programs, and networking events
-                designed specifically for the athletic community.
+              <p
+                className="text-lg text-gray-600 leading-relaxed"
+                style={{ color: sportData.primary_hex }}
+              >
+                Connect with thousands of {sportData.university_name}{" "}
+                {sportData.sport} student-athletes, alumni, and supporters.
+                Access exclusive career opportunities, mentorship programs, and
+                networking events designed specifically for the athletic
+                community.
               </p>
-              <div className="space-y-2"  style={{ color: university.primary_hex }}>
+              <div
+                className="space-y-2"
+                style={{ color: sportData.primary_hex }}
+              >
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: university.primary_hex }}
+                    style={{ backgroundColor: sportData.primary_hex }}
                   />
                   <span className="text-gray-700">
                     Exclusive job postings from alumni-owned companies
@@ -69,7 +82,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: university.primary_hex }}
+                    style={{ backgroundColor: sportData.primary_hex }}
                   />
                   <span className="text-gray-700">
                     One-on-one mentorship with successful graduates
@@ -78,7 +91,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: university.primary_hex }}
+                    style={{ backgroundColor: sportData.primary_hex }}
                   />
                   <span className="text-gray-700">
                     Networking events and career development workshops
@@ -87,19 +100,20 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: university.primary_hex }}
+                    style={{ backgroundColor: sportData.primary_hex }}
                   />
                   <span className="text-gray-700">
                     Direct connections with recruiters and hiring managers
                   </span>
                 </div>
               </div>
+
               <div className="pt-4">
                 <a
                   href="https://members.collegeathletenetwork.org/sign-up"
                   target="_blank"
                   className="inline-block py-3 px-8 rounded-lg text-white font-semibold text-lg transition-all duration-200 hover:opacity-90 hover:transform hover:scale-105 shadow-lg"
-                  style={{ backgroundColor: university.primary_hex }}
+                  style={{ backgroundColor: sportData.primary_hex }}
                   rel="noreferrer"
                 >
                   Join Now
@@ -110,7 +124,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                     href="https://members.collegeathletenetwork.org/login"
                     target="_blank"
                     className="underline"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     rel="noreferrer"
                   >
                     Sign in here
@@ -122,78 +136,82 @@ const AthleteNetworkPageContent = ({ university }: any) => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-10 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"  style={{ color: university.primary_hex }}>
-              {university.university_name} {university.mascot} by the Numbers
-            </h2>
-            <p className="text-lg text-gray-600">
-              Join a thriving community of student-athletes and alumni
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start justify-center gap-8">
-            {university.num_teams && university.num_teams > 0 && (
-              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-                <div
-                  className="text-4xl lg:text-5xl font-bold mb-2"
-                  style={{ color: university.primary_hex }}
+      {/* Sport Details Section */}
+      <div className="flex px-4 pb-10">
+        <div className="max-w-6xl w-full mx-auto pt-6 space-y-4">
+          <h3
+            className="text-4xl font-bold text-center"
+            style={{ color: sportData.primary_hex }}
+          >
+            Team Information
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {sportData.sport_details.map((detail: any, index: number) => (
+              <div
+                key={index}
+                className="border border-gray-200 rounded-lg p-4 space-y-3"
+              >
+                <h4
+                  className="font-medium text-2xl"
+                  style={{ color: sportData.primary_hex }}
                 >
-                  {university.num_teams}
-                </div>
-                <div className="text-gray-600 text-lg font-medium">
-                  Athletic Teams
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Representing excellence across multiple sports
-                </p>
-              </div>
-            )}
+                  {detail.gender_id === 1 ? "Men's" : "Women's"}{" "}
+                  {sportData.sport}
+                </h4>
 
-            {university.num_rosters && university.num_rosters > 0 && (
-              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-                <div
-                  className="text-4xl lg:text-5xl font-bold mb-2"
-                  style={{ color: university.primary_hex }}
-                >
-                  {university.num_rosters}
+                <div className="space-y-2">
+                  <p className="text-lg text-gray-600">
+                    <strong>Sponsor:</strong>{" "}
+                    {detail.sponsor ? (
+                      detail.sponsor_url ? (
+                        <a
+                          href={detail.sponsor_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline hover:opacity-80"
+                          style={{ color: sportData.primary_hex }}
+                        >
+                          {detail.sponsor}
+                        </a>
+                      ) : (
+                        <span style={{ color: sportData.primary_hex }}>
+                          {detail.sponsor}
+                        </span>
+                      )
+                    ) : (
+                      <span>
+                        <Link href="/contact-us" className="underline">
+                          Contact us
+                        </Link>{" "}
+                        to discuss about a possible sponsorship
+                      </span>
+                    )}
+                  </p>
                 </div>
-                <div className="text-gray-600 text-lg font-medium">
-                  Active Rosters
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Current team rosters across all sports
-                </p>
-              </div>
-            )}
 
-            {university.num_athletes && university.num_athletes > 0 && (
-              <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-                <div
-                  className="text-4xl lg:text-5xl font-bold mb-2"
-                  style={{ color: university.primary_hex }}
+                <a
+                  href={detail.sport_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block w-full text-center py-2 px-4 rounded-lg text-white font-medium text-sm transition-all duration-200 hover:opacity-90 hover:transform hover:scale-105"
+                  style={{ backgroundColor: sportData.primary_hex }}
                 >
-                  {university.num_athletes.toLocaleString()}
-                </div>
-                <div className="text-gray-600 text-lg font-medium">
-                  Student-Athletes
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Past and present athletes in our network
-                </p>
+                  View Sport Team Page
+                </a>
               </div>
-            )}
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* How It Works Section */}
       <section className="py-10 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"  style={{ color: university.primary_hex }}>
+            <h2
+              className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"
+              style={{ color: sportData.primary_hex }}
+            >
               How It Works
             </h2>
             <p className="text-lg text-gray-600">
@@ -205,7 +223,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             <div className="text-center">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4"
-                style={{ backgroundColor: university.primary_hex }}
+                style={{ backgroundColor: sportData.primary_hex }}
               >
                 1
               </div>
@@ -221,7 +239,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             <div className="text-center">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4"
-                style={{ backgroundColor: university.primary_hex }}
+                style={{ backgroundColor: sportData.primary_hex }}
               >
                 2
               </div>
@@ -237,7 +255,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
             <div className="text-center">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4"
-                style={{ backgroundColor: university.primary_hex }}
+                style={{ backgroundColor: sportData.primary_hex }}
               >
                 3
               </div>
@@ -271,16 +289,16 @@ const AthleteNetworkPageContent = ({ university }: any) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -299,16 +317,16 @@ const AthleteNetworkPageContent = ({ university }: any) => {
 
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -325,22 +343,22 @@ const AthleteNetworkPageContent = ({ university }: any) => {
               </h3>
               <p className="text-gray-600">
                 Access job opportunities specifically posted for{" "}
-                {university.university_name} athletes by alumni employers.
+                {sportData.university_name} athletes by alumni employers.
               </p>
             </div>
 
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -359,16 +377,16 @@ const AthleteNetworkPageContent = ({ university }: any) => {
 
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -387,16 +405,16 @@ const AthleteNetworkPageContent = ({ university }: any) => {
 
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -419,16 +437,16 @@ const AthleteNetworkPageContent = ({ university }: any) => {
 
             <div
               className="p-6 bg-white rounded-xl shadow-lg border-l-4"
-              style={{ borderLeftColor: university.primary_hex }}
+              style={{ borderLeftColor: sportData.primary_hex }}
             >
               <div className="mb-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${university.primary_hex}20` }}
+                  style={{ backgroundColor: `${sportData.primary_hex}20` }}
                 >
                   <svg
                     className="w-6 h-6"
-                    style={{ color: university.primary_hex }}
+                    style={{ color: sportData.primary_hex }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -440,8 +458,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 Alumni Support
               </h3>
               <p className="text-gray-600">
-                Connect directly with {university.university_name} alumni who
-                are eager to help fellow athletes succeed in their careers.
+                Connect directly with {sportData.university_name} alumni who are
+                eager to help fellow athletes succeed in their careers.
               </p>
             </div>
           </div>
@@ -453,13 +471,13 @@ const AthleteNetworkPageContent = ({ university }: any) => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
             Ready to Join the{" "}
-            <a href={university.base_url || "#"} target="_blank">
-              {university.university_name} Athlete Network?
+            <a href={sportData.base_url || "#"} target="_blank">
+              {sportData.university_name} Athlete Network?
             </a>
           </h2>
           <p className="text-lg text-gray-600 mb-8">
             Take the next step in your career journey. Connect with thousands of{" "}
-            {university.university_name} athletes and alumni who are ready to
+            {sportData.university_name} athletes and alumni who are ready to
             help you succeed.
           </p>
 
@@ -468,7 +486,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
               href="https://members.collegeathletenetwork.org/sign-up"
               target="_blank"
               className="inline-block py-4 px-8 rounded-lg text-white font-semibold text-lg transition-all duration-200 hover:opacity-90 hover:transform hover:scale-105 shadow-lg"
-              style={{ backgroundColor: university.primary_hex }}
+              style={{ backgroundColor: sportData.primary_hex }}
               rel="noreferrer"
             >
               Join the Network Today
@@ -478,8 +496,8 @@ const AthleteNetworkPageContent = ({ university }: any) => {
               target="_blank"
               className="inline-block py-4 px-8 rounded-lg border-2 font-semibold text-lg transition-all duration-200 hover:opacity-90"
               style={{
-                borderColor: university.primary_hex,
-                color: university.primary_hex,
+                borderColor: sportData.primary_hex,
+                color: sportData.primary_hex,
               }}
               rel="noreferrer"
             >
