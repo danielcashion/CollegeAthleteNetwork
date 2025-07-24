@@ -15,36 +15,44 @@ function slugToText(slug: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { university_name } = await params;
+  const { university_name, sport} = await params;
 
   const res = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_teams?university_name=${encodeURIComponent(
+    }/publicprod/university_sport_seo?university_name=${encodeURIComponent(
       slugToText(university_name)
     )}`,
     {
       next: { revalidate: 3600 },
     }
   );
-  const arr: any = await res.json();
+  const sportArray: any = await res.json();
 
-  const uni_sports = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
+  const decodedSport = slugToText(sport);
+  
+  const filteredArray = sportArray.filter(
+    (item: any) => item.sport.toLowerCase() === decodedSport.toLowerCase()
+  );
+  console.log("filteredArray", filteredArray);
+  
+  // const uni_sports =
+  //   Array.isArray(sportArray) && sportArray.length > 0 ? sportArray[0] : null;
 
-  if (!uni_sports) {
+  if (!filteredArray || filteredArray.length === 0) {
     return {
-      title: `${uni_sports.university_name} ${uni_sports.team_name} Athlete Network | Connecting Students & Alumni`,
-      description: `Explore ${uni_sports.university_name} ${uni_sports.team_name} athletes and professional opportunities!`,
+      title: `${filteredArray[0].university_name} ${filteredArray[0].sport} Athlete Network | Connecting Students & Alumni`,
+      description: `Explore ${filteredArray[0].university_name} ${filteredArray[0].sport} athletes and professional opportunities!`,
     };
   }
 
   return {
-    title: `${uni_sports.university_name} ${uni_sports.team_name} Athlete Network | The College Athlete Network`,
-    description: `Explore ${uni_sports.university_name}'s athlete and alumni career network.`,
+    title: `${filteredArray[0].university_name} ${filteredArray[0].sport} Athlete Network | The College Athlete Network`,
+    description: `Explore ${filteredArray[0].university_name}'s athlete and alumni career network.`,
     openGraph: {
-      title: `${uni_sports.university_name} ${uni_sports.team_name} Athlete Network`,
-      description: `Connect with ${uni_sports.university_name} ${uni_sports.team_name} athletes and alumni.`,
-      images: [uni_sports.logo_url], // Logo is not currently there... it comes from `/university_meta`
+      title: `${filteredArray[0].university_name} ${filteredArray[0].sport} Athlete Network`,
+      description: `Connect with ${filteredArray[0].university_name} ${filteredArray[0].sport} athletes and alumni.`,
+      images: [filteredArray[0].logo_url], // Logo is not currently there... it comes from `/university_meta`
     },
   };
 }
