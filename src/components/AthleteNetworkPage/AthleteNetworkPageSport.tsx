@@ -155,7 +155,7 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                   className="font-medium text-2xl"
                   style={{ color: sportData.primary_hex }}
                 >
-                  {detail.gender_id === 1 ? "Men's" : "Women's"}{" "}
+                  {sportData.university_name}{" "}{detail.gender_id === 1 ? "Men's" : "Women's"}{" "}
                   {sportData.sport}
                 </h4>
 
@@ -179,11 +179,11 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                         </span>
                       )
                     ) : (
-                      <span>
+                      <span>Sponsoring this team is currently available! {" "}  
                         <Link href="/contact-us" className="underline">
                           Contact us
                         </Link>{" "}
-                        to discuss about a possible sponsorship
+                        to discuss sponsorship options!
                       </span>
                     )}
                   </p>
@@ -196,7 +196,7 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                   className="inline-block w-full text-center py-2 px-4 rounded-lg text-white font-medium text-sm transition-all duration-200 hover:opacity-90 hover:transform hover:scale-105"
                   style={{ backgroundColor: sportData.primary_hex }}
                 >
-                  View Sport Team Page
+                  Visit Team Homepage
                 </a>
               </div>
             ))}
