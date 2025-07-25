@@ -3,6 +3,7 @@ import OurSolution from "../AboutUsPage/OurSolution";
 import Link from "next/link";
 
 const AthleteNetworkPageContent = ({ sportData }: any) => {
+
   // console.log("sportData", sportData);
 
   return (
@@ -155,7 +156,8 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                   className="font-medium text-2xl"
                   style={{ color: sportData.primary_hex }}
                 >
-                  {sportData.university_name}{" "}{detail.gender_id === 1 ? "Men's" : "Women's"}{" "}
+                  {sportData.university_name}{" "}
+                  {detail.gender_id === 1 ? "Men's" : "Women's"}{" "}
                   {sportData.sport}
                 </h4>
 
@@ -179,7 +181,8 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                         </span>
                       )
                     ) : (
-                      <span>Sponsoring this team is currently available! {" "}  
+                      <span>
+                        Sponsoring this team is currently available!{" "}
                         <Link href="/contact-us" className="underline">
                           Contact us
                         </Link>{" "}
@@ -187,8 +190,35 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                       </span>
                     )}
                   </p>
+                  {detail.sponsor_logo_url && (
+                    <div className="flex justify-center">
+                      {detail.sponsor_url ? (
+                        <a
+                          href={detail.sponsor_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:opacity-80"
+                        >
+                          <Image
+                            width={400}
+                            height={250}
+                            src={detail.sponsor_logo_url}
+                            alt={`${detail.sponsor || "Sponsor"} Logo`}
+                            className="w-42 h-auto object-contain"
+                          />
+                        </a>
+                      ) : (
+                        <Image
+                          width={400}
+                          height={250}
+                          src={detail.sponsor_logo_url}
+                          alt={`${detail.sponsor || "Sponsor"} Logo`}
+                          className="w-42 h-auto object-contain"
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
-
                 <a
                   href={detail.sport_url}
                   target="_blank"
