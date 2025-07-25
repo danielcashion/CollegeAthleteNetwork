@@ -34,10 +34,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const filteredArray = sportArray.filter(
     (item: any) => item.sport.toLowerCase() === decodedSport.toLowerCase()
   );
-  console.log("filteredArray", filteredArray);
-  
-  // const uni_sports =
-  //   Array.isArray(sportArray) && sportArray.length > 0 ? sportArray[0] : null;
 
   if (!filteredArray || filteredArray.length === 0) {
     return {
