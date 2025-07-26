@@ -210,10 +210,10 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 1
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Create Your Profile
+                Claim Your Spot
               </h3>
               <p className="text-gray-600">
-                Sign up and build your professional profile highlighting your
+                Claim your spot on your roster. Confirm your professional profile highlighting your
                 athletic achievements and career goals.
               </p>
             </div>
