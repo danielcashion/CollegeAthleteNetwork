@@ -10,19 +10,19 @@ const OurImpact = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={101400} suffix="+" />
+              <CountUp end={121900} suffix="+" />
             </h3>
             <p className="text-2xl">Athletes Connected</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={9}  />
+              <CountUp end={11}  />
             </h3>
             <p className="text-2xl">Universities Athletic Programs Currently Covered</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={95} prefix= "+" suffix="%" />
+              <CountUp end={97.1} prefix= "+" suffix="%" />
             </h3>
             <p className="text-2xl">Athletes Mapped to LinkedIn Profiles</p>
           </div>
