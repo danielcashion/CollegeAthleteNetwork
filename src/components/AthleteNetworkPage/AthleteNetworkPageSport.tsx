@@ -226,7 +226,7 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
                   className="inline-block w-full text-center py-2 px-4 rounded-lg text-white font-medium text-sm transition-all duration-200 hover:opacity-90 hover:transform hover:scale-105"
                   style={{ backgroundColor: sportData.primary_hex }}
                 >
-                  Visit Team Homepage
+                  Visit Team External Homepage
                 </a>
               </div>
             ))}
