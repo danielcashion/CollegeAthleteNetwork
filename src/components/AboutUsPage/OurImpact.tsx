@@ -31,7 +31,7 @@ const OurImpact = () => {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={97.1} suffix="%"  /> 
+              <CountUp end={97} prefix="+" suffix="%"  /> 
             </h3>
             <p className="text-2xl">Athletes Mapped to LinkedIn Profiles</p>
           </div>
