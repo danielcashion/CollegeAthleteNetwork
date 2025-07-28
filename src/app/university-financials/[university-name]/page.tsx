@@ -1,5 +1,6 @@
 import { getUniversityTeams } from "@/services/UniversityTeams";
 import UniversityFinancialsData from "@/components/UniversityFinancialsPage/UniversityFinancialsData";
+import { redirect } from "next/navigation";
 
 export default async function UniversityFinancials({
   params,
@@ -8,7 +9,11 @@ export default async function UniversityFinancials({
 }) {
   const universityName = params["university-name"];
   const teams = await getUniversityTeams({ universityName });
-  console.log("University Teams:", teams);
+
+  if (!teams || teams.length < 1) {
+    redirect("/404");
+  }
+
   return (
     <div>
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">

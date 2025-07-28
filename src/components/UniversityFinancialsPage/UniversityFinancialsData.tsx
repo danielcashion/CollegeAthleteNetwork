@@ -75,8 +75,8 @@ export default function UniversityFinancialsData({
 
   const filteredTeams = teams.filter(
     (team) =>
-      team.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getGenderText(team.gender_id)
+      team?.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getGenderText(team?.gender_id)
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
@@ -199,30 +199,30 @@ export default function UniversityFinancialsData({
           {/* Mobile Cards */}
           {sortedTeams.map((team) => {
             const networkSize: number =
-              team.num_athletes * (scalerValues.networkSizePercentage / 100);
+              team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
             const jobPlacementsPeryear: number = Math.round(
               networkSize * (scalerValues.jobPlacementPerAlumPercentage / 100)
             );
 
             const cashDirectedTowardsTeam: number = Math.round(
-              (jobPlacementsPeryear / 100) *
-                (resultingContribution / 100) *
+              jobPlacementsPeryear *
+                resultingContribution *
                 (scalerValues.participationRate / 100)
             );
 
             return (
               <div
-                key={team.team_id}
+                key={team?.team_id}
                 className="bg-white rounded-lg shadow p-4 border border-gray-200"
               >
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium text-lg text-gray-900">
-                    {team.team_name}
+                    {team?.team_name}
                   </h3>
                 </div>
                 <p className="text-gray-600 mt-1">
-                  {getGenderText(team.gender_id)}
+                  {getGenderText(team?.gender_id)}
                 </p>
                 <p className="text-gray-500 mt-2 text-sm">
                   Network Size: {Math.round(networkSize)} athletes
@@ -266,13 +266,8 @@ export default function UniversityFinancialsData({
                     Gender <SortIcon column="gender_id" />
                   </div>
                 </th>
-                <th
-                  onClick={() => handleSort("num_athletes")}
-                  className="px-6 py-4 cursor-pointer hover:text-blue-600"
-                >
-                  <div className="flex items-center gap-1">
-                    Network Size <SortIcon column="num_athletes" />
-                  </div>
+                <th className="px-6 py-4 cursor-pointer hover:text-blue-600">
+                  <div className="flex items-center gap-1">Network Size</div>
                 </th>
                 <th className="px-6 py-4">Job Placements per Year</th>
                 <th className="px-6 py-4">Cash Directed Toward Team</th>
@@ -281,7 +276,7 @@ export default function UniversityFinancialsData({
             <tbody>
               {sortedTeams.map((team, idx) => {
                 const networkSize: number =
-                  team.num_athletes *
+                  team?.num_athletes *
                   (scalerValues.networkSizePercentage / 100);
 
                 const jobPlacementsPeryear: number = Math.round(
@@ -297,16 +292,16 @@ export default function UniversityFinancialsData({
 
                 return (
                   <tr
-                    key={team.team_id}
+                    key={team?.team_id}
                     className={`${
                       idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                     } hover:bg-blue-50 transition text-lg border-t`}
                   >
                     <td className="px-6 py-2 hover:text-blue-600">
-                      {team.team_name}
+                      {team?.team_name}
                     </td>
                     <td className="px-6 py-2 hover:text-blue-600">
-                      {getGenderText(team.gender_id)}
+                      {getGenderText(team?.gender_id)}
                     </td>
                     <td className="px-6 py-2 hover:text-blue-600 text-center">
                       {Math.round(networkSize)}
