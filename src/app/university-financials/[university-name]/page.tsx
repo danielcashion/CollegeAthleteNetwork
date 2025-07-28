@@ -5,9 +5,9 @@ import { redirect } from "next/navigation";
 export default async function UniversityFinancials({
   params,
 }: {
-  params: { "university-name": string };
+  params: Promise<{ "university-name": string }>;
 }) {
-  const universityName = params["university-name"];
+  const { "university-name": universityName } = await params;
   const teams = await getUniversityTeams({ universityName });
 
   if (!teams || teams.length < 1) {
