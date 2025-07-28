@@ -1,41 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { ArrowUp, ArrowDown, Search } from "lucide-react";
+import { ArrowUp, ArrowDown, Search, X } from "lucide-react";
 import { FaFilter } from "react-icons/fa";
-
-interface Team {
-  team_id: string;
-  university_id: string;
-  gender_id: number;
-  university_name: string;
-  team_name: string;
-  max_roster_year: number | null;
-  num_athletes: number;
-  url: string;
-  sponsor: string | null;
-  sponsor_url: string | null;
-  sponsor_logo_url: string | null;
-  enabled_YN: number;
-  last_update: string;
-  is_active_YN: number;
-  created_by: string;
-  created_datetime: string;
-  updated_by: string | null;
-  updated_datetime: string | null;
-}
-
-interface NetworkSizeScaler {
-  networkSizePercentage: number;
-  jobPlacementPerAlumPercentage: number;
-  avgFte: number;
-  standardHeadHunterFeePercentage: number;
-  companyWillingToPayPercentage: number;
-  participationRate: number;
-  hiresPerYear: number;
-}
+import { NetworkSizeScaler } from "@/types/UniversityFinancials";
+import { UniversityTeam } from "@/types/University";
+import NetworkSizeScalerFilters from "./NetworkSizeScalerFilters";
 
 interface UniversityFinancialsDataProps {
-  teams: Team[];
+  teams: UniversityTeam[];
 }
 
 type SortKey = "team_name" | "gender_id" | "num_athletes";
@@ -47,6 +19,7 @@ export default function UniversityFinancialsData({
   const [sortKey, setSortKey] = useState<SortKey>("team_name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const [scalerValues, setScalerValues] = useState<NetworkSizeScaler>({
     networkSizePercentage: 100,
@@ -65,11 +38,11 @@ export default function UniversityFinancialsData({
   const resultingContribution: number =
     resultingHeadHunterFee * scalerValues.companyWillingToPayPercentage;
 
-  const cashSavingsPerHirePerCompany: number =
-    resultingContribution - resultingHeadHunterFee;
+  //   const cashSavingsPerHirePerCompany: number =
+  //     resultingContribution - resultingHeadHunterFee;
 
-  const cashSavings: number =
-    cashSavingsPerHirePerCompany * scalerValues.hiresPerYear;
+  //   const cashSavings: number =
+  //     cashSavingsPerHirePerCompany * scalerValues.hiresPerYear;
 
   const getGenderText = (genderId: number) => {
     return genderId === 1 ? "Men" : genderId === 2 ? "Women" : "-";
@@ -82,6 +55,10 @@ export default function UniversityFinancialsData({
       setSortKey(key);
       setSortOrder("asc");
     }
+  };
+
+  const handleFiltersChange = (newFilters: NetworkSizeScaler) => {
+    setScalerValues(newFilters);
   };
 
   const filteredTeams = teams.filter(
@@ -151,11 +128,47 @@ export default function UniversityFinancialsData({
             />
           </div>
 
-          <button className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white px-6 py-2 rounded-md flex flex-row items-center gap-2">
+          <button
+            onClick={() => setShowFilters(true)}
+            className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white px-6 py-2 rounded-md flex flex-row items-center gap-2 hover:opacity-90 transition-opacity"
+          >
             <FaFilter size={20} />
             Network Size Scaler
           </button>
         </div>
+
+        {/* Filters Modal */}
+        {showFilters && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center p-6 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Network Size Scaler Settings
+                </h2>
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              <div className="p-6">
+                <NetworkSizeScalerFilters
+                  filters={scalerValues}
+                  onFiltersChange={handleFiltersChange}
+                />
+              </div>
+              <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Version - Hidden on md and above */}
         <div className="md:hidden space-y-4">
@@ -191,30 +204,46 @@ export default function UniversityFinancialsData({
           </div>
 
           {/* Mobile Cards */}
-          {sortedTeams.map((team) => (
-            <div
-              key={team.team_id}
-              className="bg-white rounded-lg shadow p-4 border border-gray-200"
-            >
-              <div className="flex justify-between items-center">
-                <h3 className="font-medium text-lg text-gray-900">
-                  {team.team_name}
-                </h3>
+          {sortedTeams.map((team) => {
+            const networkSize: number =
+              team.num_athletes * (scalerValues.networkSizePercentage / 100);
+
+            const jobPlacementsPeryear: number = Math.round(
+              networkSize * (scalerValues.jobPlacementPerAlumPercentage / 100)
+            );
+
+            const cashDirectedTowardsTeam: number = Math.round(
+              (jobPlacementsPeryear / 100) *
+                (resultingContribution / 100) *
+                (scalerValues.participationRate / 100)
+            );
+
+            return (
+              <div
+                key={team.team_id}
+                className="bg-white rounded-lg shadow p-4 border border-gray-200"
+              >
+                <div className="flex justify-between items-center">
+                  <h3 className="font-medium text-lg text-gray-900">
+                    {team.team_name}
+                  </h3>
+                </div>
+                <p className="text-gray-600 mt-1">
+                  {getGenderText(team.gender_id)}
+                </p>
+                <p className="text-gray-500 mt-2 text-sm">
+                  Network Size: {Math.round(networkSize)} athletes
+                </p>
+                <p className="text-gray-500 mt-1 text-sm">
+                  Job Placements per Year: {Math.round(jobPlacementsPeryear)}
+                </p>
+                <p className="text-gray-500 mt-1 text-sm">
+                  Cash Directed Toward Team: $
+                  {Math.round(cashDirectedTowardsTeam).toLocaleString()}
+                </p>
               </div>
-              <p className="text-gray-600 mt-1">
-                {getGenderText(team.gender_id)}
-              </p>
-              <p className="text-gray-500 mt-2 text-sm">
-                Network Size: {team.num_athletes} athletes
-              </p>
-              <p className="text-gray-500 mt-1 text-sm">
-                Job Placements per Year: -
-              </p>
-              <p className="text-gray-500 mt-1 text-sm">
-                Cash Directed Toward Team: -
-              </p>
-            </div>
-          ))}
+            );
+          })}
 
           {sortedTeams.length === 0 && (
             <div className="text-center py-8 text-gray-500">
@@ -226,7 +255,7 @@ export default function UniversityFinancialsData({
         {/* Desktop Table - Hidden below md */}
         <div className="hidden md:block overflow-x-auto rounded-xl shadow-xl border border-gray-200 bg-white">
           <table className="min-w-full text-sm text-left text-gray-700">
-            <thead className="bg-gray-200 text-gray-800 text-lg font-semibold">
+            <thead className="bg-blueMain text-white text-lg font-medium">
               <tr>
                 <th
                   onClick={() => handleSort("team_name")}
@@ -287,10 +316,10 @@ export default function UniversityFinancialsData({
                       {getGenderText(team.gender_id)}
                     </td>
                     <td className="px-6 py-2 hover:text-blue-600 text-center">
-                      {networkSize}
+                      {Math.round(networkSize)}
                     </td>
                     <td className="px-6 py-2 text-center">
-                      {jobPlacementsPeryear}
+                      {Math.round(jobPlacementsPeryear)}
                     </td>
                     <td className="px-6 py-2 text-center">
                       ${Math.round(cashDirectedTowardsTeam).toLocaleString()}
