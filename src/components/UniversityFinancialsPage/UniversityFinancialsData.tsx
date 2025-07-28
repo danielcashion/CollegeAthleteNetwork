@@ -33,19 +33,31 @@ export default function UniversityFinancialsData({
 
   //   Calculative Consts
   const resultingHeadHunterFee: number =
-    scalerValues.avgFte * scalerValues.standardHeadHunterFeePercentage;
+    scalerValues.avgFte * (scalerValues.standardHeadHunterFeePercentage / 100);
 
   const resultingContribution: number =
-    resultingHeadHunterFee * scalerValues.companyWillingToPayPercentage;
+    resultingHeadHunterFee * (scalerValues.companyWillingToPayPercentage / 100);
 
-  //   const cashSavingsPerHirePerCompany: number =
-  //     resultingContribution - resultingHeadHunterFee;
+  const cashSavingsPerHirePerCompany: number =
+    resultingHeadHunterFee - resultingContribution;
 
-  //   const cashSavings: number =
-  //     cashSavingsPerHirePerCompany * scalerValues.hiresPerYear;
+  const cashSavings: number =
+    cashSavingsPerHirePerCompany * scalerValues.hiresPerYear;
 
   const getGenderText = (genderId: number) => {
     return genderId === 1 ? "Men" : genderId === 2 ? "Women" : "-";
+  };
+
+  const handleResetFilters = () => {
+    setScalerValues({
+      networkSizePercentage: 100,
+      jobPlacementPerAlumPercentage: 5,
+      avgFte: 150000,
+      standardHeadHunterFeePercentage: 33,
+      companyWillingToPayPercentage: 33,
+      participationRate: 75,
+      hiresPerYear: 3,
+    });
   };
 
   const handleSort = (key: SortKey) => {
@@ -139,8 +151,8 @@ export default function UniversityFinancialsData({
 
         {/* Filters Modal */}
         {showFilters && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh]">
               <div className="flex justify-between items-center p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-800">
                   Network Size Scaler Settings
@@ -156,9 +168,14 @@ export default function UniversityFinancialsData({
                 <NetworkSizeScalerFilters
                   filters={scalerValues}
                   onFiltersChange={handleFiltersChange}
+                  resultingHeadHunterFee={resultingHeadHunterFee}
+                  resultingContribution={resultingContribution}
+                  cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
+                  cashSavings={cashSavings}
                 />
               </div>
               <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
+                <button onClick={handleResetFilters}>Reset Values</button>
                 <button
                   onClick={() => setShowFilters(false)}
                   className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
