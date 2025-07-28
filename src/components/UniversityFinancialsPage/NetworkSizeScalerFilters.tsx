@@ -1,5 +1,5 @@
 "use client";
-import { Plus, Minus } from "lucide-react";
+import { ChevronUp, ChevronDown, X } from "lucide-react";
 import type { NetworkSizeScaler } from "@/types/UniversityFinancials";
 
 interface NetworkSizeScalerFiltersProps {
@@ -9,6 +9,8 @@ interface NetworkSizeScalerFiltersProps {
   resultingContribution: number;
   cashSavingsPerHirePerCompany: number;
   cashSavings: number;
+  onClose: () => void;
+  onReset: () => void;
 }
 
 export default function NetworkSizeScalerFilters({
@@ -18,301 +20,466 @@ export default function NetworkSizeScalerFilters({
   resultingContribution,
   cashSavingsPerHirePerCompany,
   cashSavings,
+  onClose,
+  onReset,
 }: NetworkSizeScalerFiltersProps) {
   const handleInputChange = (field: keyof NetworkSizeScaler, value: string) => {
-    const numValue = Number.parseFloat(value) || 0;
+    const parsed = parseFloat(value);
+    let clampedValue = isNaN(parsed) ? 0 : parsed;
+
+    // Apply max limits based on field type
+    if (field === "networkSizePercentage") {
+      clampedValue = Math.min(clampedValue, 250);
+    } else if (field.includes("Percentage") || field === "participationRate") {
+      clampedValue = Math.min(clampedValue, 100);
+    }
+
+    // Apply minimum of 0 for all fields
+    clampedValue = Math.max(clampedValue, 0);
+
     onFiltersChange({
       ...filters,
-      [field]: numValue,
+      [field]: clampedValue,
     });
   };
 
-  const handleIncrement = (
-    field: keyof NetworkSizeScaler,
-    step: number,
-    max?: number
-  ) => {
+  const handleIncrement = (field: keyof NetworkSizeScaler, step: number) => {
     const currentValue = filters[field];
-    const newValue = currentValue + step;
-    if (max && newValue > max) return;
+    let newValue = currentValue + step;
+
+    // Apply max limits based on field type
+    if (field === "networkSizePercentage") {
+      newValue = Math.min(newValue, 250);
+    } else if (field.includes("Percentage") || field === "participationRate") {
+      newValue = Math.min(newValue, 100);
+    }
+
     onFiltersChange({
       ...filters,
       [field]: newValue,
     });
   };
 
-  const handleDecrement = (
-    field: keyof NetworkSizeScaler,
-    step: number,
-    min = 0
-  ) => {
+  const handleDecrement = (field: keyof NetworkSizeScaler, step: number) => {
     const currentValue = filters[field];
-    const newValue = Math.max(min, currentValue - step);
+    const newValue = Math.max(0, currentValue - step);
     onFiltersChange({
       ...filters,
       [field]: newValue,
     });
   };
-
-  const SliderWithInput = ({
-    label,
-    field,
-    min,
-    max,
-    step,
-    unit = "%",
-  }: {
-    label: string;
-    field: keyof NetworkSizeScaler;
-    min: number;
-    max: number;
-    step: number;
-    unit?: string;
-  }) => (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <div className="space-y-2">
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={filters[field]}
-          onChange={(e) => handleInputChange(field, e.target.value)}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-        />
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => handleDecrement(field, step, min)}
-            className="p-1 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
-          >
-            <Minus size={16} />
-          </button>
-          <div className="flex items-center gap-1 min-w-0 flex-1">
-            <input
-              type="number"
-              min={min}
-              max={max}
-              step={step}
-              value={filters[field]}
-              onChange={(e) => handleInputChange(field, e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
-            />
-            <span className="text-sm text-gray-500 min-w-fit">{unit}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleIncrement(field, step, max)}
-            className="p-1 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
-          >
-            <Plus size={16} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const InputWithButtons = ({
-    label,
-    field,
-    step,
-    unit = "",
-    min = 0,
-  }: {
-    label: string;
-    field: keyof NetworkSizeScaler;
-    step: number;
-    unit?: string;
-    min?: number;
-  }) => (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => handleDecrement(field, step, min)}
-          className="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
-        >
-          <Minus size={16} />
-        </button>
-        <div className="flex items-center gap-1 flex-1">
-          <input
-            type="number"
-            min={min}
-            step={step}
-            value={filters[field]}
-            onChange={(e) => handleInputChange(field, e.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
-          />
-          {unit && (
-            <span className="text-sm text-gray-500 min-w-fit">{unit}</span>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={() => handleIncrement(field, step)}
-          className="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
-        >
-          <Plus size={16} />
-        </button>
-      </div>
-    </div>
-  );
 
   return (
-    <div className="space-y-8">
-      {/* Main Controls */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Network Size Percentage - Slider */}
-        <SliderWithInput
-          label="Network Size Percentage"
-          field="networkSizePercentage"
-          min={0}
-          max={250}
-          step={5}
-          unit="%"
-        />
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <style jsx>{`
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
+      <div className="bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Network Size Scaler Settings
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-lg hover:bg-gray-200"
+          >
+            <X size={24} />
+          </button>
+        </div>
 
-        {/* Job Placement Per Alum Percentage - Slider */}
-        <SliderWithInput
-          label="Job Placement For Each Alum"
-          field="jobPlacementPerAlumPercentage"
-          min={0}
-          max={100}
-          step={5}
-          unit="%"
-        />
-
-        {/* Standard Head Hunter Fee Percentage - Slider */}
-        <SliderWithInput
-          label="Standard Head Hunter Fee"
-          field="standardHeadHunterFeePercentage"
-          min={0}
-          max={100}
-          step={5}
-          unit="%"
-        />
-
-        {/* Company Willing To Pay Percentage - Slider */}
-        <SliderWithInput
-          label="Fee Company Willing To Pay"
-          field="companyWillingToPayPercentage"
-          min={0}
-          max={100}
-          step={5}
-          unit="%"
-        />
-
-        {/* Participation Rate - Slider */}
-        <SliderWithInput
-          label="Participation Rate"
-          field="participationRate"
-          min={0}
-          max={100}
-          step={5}
-          unit="%"
-        />
-
-        {/* Average FTE - Input Only */}
-        <InputWithButtons
-          label="Average FTE 1st Year Comp"
-          field="avgFte"
-          step={10000}
-          unit="$"
-          min={0}
-        />
-
-        {/* Hires Per Year - Input Only */}
-        <InputWithButtons
-          label="Hires Per Year"
-          field="hiresPerYear"
-          step={1}
-          min={0}
-        />
-      </div>
-
-      {/* Summary Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-        <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-          Calculated Financial Metrics
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1">
-              Resulting Head Hunter Fee
-            </div>
-            <div className="text-xl font-bold text-gray-900">
-              ${resultingHeadHunterFee.toLocaleString()}
+        <div className="flex h-full">
+          {/* Left Side - Financial Metrics */}
+          <div className="w-1/3 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-r border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              Financial Metrics
+            </h3>
+            <div className="space-y-4">
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="text-sm text-gray-600 mb-2">
+                  Resulting Head Hunter Fee
+                </div>
+                <div className="text-2xl font-bold text-gray-900">
+                  ${resultingHeadHunterFee.toLocaleString()}
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="text-sm text-gray-600 mb-2">
+                  Resulting Contribution
+                </div>
+                <div className="text-2xl font-bold text-green-600">
+                  ${resultingContribution.toLocaleString()}
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="text-sm text-gray-600 mb-2">
+                  Cash Savings Per Hire
+                </div>
+                <div className="text-2xl font-bold text-blue-600">
+                  ${cashSavingsPerHirePerCompany.toLocaleString()}
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="text-sm text-gray-600 mb-2">
+                  Total Cash Savings
+                </div>
+                <div className="text-2xl font-bold text-purple-600">
+                  ${cashSavings.toLocaleString()}
+                </div>
+              </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1">
-              Resulting Contribution
-            </div>
-            <div className="text-xl font-bold text-green-600">
-              ${resultingContribution.toLocaleString()}
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1">
-              Cash Savings Per Hire
-            </div>
-            <div className="text-xl font-bold text-blue-600">
-              ${cashSavingsPerHirePerCompany.toLocaleString()}
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1">Total Cash Savings</div>
-            <div className="text-xl font-bold text-purple-600">
-              ${cashSavings.toLocaleString()}
+
+          {/* Right Side - Filters */}
+          <div className="flex-1 p-6 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-800 mb-6">
+              Filter Settings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Network Size Percentage */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Network Size Percentage
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={250}
+                      step={5}
+                      value={filters.networkSizePercentage || ""}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "networkSizePercentage",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      %
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleIncrement("networkSizePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDecrement("networkSizePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Job Placement For Each Alum */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Job Placement For Each Alum
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={filters.jobPlacementPerAlumPercentage || ""}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "jobPlacementPerAlumPercentage",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      %
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleIncrement("jobPlacementPerAlumPercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDecrement("jobPlacementPerAlumPercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Standard Head Hunter Fee */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Standard Head Hunter Fee
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={filters.standardHeadHunterFeePercentage || ""}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "standardHeadHunterFeePercentage",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      %
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleIncrement("standardHeadHunterFeePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDecrement("standardHeadHunterFeePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fee Company Willing To Pay */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Fee Company Willing To Pay
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={filters.companyWillingToPayPercentage || ""}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "companyWillingToPayPercentage",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      %
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleIncrement("companyWillingToPayPercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDecrement("companyWillingToPayPercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Participation Rate */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Participation Rate
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={filters.participationRate || ""}
+                      onChange={(e) =>
+                        handleInputChange("participationRate", e.target.value)
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      %
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => handleIncrement("participationRate", 5)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDecrement("participationRate", 5)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Average FTE 1st Year Comp */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Average FTE 1st Year Comp
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      step={10000}
+                      value={filters.avgFte || ""}
+                      onChange={(e) =>
+                        handleInputChange("avgFte", e.target.value)
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      $
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => handleIncrement("avgFte", 10000)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDecrement("avgFte", 10000)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hires Per Year */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Hires Per Year
+                </label>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={0}
+                      step={1}
+                      value={filters.hiresPerYear || ""}
+                      onChange={(e) =>
+                        handleInputChange("hiresPerYear", e.target.value)
+                      }
+                      className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => handleIncrement("hiresPerYear", 1)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDecrement("hiresPerYear", 1)}
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <div className="flex justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50">
+          <div className="flex gap-3">
+            <button
+              onClick={onReset}
+              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+            >
+              Reset Values
+            </button>
+            <button
+              onClick={onClose}
+              className="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            >
+              Close
+            </button>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            Apply
+          </button>
+        </div>
       </div>
-
-      {/* Custom Slider Styles */}
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .slider::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .slider::-webkit-slider-track {
-          height: 8px;
-          border-radius: 4px;
-          background: linear-gradient(
-            to right,
-            #3b82f6 0%,
-            #3b82f6 var(--value),
-            #e5e7eb var(--value),
-            #e5e7eb 100%
-          );
-        }
-
-        .slider::-moz-range-track {
-          height: 8px;
-          border-radius: 4px;
-          background: #e5e7eb;
-        }
-      `}</style>
     </div>
   );
 }

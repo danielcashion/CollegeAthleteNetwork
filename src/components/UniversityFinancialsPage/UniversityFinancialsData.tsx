@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ArrowUp, ArrowDown, Search, X } from "lucide-react";
+import { ArrowUp, ArrowDown, Search } from "lucide-react";
 import { FaFilter } from "react-icons/fa";
 import { NetworkSizeScaler } from "@/types/UniversityFinancials";
 import { UniversityTeam } from "@/types/University";
@@ -122,7 +122,7 @@ export default function UniversityFinancialsData({
   };
 
   return (
-    <div className="w-full flex py-8 px-4">
+    <div className="w-full flex py-8 px-4 min-h-[60vh]">
       <div className="w-full flex flex-col mx-auto w-full max-w-6xl">
         {/* Search Bar */}
         <div className="mb-6 w-full mx-auto flex flex-col md:flex-row gap-4 justify-between">
@@ -136,7 +136,7 @@ export default function UniversityFinancialsData({
               placeholder="Search teams..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blueMain focus:border-transparent"
             />
           </div>
 
@@ -151,40 +151,16 @@ export default function UniversityFinancialsData({
 
         {/* Filters Modal */}
         {showFilters && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh]">
-              <div className="flex justify-between items-center p-6 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Network Size Scaler Settings
-                </h2>
-                <button
-                  onClick={() => setShowFilters(false)}
-                  className="text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-              <div className="p-6">
-                <NetworkSizeScalerFilters
-                  filters={scalerValues}
-                  onFiltersChange={handleFiltersChange}
-                  resultingHeadHunterFee={resultingHeadHunterFee}
-                  resultingContribution={resultingContribution}
-                  cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
-                  cashSavings={cashSavings}
-                />
-              </div>
-              <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
-                <button onClick={handleResetFilters}>Reset Values</button>
-                <button
-                  onClick={() => setShowFilters(false)}
-                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
+          <NetworkSizeScalerFilters
+            filters={scalerValues}
+            onFiltersChange={handleFiltersChange}
+            resultingHeadHunterFee={resultingHeadHunterFee}
+            resultingContribution={resultingContribution}
+            cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
+            cashSavings={cashSavings}
+            onClose={() => setShowFilters(false)}
+            onReset={handleResetFilters}
+          />
         )}
 
         {/* Mobile Version - Hidden on md and above */}
@@ -314,8 +290,8 @@ export default function UniversityFinancialsData({
                 );
 
                 const cashDirectedTowardsTeam: number = Math.round(
-                  (jobPlacementsPeryear / 100) *
-                    (resultingContribution / 100) *
+                  jobPlacementsPeryear *
+                    resultingContribution *
                     (scalerValues.participationRate / 100)
                 );
 
