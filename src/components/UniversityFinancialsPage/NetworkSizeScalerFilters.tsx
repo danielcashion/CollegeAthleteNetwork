@@ -14,7 +14,7 @@ interface NetworkSizeScalerFiltersProps {
   onReset: () => void;
 }
 
-export default function NetworkSizeScalerFilters({
+export default function NetworkSizeScalers({
   filters,
   onFiltersChange,
   resultingHeadHunterFee,
@@ -146,65 +146,6 @@ export default function NetworkSizeScalerFilters({
               Model Settings
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-              {/* Network Size Percentage */}
-              <div className="space-y-2">
-                <Tooltip
-                  title="Adjusts the total size of Athletes in the Network (e.g. 100% = 100% of current size, 200% = double the size)"
-                  placement="top"
-                >
-                  <label className="block text-sm font-medium text-gray-700">
-                    Total Athlete Network Size (Scale -/+)
-                  </label>
-                </Tooltip>
-
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.networkSizePercentage !== null &&
-                        filters.networkSizePercentage !== undefined
-                          ? `${Number(
-                              filters.networkSizePercentage
-                            ).toLocaleString("en-US")}%`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters (%, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "networkSizePercentage",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="0%"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleIncrement("networkSizePercentage", 5)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleDecrement("networkSizePercentage", 5)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
               {/* Average FTE 1st Year Comp */}
               <div className="space-y-2">
                 <Tooltip
@@ -259,8 +200,10 @@ export default function NetworkSizeScalerFilters({
 
               {/* Standard Head Hunter Fee */}
               <div className="space-y-2">
-                <Tooltip title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
-                  placement="top">
+                <Tooltip
+                  title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
+                  placement="top"
+                >
                   <label className="block text-sm font-medium text-gray-700">
                     Recruiter Fee (% of 1st Year Total Comp)
                   </label>
