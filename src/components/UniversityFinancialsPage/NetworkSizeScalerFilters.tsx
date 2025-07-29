@@ -150,6 +150,7 @@ export default function NetworkSizeScalerFilters({
               <div className="space-y-2">
                 <Tooltip
                   title="Adjusts the total size of Athletes in the Network (e.g. 100% = 100% of current size, 200% = double the size)"
+                  placement="top"
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Total Athlete Network Size (Scale -/+)
@@ -208,6 +209,7 @@ export default function NetworkSizeScalerFilters({
               <div className="space-y-2">
                 <Tooltip
                   title="Average first year total compensation for Full Time Employees (FTEs) in the network"
+                  placement="top"
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Average Hire&apos;s 1st Year Total Comp ($)
@@ -257,7 +259,8 @@ export default function NetworkSizeScalerFilters({
 
               {/* Standard Head Hunter Fee */}
               <div className="space-y-2">
-                <Tooltip title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages.">
+                <Tooltip title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
+                  placement="top">
                   <label className="block text-sm font-medium text-gray-700">
                     Recruiter Fee (% of 1st Year Total Comp)
                   </label>
