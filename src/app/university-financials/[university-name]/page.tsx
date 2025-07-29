@@ -40,12 +40,12 @@ export default async function UniversityFinancials({
           Department could be achieved?
         </h2>
         {teams[0]?.university_name === "Typical University" && (
-          <h2 className="text-xl mb-2 mt-2">
-            These are estimated averages for a typical university. Please{" "}
-            <Link href="/contact-us" className="underline">
+          <h2 className="text-md mb-2 mt-2">
+            * We have not mapped your university&apos;s data. Below are the averages for all universities in our datasets. Please{" "}
+            <Link href="/contact-us" className="underline font-bold">
               Contact Us
             </Link>{" "}
-            if you want to get your university&apos;s financial info listed.
+            if you want to us to load your university&apos;s Athlete Network data.
           </h2>
         )}
       </div>

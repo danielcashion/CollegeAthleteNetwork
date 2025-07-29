@@ -67,7 +67,7 @@ export default function NetworkSizeScalers({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg border border-gray-200">
+    <div className="w-full bg-white shadow-lg rounded-lg border border-gray-200">
       <style jsx>{`
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
@@ -262,7 +262,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* resulting head hunter fee */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
+              <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                 <Tooltip
                   title="This is the fee the head hunter will charge based on the first year total compensation and the standard head hunter fee percentage"
                   placement="right"
@@ -345,7 +345,7 @@ export default function NetworkSizeScalers({
                 placement="right"
                 arrow
               >
-                <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
+                <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                   <div className="text-sm text-gray-600 mb-1">
                     Resulting Contribution to Athletic Program
                   </div>
@@ -421,7 +421,7 @@ export default function NetworkSizeScalers({
             </Tooltip>
             <div className="space-y-4 pb-2 ">
               {/* Cash Savings Per Hire */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
+              <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                 <Tooltip
                   title="Versus paying the recruiters fee"
                   placement="right"
@@ -481,7 +481,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Total Cash Savings */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
+              <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                 <Tooltip
                   title="Annuel cash savings vs paying the recruiters fee"
                   placement="right"
