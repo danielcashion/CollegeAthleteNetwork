@@ -80,196 +80,220 @@ export default function NetworkSizeScalers({
       `}</style>
       <div className="w-full flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
+        <div className="p-4 border-b border-gray-800 bg-gray-50">
           <h2 className="text-xl font-semibold text-gray-800">
-            Athlete Network Size Calculator
+            Athlete Network Financial Model Settings
           </h2>
         </div>
 
         {/* Content */}
-        <div className="flex flex-col p-4">
+        <div className="flex bg-gray-50 flex-col p-4">
           {/* Settings */}
           <div className="w-full">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <h3 className="text-2xl font-semibold text-[#1C315F] mb-2">
               Model Details
             </h3>
             <div className="space-y-4 pb-4 border-b border-gray-600">
-              {/* Job Placement For Each Alum */}
-              <div className="">
-                <label className="block text-sm font-medium text-gray-700">
-                  Job Placement For Each Alum
-                </label>
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.jobPlacementPerAlumPercentage !== null &&
-                        filters.jobPlacementPerAlumPercentage !== undefined
-                          ? `${Number(
-                              filters.jobPlacementPerAlumPercentage
-                            ).toLocaleString("en-US")}%`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters (%, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "jobPlacementPerAlumPercentage",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="0%"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleIncrement("jobPlacementPerAlumPercentage", 1)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleDecrement("jobPlacementPerAlumPercentage", 1)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
               {/* Average FTE 1st Year Comp */}
               <div className="">
                 <Tooltip
                   title="Average first year total compensation for Full Time Employees (FTEs) in the network"
-                  placement="top"
+                  placement="right"
                 >
                   <label className="block text-sm font-medium text-gray-700">
-                    Average Hire&apos;s 1st Year Total Comp ($)
+                    AVG Hire&apos;s 1st Year Total Comp ($)
                   </label>
-                </Tooltip>
 
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.avgFte !== null && filters.avgFte !== undefined
-                          ? `$${Number(filters.avgFte).toLocaleString("en-US")}`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters ($, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "avgFte",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="$0"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.avgFte !== null &&
+                          filters.avgFte !== undefined
+                            ? `$${Number(filters.avgFte).toLocaleString(
+                                "en-US"
+                              )}`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters ($, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "avgFte",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="$0"
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() => handleIncrement("avgFte", 10000)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDecrement("avgFte", 10000)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() => handleIncrement("avgFte", 10000)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDecrement("avgFte", 10000)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
+                </Tooltip>
+              </div>
+              {/* Job Placement For Each Alum */}
+              <div className="">
+                <Tooltip
+                  title="Scale up/down for how many jobs you expect to place for each alum in the network"
+                  placement="right"
+                >
+                  <label className="block text-sm font-medium text-gray-700">
+                    Job Placement For Each Alum
+                  </label>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.jobPlacementPerAlumPercentage !== null &&
+                          filters.jobPlacementPerAlumPercentage !== undefined
+                            ? `${Number(
+                                filters.jobPlacementPerAlumPercentage
+                              ).toLocaleString("en-US")}%`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters (%, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "jobPlacementPerAlumPercentage",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="0%"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleIncrement("jobPlacementPerAlumPercentage", 1)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDecrement("jobPlacementPerAlumPercentage", 1)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Tooltip>
               </div>
 
               {/* Standard Head Hunter Fee */}
               <div className="">
                 <Tooltip
                   title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
-                  placement="top"
+                  placement="right"
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Recruiter Fee (% of 1st Year Total Comp)
                   </label>
-                </Tooltip>
 
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.standardHeadHunterFeePercentage !== null &&
-                        filters.standardHeadHunterFeePercentage !== undefined
-                          ? `${Number(
-                              filters.standardHeadHunterFeePercentage
-                            ).toLocaleString("en-US")}%`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters (%, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "standardHeadHunterFeePercentage",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="0%"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.standardHeadHunterFeePercentage !== null &&
+                          filters.standardHeadHunterFeePercentage !== undefined
+                            ? `${Number(
+                                filters.standardHeadHunterFeePercentage
+                              ).toLocaleString("en-US")}%`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters (%, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "standardHeadHunterFeePercentage",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="0%"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleIncrement("standardHeadHunterFeePercentage", 1)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDecrement("standardHeadHunterFeePercentage", 1)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleIncrement("standardHeadHunterFeePercentage", 1)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleDecrement("standardHeadHunterFeePercentage", 1)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                  </div>
-                </div>
+                </Tooltip>
               </div>
 
               {/* resulting head hunter fee */}
               <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
-                <div className="text-sm text-gray-600 mb-1">
-                  Resulting Head Hunter Fee
-                </div>
-                <div className="text-2xl font-bold text-gray-900">
-                  ${resultingHeadHunterFee.toLocaleString()}
-                </div>
+                <Tooltip
+                  title="This is the fee the head hunter will charge based on the first year total compensation and the standard head hunter fee percentage"
+                  placement="right"
+                >
+                  <div className="text-sm text-gray-600 mb-1">
+                    Resulting Head Hunter Fee
+                  </div>
+
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${resultingHeadHunterFee.toLocaleString()}
+                  </div>
+                </Tooltip>
               </div>
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">
+            <h3 className="text-2xl font-semibold text-[#1C315F] mb-2 mt-2">
               Hiring Company
             </h3>
             <div className="space-y-4 pb-4 border-b border-gray-600">
@@ -277,186 +301,226 @@ export default function NetworkSizeScalers({
               <div className="">
                 <Tooltip
                   title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%"
-                  placement="top"
+                  placement="right"
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     % of Fee the Company is Willing To Pay
                   </label>
-                </Tooltip>
 
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.companyWillingToPayPercentage !== null &&
-                        filters.companyWillingToPayPercentage !== undefined
-                          ? `${Number(
-                              filters.companyWillingToPayPercentage
-                            ).toLocaleString("en-US")}%`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters (%, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "companyWillingToPayPercentage",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="0%"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.companyWillingToPayPercentage !== null &&
+                          filters.companyWillingToPayPercentage !== undefined
+                            ? `${Number(
+                                filters.companyWillingToPayPercentage
+                              ).toLocaleString("en-US")}%`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters (%, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "companyWillingToPayPercentage",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="0%"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleIncrement("companyWillingToPayPercentage", 5)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDecrement("companyWillingToPayPercentage", 5)
+                        }
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleIncrement("companyWillingToPayPercentage", 5)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleDecrement("companyWillingToPayPercentage", 5)
-                      }
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                  </div>
-                </div>
+                </Tooltip>
               </div>
 
               {/* Resulting Contribution */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
-                <div className="text-sm text-gray-600 mb-1">
-                  Resulting Contribution to Athletic Program
+              <Tooltip
+                title="This is the contribution the company will make based on the first year total compensation and the company willing to pay percentage"
+                placement="right"
+                arrow
+              >
+                <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
+                  <div className="text-sm text-gray-600 mb-1">
+                    Resulting Contribution to Athletic Program
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">
+                    ${resultingContribution.toLocaleString()}
+                  </div>
                 </div>
-                <div className="text-2xl font-bold text-green-600">
-                  ${resultingContribution.toLocaleString()}
-                </div>
-              </div>
-
+              </Tooltip>
               {/* Participation Rate */}
               <div className="">
                 <Tooltip
                   title="Adjusts if not all companies agree to contribute for each hire"
-                  placement="top"
+                  placement="right"
+                  arrow
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Company Participation Rate
                   </label>
-                </Tooltip>
 
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={
-                        filters.participationRate !== null &&
-                        filters.participationRate !== undefined
-                          ? `${Number(filters.participationRate).toLocaleString(
-                              "en-US"
-                            )}%`
-                          : ""
-                      }
-                      onChange={(e) => {
-                        // Remove non-numeric characters (%, commas) and convert to number
-                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                        const numValue = rawValue ? Number(rawValue) : "";
-                        handleInputChange(
-                          "participationRate",
-                          numValue === "" ? "" : String(numValue)
-                        );
-                      }}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                      placeholder="0%"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.participationRate !== null &&
+                          filters.participationRate !== undefined
+                            ? `${Number(
+                                filters.participationRate
+                              ).toLocaleString("en-US")}%`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters (%, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "participationRate",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="0%"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() => handleIncrement("participationRate", 5)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDecrement("participationRate", 5)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() => handleIncrement("participationRate", 5)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDecrement("participationRate", 5)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                  </div>
-                </div>
+                </Tooltip>
               </div>
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">
-              Hiring Company Benefits
-            </h3>
+            <Tooltip
+              title="Hiring company benefits based on the above settings. Strictly informational."
+              placement="right"
+              arrow
+            >
+              <h3 className="text-2xl font-semibold text-[#1C315F] mb-2 mt-2">
+                Hiring Company Benefits
+              </h3>
+            </Tooltip>
             <div className="space-y-4 pb-2 ">
               {/* Cash Savings Per Hire */}
               <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
-                <div className="text-sm text-gray-600 mb-1">
-                  Cash Savings Per Hire for Hiring Company
-                </div>
-                <div className="text-2xl font-bold text-blue-600">
-                  ${cashSavingsPerHirePerCompany.toLocaleString()}
-                </div>
-              </div>
+                <Tooltip
+                  title="Versus paying the recruiters fee"
+                  placement="right"
+                  arrow
+                >
+                  <div className="text-sm text-gray-600 mb-1">
+                    Cash Savings Per Hire for Hiring Company
+                  </div>
 
+                  <div className="text-2xl font-bold text-blue-600">
+                    ${cashSavingsPerHirePerCompany.toLocaleString()}
+                  </div>
+                </Tooltip>
+              </div>
               {/* Hires Per Year */}
               <div className="">
-                <label className="block text-sm font-medium text-gray-700">
-                  Hires Per Year
-                </label>
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="number"
-                      min={0}
-                      step={1}
-                      value={filters.hiresPerYear || ""}
-                      onChange={(e) =>
-                        handleInputChange("hiresPerYear", e.target.value)
-                      }
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                    />
+                <Tooltip
+                  title="How many hires the company expects to make per year using this network"
+                  placement="right"
+                  arrow
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Hires Per Year
+                    </label>
                   </div>
-                  <div className="flex flex-col">
-                    <button
-                      type="button"
-                      onClick={() => handleIncrement("hiresPerYear", 1)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronUp size={14} className="sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDecrement("hiresPerYear", 1)}
-                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                    >
-                      <ChevronDown size={14} className="sm:w-4 sm:h-4" />
-                    </button>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="number"
+                        min={0}
+                        step={1}
+                        value={filters.hiresPerYear || ""}
+                        onChange={(e) =>
+                          handleInputChange("hiresPerYear", e.target.value)
+                        }
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() => handleIncrement("hiresPerYear", 1)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDecrement("hiresPerYear", 1)}
+                        className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                      >
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Tooltip>
               </div>
 
               {/* Total Cash Savings */}
               <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
-                <div className="text-sm text-gray-600 mb-1">
-                  Cash Savings From Network Hires
-                </div>
-                <div className="text-2xl font-bold text-purple-600">
-                  ${cashSavings.toLocaleString()}
-                </div>
+                <Tooltip
+                  title="Annuel cash savings vs paying the recruiters fee"
+                  placement="right"
+                  arrow
+                >
+                  <div className="text-sm text-gray-600 mb-1">
+                    Cash Savings From Network Hires
+                  </div>
+
+                  <div className="text-2xl font-bold text-purple-600">
+                    ${cashSavings.toLocaleString()}
+                  </div>
+                </Tooltip>
               </div>
             </div>
           </div>

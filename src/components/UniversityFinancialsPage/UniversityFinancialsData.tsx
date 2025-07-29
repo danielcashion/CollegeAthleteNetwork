@@ -186,72 +186,87 @@ export default function UniversityFinancialsData({
   return (
     <div className="w-full flex py-8 px-4 min-h-[60vh]">
       <div className="flex flex-col-reverse md:flex-row items-start gap-6 w-full max-w-7xl mx-auto">
+        {/* Network Size Scaler Bar */}
         <div className="w-full flex flex-col">
-          {/* Network Size Scaler Bar */}
-          <div className="mb-6 w-full flex flex-col md:flex-row gap-4 justify-between">
-            <div className="relative w-full md:max-w-md">
-              <Tooltip
-                title="Adjusts the total size of Athletes in the Network (e.g. 100% = 100% of current size, 200% = double the size)"
-                placement="top"
-              >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Total Athlete Network Size (Scale -/+)
-                </label>
-              </Tooltip>
-              <div className="flex items-center space-x-2">
-                <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    value={
-                      scalerValues.networkSizePercentage !== null &&
-                      scalerValues.networkSizePercentage !== undefined
-                        ? `${Number(
-                            scalerValues.networkSizePercentage
-                          ).toLocaleString("en-US")}%`
-                        : ""
-                    }
-                    onChange={(e) => {
-                      // Remove non-numeric characters (%, commas) and convert to number
-                      const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                      const numValue = rawValue ? Number(rawValue) : "";
-                      handleNetworkSizeChange(
-                        "networkSizePercentage",
-                        numValue === "" ? "" : String(numValue)
-                      );
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blueMain focus:border-transparent text-center bg-white"
-                    placeholder="0%"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleNetworkSizeIncrement("networkSizePercentage", 5)
-                    }
-                    className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                  >
-                    <ChevronUp size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleNetworkSizeDecrement("networkSizePercentage", 5)
-                    }
-                    className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
-                  >
-                    <ChevronDown size={14} />
-                  </button>
+          {/* Single row with 4 columns above the table */}
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex w-full md:flex-row gap-4">
+              {/* Column 1: Total Athlete Network Size Label */}
+              <div className="w-full md:w-2/5 flex items-center">
+                <Tooltip
+                  title="Adjusts the total size of Athletes in the Network (e.g. 100% = 100% of current size, 200% = double the size)"
+                  placement="top"
+                >
+                  <label className="block text-2xl font-medium text-[#1C315F]">
+                    Athlete Network Size Scaler
+                  </label>
+                </Tooltip>
+              </div>
+              {/* Column 2: Input Box with Increment/Decrement Buttons */}
+              <div className="w-full md:w-1/6 flex items-center">
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={
+                        scalerValues.networkSizePercentage !== null &&
+                        scalerValues.networkSizePercentage !== undefined
+                          ? `${Number(
+                              scalerValues.networkSizePercentage
+                            ).toLocaleString("en-US")}%`
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
+                        handleNetworkSizeChange(
+                          "networkSizePercentage",
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blueMain focus:border-transparent text-center bg-white"
+                      placeholder="0%"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleNetworkSizeIncrement("networkSizePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                    >
+                      <ChevronUp size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleNetworkSizeDecrement("networkSizePercentage", 5)
+                      }
+                      className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
+                    >
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
+              {/* Column 3: Scale Instruction Text */}
+              <div className="w-full md:w-2/5 flex items-center">
+                <label className="block text-sm font-medium text-[#1C315F]">
+                  Hint: Scale up/down to match what you think the true total size of the
+                  network is
+                </label>
+              </div>
+              {/* Column 4: Reset Button */}
+              <div className="w-full md:w-1/5 flex items-center">
+                <button
+                  onClick={() => handleResetFilters()}
+                  className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white px-6 py-2 rounded-md hover:opacity-90 transition-opacity w-full h-10 flex items-center justify-center"
+                >
+                  Reset Values
+                </button>
+              </div>
             </div>
-
-            <button
-              onClick={() => handleResetFilters()}
-              className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white px-6 py-2 rounded-md hover:opacity-90 transition-opacity"
-            >
-              Reset values
-            </button>
           </div>
 
           {/* Mobile Version - Hidden on md and above */}
@@ -441,7 +456,6 @@ export default function UniversityFinancialsData({
             )}
           </div>
         </div>
-
         <div className="w-full md:w-[300px] min-w-[300px]">
           <NetworkSizeScalers
             filters={scalerValues}
