@@ -20,13 +20,18 @@ export default async function UniversityFinancials({
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Financial Contributions Model for {universityName}
         </h1>
-        <h2 className="text-3xl font-semibold mb-4 ml-20 mr-20">
-          Does {universityName} receive any direct financial benefit when their
-          Athlete Network hires from within?
+        <h2 className="text-3xl font-semibold mb-0 ml-20 mr-20">
+          Does {universityName} receive any direct financial benefit
         </h2>
-        <h2 className="text-xl font-semibold mb-4">
+        <h2 className="text-3xl font-semibold mb-2 ml-20 mr-20">
+          when their Athlete Network hires from within?
+        </h2>
+        <h2 className="text-xl font-semibold mb-0">
           By using The College Athlete Network to facilitate Athlete Network
-          hiring, what kind of financial contributions back to the Athletic
+          hiring and job activity,
+        </h2>
+        <h2 className="text-xl font-semibold mb-2">
+          what levels of additional financial contributions back to the Athletic
           Department could be achieved?
         </h2>
       </div>
