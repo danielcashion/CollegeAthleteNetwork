@@ -9,7 +9,8 @@ export default async function UniversityFinancials({
 }: {
   params: Promise<{ "university-name": string }>;
 }) {
-  const { "university-name": universityName } = await params;
+  const { "university-name": encodedName } = await params;
+  const universityName = decodeURIComponent(encodedName);
   const teams = await getUniversityTeams({ universityName });
 
   if (!teams || teams.length < 1) {
