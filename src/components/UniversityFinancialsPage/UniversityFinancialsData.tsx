@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { ArrowUp, ArrowDown, ChevronUp, ChevronDown } from "lucide-react";
-import { FaFilter } from "react-icons/fa";
 import { NetworkSizeScaler } from "@/types/UniversityFinancials";
 import { UniversityTeam } from "@/types/University";
 import NetworkSizeScalers from "./NetworkSizeScalerFilters";
@@ -19,8 +18,6 @@ export default function UniversityFinancialsData({
 }: UniversityFinancialsDataProps) {
   const [sortKey, setSortKey] = useState<SortKey>("team_name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
-  const [showFilters, setShowFilters] = useState(false);
-
   const [scalerValues, setScalerValues] = useState<NetworkSizeScaler>({
     networkSizePercentage: 100,
     jobPlacementPerAlumPercentage: 5,
@@ -189,7 +186,7 @@ export default function UniversityFinancialsData({
   return (
     <div className="w-full flex py-8 px-4 min-h-[60vh]">
       <div className="flex flex-row items-start gap-6 w-full max-w-7xl mx-auto">
-        <div className="w-full flex flex-col">
+        <div className="w-[70%] min-w-[70%] flex flex-col">
           {/* Network Size Scaler Bar */}
           <div className="mb-6 w-full flex flex-col md:flex-row gap-4 justify-between">
             <div className="relative w-full md:max-w-md">
@@ -255,29 +252,7 @@ export default function UniversityFinancialsData({
             >
               Reset values
             </button>
-
-            <button
-              onClick={() => setShowFilters(true)}
-              className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white px-6 py-2 rounded-md flex flex-row items-center gap-2 hover:opacity-90 transition-opacity"
-            >
-              <FaFilter size={20} />
-              Advanced Settings
-            </button>
           </div>
-
-          {/* Filters Modal */}
-          {showFilters && (
-            <NetworkSizeScalers
-              filters={scalerValues}
-              onFiltersChange={handleFiltersChange}
-              resultingHeadHunterFee={resultingHeadHunterFee}
-              resultingContribution={resultingContribution}
-              cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
-              cashSavings={cashSavings}
-              onClose={() => setShowFilters(false)}
-              onReset={handleResetFilters}
-            />
-          )}
 
           {/* Mobile Version - Hidden on md and above */}
           <div className="md:hidden space-y-4">
@@ -467,7 +442,17 @@ export default function UniversityFinancialsData({
           </div>
         </div>
 
-        <div className="min-w-3xl w-3xl">network scaler comes here</div>
+        <div className="w-full">
+          <NetworkSizeScalers
+            filters={scalerValues}
+            onFiltersChange={handleFiltersChange}
+            resultingHeadHunterFee={resultingHeadHunterFee}
+            resultingContribution={resultingContribution}
+            cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
+            cashSavings={cashSavings}
+            onReset={handleResetFilters}
+          />
+        </div>
       </div>
     </div>
   );
