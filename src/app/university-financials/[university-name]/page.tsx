@@ -18,11 +18,16 @@ export default async function UniversityFinancials({
     <div>
       <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          University Financials for {universityName}
+          Financial Contributions Model for {universityName}
         </h1>
-        <h2 className="text-3xl font-semibold mb-4">
-          Get the complete financial information for {universityName} and its
-          teams for different years, ranges and categories.
+        <h2 className="text-3xl font-semibold mb-4 ml-20 mr-20">
+          Does {universityName} receive any direct financial benefit when their
+          Athlete Network hires from within?
+        </h2>
+        <h2 className="text-xl font-semibold mb-4">
+          By using The College Athlete Network to facilitate Athlete Network
+          hiring, what kind of financial contributions back to the Athletic
+          Department could be achieved?
         </h2>
       </div>
 

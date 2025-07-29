@@ -5,6 +5,7 @@ import { FaFilter } from "react-icons/fa";
 import { NetworkSizeScaler } from "@/types/UniversityFinancials";
 import { UniversityTeam } from "@/types/University";
 import NetworkSizeScalerFilters from "./NetworkSizeScalerFilters";
+import Tooltip from "@mui/material/Tooltip";
 
 interface UniversityFinancialsDataProps {
   teams: UniversityTeam[];
@@ -25,8 +26,8 @@ export default function UniversityFinancialsData({
     networkSizePercentage: 100,
     jobPlacementPerAlumPercentage: 5,
     avgFte: 150000,
-    standardHeadHunterFeePercentage: 33,
-    companyWillingToPayPercentage: 33,
+    standardHeadHunterFeePercentage: 30,
+    companyWillingToPayPercentage: 35,
     participationRate: 75,
     hiresPerYear: 3,
   });
@@ -45,7 +46,7 @@ export default function UniversityFinancialsData({
     cashSavingsPerHirePerCompany * scalerValues.hiresPerYear;
 
   const getGenderText = (genderId: number) => {
-    return genderId === 1 ? "Men" : genderId === 2 ? "Women" : "-";
+    return genderId === 1 ? "M" : genderId === 2 ? "W" : "-";
   };
 
   const handleResetFilters = () => {
@@ -121,6 +122,31 @@ export default function UniversityFinancialsData({
     );
   };
 
+  // Calculate totals for numerical columns
+  const totals = sortedTeams.reduce(
+    (acc, team) => {
+      const networkSize: number =
+        team?.num_athletes * (scalerValues.networkSizePercentage / 100);
+
+      const jobPlacementsPeryear: number = Math.round(
+        networkSize * (scalerValues.jobPlacementPerAlumPercentage / 100)
+      );
+
+      const cashDirectedTowardsTeam: number = Math.round(
+        jobPlacementsPeryear *
+          resultingContribution *
+          (scalerValues.participationRate / 100)
+      );
+
+      return {
+        totalAthletes: acc.totalAthletes + networkSize,
+        totalJobPlacements: acc.totalJobPlacements + jobPlacementsPeryear,
+        totalCash: acc.totalCash + cashDirectedTowardsTeam,
+      };
+    },
+    { totalAthletes: 0, totalJobPlacements: 0, totalCash: 0 }
+  );
+
   return (
     <div className="w-full flex py-8 px-4 min-h-[60vh]">
       <div className="w-full flex flex-col mx-auto w-full max-w-6xl">
@@ -178,7 +204,7 @@ export default function UniversityFinancialsData({
                       : "bg-gray-100"
                   }`}
                 >
-                  Sport Name{" "}
+                  Sport{" "}
                   {sortKey === "team_name" && (sortOrder === "asc" ? "↑" : "↓")}
                 </button>
                 <button
@@ -225,13 +251,13 @@ export default function UniversityFinancialsData({
                   {getGenderText(team?.gender_id)}
                 </p>
                 <p className="text-gray-500 mt-2 text-sm">
-                  Network Size: {Math.round(networkSize)} athletes
+                  # : {Math.round(networkSize)} athletes
                 </p>
                 <p className="text-gray-500 mt-1 text-sm">
-                  Job Placements per Year: {Math.round(jobPlacementsPeryear)}
+                  Job Placements/Year: {Math.round(jobPlacementsPeryear)}
                 </p>
                 <p className="text-gray-500 mt-1 text-sm">
-                  Cash Directed Toward Team: $
+                  Team Contribution: $
                   {Math.round(cashDirectedTowardsTeam).toLocaleString()}
                 </p>
               </div>
@@ -255,25 +281,56 @@ export default function UniversityFinancialsData({
                   className="px-6 py-4 cursor-pointer hover:text-blue-600"
                 >
                   <div className="flex items-center gap-1">
-                    Sport Name <SortIcon column="team_name" />
+                    Sport <SortIcon column="team_name" />
                   </div>
                 </th>
-                <th
+                {/* <th
                   onClick={() => handleSort("gender_id")}
                   className="px-6 py-4 cursor-pointer hover:text-blue-600"
                 >
                   <div className="flex items-center gap-1">
                     Gender <SortIcon column="gender_id" />
                   </div>
-                </th>
-                <th className="px-6 py-4 cursor-pointer hover:text-blue-600">
-                  <div className="flex items-center gap-1">Network Size</div>
-                </th>
-                <th className="px-6 py-4">Job Placements per Year</th>
-                <th className="px-6 py-4">Cash Directed Toward Team</th>
+                </th> */}
+                <Tooltip
+                  title={`The number of known athletes from the univeristy's website multiplied by the network size scaler (${scalerValues.networkSizePercentage}%)`}
+                  placement="top"
+                  className="px-6 py-4 cursor-pointer hover:text-blue-600"
+                >
+                  <th className="px-6 py-4 cursor-pointer hover:text-blue-600">
+                    <div className="flex items-center gap-1"># Athletes</div>
+                  </th>
+                </Tooltip>
+                <Tooltip
+                  title={`The number of job placements per year based on the network size scaler (${scalerValues.networkSizePercentage}%) and job placement percentage (${scalerValues.jobPlacementPerAlumPercentage}%)`}
+                  placement="top"
+                >
+                  <th className="px-6 py-4">Job Placements/Year</th>
+                </Tooltip>
+                <Tooltip
+                  title={`The estimated cash to the team based on the setting within this model.`}
+                  placement="top"
+                  className="px-6 py-4 cursor-pointer hover:text-blue-600"
+                >
+                  <th className="px-6 py-4">$ Contributions</th>
+                </Tooltip>
               </tr>
             </thead>
             <tbody>
+              {/* Totals Row */}
+              <tr className="bg-gray-100 font-bold text-lg border-t">
+                <td className="px-6 py-2">Totals</td>
+                <td className="px-6 py-2 text-center">
+                  {Math.round(totals.totalAthletes).toLocaleString()}
+                </td>
+                <td className="px-6 py-2 text-center">
+                  {Math.round(totals.totalJobPlacements).toLocaleString()}
+                </td>
+                <td className="px-6 py-2 text-center">
+                  ${Math.round(totals.totalCash).toLocaleString()}
+                </td>
+              </tr>
+              {/* Individual Team Rows */}
               {sortedTeams.map((team, idx) => {
                 const networkSize: number =
                   team?.num_athletes *
@@ -298,11 +355,11 @@ export default function UniversityFinancialsData({
                     } hover:bg-blue-50 transition text-lg border-t`}
                   >
                     <td className="px-6 py-2 hover:text-blue-600">
-                      {team?.team_name}
+                      {team?.team_name} ({getGenderText(team?.gender_id)})
                     </td>
-                    <td className="px-6 py-2 hover:text-blue-600">
+                    {/* <td className="px-6 py-2 hover:text-blue-600">
                       {getGenderText(team?.gender_id)}
-                    </td>
+                    </td> */}
                     <td className="px-6 py-2 hover:text-blue-600 text-center">
                       {Math.round(networkSize)}
                     </td>

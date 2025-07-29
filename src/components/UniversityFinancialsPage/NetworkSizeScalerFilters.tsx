@@ -1,6 +1,7 @@
 "use client";
 import { ChevronUp, ChevronDown, X } from "lucide-react";
 import type { NetworkSizeScaler } from "@/types/UniversityFinancials";
+import { Tooltip } from "@mui/material";
 
 interface NetworkSizeScalerFiltersProps {
   filters: NetworkSizeScaler;
@@ -85,7 +86,7 @@ export default function NetworkSizeScalerFilters({
         {/* Header */}
         <div className="flex justify-between items-center p-3 sm:p-6 border-b border-gray-200 bg-gray-50">
           <h2 className="text-lg sm:text-2xl font-semibold text-gray-800">
-            Network Size Scaler Settings
+            Athlete Network Size Adjustment Wizard
           </h2>
           <button
             onClick={onClose}
@@ -142,33 +143,43 @@ export default function NetworkSizeScalerFilters({
           {/* Filter Settings */}
           <div className="flex-1 p-3 sm:p-6 overflow-y-auto md:overflow-y-auto">
             <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-6">
-              Filter Settings
+              Model Settings
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
               {/* Network Size Percentage */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Network Size Percentage
-                </label>
+                <Tooltip
+                  title="Adjusts the total size of Athletes in the Network (e.g. 100% = 100% of current size, 200% = double the size)"
+                >
+                  <label className="block text-sm font-medium text-gray-700">
+                    Total Athlete Network Size (Scale -/+)
+                  </label>
+                </Tooltip>
+
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <input
-                      type="number"
-                      min={0}
-                      max={250}
-                      step={5}
-                      value={filters.networkSizePercentage || ""}
-                      onChange={(e) =>
+                      type="text"
+                      value={
+                        filters.networkSizePercentage !== null &&
+                        filters.networkSizePercentage !== undefined
+                          ? `${Number(
+                              filters.networkSizePercentage
+                            ).toLocaleString("en-US")}%`
+                          : ""
+                      }
+                      onChange={(e) => {
+                        // Remove non-numeric characters (%, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
                         handleInputChange(
                           "networkSizePercentage",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="0%"
                     />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      %
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <button
@@ -193,46 +204,49 @@ export default function NetworkSizeScalerFilters({
                 </div>
               </div>
 
-              {/* Job Placement For Each Alum */}
+              {/* Average FTE 1st Year Comp */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Job Placement For Each Alum
-                </label>
+                <Tooltip
+                  title="Average first year total compensation for Full Time Employees (FTEs) in the network"
+                >
+                  <label className="block text-sm font-medium text-gray-700">
+                    Average Hire&apos;s 1st Year Total Comp ($)
+                  </label>
+                </Tooltip>
+
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      step={5}
-                      value={filters.jobPlacementPerAlumPercentage || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "jobPlacementPerAlumPercentage",
-                          e.target.value
-                        )
+                      type="text"
+                      value={
+                        filters.avgFte !== null && filters.avgFte !== undefined
+                          ? `$${Number(filters.avgFte).toLocaleString("en-US")}`
+                          : ""
                       }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      onChange={(e) => {
+                        // Remove non-numeric characters ($, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
+                        handleInputChange(
+                          "avgFte",
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="$0"
                     />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      %
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <button
                       type="button"
-                      onClick={() =>
-                        handleIncrement("jobPlacementPerAlumPercentage", 5)
-                      }
+                      onClick={() => handleIncrement("avgFte", 10000)}
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
                       <ChevronUp size={14} className="sm:w-4 sm:h-4" />
                     </button>
                     <button
                       type="button"
-                      onClick={() =>
-                        handleDecrement("jobPlacementPerAlumPercentage", 5)
-                      }
+                      onClick={() => handleDecrement("avgFte", 10000)}
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
                       <ChevronDown size={14} className="sm:w-4 sm:h-4" />
@@ -243,34 +257,42 @@ export default function NetworkSizeScalerFilters({
 
               {/* Standard Head Hunter Fee */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Standard Head Hunter Fee
-                </label>
+                <Tooltip title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages.">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Recruiter Fee (% of 1st Year Total Comp)
+                  </label>
+                </Tooltip>
+
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      step={5}
-                      value={filters.standardHeadHunterFeePercentage || ""}
-                      onChange={(e) =>
+                      type="text"
+                      value={
+                        filters.standardHeadHunterFeePercentage !== null &&
+                        filters.standardHeadHunterFeePercentage !== undefined
+                          ? `${Number(
+                              filters.standardHeadHunterFeePercentage
+                            ).toLocaleString("en-US")}%`
+                          : ""
+                      }
+                      onChange={(e) => {
+                        // Remove non-numeric characters (%, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
                         handleInputChange(
                           "standardHeadHunterFeePercentage",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="0%"
                     />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      %
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <button
                       type="button"
                       onClick={() =>
-                        handleIncrement("standardHeadHunterFeePercentage", 5)
+                        handleIncrement("standardHeadHunterFeePercentage", 1)
                       }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
@@ -279,7 +301,7 @@ export default function NetworkSizeScalerFilters({
                     <button
                       type="button"
                       onClick={() =>
-                        handleDecrement("standardHeadHunterFeePercentage", 5)
+                        handleDecrement("standardHeadHunterFeePercentage", 1)
                       }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
@@ -291,28 +313,39 @@ export default function NetworkSizeScalerFilters({
 
               {/* Fee Company Willing To Pay */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Fee Company Willing To Pay
-                </label>
+                <Tooltip
+                  title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%"
+                  placement="top"
+                >
+                  <label className="block text-sm font-medium text-gray-700">
+                    % of Fee the Company is Willing To Pay
+                  </label>
+                </Tooltip>
+
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      step={5}
-                      value={filters.companyWillingToPayPercentage || ""}
-                      onChange={(e) =>
+                      type="text"
+                      value={
+                        filters.companyWillingToPayPercentage !== null &&
+                        filters.companyWillingToPayPercentage !== undefined
+                          ? `${Number(
+                              filters.companyWillingToPayPercentage
+                            ).toLocaleString("en-US")}%`
+                          : ""
+                      }
+                      onChange={(e) => {
+                        // Remove non-numeric characters (%, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
                         handleInputChange(
                           "companyWillingToPayPercentage",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="0%"
                     />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      %
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <button
@@ -339,25 +372,39 @@ export default function NetworkSizeScalerFilters({
 
               {/* Participation Rate */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Participation Rate
-                </label>
+                <Tooltip
+                  title="Adjusts if not all companies agree to contribute for each hire"
+                  placement="top"
+                >
+                  <label className="block text-sm font-medium text-gray-700">
+                    Company Participation Rate
+                  </label>
+                </Tooltip>
+
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      step={5}
-                      value={filters.participationRate || ""}
-                      onChange={(e) =>
-                        handleInputChange("participationRate", e.target.value)
+                      type="text"
+                      value={
+                        filters.participationRate !== null &&
+                        filters.participationRate !== undefined
+                          ? `${Number(filters.participationRate).toLocaleString(
+                              "en-US"
+                            )}%`
+                          : ""
                       }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      onChange={(e) => {
+                        // Remove non-numeric characters (%, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
+                        handleInputChange(
+                          "participationRate",
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="0%"
                     />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      %
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <button
@@ -378,38 +425,56 @@ export default function NetworkSizeScalerFilters({
                 </div>
               </div>
 
-              {/* Average FTE 1st Year Comp */}
+              {/* Job Placement For Each Alum */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Average FTE 1st Year Comp
+                  Job Placement For Each Alum
                 </label>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="number"
-                      min={0}
-                      step={10000}
-                      value={filters.avgFte || ""}
-                      onChange={(e) =>
-                        handleInputChange("avgFte", e.target.value)
-                      }
-                      className="w-full px-3 sm:px-4 py-2 pr-10 sm:pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                    />
-                    <span className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                      $
-                    </span>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={
+                          filters.jobPlacementPerAlumPercentage !== null &&
+                          filters.jobPlacementPerAlumPercentage !== undefined
+                            ? `${Number(
+                                filters.jobPlacementPerAlumPercentage
+                              ).toLocaleString("en-US")}%`
+                            : ""
+                        }
+                        onChange={(e) => {
+                          // Remove non-numeric characters (%, commas) and convert to number
+                          const rawValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          const numValue = rawValue ? Number(rawValue) : "";
+                          handleInputChange(
+                            "jobPlacementPerAlumPercentage",
+                            numValue === "" ? "" : String(numValue)
+                          );
+                        }}
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                        placeholder="0%"
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col">
                     <button
                       type="button"
-                      onClick={() => handleIncrement("avgFte", 10000)}
+                      onClick={() =>
+                        handleIncrement("jobPlacementPerAlumPercentage", 1)
+                      }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
                       <ChevronUp size={14} className="sm:w-4 sm:h-4" />
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleDecrement("avgFte", 10000)}
+                      onClick={() =>
+                        handleDecrement("jobPlacementPerAlumPercentage", 1)
+                      }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
                       <ChevronDown size={14} className="sm:w-4 sm:h-4" />
