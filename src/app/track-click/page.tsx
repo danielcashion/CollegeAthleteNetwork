@@ -30,6 +30,11 @@ export default function TrackClickPage() {
       return;
     }
 
+    if (destination === "university-financials" && !university_name) {
+      router.push("/");
+      return;
+    }
+
     if (destination === "media-viewer" && !file_name) {
       router.push("/");
       return;
@@ -59,7 +64,13 @@ export default function TrackClickPage() {
         router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
       } else if (destination === "media-viewer") {
         router.push(`/media-viewer/${university_name}?file=${file_name}`);
-      } else {
+      }
+      else if (destination === "university-financials") {
+        router.push(
+          `/university-financials/${university_name}`
+        );
+            }
+            else {
         router.push("/");
       }
     }, 300);
