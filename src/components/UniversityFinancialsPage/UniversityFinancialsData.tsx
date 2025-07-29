@@ -243,7 +243,7 @@ export default function UniversityFinancialsData({
                 className="bg-white rounded-lg shadow p-4 border border-gray-200"
               >
                 <div className="flex justify-between items-center">
-                  <h3 className="font-medium text-lg text-gray-900">
+                  <h3 className="font-medium text-lg ml-1 text-gray-900">
                     {team?.team_name}
                   </h3>
                 </div>
@@ -351,10 +351,10 @@ export default function UniversityFinancialsData({
                   <tr
                     key={team?.team_id}
                     className={`${
-                      idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      idx % 2 === 0 ? "bg-white" : "bg-gray-90"
                     } hover:bg-blue-50 transition text-lg border-t`}
                   >
-                    <td className="px-6 py-2 hover:text-blue-600">
+                    <td className="px-6 py-2 ml-1 hover:text-blue-600">
                       {team?.team_name} ({getGenderText(team?.gender_id)})
                     </td>
                     {/* <td className="px-6 py-2 hover:text-blue-600">
