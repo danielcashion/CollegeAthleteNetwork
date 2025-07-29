@@ -80,8 +80,8 @@ export default function NetworkSizeScalers({
       `}</style>
       <div className="w-full flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-800 bg-gray-50">
-          <h2 className="text-xl font-semibold text-gray-800">
+        <div className="p-4 border-b border-gray-800 bg-white-50">
+          <h2 className="text-xl font-bold text-center text-[#1C315F]">
             Athlete Network Financial Model Settings
           </h2>
         </div>
@@ -105,7 +105,7 @@ export default function NetworkSizeScalers({
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
@@ -156,7 +156,7 @@ export default function NetworkSizeScalers({
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
@@ -214,7 +214,7 @@ export default function NetworkSizeScalers({
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
@@ -267,7 +267,7 @@ export default function NetworkSizeScalers({
                   title="This is the fee the head hunter will charge based on the first year total compensation and the standard head hunter fee percentage"
                   placement="right"
                 >
-                  <div className="text-sm text-gray-600 mb-1">
+                  <div className="text-md text-gray-600 mb-1">
                     Resulting Head Hunter Fee
                   </div>
                 </Tooltip>
@@ -292,7 +292,7 @@ export default function NetworkSizeScalers({
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
@@ -366,7 +366,7 @@ export default function NetworkSizeScalers({
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
@@ -449,7 +449,7 @@ export default function NetworkSizeScalers({
                   </div>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="number"
                       min={0}

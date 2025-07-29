@@ -205,7 +205,7 @@ export default function UniversityFinancialsData({
               {/* Column 2: Input Box with Increment/Decrement Buttons */}
               <div className="w-full md:w-1/6 flex items-center">
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative shadow-md">
                     <input
                       type="text"
                       value={
