@@ -12,8 +12,6 @@ export default async function UniversityFinancials({
   const { "university-name": universityName } = await params;
   const teams = await getUniversityTeams({ universityName });
 
-  console.log("University Financials Page", universityName, teams);
-
   if (!teams || teams.length < 1) {
     redirect("/404");
   }

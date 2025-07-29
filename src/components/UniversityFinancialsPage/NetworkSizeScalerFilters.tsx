@@ -1,5 +1,5 @@
 "use client";
-import { ChevronUp, ChevronDown, X } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import type { NetworkSizeScaler } from "@/types/UniversityFinancials";
 import { Tooltip } from "@mui/material";
 
@@ -10,7 +10,6 @@ interface NetworkSizeScalerFiltersProps {
   resultingContribution: number;
   cashSavingsPerHirePerCompany: number;
   cashSavings: number;
-  onReset: () => void;
 }
 
 export default function NetworkSizeScalers({
@@ -20,7 +19,6 @@ export default function NetworkSizeScalers({
   resultingContribution,
   cashSavingsPerHirePerCompany,
   cashSavings,
-  onReset,
 }: NetworkSizeScalerFiltersProps) {
   const handleInputChange = (field: keyof NetworkSizeScaler, value: string) => {
     const parsed = parseFloat(value);
@@ -97,39 +95,34 @@ export default function NetworkSizeScalers({
             </h3>
             <div className="space-y-4 pb-4 border-b border-gray-600">
               {/* Job Placement For Each Alum */}
-              <div className="space-y-2">
+              <div className="">
                 <label className="block text-sm font-medium text-gray-700">
                   Job Placement For Each Alum
                 </label>
                 <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1 relative">
-                      <input
-                        type="text"
-                        value={
-                          filters.jobPlacementPerAlumPercentage !== null &&
-                          filters.jobPlacementPerAlumPercentage !== undefined
-                            ? `${Number(
-                                filters.jobPlacementPerAlumPercentage
-                              ).toLocaleString("en-US")}%`
-                            : ""
-                        }
-                        onChange={(e) => {
-                          // Remove non-numeric characters (%, commas) and convert to number
-                          const rawValue = e.target.value.replace(
-                            /[^0-9]/g,
-                            ""
-                          );
-                          const numValue = rawValue ? Number(rawValue) : "";
-                          handleInputChange(
-                            "jobPlacementPerAlumPercentage",
-                            numValue === "" ? "" : String(numValue)
-                          );
-                        }}
-                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
-                        placeholder="0%"
-                      />
-                    </div>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={
+                        filters.jobPlacementPerAlumPercentage !== null &&
+                        filters.jobPlacementPerAlumPercentage !== undefined
+                          ? `${Number(
+                              filters.jobPlacementPerAlumPercentage
+                            ).toLocaleString("en-US")}%`
+                          : ""
+                      }
+                      onChange={(e) => {
+                        // Remove non-numeric characters (%, commas) and convert to number
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        const numValue = rawValue ? Number(rawValue) : "";
+                        handleInputChange(
+                          "jobPlacementPerAlumPercentage",
+                          numValue === "" ? "" : String(numValue)
+                        );
+                      }}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center bg-white text-sm sm:text-base"
+                      placeholder="0%"
+                    />
                   </div>
                   <div className="flex flex-col">
                     <button
@@ -155,7 +148,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Average FTE 1st Year Comp */}
-              <div className="space-y-2">
+              <div className="">
                 <Tooltip
                   title="Average first year total compensation for Full Time Employees (FTEs) in the network"
                   placement="top"
@@ -207,7 +200,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Standard Head Hunter Fee */}
-              <div className="space-y-2">
+              <div className="">
                 <Tooltip
                   title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
                   placement="top"
@@ -266,7 +259,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* resulting head hunter fee */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
                 <div className="text-sm text-gray-600 mb-1">
                   Resulting Head Hunter Fee
                 </div>
@@ -281,7 +274,7 @@ export default function NetworkSizeScalers({
             </h3>
             <div className="space-y-4 pb-4 border-b border-gray-600">
               {/* Fee Company Willing To Pay */}
-              <div className="space-y-2">
+              <div className="">
                 <Tooltip
                   title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%"
                   placement="top"
@@ -340,7 +333,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Resulting Contribution */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
                 <div className="text-sm text-gray-600 mb-1">
                   Resulting Contribution to Athletic Program
                 </div>
@@ -350,7 +343,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Participation Rate */}
-              <div className="space-y-2">
+              <div className="">
                 <Tooltip
                   title="Adjusts if not all companies agree to contribute for each hire"
                   placement="top"
@@ -410,7 +403,7 @@ export default function NetworkSizeScalers({
             </h3>
             <div className="space-y-4 pb-2 ">
               {/* Cash Savings Per Hire */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
                 <div className="text-sm text-gray-600 mb-1">
                   Cash Savings Per Hire for Hiring Company
                 </div>
@@ -420,7 +413,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Hires Per Year */}
-              <div className="space-y-2">
+              <div className="">
                 <label className="block text-sm font-medium text-gray-700">
                   Hires Per Year
                 </label>
@@ -457,7 +450,7 @@ export default function NetworkSizeScalers({
               </div>
 
               {/* Total Cash Savings */}
-              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+              <div className="p-4 rounded-lg bg-white shadow-sm border border-gray-200 text-center">
                 <div className="text-sm text-gray-600 mb-1">
                   Cash Savings From Network Hires
                 </div>

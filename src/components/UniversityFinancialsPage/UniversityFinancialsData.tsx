@@ -185,8 +185,8 @@ export default function UniversityFinancialsData({
 
   return (
     <div className="w-full flex py-8 px-4 min-h-[60vh]">
-      <div className="flex flex-row items-start gap-6 w-full max-w-7xl mx-auto">
-        <div className="w-[70%] min-w-[70%] flex flex-col">
+      <div className="flex flex-col-reverse md:flex-row items-start gap-6 w-full max-w-7xl mx-auto">
+        <div className="w-full flex flex-col">
           {/* Network Size Scaler Bar */}
           <div className="mb-6 w-full flex flex-col md:flex-row gap-4 justify-between">
             <div className="relative w-full md:max-w-md">
@@ -442,7 +442,7 @@ export default function UniversityFinancialsData({
           </div>
         </div>
 
-        <div className="w-full">
+        <div className="w-full md:w-[300px] min-w-[300px]">
           <NetworkSizeScalers
             filters={scalerValues}
             onFiltersChange={handleFiltersChange}
@@ -450,7 +450,6 @@ export default function UniversityFinancialsData({
             resultingContribution={resultingContribution}
             cashSavingsPerHirePerCompany={cashSavingsPerHirePerCompany}
             cashSavings={cashSavings}
-            onReset={handleResetFilters}
           />
         </div>
       </div>
