@@ -1,9 +1,11 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://www.collegiateathletenetwork.org', 
+  siteUrl: 'https://www.collegeathletenetwork.org', 
   generateRobotsTxt: true, // Generate robots.txt file
-  sitemapSize: 5000, // Adjust if needed
-  exclude: ['/admin'], // Excluded pages
+  sitemapSize: 10000, // Adjust if needed
+  changefreq: 'daily',
+  priority: 0.7,
+  exclude: ['/admin','/university-financials','track-click','surveys','media-viewer'], // Excluded pages
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
@@ -11,7 +13,7 @@ module.exports = {
       { userAgent: 'Bingbot', allow: '/' },
     ],
     additionalSitemaps: [
-      'https://www.collegiateathletenetwork.org/server-sitemap.xml',
+      'https://www.collegeathletenetwork.org/server-sitemap.xml',
     ],
   },
 };
