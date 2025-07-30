@@ -78,7 +78,7 @@ export default function UniversityFinancialsData({
     let clampedValue = isNaN(parsed) ? 0 : parsed;
 
     // Apply max limit for network size percentage
-    clampedValue = Math.min(clampedValue, 250);
+    clampedValue = Math.min(clampedValue, 400);
     // Apply minimum of 0
     clampedValue = Math.max(clampedValue, 0);
 
@@ -96,7 +96,7 @@ export default function UniversityFinancialsData({
     let newValue = currentValue + step;
 
     // Apply max limit for network size percentage
-    newValue = Math.min(newValue, 250);
+    newValue = Math.min(newValue, 400);
 
     setScalerValues({
       ...scalerValues,

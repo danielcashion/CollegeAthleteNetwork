@@ -26,7 +26,7 @@ export default function NetworkSizeScalers({
 
     // Apply max limits based on field type
     if (field === "networkSizePercentage") {
-      clampedValue = Math.min(clampedValue, 250);
+      clampedValue = Math.min(clampedValue, 400);
     } else if (field.includes("Percentage") || field === "participationRate") {
       clampedValue = Math.min(clampedValue, 100);
     }
@@ -46,7 +46,7 @@ export default function NetworkSizeScalers({
 
     // Apply max limits based on field type
     if (field === "networkSizePercentage") {
-      newValue = Math.min(newValue, 250);
+      newValue = Math.min(newValue, 400);
     } else if (field.includes("Percentage") || field === "participationRate") {
       newValue = Math.min(newValue, 100);
     }
