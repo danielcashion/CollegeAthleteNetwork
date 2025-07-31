@@ -20,10 +20,10 @@ export default function UniversityFinancialsData({
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [scalerValues, setScalerValues] = useState<NetworkSizeScaler>({
     networkSizePercentage: 100,
-    jobPlacementPerAlumPercentage: 5,
+    jobPlacementPerAlumPercentage: 4,
     avgFte: 150000,
     standardHeadHunterFeePercentage: 30,
-    companyWillingToPayPercentage: 35,
+    companyWillingToPayPercentage: 50,
     participationRate: 75,
     hiresPerYear: 3,
   });
