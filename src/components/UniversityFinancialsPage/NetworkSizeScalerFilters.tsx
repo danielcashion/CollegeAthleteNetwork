@@ -202,7 +202,7 @@ export default function NetworkSizeScalers({
                         }}
                 >
                   <label className="block text-sm font-medium text-gray-700">
-                    Job Placement For Each Alum
+                    % of Alums Placed in Network
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
@@ -210,10 +210,10 @@ export default function NetworkSizeScalers({
                     <input
                       type="text"
                       value={
-                        filters.jobPlacementPerAlumPercentage !== null &&
-                        filters.jobPlacementPerAlumPercentage !== undefined
+                        filters.jobPlacementPercentage !== null &&
+                        filters.jobPlacementPercentage !== undefined
                           ? `${Number(
-                              filters.jobPlacementPerAlumPercentage
+                              filters.jobPlacementPercentage
                             ).toLocaleString("en-US")}%`
                           : ""
                       }
@@ -222,7 +222,7 @@ export default function NetworkSizeScalers({
                         const rawValue = e.target.value.replace(/[^0-9]/g, "");
                         const numValue = rawValue ? Number(rawValue) : "";
                         handleInputChange(
-                          "jobPlacementPerAlumPercentage",
+                          "jobPlacementPercentage",
                           numValue === "" ? "" : String(numValue)
                         );
                       }}
@@ -234,7 +234,7 @@ export default function NetworkSizeScalers({
                     <button
                       type="button"
                       onClick={() =>
-                        handleIncrement("jobPlacementPerAlumPercentage", 1)
+                        handleIncrement("jobPlacementPercentage", 1)
                       }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >
@@ -243,7 +243,7 @@ export default function NetworkSizeScalers({
                     <button
                       type="button"
                       onClick={() =>
-                        handleDecrement("jobPlacementPerAlumPercentage", 1)
+                        handleDecrement("jobPlacementPercentage", 1)
                       }
                       className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors min-w-[28px] min-h-[20px] flex items-center justify-center"
                     >

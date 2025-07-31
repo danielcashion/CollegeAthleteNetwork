@@ -1,6 +1,6 @@
 export interface NetworkSizeScaler {
   networkSizePercentage: number;
-  jobPlacementPerAlumPercentage: number;
+  jobPlacementPercentage: number;
   avgFte: number;
   standardHeadHunterFeePercentage: number;
   companyWillingToPayPercentage: number;
