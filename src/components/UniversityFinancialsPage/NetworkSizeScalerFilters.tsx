@@ -175,10 +175,14 @@ export default function NetworkSizeScalers({
                 <Tooltip
                   title={
                     <span>
-                      The % of the <strong style={{ color: "#ed3237" }}># Changing Jobs</strong>{" "}
-                      column could you fill in network. Low networks are 10% and
-                      strong networks are 30%. Note: It should be near 100% of current
-                      athletes when you try. Scale up/down based upon what you think is likely.
+                      The % of the{" "}
+                      <strong style={{ color: "#ed3237" }}>
+                        # Changing Jobs
+                      </strong>{" "}
+                      column you could fill &quot;in network&quot;. Weak networks
+                      are 10% and strong networks are 30%. Note: It is
+                      near 100% of <strong style={{ color: "#ed3237" }}>current athletes</strong> when using our solution. Scale up/down
+                      based upon what you think is likely.
                     </span>
                   }
                   placement="right"
