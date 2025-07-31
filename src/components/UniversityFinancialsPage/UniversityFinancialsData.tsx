@@ -530,7 +530,7 @@ export default function UniversityFinancialsData({
                     {Math.round(totals.totalAthletes * 0.2).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
-                    {Math.round(totals.totalJobPlacements * 0.2).toLocaleString()}
+                    {Math.round(totals.totalJobPlacements).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
                     ${Math.round(totals.totalCash).toLocaleString()}
@@ -543,7 +543,7 @@ export default function UniversityFinancialsData({
                     (scalerValues.networkSizePercentage / 100);
 
                   const jobPlacementsPeryear: number = Math.round(
-                    networkSize * (scalerValues.jobPlacementPercentage * 0.2 / 100)
+                    networkSize * (scalerValues.jobPlacementPercentage  / 100)
                   );
 
                   const cashDirectedTowardsTeam: number = Math.round(
