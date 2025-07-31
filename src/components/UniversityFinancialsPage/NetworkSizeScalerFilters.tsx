@@ -181,7 +181,7 @@ export default function NetworkSizeScalers({
                       </strong>{" "}
                       column you could fill &quot;in network&quot;. Weak networks
                       are 10% and strong networks are 30%. Note: It is
-                      near 100% of <strong style={{ color: "#ed3237" }}>current athletes</strong> when using our solution. Scale up/down
+                      near 100% of <strong style={{ color: "#3978f4ff", textDecoration: 'underline' }}>current athletes</strong> when using our solution. Scale up/down
                       based upon what you think is likely.
                     </span>
                   }

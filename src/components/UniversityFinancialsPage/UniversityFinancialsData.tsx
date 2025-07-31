@@ -638,7 +638,9 @@ export default function UniversityFinancialsData({
                       <Tooltip
                         title={`Of those ${Math.round(
                           networkSize * 0.2
-                        ).toLocaleString()} to the left, this is how many you would expect to place.`}
+                        ).toLocaleString()} to the left, this is how many you would expect to place. If you do, you would receive a contribution of $${Math.round(
+                          cashDirectedTowardsTeam
+                        ).toLocaleString()}!`}
                         placement="right"
                         arrow
                         slotProps={{
