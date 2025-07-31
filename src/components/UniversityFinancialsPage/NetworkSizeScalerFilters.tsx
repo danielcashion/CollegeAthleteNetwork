@@ -97,9 +97,34 @@ export default function NetworkSizeScalers({
               {/* Average FTE 1st Year Comp */}
               <div className="">
                 <Tooltip
-                  title="Average first year total compensation for Full Time Employees (FTEs) in the network"
+                  title="Average total compensation for Full Time Hires in the network. This is NOT just recent graduates, but includes experienced hires."
                   placement="right"
-                >
+                  arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
+                      >
                   <label className="block text-sm font-medium text-gray-700">
                     AVG Hire&apos;s 1st Year Total Comp ($)
                   </label>
@@ -148,8 +173,33 @@ export default function NetworkSizeScalers({
               {/* Job Placement For Each Alum */}
               <div className="">
                 <Tooltip
-                  title="Scale up/down for how many jobs you expect to place for each alum in the network"
+                  title="The AVG tenure of a hire in the network is about 4 years. This results in 25% turnover/year. It is typical to keep 3% in network. Scale up/down based upon the activity of your network."
                   placement="right"
+                  arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Job Placement For Each Alum
@@ -208,6 +258,31 @@ export default function NetworkSizeScalers({
                 <Tooltip
                   title="Standard recruiter fees range between 20% and 35% of the first year total compensation. Lower for large pay packages, higher for lower pay packages."
                   placement="right"
+                  arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Recruiter Fee (% of 1st Year Total Comp)
@@ -266,6 +341,31 @@ export default function NetworkSizeScalers({
                 <Tooltip
                   title="This is the fee the head hunter will charge based on the first year total compensation and the standard head hunter fee percentage"
                   placement="right"
+                  arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <div className="text-md text-gray-600 mb-1">
                     Resulting Head Hunter Fee
@@ -286,7 +386,32 @@ export default function NetworkSizeScalers({
                 <Tooltip
                   title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%"
                   placement="right"
-                >
+                  arrow
+                 slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
+                  >
                   <label className="block text-sm font-medium text-gray-700">
                     % of Fee the Company is Willing To Pay
                   </label>
@@ -344,7 +469,31 @@ export default function NetworkSizeScalers({
                 title="This is the contribution the company will make based on the first year total compensation and the company willing to pay percentage"
                 placement="right"
                 arrow
-              >
+                slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
+                >
                 <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                   <div className="text-sm text-gray-600 mb-1">
                     Resulting Contribution to Athletic Program
@@ -357,10 +506,34 @@ export default function NetworkSizeScalers({
               {/* Participation Rate */}
               <div className="">
                 <Tooltip
-                  title="Adjusts if not all companies agree to contribute for each hire"
+                  title="Not all companies will agree to contribute. This is the percentage of companies that you estimate agree to contribute."
                   placement="right"
                   arrow
-                >
+                slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
+                  >
                   <label className="block text-sm font-medium text-gray-700">
                     Company Participation Rate
                   </label>
@@ -414,7 +587,31 @@ export default function NetworkSizeScalers({
               title="Hiring company benefits based on the above settings. Strictly informational."
               placement="right"
               arrow
-            >
+            slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
+                >
               <h3 className="text-2xl font-semibold text-[#1C315F] mb-2 mt-2">
                 Hiring Company Benefits
               </h3>
@@ -426,6 +623,30 @@ export default function NetworkSizeScalers({
                   title="Versus paying the recruiters fee"
                   placement="right"
                   arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <div className="text-sm text-gray-600 mb-1">
                     Cash Savings Per Hire for Hiring Company
@@ -441,6 +662,30 @@ export default function NetworkSizeScalers({
                   title="How many hires the company expects to make per year using this network"
                   placement="right"
                   arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -486,6 +731,30 @@ export default function NetworkSizeScalers({
                   title="Annuel cash savings vs paying the recruiters fee"
                   placement="right"
                   arrow
+                  slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: '1rem',
+                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
+                              color: '#fff',
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
+                            },
+                          },
+                        }}
                 >
                   <div className="text-sm text-gray-600 mb-1">
                     Cash Savings From Network Hires
