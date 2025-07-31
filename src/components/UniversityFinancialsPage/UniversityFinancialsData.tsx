@@ -20,7 +20,7 @@ export default function UniversityFinancialsData({
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [scalerValues, setScalerValues] = useState<NetworkSizeScaler>({
     networkSizePercentage: 150,
-    jobPlacementPercentage: 3,
+    jobPlacementPercentage: 20,
     avgFte: 135000,
     standardHeadHunterFeePercentage: 30,
     companyWillingToPayPercentage: 50,
@@ -48,7 +48,7 @@ export default function UniversityFinancialsData({
   const handleResetFilters = () => {
     setScalerValues({
       networkSizePercentage: 150,
-      jobPlacementPercentage: 3,
+      jobPlacementPercentage: 20,
       avgFte: 135000,
       standardHeadHunterFeePercentage: 33,
       companyWillingToPayPercentage: 33,
@@ -165,8 +165,7 @@ export default function UniversityFinancialsData({
         team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
       const jobPlacementsPeryear: number = Math.round(
-        networkSize *  
-          ((scalerValues.jobPlacementPercentage) / 100)
+        networkSize * ((scalerValues.jobPlacementPercentage * 0.2) /  100)
       );
 
       const cashDirectedTowardsTeam: number = Math.round(
@@ -335,7 +334,8 @@ export default function UniversityFinancialsData({
                 team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
               const jobPlacementsPeryear: number = Math.round(
-                networkSize * (scalerValues.jobPlacementPercentage / 100)
+                networkSize *
+                  ((scalerValues.jobPlacementPercentage * 0.2) / 100)
               );
 
               const cashDirectedTowardsTeam: number = Math.round(
@@ -392,7 +392,7 @@ export default function UniversityFinancialsData({
                     </div>
                   </th>
                   <Tooltip
-                    title={`The number of known athletes from the univeristy's website multiplied by the network size scaler (${scalerValues.networkSizePercentage}%)`}
+                    title={`The number of athletes from the university's public rosters multiplied by the above Athlete Network Size Scaler (${scalerValues.networkSizePercentage}%)`}
                     placement="top"
                     arrow
                     slotProps={{
@@ -530,7 +530,7 @@ export default function UniversityFinancialsData({
                     {Math.round(totals.totalAthletes * 0.2).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
-                    {Math.round(totals.totalJobPlacements).toLocaleString()}
+                    {Math.round(totals.totalJobPlacements * 0.2).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
                     ${Math.round(totals.totalCash).toLocaleString()}
@@ -543,7 +543,7 @@ export default function UniversityFinancialsData({
                     (scalerValues.networkSizePercentage / 100);
 
                   const jobPlacementsPeryear: number = Math.round(
-                    networkSize * (scalerValues.jobPlacementPercentage / 100)
+                    networkSize * (scalerValues.jobPlacementPercentage * 0.2 / 100)
                   );
 
                   const cashDirectedTowardsTeam: number = Math.round(
