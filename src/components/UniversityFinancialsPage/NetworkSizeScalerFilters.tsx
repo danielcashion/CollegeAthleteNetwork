@@ -26,7 +26,7 @@ export default function NetworkSizeScalers({
 
     // Apply max limits based on field type
     if (field === "networkSizePercentage") {
-      clampedValue = Math.min(clampedValue, 400);
+      clampedValue = Math.min(clampedValue, 500);
     } else if (field.includes("Percentage") || field === "participationRate") {
       clampedValue = Math.min(clampedValue, 100);
     }
@@ -46,7 +46,7 @@ export default function NetworkSizeScalers({
 
     // Apply max limits based on field type
     if (field === "networkSizePercentage") {
-      newValue = Math.min(newValue, 400);
+      newValue = Math.min(newValue, 500);
     } else if (field.includes("Percentage") || field === "participationRate") {
       newValue = Math.min(newValue, 100);
     }
@@ -97,34 +97,34 @@ export default function NetworkSizeScalers({
               {/* Average FTE 1st Year Comp */}
               <div className="">
                 <Tooltip
-                  title="Average total compensation for Full Time Hires in the network. This is NOT just recent graduates, but includes experienced hires."
+                  title="Average total compensation for full time hires in the network. This is NOT just recent graduates, but includes graduates with experience."
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
-                      >
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
+                >
                   <label className="block text-sm font-medium text-gray-700">
                     AVG Hire&apos;s Annualized Total Comp ($)
                   </label>
@@ -173,36 +173,43 @@ export default function NetworkSizeScalers({
               {/* Job Placement For Each Alum */}
               <div className="">
                 <Tooltip
-                  title="The AVG tenure of a hire in the network is about 4 years. This results in 25% turnover/year. It is typical to keep 3% in network. Scale up/down based upon the activity of your network."
+                  title={
+                    <span>
+                      The % of the <strong style={{ color: "#ed3237" }}># Changing Jobs</strong>{" "}
+                      column could you fill in network. Low networks are 10% and
+                      strong networks are 30%. Note: It should be near 100% of current
+                      athletes when you try. Scale up/down based upon what you think is likely.
+                    </span>
+                  }
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <label className="block text-sm font-medium text-gray-700">
-                    % of Alums Placed in Network
+                    % of Changing Jobs you Hope to Place
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
@@ -260,29 +267,29 @@ export default function NetworkSizeScalers({
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <label className="block text-sm font-medium text-gray-700">
                     Recruiter Fee (% of 1st Year Total Comp)
@@ -343,29 +350,29 @@ export default function NetworkSizeScalers({
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <div className="text-md text-gray-600 mb-1">
                     Resulting Head Hunter Fee
@@ -387,31 +394,31 @@ export default function NetworkSizeScalers({
                   title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%."
                   placement="right"
                   arrow
-                 slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
-                  >
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
+                >
                   <label className="block text-sm font-medium text-gray-700">
                     % of Fee the Company is Willing To Pay
                   </label>
@@ -470,30 +477,30 @@ export default function NetworkSizeScalers({
                 placement="right"
                 arrow
                 slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
-                          },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
-                >
+                  popper: {
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, 10], // optional spacing
+                        },
+                      },
+                    ],
+                  },
+                  tooltip: {
+                    sx: {
+                      fontSize: "1rem",
+                      backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                      color: "#fff",
+                    },
+                  },
+                  arrow: {
+                    sx: {
+                      color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                    },
+                  },
+                }}
+              >
                 <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                   <div className="text-sm text-gray-600 mb-1">
                     Resulting Contribution to Athletic Program
@@ -509,31 +516,31 @@ export default function NetworkSizeScalers({
                   title="Not all companies will agree to contribute. This is the percentage of companies that you estimate agree to contribute. Historically, we have seen an AVG participation rate of 75%."
                   placement="right"
                   arrow
-                slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
-                  >
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
+                >
                   <label className="block text-sm font-medium text-gray-700">
                     Company Participation Rate
                   </label>
@@ -587,31 +594,31 @@ export default function NetworkSizeScalers({
               title="Hiring company benefits based on the above settings. Strictly informational."
               placement="right"
               arrow
-            slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
-                          },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
-                >
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, 10], // optional spacing
+                      },
+                    },
+                  ],
+                },
+                tooltip: {
+                  sx: {
+                    fontSize: "1rem",
+                    backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                    color: "#fff",
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                  },
+                },
+              }}
+            >
               <h3 className="text-2xl font-semibold text-[#1C315F] mb-2 mt-2">
                 Hiring Company Benefits
               </h3>
@@ -624,29 +631,29 @@ export default function NetworkSizeScalers({
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <div className="text-sm text-gray-600 mb-1">
                     Cash Savings Per Hire for Hiring Company
@@ -663,29 +670,29 @@ export default function NetworkSizeScalers({
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -728,33 +735,33 @@ export default function NetworkSizeScalers({
               {/* Total Cash Savings */}
               <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                 <Tooltip
-                  title="Annuel cash savings vs paying the recruiters fee"
+                  title="Annual cash savings vs paying the recruiters fee"
                   placement="right"
                   arrow
                   slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10], // optional spacing
-                                },
-                              },
-                            ],
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10], // optional spacing
                           },
-                          tooltip: {
-                            sx: {
-                              fontSize: '1rem',
-                              backgroundColor: 'rgba(28, 49, 95, 0.9)', // 90% opacity
-                              color: '#fff',
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: 'rgba(28, 49, 95, 0.9)', // match arrow background
-                            },
-                          },
-                        }}
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        fontSize: "1rem",
+                        backgroundColor: "rgba(28, 49, 95, 0.9)", // 90% opacity
+                        color: "#fff",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                      },
+                    },
+                  }}
                 >
                   <div className="text-sm text-gray-600 mb-1">
                     Cash Savings From Network Hires
