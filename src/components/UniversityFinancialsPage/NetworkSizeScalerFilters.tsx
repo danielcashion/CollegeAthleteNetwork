@@ -126,7 +126,7 @@ export default function NetworkSizeScalers({
                         }}
                       >
                   <label className="block text-sm font-medium text-gray-700">
-                    AVG Hire&apos;s 1st Year Total Comp ($)
+                    AVG Hire&apos;s Annualized Total Comp ($)
                   </label>
                 </Tooltip>
                 <div className="flex items-center space-x-2">
@@ -384,7 +384,7 @@ export default function NetworkSizeScalers({
               {/* Fee Company Willing To Pay */}
               <div className="">
                 <Tooltip
-                  title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%"
+                  title="If the company is willing to contribute 50% of what the recruiter would charge, set this to 50%."
                   placement="right"
                   arrow
                  slotProps={{
@@ -506,7 +506,7 @@ export default function NetworkSizeScalers({
               {/* Participation Rate */}
               <div className="">
                 <Tooltip
-                  title="Not all companies will agree to contribute. This is the percentage of companies that you estimate agree to contribute."
+                  title="Not all companies will agree to contribute. This is the percentage of companies that you estimate agree to contribute. Historically, we have seen an AVG participation rate of 75%."
                   placement="right"
                   arrow
                 slotProps={{
