@@ -97,7 +97,7 @@ export default function NetworkSizeScalers({
               {/* Average FTE 1st Year Comp */}
               <div className="">
                 <Tooltip
-                  title="Average total compensation for Full Time Hires in the network. This is NOT just recent graduates, but includes experienced hires."
+                  title="Average total compensation for full time hires in the network. This is NOT just recent graduates, but includes graduates with experience."
                   placement="right"
                   arrow
                   slotProps={{
@@ -173,7 +173,7 @@ export default function NetworkSizeScalers({
               {/* Job Placement For Each Alum */}
               <div className="">
                 <Tooltip
-                  title="The AVG tenure of a hire in the network is about 4 years. This results in 25% turnover/year. It is typical to keep 3% in network. Scale up/down based upon the activity of your network."
+                  title="The AVG tenure of a hire in the network is about 5 years. This results in 20% turnover/year. It is typical to keep 3% in network. Scale up/down based upon the activity of your network."
                   placement="right"
                   arrow
                   slotProps={{
@@ -728,7 +728,7 @@ export default function NetworkSizeScalers({
               {/* Total Cash Savings */}
               <div className="p-4 rounded-lg bg-white shadow-lg border border-gray-200 text-center">
                 <Tooltip
-                  title="Annuel cash savings vs paying the recruiters fee"
+                  title="Annual cash savings vs paying the recruiters fee"
                   placement="right"
                   arrow
                   slotProps={{

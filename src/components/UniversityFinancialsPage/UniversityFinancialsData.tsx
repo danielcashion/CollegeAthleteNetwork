@@ -47,8 +47,8 @@ export default function UniversityFinancialsData({
 
   const handleResetFilters = () => {
     setScalerValues({
-      networkSizePercentage: 100,
-      jobPlacementPercentage: 4,
+      networkSizePercentage: 150,
+      jobPlacementPercentage: 3,
       avgFte: 135000,
       standardHeadHunterFeePercentage: 33,
       companyWillingToPayPercentage: 33,
@@ -195,7 +195,7 @@ export default function UniversityFinancialsData({
               {/* Column 1: Total Athlete Network Size Label */}
               <div className="w-full md:w-2/5 flex items-center">
                 <Tooltip
-                  title="Adjusts the total size of Athletes in the Network (e.g. 150% = 150% of the website limited rosters size (they only go back so far), 200% = double the size)"
+                  title="Adjusts the total size of Athletes in the Network (e.g. 150% = 150% of the website limited rosters size, 200% = double the size). University websites only go back so far, but we can go back further..."
                   placement="top"
                   slotProps={{
                     popper: {
@@ -425,7 +425,7 @@ export default function UniversityFinancialsData({
                     </th>
                   </Tooltip>
                   <Tooltip
-                    title={`The AVG duration of employment is 5 years, implying 20% change jobs each year. This is strictly informational.)`}
+                    title={`The AVG duration of employment is 5 years, implying 20% change jobs each year.`}
                     placement="top"
                     arrow
                     slotProps={{
@@ -638,7 +638,7 @@ export default function UniversityFinancialsData({
                       <Tooltip
                         title={`Of those ${Math.round(
                           networkSize * 0.2
-                        ).toLocaleString()} to the left, this is how many you would like to place.`}
+                        ).toLocaleString()} to the left, this is how many you would expect to place.`}
                         placement="right"
                         arrow
                         slotProps={{
