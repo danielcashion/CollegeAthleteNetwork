@@ -669,7 +669,7 @@ export default function UniversityFinancialsData({
                         }}
                       >
                         <td className="px-6 py-2 text-center">
-                          {Math.round(jobPlacementsPeryear)}
+                          {Math.round(jobPlacementsPeryear * 0.2)}
                         </td>
                       </Tooltip>
                       <td className="px-6 py-2 text-center">
