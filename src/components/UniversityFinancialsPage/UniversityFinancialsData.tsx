@@ -50,8 +50,8 @@ export default function UniversityFinancialsData({
       networkSizePercentage: 150,
       jobPlacementPercentage: 20,
       avgFte: 135000,
-      standardHeadHunterFeePercentage: 33,
-      companyWillingToPayPercentage: 33,
+      standardHeadHunterFeePercentage: 30,
+      companyWillingToPayPercentage: 50,
       participationRate: 75,
       hiresPerYear: 3,
     });
@@ -116,9 +116,7 @@ export default function UniversityFinancialsData({
     });
   };
 
-  const filteredTeams = teams;
-
-  const sortedTeams = [...filteredTeams].sort((a, b) => {
+  const sortedTeams = [...teams].sort((a, b) => {
     let aVal: string | number;
     let bVal: string | number;
 
@@ -196,7 +194,7 @@ export default function UniversityFinancialsData({
               {/* Column 1: Total Athlete Network Size Label */}
               <div className="w-full md:w-2/5 flex items-center">
                 <Tooltip
-                  title="Adjusts the total size of Athletes in the Network (e.g. 150% = 150% of the website limited rosters size, 200% = double the size). University websites only go back so far, but we can go back further..."
+                  title="Adjusts the total size of Athletes in the Network (e.g. 150% = 150% of the university's website rosters size, 200% = double the size). University websites only go back so far, but we can go back further..."
                   placement="top"
                   slotProps={{
                     popper: {
@@ -337,7 +335,8 @@ export default function UniversityFinancialsData({
 
               const jobPlacementsPeryear: number = Math.round(
                 networkSize *
-                  ((scalerValues.jobPlacementPercentage * percentTurnover) / 100)
+                  ((scalerValues.jobPlacementPercentage * percentTurnover) /
+                    100)
               );
 
               const cashDirectedTowardsTeam: number = Math.round(
@@ -525,24 +524,142 @@ export default function UniversityFinancialsData({
                 {/* Totals Row */}
                 <tr className="bg-gray-100 font-bold text-lg border-t">
                   <td className="px-6 py-2">Totals</td>
-                  <td className="px-6 py-2 text-center">
-                    {Math.round(totals.totalAthletes).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-2 text-gray-500 text-center">
-                    {Math.round(
-                      totals.totalAthletes * percentTurnover
-                    ).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-2 text-center">
-                    {Math.round(totals.totalJobPlacements).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-2 text-center">
-                    $
-                    {Math.round(
-                      totals.totalCash 
-                    ).toLocaleString()}
-                  </td>
+                  <Tooltip
+                    title={`Website athletes across all teams Xs the above Athlete Network Size Scaler.`}
+                    placement="bottom"
+                    arrow
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, 10], // optional spacing
+                            },
+                          },
+                        ],
+                      },
+                      tooltip: {
+                        sx: {
+                          fontSize: "1rem",
+                          backgroundColor: "rgba(28, 49, 95, 0.75)", // 90% opacity
+                          color: "#fff",
+                        },
+                      },
+                      arrow: {
+                        sx: {
+                          color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                        },
+                      },
+                    }}
+                  >
+                    <td className="px-6 py-2 text-center">
+                      {Math.round(totals.totalAthletes).toLocaleString()}
+                    </td>
+                  </Tooltip>
+                  <Tooltip
+                    title={`# of Athletes changing jobs each year.`}
+                    placement="bottom"
+                    arrow
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, 10], // optional spacing
+                            },
+                          },
+                        ],
+                      },
+                      tooltip: {
+                        sx: {
+                          fontSize: "1rem",
+                          backgroundColor: "rgba(28, 49, 95, 0.75)", // 90% opacity
+                          color: "#fff",
+                        },
+                      },
+                      arrow: {
+                        sx: {
+                          color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                        },
+                      },
+                    }}
+                  >
+                    <td className="px-6 py-2 text-gray-500 text-center">
+                      {Math.round(
+                        totals.totalAthletes * percentTurnover
+                      ).toLocaleString()}
+                    </td>
+                  </Tooltip>
+                  <Tooltip
+                    title={`How many you expect to place from the network each year.`}
+                    placement="bottom"
+                    arrow
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, 10], // optional spacing
+                            },
+                          },
+                        ],
+                      },
+                      tooltip: {
+                        sx: {
+                          fontSize: "1rem",
+                          backgroundColor: "rgba(28, 49, 95, 0.75)", // 90% opacity
+                          color: "#fff",
+                        },
+                      },
+                      arrow: {
+                        sx: {
+                          color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                        },
+                      },
+                    }}
+                  >
+                    <td className="px-6 py-2 text-center">
+                      {Math.round(totals.totalJobPlacements).toLocaleString()}
+                    </td>
+                  </Tooltip>
+                  <Tooltip
+                    title={`The total cash directed towards all teams based on the your settings.`}
+                    placement="bottom"
+                    arrow
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, 10], // optional spacing
+                            },
+                          },
+                        ],
+                      },
+                      tooltip: {
+                        sx: {
+                          fontSize: "1rem",
+                          backgroundColor: "rgba(28, 49, 95, 0.75)", // 90% opacity
+                          color: "#fff",
+                        },
+                      },
+                      arrow: {
+                        sx: {
+                          color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                        },
+                      },
+                    }}
+                  >
+                    <td className="px-6 py-2 text-center">
+                      ${Math.round(totals.totalCash).toLocaleString()}
+                    </td>
+                  </Tooltip>
                 </tr>
+
                 {/* Individual Team Rows */}
                 {sortedTeams.map((team, idx) => {
                   const networkSize: number =
@@ -554,7 +671,8 @@ export default function UniversityFinancialsData({
                   );
 
                   const cashDirectedTowardsTeam: number = Math.round(
-                    jobPlacementsPeryear * percentTurnover *
+                    jobPlacementsPeryear *
+                      percentTurnover *
                       resultingContribution *
                       (scalerValues.participationRate / 100)
                   );
@@ -699,16 +817,24 @@ export default function UniversityFinancialsData({
                               {Math.round(
                                 jobPlacementsPeryear * percentTurnover
                               )}{" "}
+                            </strong>{" "}
+                            <span style={{ color: "#a6c6feff" }}>
                               Job Placements/Year
-                            </strong>{" "}
-                            Xs{" "}
+                            </span>{" "}
+                            Xs a{" "}
+                            <span style={{ color: "#a6c6feff" }}>
+                              Company Contribution
+                            </span>{" "}
+                            <span>of </span>
                             <strong style={{ color: "#0df333ff" }}>
-                              Company Contribution of $
-                              {resultingContribution.toLocaleString()}
+                              ${resultingContribution.toLocaleString()}
                             </strong>{" "}
-                            Xs{" "}
+                            Xs a{" "}
+                            <span style={{ color: "#a6c6feff" }}>
+                              Company Participation Rate
+                            </span>{" "}
+                            <span>of </span>
                             <strong style={{ color: "#0df333ff" }}>
-                              Company Participation Rate of{" "}
                               {scalerValues.participationRate}%
                             </strong>{" "}
                             = $
