@@ -171,7 +171,7 @@ export default function UniversityFinancialsData({
         ((scalerValues.jobPlacementPercentage * percentTurnover) / 100);
 
       const cashDirectedTowardsTeam: number =
-        jobPlacementsPeryear *
+        Math.round(jobPlacementsPeryear) *
         resultingContribution *
         (scalerValues.participationRate / 100);
 
@@ -549,21 +549,6 @@ export default function UniversityFinancialsData({
                     Math.round(jobPlacementsPeryear * percentTurnover) *
                     resultingContribution *
                     (scalerValues.participationRate / 100);
-
-                  if (idx === 0) {
-                    console.log(
-                      "jp/y: ",
-                      jobPlacementsPeryear * percentTurnover
-                    );
-                    console.log(
-                      "resulting contribution: ",
-                      resultingContribution
-                    );
-                    console.log(
-                      "cparticipation rate: ",
-                      scalerValues.participationRate
-                    );
-                  }
 
                   return (
                     <tr
