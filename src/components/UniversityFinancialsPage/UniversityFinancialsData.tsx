@@ -166,15 +166,14 @@ export default function UniversityFinancialsData({
       const networkSize: number =
         team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
-      const jobPlacementsPeryear: number = Math.round(
-        networkSize * ((scalerValues.jobPlacementPercentage * percentTurnover) /  100)
-      );
+      const jobPlacementsPeryear: number =
+        networkSize *
+        ((scalerValues.jobPlacementPercentage * percentTurnover) / 100);
 
-      const cashDirectedTowardsTeam: number = Math.round(
+      const cashDirectedTowardsTeam: number =
         jobPlacementsPeryear *
-          resultingContribution *
-          (scalerValues.participationRate / 100)
-      );
+        resultingContribution *
+        (scalerValues.participationRate / 100);
 
       return {
         totalAthletes: acc.totalAthletes + networkSize,
@@ -335,17 +334,14 @@ export default function UniversityFinancialsData({
               const networkSize: number =
                 team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
-              const jobPlacementsPeryear: number = Math.round(
+              const jobPlacementsPeryear: number =
                 networkSize *
-                  ((scalerValues.jobPlacementPercentage * percentTurnover) / 100)
-              );
+                ((scalerValues.jobPlacementPercentage * percentTurnover) / 100);
 
-              const cashDirectedTowardsTeam: number = Math.round(
-                jobPlacementsPeryear *
-                  resultingContribution *
-                  (scalerValues.participationRate / 100)
-              );
-
+              const cashDirectedTowardsTeam: number =
+                Math.round(jobPlacementsPeryear) *
+                resultingContribution *
+                (scalerValues.participationRate / 100);
               return (
                 <div
                   key={team?.team_id}
@@ -537,10 +533,7 @@ export default function UniversityFinancialsData({
                     {Math.round(totals.totalJobPlacements).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
-                    $
-                    {Math.round(
-                      totals.totalCash 
-                    ).toLocaleString()}
+                    ${Math.round(totals.totalCash).toLocaleString()}
                   </td>
                 </tr>
                 {/* Individual Team Rows */}
@@ -549,15 +542,28 @@ export default function UniversityFinancialsData({
                     team?.num_athletes *
                     (scalerValues.networkSizePercentage / 100);
 
-                  const jobPlacementsPeryear: number = Math.round(
-                    networkSize * (scalerValues.jobPlacementPercentage / 100)
-                  );
+                  const jobPlacementsPeryear: number =
+                    networkSize * (scalerValues.jobPlacementPercentage / 100);
 
-                  const cashDirectedTowardsTeam: number = Math.round(
-                    jobPlacementsPeryear * percentTurnover *
-                      resultingContribution *
-                      (scalerValues.participationRate / 100)
-                  );
+                  const cashDirectedTowardsTeam: number =
+                    Math.round(jobPlacementsPeryear * percentTurnover) *
+                    resultingContribution *
+                    (scalerValues.participationRate / 100);
+
+                  if (idx === 0) {
+                    console.log(
+                      "jp/y: ",
+                      jobPlacementsPeryear * percentTurnover
+                    );
+                    console.log(
+                      "resulting contribution: ",
+                      resultingContribution
+                    );
+                    console.log(
+                      "cparticipation rate: ",
+                      scalerValues.participationRate
+                    );
+                  }
 
                   return (
                     <tr
