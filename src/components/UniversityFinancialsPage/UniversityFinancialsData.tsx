@@ -164,15 +164,14 @@ export default function UniversityFinancialsData({
       const networkSize: number =
         team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
-      const jobPlacementsPeryear: number = Math.round(
-        networkSize * ((scalerValues.jobPlacementPercentage * percentTurnover) /  100)
-      );
+      const jobPlacementsPeryear: number =
+        networkSize *
+        ((scalerValues.jobPlacementPercentage * percentTurnover) / 100);
 
-      const cashDirectedTowardsTeam: number = Math.round(
-        jobPlacementsPeryear *
-          resultingContribution *
-          (scalerValues.participationRate / 100)
-      );
+      const cashDirectedTowardsTeam: number =
+        Math.round(jobPlacementsPeryear) *
+        resultingContribution *
+        (scalerValues.participationRate / 100);
 
       return {
         totalAthletes: acc.totalAthletes + networkSize,
@@ -333,18 +332,14 @@ export default function UniversityFinancialsData({
               const networkSize: number =
                 team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
-              const jobPlacementsPeryear: number = Math.round(
+              const jobPlacementsPeryear: number =
                 networkSize *
-                  ((scalerValues.jobPlacementPercentage * percentTurnover) /
-                    100)
-              );
+                ((scalerValues.jobPlacementPercentage * percentTurnover) / 100);
 
-              const cashDirectedTowardsTeam: number = Math.round(
-                jobPlacementsPeryear *
-                  resultingContribution *
-                  (scalerValues.participationRate / 100)
-              );
-
+              const cashDirectedTowardsTeam: number =
+                Math.round(jobPlacementsPeryear) *
+                resultingContribution *
+                (scalerValues.participationRate / 100);
               return (
                 <div
                   key={team?.team_id}
@@ -666,16 +661,13 @@ export default function UniversityFinancialsData({
                     team?.num_athletes *
                     (scalerValues.networkSizePercentage / 100);
 
-                  const jobPlacementsPeryear: number = Math.round(
-                    networkSize * (scalerValues.jobPlacementPercentage / 100)
-                  );
+                  const jobPlacementsPeryear: number =
+                    networkSize * (scalerValues.jobPlacementPercentage / 100);
 
-                  const cashDirectedTowardsTeam: number = Math.round(
-                    jobPlacementsPeryear *
-                      percentTurnover *
-                      resultingContribution *
-                      (scalerValues.participationRate / 100)
-                  );
+                  const cashDirectedTowardsTeam: number =
+                    Math.round(jobPlacementsPeryear * percentTurnover) *
+                    resultingContribution *
+                    (scalerValues.participationRate / 100);
 
                   return (
                     <tr
