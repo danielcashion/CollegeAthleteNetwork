@@ -158,6 +158,8 @@ export default function UniversityFinancialsData({
     );
   };
 
+  const percentTurnover = 0.2; // 20% turnover per year
+
   // Calculate totals for numerical columns
   const totals = sortedTeams.reduce(
     (acc, team) => {
@@ -165,7 +167,7 @@ export default function UniversityFinancialsData({
         team?.num_athletes * (scalerValues.networkSizePercentage / 100);
 
       const jobPlacementsPeryear: number = Math.round(
-        networkSize * ((scalerValues.jobPlacementPercentage * 0.2) /  100)
+        networkSize * ((scalerValues.jobPlacementPercentage * percentTurnover) /  100)
       );
 
       const cashDirectedTowardsTeam: number = Math.round(
@@ -335,7 +337,7 @@ export default function UniversityFinancialsData({
 
               const jobPlacementsPeryear: number = Math.round(
                 networkSize *
-                  ((scalerValues.jobPlacementPercentage * 0.2) / 100)
+                  ((scalerValues.jobPlacementPercentage * percentTurnover) / 100)
               );
 
               const cashDirectedTowardsTeam: number = Math.round(
@@ -527,13 +529,18 @@ export default function UniversityFinancialsData({
                     {Math.round(totals.totalAthletes).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-gray-500 text-center">
-                    {Math.round(totals.totalAthletes * 0.2).toLocaleString()}
+                    {Math.round(
+                      totals.totalAthletes * percentTurnover
+                    ).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
                     {Math.round(totals.totalJobPlacements).toLocaleString()}
                   </td>
                   <td className="px-6 py-2 text-center">
-                    ${Math.round(totals.totalCash).toLocaleString()}
+                    $
+                    {Math.round(
+                      totals.totalCash 
+                    ).toLocaleString()}
                   </td>
                 </tr>
                 {/* Individual Team Rows */}
@@ -543,11 +550,11 @@ export default function UniversityFinancialsData({
                     (scalerValues.networkSizePercentage / 100);
 
                   const jobPlacementsPeryear: number = Math.round(
-                    networkSize * (scalerValues.jobPlacementPercentage  / 100)
+                    networkSize * (scalerValues.jobPlacementPercentage / 100)
                   );
 
                   const cashDirectedTowardsTeam: number = Math.round(
-                    jobPlacementsPeryear *
+                    jobPlacementsPeryear * percentTurnover *
                       resultingContribution *
                       (scalerValues.participationRate / 100)
                   );
@@ -602,9 +609,9 @@ export default function UniversityFinancialsData({
                         title={`With ${Math.round(
                           networkSize
                         ).toLocaleString()} athletes and 20% changing jobs each year (5 year AVG job duration), about ${Math.round(
-                          networkSize * 0.2
+                          networkSize * percentTurnover
                         ).toLocaleString()} will change jobs this year.`}
-                        placement="left"
+                        placement="right"
                         arrow
                         slotProps={{
                           popper: {
@@ -632,15 +639,27 @@ export default function UniversityFinancialsData({
                         }}
                       >
                         <td className="px-6 py-2 hover:text-blue-600 text-gray-400 text-center">
-                          {Math.round(networkSize * 0.2).toLocaleString()}
+                          {Math.round(
+                            networkSize * percentTurnover
+                          ).toLocaleString()}
                         </td>
                       </Tooltip>
                       <Tooltip
-                        title={`Of those ${Math.round(
-                          networkSize * 0.2
-                        ).toLocaleString()} to the left, this is how many you would expect to place. If you do, you would receive a contribution of $${Math.round(
-                          cashDirectedTowardsTeam
-                        ).toLocaleString()}!`}
+                        title={
+                          <span>
+                            Of those{" "}
+                            {Math.round(
+                              networkSize * percentTurnover
+                            ).toLocaleString()}{" "}
+                            to the left, this is how many you would hope to
+                            place in network. Fine-tune this number by scaling
+                            +/- the{" "}
+                            <strong style={{ color: "#0df333ff" }}>
+                              &quot;% of Changing Jobs you Hope to Place&quot;
+                            </strong>{" "}
+                            on the right!
+                          </span>
+                        }
                         placement="right"
                         arrow
                         slotProps={{
@@ -669,12 +688,67 @@ export default function UniversityFinancialsData({
                         }}
                       >
                         <td className="px-6 py-2 text-center">
-                          {Math.round(jobPlacementsPeryear * 0.2)}
+                          {Math.round(jobPlacementsPeryear * percentTurnover)}
                         </td>
                       </Tooltip>
-                      <td className="px-6 py-2 text-center">
-                        ${Math.round(cashDirectedTowardsTeam).toLocaleString()}
-                      </td>
+                      <Tooltip
+                        title={
+                          <span>
+                            Results in:{" "}
+                            <strong style={{ color: "#0df333ff" }}>
+                              {Math.round(
+                                jobPlacementsPeryear * percentTurnover
+                              )}{" "}
+                              Job Placements/Year
+                            </strong>{" "}
+                            Xs{" "}
+                            <strong style={{ color: "#0df333ff" }}>
+                              Company Contribution of $
+                              {resultingContribution.toLocaleString()}
+                            </strong>{" "}
+                            Xs{" "}
+                            <strong style={{ color: "#0df333ff" }}>
+                              Company Participation Rate of{" "}
+                              {scalerValues.participationRate}%
+                            </strong>{" "}
+                            = $
+                            {Math.round(
+                              cashDirectedTowardsTeam
+                            ).toLocaleString()}
+                          </span>
+                        }
+                        placement="right"
+                        arrow
+                        slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, 10], // optional spacing
+                                },
+                              },
+                            ],
+                          },
+                          tooltip: {
+                            sx: {
+                              fontSize: ".8rem",
+                              backgroundColor: "rgba(28, 49, 95, 0.75)", // 90% opacity
+                              color: "#fff",
+                            },
+                          },
+                          arrow: {
+                            sx: {
+                              color: "rgba(28, 49, 95, 0.9)", // match arrow background
+                            },
+                          },
+                        }}
+                      >
+                        <td className="px-6 py-2 text-center">
+                          $
+                          {Math.round(cashDirectedTowardsTeam).toLocaleString()}
+                        </td>
+                      </Tooltip>
                     </tr>
                   );
                 })}
