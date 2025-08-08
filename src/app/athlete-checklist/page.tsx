@@ -30,7 +30,7 @@ export default function AthleteChecklist() {
             />
           </div>
           <div className="md:w-1/2 md:pl-8">
-            <p className="text-lg mb-4 text-center md:text-left">
+            <p className="text-xl mb-4 text-[#1c315f] text-center md:text-left">
               As a college athlete, you&apos;ve spent years mastering teamwork,
               discipline, and perseverance—qualities that employers value
               highly. Now, it&apos;s time to leverage those strengths and the
@@ -38,11 +38,11 @@ export default function AthleteChecklist() {
               job. Follow these steps to make the most of your College Athlete
               Network and land the opportunity you deserve.
             </p>
-            <p className="text-lg text-center md:text-left">
+            <p className="text-xl text-[#1c315f] text-center md:text-left">
               We saw an opportunity to make a difference. By introducing a
               professional workflow, we&apos;ve taken the burden of maintaining
               and updating these networks off the shoulders of university
-              administrations and placed it in the hands of a trusted partner —
+              administrators and/or Alumni Association Groups and placed it in the hands of a trusted partner —
               us.
             </p>
           </div>

@@ -520,7 +520,20 @@ export default function UniversityFinancialsData({
                 <tr className="bg-gray-100 font-bold text-lg border-t">
                   <td className="px-6 py-2">Totals</td>
                   <Tooltip
-                    title={`Website athletes across all teams Xs the above Athlete Network Size Scaler.`}
+                    title={
+                      <span>
+                        Website athletes across all teams Xs the above{" "}
+                        <strong
+                          style={{
+                            fontWeight: "bold",
+                            color: "#0df333ff",
+                          }}
+                        >
+                          Athlete Network Size Scaler
+                        </strong>
+                        .
+                      </span>
+                    }
                     placement="bottom"
                     arrow
                     slotProps={{
@@ -553,7 +566,7 @@ export default function UniversityFinancialsData({
                     </td>
                   </Tooltip>
                   <Tooltip
-                    title={`# of Athletes changing jobs each year.`}
+                    title={`# of Athletes changing jobs each year (historical norm of 20%).`}
                     placement="bottom"
                     arrow
                     slotProps={{
@@ -588,7 +601,20 @@ export default function UniversityFinancialsData({
                     </td>
                   </Tooltip>
                   <Tooltip
-                    title={`How many you expect to place from the network each year.`}
+                    title={
+                      <span>
+                        How many you expect to place from the{" "}
+                        {Math.round(
+                          totals.totalAthletes * percentTurnover
+                        ).toLocaleString()}{" "}
+                        (column to the left) job changers each year. Scale this
+                        up/down based on your network&apos;s activity using the{" "}
+                        <strong style={{
+                            fontWeight: "bold",
+                            color: "#0df333ff",
+                          }}>% of Changing Jobs you Hope to Place</strong> input on the right.
+                      </span>
+                    }
                     placement="bottom"
                     arrow
                     slotProps={{

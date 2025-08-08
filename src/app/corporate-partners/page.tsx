@@ -164,29 +164,29 @@ export default function CorporatePartnersPage() {
             <div className="grid md:grid-cols-5 gap-8 md:gap-12 text-[#1c315f]">
               {[
                 {
-                  title: "Join our Network",
+                  title: "Join Our Network",
                   description:
-                    "Contact us or your corporate lead at your partner universities. We can then onboard your firm to The College Athlete Network.",
+                    "Contact us or your corporate lead at your partner universities. We then quickly & easily onboard your firm to The College Athlete Network.",
                 },
                 {
                   title: 'Post an "Opportunity"',
                   description:
-                    "Post your company's openings to our network, specifically targeting profiles (Universities, sports, etc.) in university networks.",
+                    "Post your company's openings to university network(s), specifically targeting profiles (Universities, sports, etc.) in our network of universities.",
                 },
                 {
-                  title: 'Browse Pool of Athlete "Availabilities"',
+                  title: 'Browse Our Pool of Athlete "Availabilities"',
                   description:
-                    "Search profiles based on school, sport, skills, and location. We match great people with great firms.",
+                    "Search profiles based on school, sport, skills, and location. We match great people with great firms!",
                 },
                 {
                   title: "Hire Exceptional Talent",
                   description:
-                    "Engage with candidates and bring them onto your team. Hiring from the network avoids large recruiter fees.",
+                    "Engage with candidates and bring them onto your team. Hiring from the network significantly reduces large recruiter fees.",
                 },
                 {
                   title: "Contribute Back to Your Athletic Department",
                   description:
-                    "By avoiding head hunting fees, you can contribute some funds to your athletic department. Optional, but encouraged.",
+                    "By avoiding head hunting fees, we ask you to make a contribution to your athletic department. Optional, encouraged, and tax-deductible.",
                 },
               ].map((step, index) => (
                 <div key={index} className="text-center">

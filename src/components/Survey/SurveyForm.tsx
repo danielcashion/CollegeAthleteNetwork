@@ -399,8 +399,8 @@ export default function SurveyForm({
           <div className="flex items-start gap-3 mb-4">
             <div className="flex-1">
               <h3 className="text-lg font-medium text-gray-800">
-                Would you like us to contact you to explore a corporate
-                partnership or to learn more? (Optional)
+                Would you like us to contact you to discuss details, explore a corporate
+                partnership, or just to learn more? (Optional)
               </h3>
               <p className="text-sm text-gray-500 mt-1">
                 Enter your email if you&apos;d like to keep current.

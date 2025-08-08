@@ -38,7 +38,7 @@ export default function Home() {
             </h2>
             <p className="text-lg md:text-xl text-right mb-6 font-light">
               Your School&apos;s Athletic Team Rosters, merged and continuously
-              updated with LinkedIn Experience Data.
+              updated with Professional Experience Data (including LinkedIn).
             </p>
             <p className="text-lg md:text-xl text-right font-light">
               Empower your athletes. Strengthen your school. Future-proof your
@@ -81,16 +81,16 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
+              <FaLinkedin size={70} className="mx-auto text-[#1C315F]"/>
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Map these Athletes to their LinkedIn and other Public
-                datasets
+                We Map these Athletes to 3rd Party Public 
+                datasets we purchase, including LinkedIn
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
               <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Refresh Athlete Employers, Titles, Locations every 60 days.
+                We Refresh Athlete Employers, Titles, Locations every 60 days
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
