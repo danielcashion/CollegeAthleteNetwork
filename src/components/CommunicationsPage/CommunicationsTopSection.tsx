@@ -4,7 +4,7 @@ const CommunicationsTopSection = () => {
       <h1 className="text-4xl md:text-5xl font-bold mb-4">
         Energize your University&apos;s network with centralized and effortless communications
       </h1>
-      <h2 className="text-2xl font-semibold mb-4" role="heading" aria-level="2">
+      <h2 className="text-2xl font-semibold mb-4" role="heading" aria-level={2}>
         Activate Your Network by leveraging our Proven Step-by-Step Process that Drives Success
       </h2>
     </div>

@@ -52,7 +52,7 @@ export default function DataTransparency() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 ">
-        <h2 className="text-4xl font-bold text-center mb-12 text-[#1C315F]" role="heading" aria-level="2">
+        <h2 className="text-4xl font-bold text-center mb-12 text-[#1C315F]" role="heading" aria-level={2}>
           For University Stakeholders
         </h2>
 
@@ -62,7 +62,7 @@ export default function DataTransparency() {
               <FaUserGraduate className="text-4xl text-white" />
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level="3">
+              <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level={3}>
                 For Compliance Officers
               </h3>
               <p className="text-gray-700">
@@ -81,7 +81,7 @@ export default function DataTransparency() {
               <FaFootballBall className="text-4xl text-white" />
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-[#ED3237]" role="heading" aria-level="3">
+              <h3 className="text-xl font-bold mb-4 text-[#ED3237]" role="heading" aria-level={3}>
                 For Athletic Directors
               </h3>
               <p className="text-gray-700">
@@ -100,7 +100,7 @@ export default function DataTransparency() {
               <FaUserTie className="text-4xl text-white" />
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level="3">
+              <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level={3}>
                 For University Leadership
               </h3>
               <p className="text-gray-700">
@@ -122,7 +122,7 @@ export default function DataTransparency() {
             <div className="w-12 h-12 rounded-full bg-[#1C315F] flex items-center justify-center mr-4">
               <FaCheckCircle className="text-2xl text-white" />
             </div>
-            <h2 className="text-4xl font-bold text-[#1C315F]" role="heading" aria-level="2">
+            <h2 className="text-4xl font-bold text-[#1C315F]" role="heading" aria-level={2}>
               Key Compliance Assurances
             </h2>
           </div>
@@ -133,7 +133,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level="3">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level={3}>
                     All Data is Public
                   </h3>
                   <p className="text-gray-700">
@@ -153,7 +153,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level="3">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level={3}>
                     No Data Sharing or Transfers
                   </h3>
                   <p className="text-gray-700">
@@ -170,7 +170,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level="3">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level={3}>
                     Universities Never Take Possession of Data
                   </h3>
                   <p className="text-gray-700">
@@ -186,7 +186,7 @@ export default function DataTransparency() {
               <div className="flex items-start">
                 <FaCheckCircle className="text-[#1C315F] text-xl mt-1 mr-4 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level="3">
+                  <h3 className="font-bold text-xl text-[#1C315F] mb-2" role="heading" aria-level={3}>
                     No Legal or Operational Burden
                   </h3>
                   <p className="text-gray-700">
@@ -204,7 +204,7 @@ export default function DataTransparency() {
 
       <div className="max-w-6xl mx-auto px-6 pb-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-[#1C315F] mb-4" role="heading" aria-level="2">
+          <h2 className="text-3xl font-bold text-[#1C315F] mb-4" role="heading" aria-level={2}>
             Why Universities Partner With The College Athlete Network?
           </h2>
           <div className="w-[75%] h-1 bg-[#ED3237] mx-auto"></div>
@@ -215,7 +215,7 @@ export default function DataTransparency() {
             <div className="w-16 h-16 bg-[#1C315F]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <FaTrophy className="text-2xl text-[#1C315F]" />
             </div>
-            <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level="3">
+            <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level={3}>
               Upwardly Manage Your School&apos;s Athlete Network
             </h3>
             <p className="text-gray-700">
@@ -229,7 +229,7 @@ export default function DataTransparency() {
             <div className="w-16 h-16 bg-[#ED3237]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <FaNetworkWired className="text-2xl text-[#ED3237]" />
             </div>
-            <h3 className="text-xl font-bold mb-4 text-[#ED3237]" role="heading" aria-level="3">
+            <h3 className="text-xl font-bold mb-4 text-[#ED3237]" role="heading" aria-level={3}>
               Drive the Outcomes Within Your Athlete Network
             </h3>
             <p className="text-gray-700">
@@ -243,7 +243,7 @@ export default function DataTransparency() {
             <div className="w-16 h-16 bg-[#1C315F]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <FaChartLine className="text-2xl text-[#1C315F]" />
             </div>
-            <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level="3">
+            <h3 className="text-xl font-bold mb-4 text-[#1C315F]" role="heading" aria-level={3}>
               Drive Engagement With no Internal Effort or Compliance Complexities
             </h3>
             <p className="text-gray-700">
@@ -259,7 +259,7 @@ export default function DataTransparency() {
           <div className="flex justify-center mb-6">
             <FaHandshake className="text-5xl" />
           </div>
-          <h2 className="text-4xl font-bold mb-6" role="heading" aria-level="2">Ready to Partner With Us?</h2>
+          <h2 className="text-4xl font-bold mb-6" role="heading" aria-level={2}>Ready to Partner With Us?</h2>
           <p className="text-xl mb-8">
             Join the growing network of universities supporting their
             athletes&apos; career journeys with zero compliance risk.

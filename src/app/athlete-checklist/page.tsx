@@ -12,7 +12,7 @@ export default function AthleteChecklist() {
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           The 9 Proven and Actionable Steps
         </h1> 
-        <h2 className="text-3xl font-semibold mb-4" role="heading" aria-level="2">
+  <h2 className="text-3xl font-semibold mb-4" role="heading" aria-level={2}>
            Unlock your Career Potential by Intelligently Leveraging Your School&apos;s Athlete Network using our roadmap and solution.
         </h2>
       </div>
@@ -79,7 +79,7 @@ export default function AthleteChecklist() {
 
                 <div className="w-full pl-20 md:pl-16">
                   <div className="bg-white p-8 rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300">
-                    <h2 className="text-2xl font-bold text-[#1C315F] mb-4 flex flex-col sm:flex-row items-center" role="heading" aria-level="3">
+                    <h2 className="text-2xl font-bold text-[#1C315F] mb-4 flex flex-col sm:flex-row items-center" role="heading" aria-level={3}>
                       <span
                         className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white rounded-full 
                  w-10 min-w-10 h-10 min-h-10 flex items-center justify-center mr-4 shadow-md"
@@ -104,7 +104,7 @@ export default function AthleteChecklist() {
 
         <div className="bg-white rounded-lg shadow-lg p-8 mt-16 flex flex-col md:flex-row items-center">
           <div className="w-full md:w-[60%] pr-10">
-            <h2 className="text-3xl font-bold text-[#1C315F] mb-4" role="heading" aria-level="2">
+            <h2 className="text-3xl font-bold text-[#1C315F] mb-4" role="heading" aria-level={2}>
               Never Lose Your Focus; Your College Athlete Network is part of Your Net Worth
             </h2>
             <p className="mb-10 text-lg text-gray-700 leading-relaxed">
