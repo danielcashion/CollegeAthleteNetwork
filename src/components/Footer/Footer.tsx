@@ -131,7 +131,7 @@ const AppFooter: React.FC = () => {
                   <ListItemText primary="Terms of Service" />
                 </MenuItemText>
                 <MenuItemText
-                  href="/accessibility-policy"
+                  href="/accessibility"
                   rel="noopener noreferrer"
                 >
                   <ListItemText primary="Accessibility" />
