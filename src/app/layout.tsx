@@ -49,9 +49,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        {/* Skip Links for Accessibility */}
+        <nav aria-label="Skip links">
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:bg-[#ED3237] focus:text-white focus:rounded focus:p-2 focus:z-50" tabIndex={0}>
+            Skip to Main Content
+          </a>
+          <a href="#site-navigation" className="sr-only focus:not-sr-only focus:bg-[#ED3237] focus:text-white focus:rounded focus:p-2 focus:z-50" tabIndex={0}>
+            Skip to Navigation
+          </a>
+          <a href="#site-footer" className="sr-only focus:not-sr-only focus:bg-[#ED3237] focus:text-white focus:rounded focus:p-2 focus:z-50" tabIndex={0}>
+            Skip to Footer
+          </a>
+        </nav>
+        <Navbar id="site-navigation" />
+        <main id="main-content">{children}</main>
+        <Footer id="site-footer" />
         <CanVideoModal />
         <LogUserIP />
         <Analytics />

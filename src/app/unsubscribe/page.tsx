@@ -81,9 +81,9 @@ export default function UnsubscribePage() {
 
         <div className="min-h-[80vh]">
           <div className="max-w-md mx-auto mt-12 p-6 border border-gray-300 rounded shadow">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center" role="heading" aria-level="2">
               Hey there, {data.email_address}
-            </h3>
+            </h2>
             <p className="text-lg mb-8 text-center">
               You have already unsubscribed from our distribution list!
             </p>
@@ -103,9 +103,9 @@ export default function UnsubscribePage() {
       </div>
 
       <div className="max-w-md mx-auto mt-12 p-6 border border-gray-300 rounded shadow">
-        <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center" role="heading" aria-level="2">
           We are sorry to see {data.email_address} go!
-        </h3>
+        </h2>
         <p className="text-lg mb-8 text-center">
           Please confirm that you would like to unsubscribe from our
           distribution list.

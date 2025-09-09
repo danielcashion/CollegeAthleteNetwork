@@ -7,18 +7,23 @@ const TermsOfService = () => {
   const [showTable, setShowTable] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          The College Athlete Network
-        </h1>
-        <h1 className="text-4xl md:text-4xl font-bold mb-4 font-variant-small-caps">
-          Our Terms of Service
-        </h1>
-      </div>
+    <>
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className="skip-link absolute left-2 top-2 bg-white text-[#1C315F] px-4 py-2 z-50 focus:translate-y-0 -translate-y-20 focus:outline-none focus:ring-2 focus:ring-[#ED3237]" style={{borderRadius: '6px'}}>
+        Skip to main content
+      </a>
+      <div className="min-h-screen bg-gray-50 flex flex-col" aria-label="Terms of Service Page" role="region">
+        <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]" role="banner">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4" id="main-content" tabIndex={-1}>
+            The College Athlete Network
+          </h1>
+          <h2 className="text-4xl md:text-4xl font-bold mb-4 font-variant-small-caps">
+            Our Terms of Service
+          </h2>
+        </div>
 
-      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <div className="bg-white border border-gray-200 rounded p-4 mb-6">
+        <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12" aria-label="Table of Contents">
+          <div className="bg-white border border-gray-200 rounded p-4 mb-6">
           <div
             className="cursor-pointer font-semibold text-gray-800 text-2xl flex items-center justify-between"
             onClick={() => setShowTable(!showTable)}
@@ -267,9 +272,9 @@ const TermsOfService = () => {
         </div>
       </section>
 
-      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service">
-        <article className="prose prose-lg max-w-none text-gray-600">
-          <p className="italic font-semibold mb-2">
+      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service" aria-label="Main content" role="main">
+        <article className="prose prose-lg max-w-none text-gray-600" aria-labelledby="main-content">
+          <p className="italic font-semibold mb-2" aria-label="Last Updated">
             Last Updated: January 1st, 2025
           </p>
 
@@ -322,6 +327,7 @@ const TermsOfService = () => {
           <h2
             id="using-our-service"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Using Our Service"
           >
             1. Using Our Service
           </h2>
@@ -438,6 +444,7 @@ const TermsOfService = () => {
           <h2
             id="your-content"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Your Content"
           >
             2. Your Content
           </h2>
@@ -529,6 +536,7 @@ const TermsOfService = () => {
           <h2
             id="privacy-and-data-security"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Privacy and Data Security"
           >
             3. Privacy and Data Security
           </h2>
@@ -568,6 +576,7 @@ const TermsOfService = () => {
           <h2
             id="mobile-apps"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Mobile Apps"
           >
             4. Mobile Apps
           </h2>
@@ -599,6 +608,7 @@ const TermsOfService = () => {
           <h2
             id="third-party-content-and-services"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Third-Party Content and Services"
           >
             5. Third-Party Content and Services
           </h2>
@@ -615,6 +625,7 @@ const TermsOfService = () => {
           <h2
             id="paid-services-and-payments"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Paid Services and Payments"
           >
             6. Paid Services and Payments
           </h2>
@@ -662,6 +673,7 @@ const TermsOfService = () => {
           <h2
             id="background-screening"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Background Screening"
           >
             7. Background Screening
           </h2>
@@ -702,6 +714,7 @@ const TermsOfService = () => {
           <h2
             id="accessibility"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Accessibility"
           >
             8. Accessibility
           </h2>
@@ -721,6 +734,7 @@ const TermsOfService = () => {
           <h2
             id="intellectual-property"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Intellectual Property"
           >
             9. Intellectual Property
           </h2>
@@ -763,6 +777,7 @@ const TermsOfService = () => {
           <h2
             id="no-warranty"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="No Warranty"
           >
             10. No Warranty
           </h2>
@@ -793,6 +808,7 @@ const TermsOfService = () => {
           <h2
             id="limitation-of-liability"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Limitation of Liability"
           >
             11. Limitation of Liability
           </h2>
@@ -825,6 +841,7 @@ const TermsOfService = () => {
           <h2
             id="indemnity"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Indemnity"
           >
             12. Indemnity
           </h2>
@@ -850,6 +867,7 @@ const TermsOfService = () => {
           <h2
             id="dispute-resolution"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Dispute Resolution"
           >
             13. Dispute Resolution
           </h2>
@@ -916,6 +934,7 @@ const TermsOfService = () => {
           <h2
             id="governing-law"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="Governing Law"
           >
             14. Governing Law
           </h2>
@@ -931,6 +950,7 @@ const TermsOfService = () => {
           <h2
             id="general-terms"
             className="text-2xl font-semibold mt-6 mb-3 text-gray-800"
+            aria-label="General Terms"
           >
             15. General Terms
           </h2>
@@ -1001,6 +1021,7 @@ const TermsOfService = () => {
         </article>
       </main>
     </div>
+    </>
   );
 };
 
