@@ -62,8 +62,10 @@ export default function RootLayout({
           </a>
         </nav>
         <Navbar id="site-navigation" />
-        <main id="main-content">{children}</main>
-        <Footer id="site-footer" />
+        <main id="main-content" aria-label="Main content" role="main">{children}</main>
+        <footer id="site-footer" aria-label="Site footer" role="contentinfo">
+          <Footer />
+        </footer>
         <CanVideoModal />
         <LogUserIP />
         <Analytics />
