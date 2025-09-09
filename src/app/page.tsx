@@ -26,7 +26,7 @@ import { TbAppWindowFilled } from "react-icons/tb";
 export default function Home() {
   return (
     <div className="bg-[#CCCBCB] overflow-x-hidden">
-      <main>
+  <div>
         {/* Hero Section */}
         <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
           <div className="w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
@@ -287,7 +287,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </main>
+  </div>
     </div>
   );
 }
