@@ -170,7 +170,7 @@ export default function SurveyForm({
   if (alreadyFilled) {
     return (
       <div className="w-full max-w-4xl mx-auto text-black h-[50vh] flex flex-col justify-center items-center gap-4">
-        <FaCheck size={100} className="text-[#ed3237]" />
+        <FaCheck size={100} className="text-[#ED3237]" />
         <p className="text-center text-[#1C315F] text-3xl font-bold">
           You&apos;ve already filled out this survey!
         </p>

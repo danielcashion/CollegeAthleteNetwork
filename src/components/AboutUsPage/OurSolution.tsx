@@ -13,7 +13,7 @@ const OurSolution = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
               <div className="flex items-start mb-4 space-x-3">
-                <FaNetworkWired className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
+                <FaNetworkWired className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
                 <h3 className="font-bold text-2xl text-[#ED3237]">
                   Dynamic Networking
                 </h3>
