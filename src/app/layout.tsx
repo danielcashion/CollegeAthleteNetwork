@@ -61,7 +61,9 @@ export default function RootLayout({
             Skip to Footer
           </a>
         </nav>
-  <Navbar />
+  <nav id="site-navigation" aria-label="Site navigation" tabIndex={-1}>
+    <Navbar />
+  </nav>
         <main id="main-content" aria-label="Main content" role="main">{children}</main>
         <footer id="site-footer" aria-label="Site footer" role="contentinfo">
           <Footer />
@@ -70,6 +72,24 @@ export default function RootLayout({
         <LogUserIP />
         <Analytics />
         <GoogleAnalyticsClient />
+        {/* WebKit/Safari/Chrome skip link focus fix */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                  link.addEventListener('click', function(e) {
+                    var target = document.getElementById(this.getAttribute('href').substring(1));
+                    if (target) {
+                      target.setAttribute('tabindex', '-1');
+                      target.focus();
+                    }
+                  });
+                });
+              });
+            `,
+          }}
+        />
       </body>
     </html>
   );

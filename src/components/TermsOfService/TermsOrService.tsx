@@ -272,7 +272,7 @@ const TermsOfService = () => {
         </div>
       </section>
 
-      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service" aria-label="Main content" role="main">
+      <div className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service" aria-label="Main content">
         <article className="prose prose-lg max-w-none text-gray-600" aria-labelledby="main-content">
           <p className="italic font-semibold mb-2" aria-label="Last Updated">
             Last Updated: January 1st, 2025
@@ -1019,7 +1019,7 @@ const TermsOfService = () => {
             .
           </p>
         </article>
-      </main>
+  </div>
     </div>
     </>
   );

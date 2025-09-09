@@ -11,7 +11,7 @@ import { FaBalanceScale } from "react-icons/fa";
 export default function CorporatePartnersPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
+  <div className="flex-grow">
         {/* Hero Section */}
         <section className="text-white pt-28 bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-16">
           <div className="container mx-auto px-4 text-center flex flex-col">
@@ -221,7 +221,7 @@ export default function CorporatePartnersPage() {
             </p>
           </div>
         </section>
-      </main>
+  </div>
     </div>
   );
 }
