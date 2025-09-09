@@ -130,6 +130,12 @@ const AppFooter: React.FC = () => {
                 >
                   <ListItemText primary="Terms of Service" />
                 </MenuItemText>
+                <MenuItemText
+                  href="/accessibility-policy"
+                  rel="noopener noreferrer"
+                >
+                  <ListItemText primary="Accessibility" />
+                </MenuItemText>
               </MenuListItemLeft>
               <Image
                 src={Logo}
