@@ -55,15 +55,24 @@ export default function AccessibilityPolicyPage() {
 
          <section aria-labelledby="main-content">
            <AccessibilityContainer>
+
              <Typography
                component="p"
                variant="subtitle1"
-               sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
+               sx={{ textAlign: "right", color: "#ED3237", mb: 1 }}
                gutterBottom
                aria-label="Effective date"
              >
                Effective date: June 2nd, 2025
              </Typography>
+             <a
+               href="https://collegeathletenetwork.s3.us-east-1.amazonaws.com/InternalDocuments/CollegeAthleteNetworkAccessibilityComplanceReport202506.pdf"
+               target="_blank"
+               rel="noopener noreferrer"
+               style={{ display: "block", textAlign: "right", color: "#1C315F", marginBottom: "1.5rem", fontWeight: 500 }}
+             >
+               Access Our Accessibility Conformance Report (PDF)
+             </a>
 
              <section aria-labelledby="accessibility-policy-heading">
                <Section>
