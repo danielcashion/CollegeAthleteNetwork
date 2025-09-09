@@ -43,7 +43,7 @@ export default function CorporatePartnersPage() {
         {/* Why College Athletes Make Exceptional Employees */}
         <section className="py-16 bg-gray-100">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-8 text-center text-[#1c315f]" role="heading" aria-level="2">
+            <h2 className="text-4xl font-bold mb-8 text-center text-[#1c315f]" role="heading" aria-level={2}>
               College Athletes Make Exceptional Employees
             </h2>
             <p className="text-xl ml-5 mr-5 mb-6 text-center text-[#1c315f]">
@@ -78,7 +78,7 @@ export default function CorporatePartnersPage() {
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                   <div className="mb-2 text-[#1c315f]"> {trait.icon}</div>
 
-                  <h3 className="text-xl font-semibold mb-2" role="heading" aria-level="3">{trait.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2" role="heading" aria-level={3}>{trait.title}</h3>
                   <p>{trait.description}</p>
                 </div>
               ))}
@@ -89,7 +89,7 @@ export default function CorporatePartnersPage() {
         {/* Alumni-Driven Hiring */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]" role="heading" aria-level="2">
+            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]" role="heading" aria-level={2}>
               Alumni: Help Build the Next Generation of Leaders
             </h2>
             <div className="max-w-3xl mx-auto">
@@ -126,7 +126,7 @@ export default function CorporatePartnersPage() {
         <section className="pb-8 pt-4 bg-gray-100">
           <div className="container mx-auto px-4">
             <FaCrown size={60} className="mx-auto text-[#1c315f] mb-2" />
-            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]" role="heading" aria-level="2">
+            <h2 className="text-3xl font-bold mb-4 text-center text-[#1c315f]" role="heading" aria-level={2}>
               Connect with a Network of Like-Minded Leaders
             </h2>
             <div className="max-w-3xl mx-auto">
@@ -158,7 +158,7 @@ export default function CorporatePartnersPage() {
         {/* How It Works */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-[#1c315f] text-5xl font-bold mb-8 text-center" role="heading" aria-level="2">
+            <h2 className="text-[#1c315f] text-5xl font-bold mb-8 text-center" role="heading" aria-level={2}>
               How It Works
             </h2>
             <div className="grid md:grid-cols-5 gap-8 md:gap-12 text-[#1c315f]">
@@ -193,7 +193,7 @@ export default function CorporatePartnersPage() {
                   <div className="bg-[#ed3237] text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                     {index + 1}
                   </div>
-                  <h3 className="text-2xl font-semibold mb-2" role="heading" aria-level="3">{step.title}</h3>
+                  <h3 className="text-2xl font-semibold mb-2" role="heading" aria-level={3}>{step.title}</h3>
                   <p className="text-lg">{step.description}</p>
                 </div>
               ))}
@@ -204,7 +204,7 @@ export default function CorporatePartnersPage() {
         {/* Call to Action */}
         <section className="py-16 bg-[#1c315f] text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-6" role="heading" aria-level="2">
+            <h2 className="text-3xl font-bold mb-6" role="heading" aria-level={2}>
               Start Hiring Today & Gain Access to Elite Talent
             </h2>
             <div className="space-x-4">

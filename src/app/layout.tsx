@@ -61,7 +61,7 @@ export default function RootLayout({
             Skip to Footer
           </a>
         </nav>
-        <Navbar id="site-navigation" />
+  <Navbar />
         <main id="main-content" aria-label="Main content" role="main">{children}</main>
         <footer id="site-footer" aria-label="Site footer" role="contentinfo">
           <Footer />

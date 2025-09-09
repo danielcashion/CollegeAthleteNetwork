@@ -32,23 +32,23 @@ export default async function UniversityFinancials({
             <span className="capitalize">{universityName}</span>
           </h1>
         )}
-        <h2 className="text-3xl font-semibold mb-0 ml-20 mr-20" role="heading" aria-level="2">
+        <h2 className="text-3xl font-semibold mb-0 ml-20 mr-20" role="heading" aria-level={2}>
           Does <span className="capitalize">{universityName}</span> receive any
           direct financial benefit
         </h2>
-        <h2 className="text-3xl font-semibold mb-2 ml-20 mr-20" role="heading" aria-level="2">
+        <h2 className="text-3xl font-semibold mb-2 ml-20 mr-20" role="heading" aria-level={2}>
           when their Athlete Network hires from within?
         </h2>
-        <h2 className="text-xl font-semibold mb-0" role="heading" aria-level="3">
+        <h2 className="text-xl font-semibold mb-0" role="heading" aria-level={3}>
           By using The College Athlete Network to facilitate Athlete Network
           hiring and job activity,
         </h2>
-        <h2 className="text-xl font-semibold mb-2" role="heading" aria-level="3">
+        <h2 className="text-xl font-semibold mb-2" role="heading" aria-level={3}>
           what levels of additional financial contributions back to the Athletic
           Department could be achieved?
         </h2>
         {teams[0]?.university_name === "Typical University" && (
-          <h2 className="text-md mb-2 mt-2" role="heading" aria-level="4">
+          <h2 className="text-md mb-2 mt-2" role="heading" aria-level={4}>
             * We have not mapped your university&apos;s data. Below are the
             averages for all universities in our datasets. Please{" "}
             <Link href="/contact-us" className="underline font-bold">
