@@ -38,18 +38,19 @@ export default function AccessibilityPolicyPage() {
 					 </h1>
 				 </div>
 
-				 <AccessibilityContainer component="section" aria-labelledby="main-content">
-					 <Typography
-						 component="p"
-						 variant="subtitle1"
-						 sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
-						 gutterBottom
-						 aria-label="Effective date"
-					 >
-						 Effective date: June 2nd, 2025
-					 </Typography>
+						 <section aria-labelledby="main-content">
+							 <AccessibilityContainer>
+								 <Typography
+									 component="p"
+									 variant="subtitle1"
+									 sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
+									 gutterBottom
+									 aria-label="Effective date"
+								 >
+									 Effective date: June 2nd, 2025
+								 </Typography>
 
-					 <Section component="section" aria-labelledby="accessibility-policy-heading">
+								 <Section component="section" aria-labelledby="accessibility-policy-heading">
 						 <Typography
 							 component="h2"
 							 id="accessibility-policy-heading"
@@ -85,6 +86,7 @@ export default function AccessibilityPolicyPage() {
 						 </Typography>
 						 <Typography
 							 component="p"
+											 </section>
 							 variant="body1"
 							 sx={{ textAlign: "justify", color: "#1C315F", fontSize: "1.15rem", lineHeight: 1.8 }}
 							 paragraph
