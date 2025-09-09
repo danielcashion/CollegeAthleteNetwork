@@ -4,7 +4,7 @@ const ContactTopSection = () => {
       <h1 className="text-4xl md:text-5xl font-bold mb-4">
         Get in Touch With Us
       </h1>
-      <h2 className="text-3xl font-semibold mb-4">
+      <h2 className="text-3xl font-semibold mb-4" role="heading" aria-level="2">
         We&apos;re Here to Help and Answer Your Questions
       </h2>
       <p className="text-lg md:text-xl mb-3 font-light">

@@ -25,22 +25,29 @@ const PrivacyListItem = styled(ListItem)({
 
 export default function PrivacyPolicyComponent() {
   return (
-    <div className="mb-20">
-      <div className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col items-center px-[5%] sm:px-[10%]">
-        <h1 className="text-5xl font-bold text-center mb-8 text-white tracking-wider small-caps w-full">
-          Privacy Policy for <br />
-          The College Athlete Network
-        </h1>
-      </div>
+    <>
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className="skip-link absolute left-2 top-2 bg-white text-[#1C315F] px-4 py-2 z-50 focus:translate-y-0 -translate-y-20 focus:outline-none focus:ring-2 focus:ring-[#ED3237]" style={{borderRadius: '6px'}}>
+        Skip to main content
+      </a>
+      <div className="mb-20" aria-label="Privacy Policy Page" role="region">
+        <div className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col items-center px-[5%] sm:px-[10%]" role="banner">
+          <h1 className="text-5xl font-bold text-center mb-8 text-white tracking-wider small-caps w-full" id="main-content" tabIndex={-1}>
+            Privacy Policy for <br />
+            The College Athlete Network
+          </h1>
+        </div>
 
-      <PrivacyContainer>
-        <Typography
-          variant="subtitle1"
-          sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
-          gutterBottom
-        >
-          Effective date: June 1st, 2025
-        </Typography>
+        <PrivacyContainer component="section" aria-labelledby="main-content">
+          <Typography
+            component="p"
+            variant="subtitle1"
+            sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
+            gutterBottom
+            aria-label="Effective date"
+          >
+            Effective date: June 1st, 2025
+          </Typography>
 
         <Typography
           variant="body1"
@@ -70,8 +77,8 @@ export default function PrivacyPolicyComponent() {
           same meanings as in our Terms and Conditions.
         </Typography>
 
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="nav" aria-label="Table of Contents">
+          <Typography component="h2" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Table of Contents
           </Typography>
           <List dense style={{ color: "#1C315F", fontSize: "18px" }}>
@@ -101,8 +108,8 @@ export default function PrivacyPolicyComponent() {
           </List>
         </Section>
 
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="summary-heading">
+          <Typography component="h2" id="summary-heading" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Summary
           </Typography>
           <Typography
@@ -146,8 +153,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Definitions Section */}
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="definitions-heading">
+          <Typography component="h2" id="definitions-heading" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Definitions
           </Typography>
           <Typography
@@ -211,11 +218,11 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Information Collection and Use */}
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="info-collection-heading">
+          <Typography component="h2" id="info-collection-heading" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Information Collection and Use
           </Typography>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Types of Data Collected
           </Typography>
           <Typography
@@ -227,7 +234,7 @@ export default function PrivacyPolicyComponent() {
             purposes to provide and improve our Service to you.
           </Typography>
 
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Personal Data
           </Typography>
           <Typography
@@ -275,7 +282,7 @@ export default function PrivacyPolicyComponent() {
             data, such data will be kept strictly confidential.
           </Typography>
 
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             User Usage Metrics
           </Typography>
           <Typography
@@ -304,8 +311,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Tracking & Cookie Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="tracking-heading">
+          <Typography component="h3" id="tracking-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Tracking & Cookie Data
           </Typography>
           <Typography
@@ -336,7 +343,7 @@ export default function PrivacyPolicyComponent() {
             when a cookie is being sent. However, if you do not accept cookies,
             you may not be able to use some portions of our Service.
           </Typography>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+          <Typography component="h4" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Examples of Cookies we use:
           </Typography>
           <Typography
@@ -364,8 +371,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Use of Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="use-of-data-heading">
+          <Typography component="h3" id="use-of-data-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Use of Data
           </Typography>
           <Typography
@@ -393,8 +400,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* GDPR */}
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="gdpr-heading">
+          <Typography component="h2" id="gdpr-heading" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             LEGAL BASIS FOR PROCESSING PERSONAL DATA UNDER THE GENERAL DATA
             PROTECTION REGULATION (GDPR)
           </Typography>
@@ -476,8 +483,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Retention of Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="retention-heading">
+          <Typography component="h3" id="retention-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Retention of Data
           </Typography>
           <Typography
@@ -506,8 +513,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Service Providers */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="service-providers-heading">
+          <Typography component="h3" id="service-providers-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Service Providers
           </Typography>
           <Typography
@@ -531,8 +538,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Analytics */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="analytics-heading">
+          <Typography component="h3" id="analytics-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Analytics
           </Typography>
           <Typography
@@ -543,7 +550,7 @@ export default function PrivacyPolicyComponent() {
             We may use third-party Service Providers to monitor and analyze the
             use of our Service.
           </Typography>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+          <Typography component="h4" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Google Analytics
           </Typography>
           <Typography
@@ -570,8 +577,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Payments */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="payments-heading">
+          <Typography component="h3" id="payments-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Payments
           </Typography>
           <Typography
@@ -609,8 +616,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Children's Policy */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="children-heading">
+          <Typography component="h3" id="children-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Children&apos;s Policy
           </Typography>
           <Typography
@@ -630,8 +637,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Changes */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="changes-heading">
+          <Typography component="h3" id="changes-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Changes to this Privacy Policy
           </Typography>
           <Typography
@@ -648,8 +655,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Transfer of Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="transfer-heading">
+          <Typography component="h3" id="transfer-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Transfer of Data
           </Typography>
           <Typography
@@ -694,11 +701,11 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Disclosure of Data */}
-        <Section>
-          <Typography variant="h4" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="disclosure-heading">
+          <Typography component="h2" id="disclosure-heading" variant="h4" gutterBottom style={{ color: "#1C315F" }}>
             Disclosure of Data
           </Typography>
-          <Typography variant="h5" paragraph style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" paragraph style={{ color: "#1C315F" }}>
             Business Transaction
           </Typography>
           <Typography
@@ -711,7 +718,7 @@ export default function PrivacyPolicyComponent() {
             before our Personal Data is transferred and becomes subject to a
             different Privacy Policy.
           </Typography>
-          <Typography variant="h5" paragraph style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" paragraph style={{ color: "#1C315F" }}>
             Disclosure for Law Enforcement
           </Typography>
           <Typography
@@ -724,7 +731,7 @@ export default function PrivacyPolicyComponent() {
             valid requests by public authorities (e.g. a court or a government
             agency).
           </Typography>
-          <Typography variant="h5" paragraph style={{ color: "#1C315F" }}>
+          <Typography component="h3" variant="h5" paragraph style={{ color: "#1C315F" }}>
             Legal Requirements
           </Typography>
           <Typography
@@ -751,8 +758,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Disclosure of Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="dnt-heading">
+          <Typography component="h3" id="dnt-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             OUR POLICY ON “DO NOT TRACK” SIGNALS UNDER THE CALIFORNIA ONLINE
             PROTECTION ACT (CALOPPA)
           </Typography>
@@ -776,8 +783,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Security of Data */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="security-heading">
+          <Typography component="h3" id="security-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Security of Data
           </Typography>
           <Typography
@@ -796,8 +803,8 @@ export default function PrivacyPolicyComponent() {
         </Section>
 
         {/* Contact Us */}
-        <Section>
-          <Typography variant="h5" gutterBottom style={{ color: "#1C315F" }}>
+        <Section component="section" aria-labelledby="contact-heading">
+          <Typography component="h3" id="contact-heading" variant="h5" gutterBottom style={{ color: "#1C315F" }}>
             Contact Us
           </Typography>
           <Typography
@@ -811,5 +818,6 @@ export default function PrivacyPolicyComponent() {
         </Section>
       </PrivacyContainer>
     </div>
+    </>
   );
 }

@@ -33,7 +33,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Powering The Professional Networks of Collegiate Athletes
             </h1>
-            <h2 className="text-3xl font-semibold mb-4">
+            <h2 className="text-3xl font-semibold mb-4" role="heading" aria-level="2">
               We Provide All Their Data Fuel
             </h2>
             <p className="text-lg md:text-xl text-right mb-6 font-light">
@@ -135,7 +135,7 @@ export default function Home() {
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
                     <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
-                    <h3 className="font-bold text-2xl text-[#ED3237]">
+                    <h3 className="font-bold text-2xl text-[#ED3237]" role="heading" aria-level="3">
                       If Your Alumni &quot;Database&quot; is actually a simple
                       and stale Spreadsheet:
                     </h3>
@@ -161,7 +161,7 @@ export default function Home() {
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
                     <TbAppWindowFilled className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
-                    <h3 className="font-bold text-2xl text-[#ED3237]">
+                    <h3 className="font-bold text-2xl text-[#ED3237]" role="heading" aria-level="3">
                       If You&apos;re Using an App where YOU supply the Data:
                     </h3>
                   </div>
@@ -253,7 +253,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
               <FaSitemap size={60} className="text-[#1C315F] mx-auto mb-4" />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level="3">
                 Serious Expertise
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
@@ -264,7 +264,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <FaCode size={60} className="text-[#1C315F] mx-auto mb-4" />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level="3">
                 Repeatable & Dependable
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
@@ -277,7 +277,7 @@ export default function Home() {
                 size={60}
                 className="text-[#1C315F] mx-auto mb-4"
               />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]">
+              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level="3">
                 Providing an Exceptional Experience
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
