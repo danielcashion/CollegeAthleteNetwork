@@ -78,6 +78,21 @@ export default function AccessibilityPolicyPage() {
 							>
 								We are dedicated to ongoing improvement and welcome input from our users to enhance accessibility. If you encounter any accessibility challenges or have suggestions, please contact us. Together, we can build a more inclusive digital space for college athletes and their supporters.
 							</Typography>
+
+							<Typography
+								variant="h5"
+								sx={{ color: "#1C315F", fontWeight: 600, mt: 4, mb: 2 }}
+								gutterBottom
+							>
+								Legal Compliance
+							</Typography>
+							<Typography
+								variant="body1"
+								sx={{ textAlign: "justify", color: "#1C315F", fontSize: "1.08rem", lineHeight: 1.7 }}
+								paragraph
+							>
+								The College Athlete Network is committed to complying with all applicable accessibility laws and standards, including the Americans with Disabilities Act (ADA) and Section 508 of the Rehabilitation Act. We strive to ensure our website and digital services are accessible to individuals with disabilities and meet or exceed the requirements set forth by these regulations. Our ongoing efforts include regular accessibility audits, staff training, and prompt response to user feedback regarding accessibility barriers.
+							</Typography>
 						</Section>
 					</AccessibilityContainer>
 		</div>
