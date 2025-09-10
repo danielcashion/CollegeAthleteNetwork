@@ -22,7 +22,7 @@ export const EmailCommunicationSteps: any = [
         <h2>Step 6: Your Program Gets Paid</h2>
         <p>When you get hired, the hiring company can make a contribution back to our athletic program— we typically guidance is 25% of what they would've paid a recruiter.</p>
         <p>You're not just building your future. You're helping the next generation of our athletes too.</p>
-        <p><a href="https://members.collegeathletenetwork.org/" target="_blank" style="margin: 10px 0 ; display:inline-block;padding:5px 10px;background-color:#ED3237;color:#ffffff;text-decoration:none;border-radius:4px;">Create My Availability</a></p>
+  <p><a href="https://members.collegeathletenetwork.org/" target="_blank" aria-label="Create My Availability (opens in a new tab)" style="margin: 10px 0 ; display:inline-block;padding:5px 10px;background-color:#ED3237;color:#ffffff;text-decoration:none;border-radius:4px;">Create My Availability</a></p>
         <p>Let's do this!<br/>{{Your Name}}<br/>{{Your University Name}}</p>
       `,
   },
@@ -49,7 +49,7 @@ export const EmailCommunicationSteps: any = [
         <h2>Step 6: You Pay It Forward</h2>
         <p>Instead of paying a recruiter, you make a tax-deductible contribution to the athletic program that produced your new hire. It's a win for your company and a win for your team.</p>
         <p>No external recruiter fees. No friction. Just real connections—with purpose.</p>
-        <p><a href="https://members.collegeathletenetwork.org/" target="_blank" style="margin: 10px 0 ; display:inline-block;padding:5px 10px;background-color:#ED3237;color:#ffffff;text-decoration:none;border-radius:4px;">Browse Athlete Availabilities</a></p>
+  <p><a href="https://members.collegeathletenetwork.org/" target="_blank" aria-label="Browse Athlete Availabilities (opens in a new tab)" style="margin: 10px 0 ; display:inline-block;padding:5px 10px;background-color:#ED3237;color:#ffffff;text-decoration:none;border-radius:4px;">Browse Athlete Availabilities</a></p>
         <p>Thanks for being a part of something bigger,<br/>{{Your Name}}<br/>The College Athlete Network</p>
       `,
   },

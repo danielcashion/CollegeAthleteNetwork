@@ -42,15 +42,15 @@ export const AthleteChecklistItems = [
   {
     id: 5,
     title:
-      'Create Your "Availability" and explore current "Opportunities" within our <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a> website',
+  'Create Your "Availability" and explore current "Opportunities" within our <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="College Athlete Network (opens in a new tab)">College Athlete Network</a> website',
     icon: <FaCalendarCheck className="text-[#4CAF50] text-3xl" />,
     content:
-      'Employers and athlete alumni are looking for motivated candidates like you. By posting your "Availability" on <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a>, you increase your visibility to potential employers and mentors who can advocate for you in the hiring process.',
+  'Employers and athlete alumni are looking for motivated candidates like you. By posting your "Availability" on <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="College Athlete Network (opens in a new tab)">College Athlete Network</a>, you increase your visibility to potential employers and mentors who can advocate for you in the hiring process.',
   },
   {
     id: 6,
     title:
-      'Utilize Your Account on  <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">The College Athlete Network</a> to Grow Your LinkedIn Connections',
+  'Utilize Your Account on  <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="The College Athlete Network (opens in a new tab)">The College Athlete Network</a> to Grow Your LinkedIn Connections',
     icon: <FaUsers className="text-[#FF9800] text-3xl" />,
     content:
       "Networking is key to unlocking job opportunities. Connect with fellow athletes from your college and expand your LinkedIn network. A strong professional network increases your exposure to job openings and insider insights about companies and industries.",
@@ -60,20 +60,20 @@ export const AthleteChecklistItems = [
     title: "Research Companies and Connect with Athlete Employees",
     icon: <FaBuilding className="text-[#607D8B] text-3xl" />,
     content:
-      'Use your <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">College Athlete Network</a> to identify companies where fellow athletes are employed. Reach out to them for informational interviews, learn about company cultures, and gain referrals. Having an internal advocate significantly increases your chances of securing an interview.',
+  'Use your <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="College Athlete Network (opens in a new tab)">College Athlete Network</a> to identify companies where fellow athletes are employed. Reach out to them for informational interviews, learn about company cultures, and gain referrals. Having an internal advocate significantly increases your chances of securing an interview.',
   },
   {
     id: 8,
     title: "Explore Industries and Intelligently Expand your Network",
     icon: <FaLightbulb className="text-[#FFC107] text-3xl" />,
     content:
-      'Whether you are a current student or alum, explore an industry or specific companies within  <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network </a> where fellow college athletes currently succeed. Connect with them to gain insights and build relationships. By actively engaging with your athlete network in these industries, you will expand personal brand and positioning yourself as the leader you are.',
+  'Whether you are a current student or alum, explore an industry or specific companies within  <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="your College Athlete Network (opens in a new tab)">your College Athlete Network </a> where fellow college athletes currently succeed. Connect with them to gain insights and build relationships. By actively engaging with your athlete network in these industries, you will expand personal brand and positioning yourself as the leader you are.',
   },
   {
     id: 9,
     title: "Leverage Your Network by Geographical Location",
     icon: <FaMapMarkerAlt className="text-[#F44336] text-3xl" />,
     content:
-      'Do you target a certain city or region for professional prospecting? Then search <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer">your College Athlete Network</a> by geography. We literally provide a live map of your network. Find and connect with fellow athletes in these areas who want to network with you. Increasing the strength of the network is in everyone’s intent. We just make it actionable...',
+  'Do you target a certain city or region for professional prospecting? Then search <a style="color: red;" href="https://members.collegeathletenetwork.org/login" target="_blank" rel="noopener noreferrer" aria-label="your College Athlete Network (opens in a new tab)">your College Athlete Network</a> by geography. We literally provide a live map of your network. Find and connect with fellow athletes in these areas who want to network with you. Increasing the strength of the network is in everyone’s intent. We just make it actionable...',
   },
 ];

@@ -26,15 +26,18 @@ import { TbAppWindowFilled } from "react-icons/tb";
 export default function Home() {
   return (
     <div className="bg-[#e8e8e8] overflow-x-hidden">
-  <div>
+      <main>
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
-          <div className="relative w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
+        <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
+          <div className="w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Powering The Professional Networks of Collegiate Athletes
             </h1>
-            <h2 className="text-3xl font-semibold mb-4" role="heading" aria-level={2}>
+            <h2
+              className="text-3xl font-semibold mb-4"
+              role="heading"
+              aria-level={4}
+            >
               We Provide All Their Data Fuel
             </h2>
             <p className="text-lg md:text-xl text-right mb-6 font-light">
@@ -68,8 +71,8 @@ export default function Home() {
             partner universities and their athletes with an up-to-date knowledge
             graph of their athlete network. Our platform curates and organizes
             the geographical locations and professional journeys data (past
-            &amp; present) of your college&apos; athletes, creating an actionable
-            network for your university.
+            &amp; present) of your college&apos; athletes, creating an
+            actionable network for your university.
           </p>
           <div className="w-full flex flex-col sm:flex-row gap-10 sm:gap-20 justify-center items-start mt-8 mb-4">
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
@@ -77,26 +80,42 @@ export default function Home() {
                 size={70}
                 className="mx-auto text-[#1C315F]"
               />
-              <p className="text-center text-xl text-[#ED3237] font-medium">
+              <p
+                role="heading"
+                aria-level={4}
+                className="text-center text-xl text-[#ED3237] font-medium"
+              >
                 We Source Current & Historic Public Athlete Rosters
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
-              <FaLinkedin size={70} className="mx-auto text-[#1C315F]"/>
-              <p className="text-center text-xl text-[#ED3237] font-medium">
-                We Map these Athletes to 3rd Party Public 
-                datasets we purchase, including LinkedIn
+              <FaLinkedin size={70} className="mx-auto text-[#1C315F]" />
+              <p
+                role="heading"
+                aria-level={4}
+                className="text-center text-xl text-[#ED3237] font-medium"
+              >
+                We Map these Athletes to 3rd Party Public datasets we purchase,
+                including LinkedIn
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaDatabase size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#ED3237] font-medium">
+              <p
+                role="heading"
+                aria-level={4}
+                className="text-center text-xl text-[#ED3237] font-medium"
+              >
                 We Refresh Athlete Employers, Titles, Locations every 60 days
               </p>
             </div>
             <div className="flex flex-col gap-2 mx-auto sm:mx-0">
               <FaHandshakeSimple size={70} className="mx-auto text-[#1C315F]" />
-              <p className="text-center text-xl text-[#ED3237] font-medium">
+              <p
+                role="heading"
+                aria-level={4}
+                className="text-center text-xl text-[#ED3237] font-medium"
+              >
                 We Actively Partner with Athletic Directors, Teams, & Employers
               </p>
             </div>
@@ -114,7 +133,11 @@ export default function Home() {
 
               <div className="flex items-start justify-center mb-12 space-x-4">
                 <FaUsers className="w-8 h-8 min-w-8 min-h-8 text-[#ED3237]" />
-                <p className="text-xl leading-relaxed">
+                <p
+                  role="heading"
+                  aria-level={4}
+                  className="text-xl leading-relaxed"
+                >
                   After Graduating, athletes change jobs, on average, every{" "}
                   <span className="text-[#ED3237] font-semibold">
                     3.1 years
@@ -126,7 +149,8 @@ export default function Home() {
                   (a relatively small school network), this means tracking and
                   updating data for around
                   <span className="text-[#ED3237] font-semibold">
-                    {" "}1,200 individuals{" "}
+                    {" "}
+                    1,200 individuals{" "}
                   </span>
                   annually.
                 </p>
@@ -136,7 +160,11 @@ export default function Home() {
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
                     <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
-                    <h3 className="font-bold text-2xl text-[#ED3237]" role="heading" aria-level={3}>
+                    <h3
+                      className="font-bold text-2xl text-[#ED3237]"
+                      role="heading"
+                      aria-level={4}
+                    >
                       If Your Alumni &quot;Database&quot; is actually a simple
                       and stale Spreadsheet:
                     </h3>
@@ -162,7 +190,11 @@ export default function Home() {
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
                     <TbAppWindowFilled className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
-                    <h3 className="font-bold text-2xl text-[#ED3237]" role="heading" aria-level={3}>
+                    <h3
+                      className="font-bold text-2xl text-[#ED3237]"
+                      role="heading"
+                      aria-level={4}
+                    >
                       If You&apos;re Using an App where YOU supply the Data:
                     </h3>
                   </div>
@@ -242,19 +274,31 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#ED3237] small-caps">
             CollegeAthleteNetwork.org?
           </h2>
-          <p className="text-2xl md:text-3xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto">
+          <p
+            role="heading"
+            aria-level={4}
+            className="text-2xl md:text-3xl leading-relaxed mb-4 text-[#1C315F] text-center max-w-3xl mx-auto"
+          >
             Maintaining professional data on your athletes is a time-consuming,
             never-ending headache that demands continuous effort.
           </p>
 
-          <p className="text-2xl leading-relaxed mb-2 text-[#1C315F] text-center max-w-2xl mx-auto tracking-wide">
+          <p
+            role="heading"
+            aria-level={4}
+            className="text-2xl leading-relaxed mb-2 text-[#1C315F] text-center max-w-2xl mx-auto tracking-wide"
+          >
             This is where we become your trusted teammate.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mt-6">
             <div className="text-center">
               <FaSitemap size={60} className="text-[#1C315F] mx-auto mb-4" />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level={3}>
+              <h3
+                className="font-bold text-2xl mb-2 text-[#ED3237]"
+                role="heading"
+                aria-level={4}
+              >
                 Serious Expertise
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
@@ -265,7 +309,11 @@ export default function Home() {
             </div>
             <div className="text-center">
               <FaCode size={60} className="text-[#1C315F] mx-auto mb-4" />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level={3}>
+              <h3
+                className="font-bold text-2xl mb-2 text-[#ED3237]"
+                role="heading"
+                aria-level={4}
+              >
                 Repeatable & Dependable
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
@@ -278,7 +326,11 @@ export default function Home() {
                 size={60}
                 className="text-[#1C315F] mx-auto mb-4"
               />
-              <h3 className="font-bold text-2xl mb-2 text-[#ED3237]" role="heading" aria-level={3}>
+              <h3
+                className="font-bold text-2xl mb-2 text-[#ED3237]"
+                role="heading"
+                aria-level={4}
+              >
                 Providing an Exceptional Experience
               </h3>
               <p className="text-[#1C315F] text-xl text-center">
@@ -288,7 +340,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-  </div>
+      </main>
     </div>
   );
 }
