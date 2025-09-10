@@ -2,21 +2,21 @@ import Image from "next/image";
 import OurSolution from "../AboutUsPage/OurSolution";
 
 const AthleteNetworkPageContent = ({ university }: any) => {
-  console.log("university meta info: ", university);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
         <div className="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
-        <div className="relative">
-          <h1 className="text-4xl font-bold mb-4">
+          <div className="relative">
+            <h1 className="text-4xl font-bold mb-4">
             {university.university_name} {university.mascot} Athlete Network
-          </h1>
-          <p className="text-lg mb-6">
-            Connect with student-athletes, alumni, and supporters from{" "}
-            {university.university_name}. Discover jobs, professional
-            opportunities, and lifelong connections.
-          </p>
+            </h1>
+            <p className="text-lg mb-6">
+              Connect with student-athletes, alumni, and supporters from{" "}
+              {university.university_name}. Discover jobs, professional
+              opportunities, and lifelong connections.
+            </p>
 
           <div className="flex gap-2">
             {[
@@ -30,6 +30,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
               style={{ backgroundColor: hex }}
             />
           ))}
+            </div>
         </div>
       </div>
 
