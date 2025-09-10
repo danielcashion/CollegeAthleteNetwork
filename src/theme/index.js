@@ -164,7 +164,7 @@ export default createTheme({
       default: "#fafafa",
     },
     error: {
-      main: "#ed3237",
+      main: "#ED3237",
     },
     primary: {
       main: "#1c315f",

@@ -248,7 +248,7 @@ export default function DataTransparency() {
             </h3>
             <p className="text-gray-700">
               You get all the upside — visibility, engagement, career impact —
-              with <strong className="text-[#ed3237]">zero administrative headache, risk or responsibility.</strong>
+              with <strong className="text-[#ED3237]">zero administrative headache, risk or responsibility.</strong>
             </p>
           </div>
         </div>

@@ -25,11 +25,12 @@ import { TbAppWindowFilled } from "react-icons/tb";
 
 export default function Home() {
   return (
-    <div className="bg-[#CCCBCB] overflow-x-hidden">
+    <div className="bg-[#e8e8e8] overflow-x-hidden">
   <div>
         {/* Hero Section */}
-        <section className=" bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
-          <div className="w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
+        <section className="relative bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col lg:flex-row gap-10 lg:gap-0 items-center px-[5%] sm:px-[10%]">
+          <div className="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
+          <div className="relative w-full lg:w-[50%] mx-auto px-4 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Powering The Professional Networks of Collegiate Athletes
             </h1>
@@ -134,7 +135,7 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="bg-[#1c315f]/50 backdrop-blur-sm p-8 rounded-xl border border-white/10 hover:border-[#ED3237]/50 transition-all duration-300">
                   <div className="flex items-start mb-4 space-x-3">
-                    <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ed3237] mt-1" />
+                    <BsFillFileEarmarkSpreadsheetFill className="w-7 h-7 min-w-7 min-h-7 text-[#ED3237] mt-1" />
                     <h3 className="font-bold text-2xl text-[#ED3237]" role="heading" aria-level={3}>
                       If Your Alumni &quot;Database&quot; is actually a simple
                       and stale Spreadsheet:

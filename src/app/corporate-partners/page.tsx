@@ -32,7 +32,7 @@ export default function CorporatePartnersPage() {
               </Link>
               <Link
                 href="/contact-us"
-                className="bg-[#ed3237] text-white text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ed3237] transition duration-200"
+                className="bg-[#ED3237] text-white text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ED3237] transition duration-200"
               >
                 Post a Job Today
               </Link>
@@ -107,7 +107,7 @@ export default function CorporatePartnersPage() {
               <div className="text-center mt-6">
                 <Link
                   href="/contact-us"
-                  className="bg-[#ed3237] text-white text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ed3237] transition duration-200"
+                  className="bg-[#ED3237] text-white text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ED3237] transition duration-200"
                 >
                   Start Hiring from Your Alma Mater
                 </Link>
@@ -146,7 +146,7 @@ export default function CorporatePartnersPage() {
               <div className="text-center">
                 <Link
                   href="/contact-us"
-                  className="bg-[#ed3237] text-white pt-2 text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ed3237] transition duration-200"
+                  className="bg-[#ED3237] text-white pt-2 text-lg font-medium px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#ED3237] transition duration-200"
                 >
                   Become a Hiring Partner
                 </Link>
@@ -190,7 +190,7 @@ export default function CorporatePartnersPage() {
                 },
               ].map((step, index) => (
                 <div key={index} className="text-center">
-                  <div className="bg-[#ed3237] text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                  <div className="bg-[#ED3237] text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                     {index + 1}
                   </div>
                   <h3 className="text-2xl font-semibold mb-2" role="heading" aria-level={3}>{step.title}</h3>

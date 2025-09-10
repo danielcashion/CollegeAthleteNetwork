@@ -176,7 +176,7 @@ export default function NetworkSizeScalers({
                   title={
                     <span>
                       The % of the{" "}
-                      <strong style={{ color: "#ed3237" }}>
+                      <strong style={{ color: "#ED3237" }}>
                         # Changing Jobs
                       </strong>{" "}
                       column you could fill &quot;in network&quot;. Weak networks
