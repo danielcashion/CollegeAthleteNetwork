@@ -55,7 +55,6 @@ export default function AccessibilityPolicyPage() {
 
          <section aria-labelledby="main-content">
            <AccessibilityContainer>
-
              <Typography
                component="p"
                variant="subtitle1"
@@ -66,10 +65,14 @@ export default function AccessibilityPolicyPage() {
                Effective date: June 2nd, 2025
              </Typography>
              <a
-               href="https://collegeathletenetwork.s3.us-east-1.amazonaws.com/InternalDocuments/CollegeAthleteNetworkAccessibilityComplanceReport202506.pdf"
+               href="https://collegeathletenetwork.s3.us-east-1.amazonaws.com/InternalDocuments/CollegeAthleteNetworkAccessibilityConformanceReport202506.pdf"
                target="_blank"
                rel="noopener noreferrer"
-               style={{ display: "block", textAlign: "right", color: "#1C315F", marginBottom: "1.5rem", fontWeight: 500 }}
+               className="text-[#1C315F] hover:text-[#ED3237] focus:text-[#ED3237] transition-colors duration-200 font-extrabold block text-right"
+               style={{
+                 fontSize: "1.1rem",
+                 marginBottom: "1.0rem",
+               }}
              >
                Access Our Accessibility Conformance Report (PDF)
              </a>
@@ -103,16 +106,20 @@ export default function AccessibilityPolicyPage() {
                    }}
                    paragraph
                  >
-                   Our college athlete networking website is committed to ensuring
-                   digital accessibility for all users, including those with
-                   disabilities. We strive to provide an inclusive online platform
-                   that empowers college athletes, coaches, and recruiters to
-                   connect, collaborate, and thrive. Accessibility is a core
-                   value, and we are dedicated to meeting the needs of individuals
-                   with diverse abilities, ensuring equal access to our services
-                   and resources in compliance with applicable accessibility
-                   standards, including the Web Content Accessibility Guidelines
-                   (WCAG) 2.1.
+                   We at <strong>The College Athlete Network</strong> are firmly
+                   committed to ensuring digital accessibility for all users,
+                   including those with disabilities. We strive to provide an
+                   inclusive online platform that empowers college athletes,
+                   coaches, and recruiters to connect, collaborate, and thrive.
+                   Accessibility is a core value, and we are dedicated to
+                   meeting the needs of individuals with diverse abilities,
+                   ensuring equal access to our services and resources in
+                   compliance with applicable accessibility standards, including
+                   the{" "}
+                   <strong>
+                     Web Content Accessibility Guidelines (WCAG) 2.2
+                   </strong>
+                   .
                  </Typography>
                  <Typography
                    component="p"
@@ -128,16 +135,16 @@ export default function AccessibilityPolicyPage() {
                  >
                    We recognize the importance of creating a seamless and
                    equitable user experience for everyone, regardless of visual,
-                   auditory, motor, or cognitive impairments. To achieve this, we
-                   have implemented a comprehensive accessibility strategy that
-                   includes regular audits of our website to identify and address
-                   barriers to access. Our development team prioritizes accessible
-                   design principles, such as providing text alternatives for
-                   non-text content, ensuring keyboard navigability, and
-                   maintaining sufficient color contrast to enhance readability.
-                   We also incorporate assistive technologies, such as screen
-                   readers, into our testing processes to ensure compatibility and
-                   usability.
+                   auditory, motor, or cognitive impairments. To achieve this,
+                   we have implemented a comprehensive accessibility strategy
+                   that includes regular audits of our website to identify and
+                   address barriers to access. Our development team prioritizes
+                   accessible design principles, such as providing text
+                   alternatives for non-text content, ensuring keyboard
+                   navigability, and maintaining sufficient color contrast to
+                   enhance readability. We also incorporate assistive
+                   technologies, such as screen readers, into our testing
+                   processes to ensure compatibility and usability.
                  </Typography>
                  <Typography
                    component="p"
@@ -151,8 +158,8 @@ export default function AccessibilityPolicyPage() {
                    }}
                    paragraph
                  >
-                   Our commitment extends beyond technical compliance. We actively
-                   seek feedback from users to continually improve the
+                   Our commitment extends beyond technical compliance. We
+                   actively seek feedback from users to continually improve the
                    accessibility of our platform. By fostering an inclusive
                    environment, we aim to support the diverse needs of our
                    community, enabling all users to engage fully with our
@@ -171,10 +178,10 @@ export default function AccessibilityPolicyPage() {
                    }}
                    paragraph
                  >
-                   We are dedicated to ongoing improvement and welcome input from
-                   our users to enhance accessibility. If you encounter any
-                   accessibility challenges or have suggestions, please contact us
-                   at{" "}
+                   We are dedicated to ongoing improvement and welcome input
+                   from our users to enhance accessibility. If you encounter any
+                   accessibility challenges or have suggestions, please contact
+                   us at{" "}
                    <a
                      href="mailto:admin@collegeathletenetwork.org"
                      className="text-blue-600 underline"
@@ -206,13 +213,14 @@ export default function AccessibilityPolicyPage() {
                    }}
                    paragraph
                  >
-                   The College Athlete Network is committed to complying with all
-                   applicable accessibility laws and standards, including the
-                   Americans with Disabilities Act (ADA) and Section 508 of the
-                   Rehabilitation Act. We strive to ensure our website and digital
-                   services are accessible to individuals with disabilities and
-                   meet or exceed the requirements set forth by these regulations.
-                   Our ongoing efforts include regular accessibility audits, staff
+                   The College Athlete Network is committed to complying with
+                   all applicable accessibility laws and standards, including
+                   the <strong>Americans with Disabilities Act (ADA)</strong>{" "}
+                   and <strong>Section 508 of the Rehabilitation Act</strong>.
+                   We strive to ensure our website and digital services are
+                   accessible to individuals with disabilities and meet or
+                   exceed the requirements set forth by these regulations. Our
+                   ongoing efforts include regular accessibility audits, staff
                    training, and prompt response to user feedback regarding
                    accessibility barriers.
                  </Typography>

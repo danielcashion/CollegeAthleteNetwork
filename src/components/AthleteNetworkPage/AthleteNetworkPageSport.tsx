@@ -501,7 +501,7 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
             Ready to Join the{" "}
-            <a href={sportData.base_url || "#"} target="_blank" aria-label="Opens in a new tab">
+            <a href={sportData.base_url || "#"} target="_blank" aria-label={sportData.base_url ? `Opens ${sportData.base_url} in a new tab` : 'Opens in a new tab'}>
               {sportData.university_name} Athlete Network?
             </a>
           </h2>
