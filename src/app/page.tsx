@@ -1,7 +1,7 @@
 import Image from "next/image";
 import "../styles/customStyles.css";
 import Carousel from "@/components/LandingPage/Carousel";
-import AthleteImage from "../../public/images/college-athletes-2.jpg";
+import AthleteImage from "../../public/images/college-athletes-7.jpg"
 
 import {
   FaDatabase,
