@@ -88,7 +88,7 @@ export default function TrackClickPage() {
     <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] min-h-screen text-white pb-12 pt-24 flex flex-col justify-center items-center px-[10%] sm:px-[20%]">
       <CgSpinner size={80} className="animate-spin" />
       <h1 className="text-3xl font-semibold mb-2 mt-4">
-        Loading your custom media...
+        Loading things now...
       </h1>
       <p className="text-lg">
         Just give us a moment while we get everything ready for you
