@@ -15,6 +15,7 @@ export default function TrackClickPage() {
     const row_id = searchParams.get("row_id");
     const campaign_id = searchParams.get("campaign_id") || null; // Optional, can be null
     const survey_id = searchParams.get("survey_id") || null; // Optional, can be null
+    const email_address = searchParams.get("email_address") || null; // Optional, can be null
 
     const created_by = "admin";
     const created_datetime = new Date().toISOString();
@@ -49,7 +50,7 @@ export default function TrackClickPage() {
         row_id,
         university_name: university_name,
         destination: destination || null,
-        file_name: survey_id || null,
+        file_name: file_name || null,
         campaign_id: campaign_id || null,
         created_by: created_by,
         created_datetime: created_datetime,
@@ -64,13 +65,20 @@ export default function TrackClickPage() {
         router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
       } else if (destination === "media-viewer") {
         router.push(`/media-viewer/${university_name}?file=${file_name}`);
-      }
-      else if (destination === "university-financials") {
+      } else if (destination === "login" && email_address) {
+        // include the email address value so the members site can pre-fill the login form
+        const encoded = encodeURIComponent(email_address);
         router.push(
-          `/university-financials/${university_name}`
+          `https://members.collegeathletenetwork.org/login?email_address=${encoded}`
         );
-            }
-            else {
+     } else if (destination === "login" && !email_address) {
+        // no email to pre-fill, just go to login page
+        router.push(
+          `https://members.collegeathletenetwork.org/login`
+        );
+      } else if (destination === "university-financials") {
+        router.push(`/university-financials/${university_name}`);
+      } else {
         router.push("/");
       }
     }, 300);
