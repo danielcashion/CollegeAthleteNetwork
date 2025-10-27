@@ -1,15 +1,8 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push("/admin");
-  };
 
   if (status === "loading") {
     return (
@@ -46,19 +39,8 @@ export default function DashboardPage() {
                 {session.user?.id}
               </p>
             </div>
-
-            <button
-              onClick={handleSignOut}
-              className="mt-6 w-full bg-gradient-to-r from-blueMain to-redMain text-white py-2 px-4 rounded-lg font-semibold hover:opacity-90 transition-all duration-200"
-            >
-              Sign Out
-            </button>
           </div>
         )}
-
-        <p className="text-gray-600 mt-4">
-          Dashboard Page - Under Construction
-        </p>
       </div>
     </main>
   );

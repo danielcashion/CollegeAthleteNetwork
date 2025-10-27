@@ -12,6 +12,7 @@ import {
 import { LocationOn, Phone, Mail } from "@mui/icons-material";
 import Image from "next/image";
 import { styled } from "@mui/system";
+import { usePathname } from "next/navigation";
 
 import ConstrainedWidth from "../ConstrainedWidth";
 import Logo from "../../../public/Logos/CANLogo1200x1200White.png";
@@ -104,6 +105,10 @@ const MailIcon = styled(Mail)({
 });
 
 const AppFooter: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -130,10 +135,7 @@ const AppFooter: React.FC = () => {
                 >
                   <ListItemText primary="Terms of Service" />
                 </MenuItemText>
-                <MenuItemText
-                  href="/accessibility"
-                  rel="noopener noreferrer"
-                >
+                <MenuItemText href="/accessibility" rel="noopener noreferrer">
                   <ListItemText primary="Accessibility" />
                 </MenuItemText>
               </MenuListItemLeft>

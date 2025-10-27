@@ -6,8 +6,14 @@ import { FaAngleDown } from "react-icons/fa6";
 import { IoMenu, IoClose } from "react-icons/io5";
 import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
 import { NavItem, navbarItems } from "../../utils/navbarItems";
+import { usePathname } from "next/navigation";
 
 const Navbar: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({});
