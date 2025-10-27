@@ -1,9 +1,14 @@
 "use client";
-
+import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 const CanVideoModal = () => {
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const modalUniqueId = "CANElectricity-2025-05-21";
   const videoSrc =
     "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Videos/CollegeAthleteNetworkLogoElectricity.mp4";

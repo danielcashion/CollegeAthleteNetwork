@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: var(--font-open-sans), sans-serif;
+  }
+}
+
 .small-caps {
   font-variant: small-caps;
   letter-spacing: 0.05em;

@@ -3,8 +3,8 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Home, LayoutDashboard, Mail } from "lucide-react";
-import Logo from "../../../public/Logos/CANLogo-horizontal-white.png";
+import { LogOut, Home, LayoutDashboard, Mail, Send } from "lucide-react";
+import Logo from "../../../../public/Logos/CANLogo-horizontal-white.png";
 import Image from "next/image";
 
 const adminSidebarItems = [
@@ -15,8 +15,13 @@ const adminSidebarItems = [
   },
   {
     href: "/admin/e-comms",
+    icon: Send,
+    label: "Campaigns",
+  },
+  {
+    href: "/admin/email-templates",
     icon: Mail,
-    label: "HuddleUp",
+    label: "Templates",
   },
 ];
 
@@ -34,7 +39,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-blueMain to-blue-900 text-white min-h-screen py-6 px-4 flex flex-col">
+    <aside className="w-64 bg-gradient-to-b from-blueMain via-blueMain to-redMain text-white min-h-screen py-6 px-4 flex flex-col">
       <div className="mb-8">
         <Image src={Logo} alt="CAN Logo" className="w-40 mb-6" />
         <h2 className="text-xl font-bold">ADMIN PANEL</h2>
