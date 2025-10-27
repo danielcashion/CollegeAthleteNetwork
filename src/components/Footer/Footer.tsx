@@ -106,14 +106,15 @@ const MailIcon = styled(Mail)({
 
 const AppFooter: React.FC = () => {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   if (!isMounted) {
     return null;

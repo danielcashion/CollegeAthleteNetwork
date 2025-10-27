@@ -10,10 +10,6 @@ import { usePathname } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
-
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({});
@@ -23,6 +19,10 @@ const Navbar: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
