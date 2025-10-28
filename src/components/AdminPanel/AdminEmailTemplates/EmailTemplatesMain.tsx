@@ -70,9 +70,9 @@ export default function EmailTemplatesMain() {
         <h1 className="text-2xl font-bold">Email Templates</h1>
         <button
           onClick={handleCreate}
-          className="px-4 py-2 bg-blueMain text-white rounded-lg hover:bg-blueMain/80 transition-colors"
+          className="px-4 py-2 bg-blueMain  font-bold text-white rounded-lg hover:bg-blueMain/80 transition-colors"
         >
-          Create Email Template
+          + Create Email Template
         </button>
       </div>
 
@@ -87,11 +87,11 @@ export default function EmailTemplatesMain() {
               <tr>
                 <th className="px-6 py-4">Template ID</th>
                 <th className="px-6 py-4">Template Name</th>
-                <th className="px-6 py-4">Description</th>
+                <th className="px-6 py-4">Campaign Goal</th>
                 <th className="px-6 py-4">Creator</th>
-                <th className="px-6 py-4">Task</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Created At</th>
+                <th className="px-6 py-4">Database Task</th>
+                {/* <th className="px-6 py-4">Status</th> */}
+                <th className="px-6 py-4">Created Datetime</th>
                 <th className="px-6 py-4">Actions</th>
               </tr>
             </thead>
@@ -118,7 +118,7 @@ export default function EmailTemplatesMain() {
                   <td className="px-6 py-4 text-md text-gray-500">
                     {template.template_task}
                   </td>
-                  <td className="px-6 py-4">
+                  {/* <td className="px-6 py-4">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         template.is_active_YN === 1
@@ -128,7 +128,7 @@ export default function EmailTemplatesMain() {
                     >
                       {template.is_active_YN === 1 ? "Active" : "Inactive"}
                     </span>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4 text-md text-gray-500">
                     <span
                       title={template.created_datetime}
