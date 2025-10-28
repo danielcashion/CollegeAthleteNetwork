@@ -14,7 +14,7 @@ const adminSidebarItems = [
     label: "Dashboard",
   },
   {
-    href: "/admin/e-comms",
+    href: "/admin/campaigns",
     icon: Send,
     label: "Campaigns",
   },

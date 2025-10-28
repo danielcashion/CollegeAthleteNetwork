@@ -9,6 +9,7 @@ import LogUserIP from "@/components/UserAudit/LogUserIP";
 import CanVideoModal from "@/components/Modals/CanVideoModal";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import ToasterProvider from "@/providers/ToasterProvider";
 
 export const openSans = Open_Sans({
   subsets: ["latin"],
@@ -93,6 +94,7 @@ export default function RootLayout({
           <CanVideoModal />
           <LogUserIP />
           <Analytics />
+          <ToasterProvider />
           <GoogleAnalyticsClient />
           {/* WebKit/Safari/Chrome skip link focus fix */}
           <script
