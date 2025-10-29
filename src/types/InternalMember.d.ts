@@ -8,14 +8,22 @@ export interface InternalMember {
 }
 
 export interface InternalEmailTemplate {
-  template_id: string;
-  template_name: string;
+  campaign_template_id: string;
+  campaign_type?: string | null;
+  template_title: string;
   template_description?: string;
   template_creator?: string;
   template_task?: string;
   template_params?: string;
-  template_html: string;
-  is_active_YN?: number;
+  email_body: string;
+  email_from_name?: string | null;
+  email_from_address?: string | null;
+  reply_to_address?: string | null;
+  email_subject?: string | null;
+  reponse_type?: string | null;
+  reponse_options?: string | null;
+  is_systemwide_YN?: number | null;
+  is_active_YN?: number | null;
   created_by?: string;
   created_datetime?: string;
   updated_by?: string | null;

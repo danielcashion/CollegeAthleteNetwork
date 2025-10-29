@@ -61,7 +61,7 @@ export default function EmailTemplatesMain() {
 
   const handleDelete = (template: InternalEmailTemplate) => {
     // Functionality to be implemented later
-    console.log("Delete template:", template.template_id);
+    console.log("Delete template:", template.campaign_template_id);
   };
 
   return (
@@ -86,8 +86,8 @@ export default function EmailTemplatesMain() {
             <thead className="bg-gray-200 text-gray-800 text-lg font-semibold">
               <tr>
                 <th className="px-6 py-4">Template ID</th>
-                <th className="px-6 py-4">Template Name</th>
-                <th className="px-6 py-4">Campaign Goal</th>
+                <th className="px-6 py-4">Template Title</th>
+                <th className="px-6 py-4">Description</th>
                 <th className="px-6 py-4">Creator</th>
                 <th className="px-6 py-4">Database Task</th>
                 {/* <th className="px-6 py-4">Status</th> */}
@@ -98,16 +98,16 @@ export default function EmailTemplatesMain() {
             <tbody>
               {templates.map((template, idx) => (
                 <tr
-                  key={template.template_id}
+                  key={template.campaign_template_id}
                   className={`cursor-pointer ${
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   } hover:bg-blue-50 transition`}
                 >
                   <td className="px-6 py-4 text-md font-medium text-gray-900">
-                    {template.template_id}
+                    {template.campaign_template_id}
                   </td>
                   <td className="px-6 py-4 text-md text-gray-900">
-                    {template.template_name}
+                    {template.template_title}
                   </td>
                   <td className="px-6 py-4 text-md text-gray-500 max-w-xs truncate">
                     {template.template_description}

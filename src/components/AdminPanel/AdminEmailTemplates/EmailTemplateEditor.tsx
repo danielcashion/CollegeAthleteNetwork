@@ -36,13 +36,19 @@ export default function EmailTemplateEditor({
   mode,
 }: EmailTemplateEditorProps) {
   const [formData, setFormData] = useState<Partial<InternalEmailTemplate>>({
-    template_name: "",
+    template_title: "",
     template_description: "",
     template_creator: "",
     template_task: "",
     template_params: "",
-    template_html: "",
+    email_body: "",
+    email_subject: "",
+    email_from_name: "",
+    email_from_address: "",
+    reply_to_address: "",
+    campaign_type: "",
     is_active_YN: 1,
+    is_systemwide_YN: 0,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,13 +59,19 @@ export default function EmailTemplateEditor({
     } else {
       // Reset form for create mode
       setFormData({
-        template_name: "",
+        template_title: "",
         template_description: "",
         template_creator: "",
         template_task: "",
         template_params: "",
-        template_html: "",
+        email_body: "",
+        email_subject: "",
+        email_from_name: "",
+        email_from_address: "",
+        reply_to_address: "",
+        campaign_type: "",
         is_active_YN: 1,
+        is_systemwide_YN: 0,
       });
     }
   }, [template, mode]);
@@ -72,24 +84,27 @@ export default function EmailTemplateEditor({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "is_active_YN" ? parseInt(value) : value,
+      [name]:
+        name === "is_active_YN" || name === "is_systemwide_YN"
+          ? parseInt(value)
+          : value,
     }));
   };
 
   const handleEditorChange = (value: string | undefined) => {
     setFormData((prev) => ({
       ...prev,
-      template_html: value || "",
+      email_body: value || "",
     }));
   };
 
   const validateForm = () => {
-    if (!formData.template_name?.trim()) {
-      setError("Template name is required");
+    if (!formData.template_title?.trim()) {
+      setError("Template title is required");
       return false;
     }
-    if (!formData.template_html?.trim()) {
-      setError("Template HTML is required");
+    if (!formData.email_body?.trim()) {
+      setError("Email body is required");
       return false;
     }
     return true;
@@ -106,17 +121,17 @@ export default function EmailTemplateEditor({
     setLoading(true);
 
     try {
-      if (mode === "edit" && template?.template_id) {
+      if (mode === "edit" && template?.campaign_template_id) {
         await updateInternalEmailTemplate({
           ...formData,
-          template_id: template.template_id,
+          campaign_template_id: template.campaign_template_id,
           updated_by: formData.template_creator || "",
           updated_datetime: new Date().toISOString(),
         } as InternalEmailTemplate);
       } else {
         await createInternalEmailTemplate({
           ...formData,
-          template_id: getVarcharEight(),
+          campaign_template_id: getVarcharEight(),
           created_by: formData.template_creator || "",
           created_datetime: new Date().toISOString(),
         } as InternalEmailTemplate);
@@ -144,13 +159,14 @@ export default function EmailTemplateEditor({
         <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-              {mode === "edit" ? "Edit Email Template" : "Create Email Template"}
+              {mode === "edit"
+                ? "Edit Email Template"
+                : "Create Email Template"}
             </h2>
             <p className="text-sm text-gray-600 mt-1">
-              {mode === "edit" 
-                ? "Modify your existing email template" 
-                : "Build a new email template for your campaigns"
-              }
+              {mode === "edit"
+                ? "Modify your existing email template"
+                : "Build a new email template for your campaigns"}
             </p>
           </div>
           <button
@@ -167,8 +183,16 @@ export default function EmailTemplateEditor({
         {error && (
           <div className="mx-8 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-3">
             <div className="flex-shrink-0">
-              <svg className="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 text-red-400 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div>
@@ -188,23 +212,35 @@ export default function EmailTemplateEditor({
                 <div className="space-y-4">
                   <div className="border-b border-gray-100 pb-3">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg className="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg
+                        className="w-5 h-5 text-blue-500 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       Basic Information
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">General template details and metadata</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      General template details and metadata
+                    </p>
                   </div>
 
-                  {/* Template Name */}
+                  {/* Template Title */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Template Name <span className="text-red-500">*</span>
+                      Template Title <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      name="template_name"
-                      value={formData.template_name || ""}
+                      name="template_title"
+                      value={formData.template_title || ""}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
                       placeholder="e.g., Welcome Email, Newsletter Template"
@@ -250,7 +286,7 @@ export default function EmailTemplateEditor({
                       </label>
                       <select
                         name="is_active_YN"
-                        value={formData.is_active_YN}
+                        value={formData.is_active_YN ?? 1}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
                       >
@@ -265,20 +301,72 @@ export default function EmailTemplateEditor({
                 <div className="space-y-4">
                   <div className="border-b border-gray-100 pb-3">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg className="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <svg
+                        className="w-5 h-5 text-purple-500 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
                       </svg>
                       Technical Configuration
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">Advanced settings for template processing</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Advanced settings for template processing
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Campaign Type */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Campaign Type
+                      </label>
+                      <input
+                        type="text"
+                        name="campaign_type"
+                        value={formData.campaign_type || ""}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        placeholder="e.g., promotional, informational"
+                      />
+                    </div>
+
+                    {/* System-wide */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        System-wide Template
+                      </label>
+                      <select
+                        name="is_systemwide_YN"
+                        value={formData.is_systemwide_YN ?? 0}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      >
+                        <option value={1}>✅ Yes</option>
+                        <option value={0}>❌ No</option>
+                      </select>
+                    </div>
                   </div>
 
                   {/* Template Task */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Task
-                      <span className="text-xs text-gray-500 font-normal ml-2">(API Integration)</span>
+                      <span className="text-xs text-gray-500 font-normal ml-2">
+                        (API Integration)
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -294,7 +382,9 @@ export default function EmailTemplateEditor({
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Parameters
-                      <span className="text-xs text-gray-500 font-normal ml-2">(Comma-separated)</span>
+                      <span className="text-xs text-gray-500 font-normal ml-2">
+                        (Comma-separated)
+                      </span>
                     </label>
                     <textarea
                       name="template_params"
@@ -307,23 +397,122 @@ export default function EmailTemplateEditor({
                   </div>
                 </div>
 
+                {/* Email Settings Section */}
+                <div className="space-y-4">
+                  <div className="border-b border-gray-100 pb-3">
+                    <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                      <svg
+                        className="w-5 h-5 text-blue-500 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Email Settings
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Configure email headers and metadata
+                    </p>
+                  </div>
+
+                  {/* Email Subject */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Email Subject
+                    </label>
+                    <input
+                      type="text"
+                      name="email_subject"
+                      value={formData.email_subject || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      placeholder="e.g., Welcome to College Athlete Network!"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Email From Name */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        From Name
+                      </label>
+                      <input
+                        type="text"
+                        name="email_from_name"
+                        value={formData.email_from_name || ""}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        placeholder="e.g., CAN Team"
+                      />
+                    </div>
+
+                    {/* Email From Address */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        From Address
+                      </label>
+                      <input
+                        type="email"
+                        name="email_from_address"
+                        value={formData.email_from_address || ""}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        placeholder="e.g., noreply@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Reply To Address */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Reply To Address
+                    </label>
+                    <input
+                      type="email"
+                      name="reply_to_address"
+                      value={formData.reply_to_address || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      placeholder="e.g., support@example.com"
+                    />
+                  </div>
+                </div>
+
                 {/* HTML Editor Section */}
                 <div className="space-y-4">
                   <div className="border-b border-gray-100 pb-3">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                      <svg
+                        className="w-5 h-5 text-green-500 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                        />
                       </svg>
-                      HTML Content <span className="text-red-500">*</span>
+                      Email Body <span className="text-red-500">*</span>
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">Write your email template HTML with live preview</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Write your email template HTML with live preview
+                    </p>
                   </div>
 
                   <div className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                     <Editor
                       height="500px"
                       defaultLanguage="html"
-                      value={formData.template_html || ""}
+                      value={formData.email_body || ""}
                       onChange={handleEditorChange}
                       theme="vs-light"
                       options={{
@@ -350,9 +539,24 @@ export default function EmailTemplateEditor({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg className="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <svg
+                        className="w-5 h-5 text-blue-500 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
                       </svg>
                       Live Preview
                     </h3>
@@ -366,21 +570,34 @@ export default function EmailTemplateEditor({
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto p-8">
                 <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                  {formData.template_html ? (
+                  {formData.email_body ? (
                     <div className="p-6">
-                      <HtmlViewer htmlContent={formData.template_html} />
+                      <HtmlViewer htmlContent={formData.email_body} />
                     </div>
                   ) : (
                     <div className="p-12 text-center">
-                      <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <svg
+                        className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
                       </svg>
-                      <h4 className="text-lg font-medium text-gray-900 mb-2">No Content Yet</h4>
+                      <h4 className="text-lg font-medium text-gray-900 mb-2">
+                        No Content Yet
+                      </h4>
                       <p className="text-gray-500 max-w-sm mx-auto">
-                        Start typing HTML in the editor to see a live preview of your email template here.
+                        Start typing HTML in the editor to see a live preview of
+                        your email template here.
                       </p>
                     </div>
                   )}
@@ -393,12 +610,24 @@ export default function EmailTemplateEditor({
         {/* Footer */}
         <div className="px-8 py-6 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
           <div className="flex items-center text-sm text-gray-500">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            {mode === "edit" ? "Modifying existing template" : "Creating new template"}
+            {mode === "edit"
+              ? "Modifying existing template"
+              : "Creating new template"}
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <button
               type="button"
@@ -411,7 +640,7 @@ export default function EmailTemplateEditor({
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:bg-blue-700 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm"
+              className="px-6 py-2.5 bg-blueMain text-white rounded-lg hover:bg-blue-700 focus:bg-blue-700 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm"
             >
               {loading ? (
                 <>

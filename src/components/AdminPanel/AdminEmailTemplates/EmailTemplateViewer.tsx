@@ -22,7 +22,7 @@ export default function EmailTemplateViewer({
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-900">
-            {template.template_name}
+            {template.template_title}
           </h2>
           <button
             onClick={onClose}
@@ -37,7 +37,9 @@ export default function EmailTemplateViewer({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-semibold text-gray-700">Template ID:</span>
-              <span className="ml-2 text-gray-600">{template.template_id}</span>
+              <span className="ml-2 text-gray-600">
+                {template.campaign_template_id}
+              </span>
             </div>
             <div>
               <span className="font-semibold text-gray-700">Creator:</span>
@@ -63,6 +65,16 @@ export default function EmailTemplateViewer({
                 {template.is_active_YN === 1 ? "Active" : "Inactive"}
               </span>
             </div>
+            {template.campaign_type && (
+              <div>
+                <span className="font-semibold text-gray-700">
+                  Campaign Type:
+                </span>
+                <span className="ml-2 text-gray-600">
+                  {template.campaign_type}
+                </span>
+              </div>
+            )}
             {template.template_description && (
               <div className="col-span-2">
                 <span className="font-semibold text-gray-700">
@@ -78,6 +90,52 @@ export default function EmailTemplateViewer({
                 <span className="font-semibold text-gray-700">Parameters:</span>
                 <span className="ml-2 text-gray-600 font-mono text-xs">
                   {template.template_params}
+                </span>
+              </div>
+            )}
+            {template.email_subject && (
+              <div className="col-span-2">
+                <span className="font-semibold text-gray-700">
+                  Email Subject:
+                </span>
+                <span className="ml-2 text-gray-600">
+                  {template.email_subject}
+                </span>
+              </div>
+            )}
+            {template.email_from_name && (
+              <div>
+                <span className="font-semibold text-gray-700">From Name:</span>
+                <span className="ml-2 text-gray-600">
+                  {template.email_from_name}
+                </span>
+              </div>
+            )}
+            {template.email_from_address && (
+              <div>
+                <span className="font-semibold text-gray-700">
+                  From Address:
+                </span>
+                <span className="ml-2 text-gray-600">
+                  {template.email_from_address}
+                </span>
+              </div>
+            )}
+            {template.reply_to_address && (
+              <div>
+                <span className="font-semibold text-gray-700">Reply To:</span>
+                <span className="ml-2 text-gray-600">
+                  {template.reply_to_address}
+                </span>
+              </div>
+            )}
+            {template.is_systemwide_YN !== null && (
+              <div>
+                <span className="font-semibold text-gray-700">
+                  System-wide:
+                </span>
+                <span className="ml-2 text-gray-600">
+                  {template.is_systemwide_YN === 1 ? "Yes" : "No"}
                 </span>
               </div>
             )}
@@ -125,7 +183,7 @@ export default function EmailTemplateViewer({
           <h3 className="text-md font-semibold mb-3 text-gray-900">
             Template Preview
           </h3>
-          <HtmlViewer htmlContent={template.template_html} />
+          <HtmlViewer htmlContent={template.email_body} />
         </div>
 
         {/* Footer */}
