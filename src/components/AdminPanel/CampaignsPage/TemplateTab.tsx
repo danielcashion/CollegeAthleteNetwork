@@ -10,7 +10,7 @@ import EditorSwitchWarningModal from "./EditorSwitchWarningModal";
 import StyledTooltip from "@/components/common/StyledTooltip";
 import { Copy } from "lucide-react";
 import toast from "react-hot-toast";
-import { CUSTOM_FIELDS } from "@/utils/ECommUtils";
+import { CUSTOM_FIELDS } from "@/utils/CampaignUtils";
 import { useUniversitiesStore } from "@/store/universitiesStore";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 

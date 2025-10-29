@@ -51,7 +51,7 @@ export const getInternalMemberByEmail = async (email: string) => {
 export const getInternalEmailTemplates = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_email_templates`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates`
     );
     return response.data;
   } catch (error) {
@@ -63,7 +63,7 @@ export const getInternalEmailTemplates = async () => {
 export const getInternalEmailTemplatesById = async (id: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_email_templates?template_id=${id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates?template_id=${id}`
     );
     return response.data;
   } catch (error) {
@@ -77,7 +77,7 @@ export const createInternalEmailTemplate = async (
 ) => {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_email_templates`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates`,
       templateData
     );
     return response.data;
@@ -92,7 +92,7 @@ export const updateInternalEmailTemplate = async (
 ) => {
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_email_templates`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates`,
       templateData
     );
     return response.data;
@@ -105,7 +105,7 @@ export const updateInternalEmailTemplate = async (
 export const deleteInternalEmailTemplate = async (template_id: string) => {
   try {
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_email_templates?template_id=${template_id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates?template_id=${template_id}`
     );
     return response.data;
   } catch (error) {

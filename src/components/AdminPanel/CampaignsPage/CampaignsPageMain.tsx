@@ -45,13 +45,14 @@ export default function CampaignsPageMain() {
           editCampaignAction={handleEditCampaign}
         />
       ) : (
-        <CampaignBuilder
-          onBackToList={handleBackToList}
-          openSaveDraftOnMount={openSaveDraftOnMount}
-          editingCampaign={editingCampaign}
-          initialCampaignName={initialCampaignName}
-          initialCampaignDesc={initialCampaignDesc}
-        />
+        // <CampaignBuilder
+        //   onBackToList={handleBackToList}
+        //   openSaveDraftOnMount={openSaveDraftOnMount}
+        //   editingCampaign={editingCampaign}
+        //   initialCampaignName={initialCampaignName}
+        //   initialCampaignDesc={initialCampaignDesc}
+        // />
+        <></>
       )}
     </div>
   );
