@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-// import ECommsCampaignBuilder from "./ECommsCampaignBuilder";
+import CampaignBuilder from "./CampaignBuilder";
 import CampaignsList from "./CampaignsList";
 import type { CampaignData } from "@/types/Campaign";
 
@@ -45,14 +45,13 @@ export default function CampaignsPageMain() {
           editCampaignAction={handleEditCampaign}
         />
       ) : (
-        // <ECommsCampaignBuilder
-        //   onBackToList={handleBackToList}
-        //   openSaveDraftOnMount={openSaveDraftOnMount}
-        //   editingCampaign={editingCampaign}
-        //   initialCampaignName={initialCampaignName}
-        //   initialCampaignDesc={initialCampaignDesc}
-        // />
-        <></>
+        <CampaignBuilder
+          onBackToList={handleBackToList}
+          openSaveDraftOnMount={openSaveDraftOnMount}
+          editingCampaign={editingCampaign}
+          initialCampaignName={initialCampaignName}
+          initialCampaignDesc={initialCampaignDesc}
+        />
       )}
     </div>
   );

@@ -494,7 +494,7 @@ export default function CampaignsList({
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <h1 className="text-2xl font-extrabold font-merriweather text-primary">
-              Huddleup! Where coaches, athletes, and alumni all get the call.
+              Campaigns
             </h1>
             <p className="text-primary mt-1">
               Manage your email and SMS communications to effectively engage
