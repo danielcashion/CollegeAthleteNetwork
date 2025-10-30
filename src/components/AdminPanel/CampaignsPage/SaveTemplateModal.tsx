@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { createInternalEmailTemplate } from "@/services/InternalMemberApis";
-import { CampaignTemplate } from "@/types/Campaign";
+import { InternalEmailTemplate } from "@/types/InternalMember.d";
 import { getVarcharEight } from "@/helpers/getVarCharId";
 import toast from "react-hot-toast";
 import InputField from "@/components/MUI/InputTextField";
@@ -43,30 +43,33 @@ export default function SaveTemplateModal({
 
     setSaving(true);
     try {
-      const campaignTemplate: CampaignTemplate = {
+      const emailTemplate: InternalEmailTemplate = {
         campaign_template_id: getVarcharEight(),
         campaign_type: "email",
-        university_name: session?.user?.university_affiliation || null,
-        member_id: shareAcrossUniversity ? null : session?.user?.id || null,
-        campaign_title: templateTitle.trim(),
+        template_title: templateTitle.trim(),
+        template_description: undefined,
+        template_creator: session?.user?.name || session?.user?.email || "",
+        template_task: undefined,
+        template_params: undefined,
         email_body: templateData.body,
         email_from_name: templateData.senderName,
         email_from_address: templateData.senderEmail,
         reply_to_address: templateData.replyTo || null,
         email_subject: templateData.subject,
-        response_type: null,
-        response_options: null,
-        is_systemwide_YN: 0, // User-specific template
+        reponse_type: null,
+        reponse_options: null,
+        is_systemwide_YN: shareAcrossUniversity ? 1 : 0,
         is_active_YN: 1,
-        editor_type: templateData.editorType || "text-editor",
+        created_by: session?.user?.name || session?.user?.email || "",
+        created_datetime: new Date().toISOString(),
       };
 
-      const result = await createInternalEmailTemplate(campaignTemplate);
+      const result = await createInternalEmailTemplate(emailTemplate);
 
       toast.success("Template saved successfully!");
 
       if (onSaved) {
-        onSaved(campaignTemplate.campaign_template_id!);
+        onSaved(emailTemplate.campaign_template_id);
       }
 
       setTemplateTitle("");

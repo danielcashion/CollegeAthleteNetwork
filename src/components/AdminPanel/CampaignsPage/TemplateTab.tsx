@@ -6,13 +6,13 @@ import { useSession } from "next-auth/react";
 import SaveTemplateModal from "./SaveTemplateModal";
 import ImportTemplateModal from "./ImportTemplateModal";
 import PreviewModal from "./PreviewModal";
-import EditorSwitchWarningModal from "./EditorSwitchWarningModal";
+import EditorSwitchWarningModal from "./EditorSwitchWarning";
 import StyledTooltip from "@/components/common/StyledTooltip";
 import { Copy } from "lucide-react";
 import toast from "react-hot-toast";
 import { CUSTOM_FIELDS } from "@/utils/CampaignUtils";
-import { useUniversitiesStore } from "@/store/universitiesStore";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
+import { getAllUniversities } from "@/services/universityApi";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
@@ -73,9 +73,7 @@ export default function TemplateTab({
 }: Props) {
   const { data: session } = useSession();
 
-  const { universityMetaData } = useUniversitiesStore();
-  console.log("University Meta Data:", universityMetaData);
-
+  const [universityMetaData, setUniversityMetaData] = useState<any>(null);
   const quillRef = useRef<any>(null);
   const monacoEditorRef = useRef<any>(null);
 
@@ -88,6 +86,32 @@ export default function TemplateTab({
   >(null);
   const [isEditingCampaignName, setIsEditingCampaignName] = useState(false);
   const [tempCampaignName, setTempCampaignName] = useState("");
+
+  // Fetch universities data on component mount
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const universities = await getAllUniversities();
+        console.log("Fetched universities:", universities);
+
+        // Find the university that matches the session's university_affiliation
+        const universityName =
+          (session as any)?.user?.university_affiliation || "Yale";
+        const matchingUniversity = universities?.find(
+          (uni: any) => uni.university_name === universityName
+        );
+
+        if (matchingUniversity) {
+          setUniversityMetaData(matchingUniversity);
+          console.log("University Meta Data:", matchingUniversity);
+        }
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
 
   // Wait for component to mount and try to get quill instance
   useEffect(() => {

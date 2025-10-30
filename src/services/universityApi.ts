@@ -64,3 +64,15 @@ export const postSurvey = async (payload: {
     throw error;
   }
 };
+
+export const getAllUniversities = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/university`
+    );
+    return response.data[0];
+  } catch (error) {
+    console.error("Error fetching teams of university:", error);
+    throw error;
+  }
+};
