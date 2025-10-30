@@ -120,7 +120,6 @@ export default function SaveDraftCampaignModal({
         campaign_id: getVarcharEight(),
         campaign_name: campaignName.trim(),
         campaign_desc: campaignDesc.trim() || undefined,
-        university_name: "Yale",
         campaign_type: "email",
         aws_configuration_set: "CollegeAthleteNetworkEventbridge",
         campaign_filters: JSON.stringify(campaignFilters),

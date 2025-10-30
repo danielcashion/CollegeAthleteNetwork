@@ -564,15 +564,6 @@ export default function ViewCampaignModal({
                   {formatDate(campaign.updated_datetime)}
                 </p>
               </div>
-
-              <div>
-                <span className="text-md font-medium text-gray-700">
-                  Member ID:
-                </span>
-                <p className="text-md text-gray-600">
-                  {campaign.member_id || "Unknown"}
-                </p>
-              </div>
             </div>
 
             {campaign.attachments_url && (

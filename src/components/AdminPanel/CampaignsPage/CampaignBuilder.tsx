@@ -531,7 +531,7 @@ export default function CampaignBuilder({
   };
 
   return (
-    <div className="p-6">
+    <div className="">
       <header className="rounded-xl overflow-hidden mb-6 shadow-lg">
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6">
           <div className="flex items-center justify-between">
@@ -877,7 +877,6 @@ export default function CampaignBuilder({
                 createdCampaign?.campaign_desc ??
                 initialCampaignDesc ??
                 undefined,
-              university_name: "Yale",
               campaign_type: commType === "event" ? "event" : "email",
               aws_configuration_set:
                 process.env.AWS_SES_CONFIGURATION_SET || "",

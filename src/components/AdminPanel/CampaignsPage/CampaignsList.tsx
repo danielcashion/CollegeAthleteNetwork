@@ -297,8 +297,6 @@ export default function CampaignsList({
         campaign_id: getVarcharEight(),
         campaign_name: newCampaignName.trim(),
         campaign_desc: newCampaignDesc.trim(),
-        university_name: "",
-        member_id: "",
         campaign_type: "email", // Default type
         aws_configuration_set: "CollegeAthleteNetworkEventbridge",
         campaign_status: "draft",
