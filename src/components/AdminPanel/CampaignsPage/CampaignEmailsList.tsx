@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import {
@@ -102,7 +102,7 @@ export default function CampaignEmailsList({
   };
 
   // Fetch emails only on initial render
-  const fetchInitialEmails = async () => {
+  const fetchInitialEmails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -125,6 +125,8 @@ export default function CampaignEmailsList({
       const max_roster_year = apiFilterCriteria.selectedYears || undefined;
       const sports = apiFilterCriteria.sports || undefined;
 
+      // TODO: Get university name from campaign or make it configurable
+      // For now using Yale as default but this should be dynamic
       const response = await getEmailListByUniversityAndFilters({
         university_name: "Yale",
         gender_id,
@@ -132,20 +134,41 @@ export default function CampaignEmailsList({
         sports,
       });
 
+      console.log("API Response:", response); // Debug: Log the actual API response
+
       // The API returns [data, metadata], so we take the first element
       if (Array.isArray(response) && response.length > 0) {
+        console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
+        console.log("All field names in first row:", Object.keys(response[0][0] || {})); // Debug: Log all available fields
+        console.log("Total number of fields:", Object.keys(response[0][0] || {}).length); // Debug: Count fields
+        
         // Map and add stable ids for selection handling
-        const mapped = response[0].map((e: any, idx: number) => ({
-          id: `${e.email_address ?? "row"}_${idx}`,
-          athlete_name: e.athlete_name,
-          max_roster_year: e.max_roster_year,
-          sport: e.sport,
-          gender_id: e.gender_id,
-          email_address: e.email_address,
-        }));
+        const mapped = response[0].map((e: any, idx: number) => {
+          // Log all fields for first few rows to understand the data structure
+          if (idx < 3) {
+            console.log(`Row ${idx} fields:`, Object.keys(e));
+            console.log(`Row ${idx} data:`, e);
+          }
+          
+          return {
+            id: `${e.email_address || e.email || `row_${idx}`}_${idx}`,
+            // Map API fields to expected interface fields - try multiple possible field names
+            athlete_name: e.athlete_name || e.name || e.full_name || e.first_name + " " + e.last_name || "Unknown",
+            max_roster_year: e.max_roster_year || e.graduation_year || e.year || e.roster_year || e.grad_year || 0,
+            sport: e.sport || e.sport_name || e.team_sport || "Unknown",
+            gender_id: e.gender_id || e.gender || (e.gender_name === "M" ? 1 : e.gender_name === "W" ? 2 : 1),
+            email_address: e.email_address || e.email || e.email_addr || "No email",
+          };
+        });
+        
+        console.log("Mapped data sample:", mapped.slice(0, 3)); // Debug: Log first 3 mapped rows
+        console.log("Total mapped records:", mapped.length);
+        
         // Set emails as returned; sorting for the UI is handled by `sortedEmails`
         setEmails(mapped);
       } else {
+        console.log("No data returned from API or unexpected response format");
+        console.log("Response structure:", typeof response, Array.isArray(response), response?.length);
         setEmails([]);
       }
     } catch (err) {
@@ -154,7 +177,7 @@ export default function CampaignEmailsList({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiFilterCriteria]); // Add apiFilterCriteria as dependency
 
   // Restore persisted sort state for this campaign (if any) - only runs once per campaign
   useEffect(() => {
@@ -166,7 +189,9 @@ export default function CampaignEmailsList({
         if (parsed?.sortBy) setSortBy(parsed.sortBy);
         if (parsed?.sortDirection) setSortDirection(parsed.sortDirection);
       }
-    } catch (err) {}
+    } catch {
+      // ignore localStorage read errors
+    }
   }, [campaign.campaign_id]);
 
   // Initialize excluded emails from campaign filters - updates when campaign filters change
@@ -188,10 +213,10 @@ export default function CampaignEmailsList({
 
   // Fetch emails only when API-relevant criteria change (excludes excludedEmails)
   useEffect(() => {
-    if (apiFilterCriteria && "Yale") {
+    if (apiFilterCriteria) {
       fetchInitialEmails();
     }
-  }, [apiFilterCriteria, "Yale"]);
+  }, [apiFilterCriteria, fetchInitialEmails]);
 
   // Persist sort state when it changes
   useEffect(() => {
@@ -199,7 +224,7 @@ export default function CampaignEmailsList({
       const key = `campaign_emails_sort_${campaign.campaign_id}`;
       const payload = JSON.stringify({ sortBy, sortDirection });
       localStorage.setItem(key, payload);
-    } catch (err) {
+    } catch {
       // ignore localStorage write errors
     }
   }, [campaign.campaign_id, sortBy, sortDirection]);

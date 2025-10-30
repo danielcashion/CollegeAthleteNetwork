@@ -110,7 +110,12 @@ export default function EmailTemplatesMain() {
                     {template.template_title}
                   </td>
                   <td className="px-6 py-4 text-md text-gray-500 max-w-xs truncate">
-                    {template.template_description}
+                    <span
+                      title={template.template_description}
+                      className="cursor-help"
+                    >
+                      {template.template_description}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-md text-gray-500">
                     {template.template_creator}
