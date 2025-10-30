@@ -15,7 +15,10 @@ import {
   createInternalEmailTemplate,
 } from "@/services/InternalMemberApis";
 import { updateInternalCampaign } from "@/services/InternalMemberApis";
-import { useUniversitiesStore } from "@/store/universitiesStore";
+import {
+  getUniversityMetaByUniversityName,
+  getTeamsByUniversityName,
+} from "@/services/universityApi";
 import SaveDraftCampaignModal from "./SaveDraftCampaignModal";
 import ConfirmSaveDraftModal from "./ConfirmSaveDraftModal";
 import { CampaignData } from "@/types/Campaign";
@@ -53,7 +56,8 @@ export default function CampaignBuilder({
 }: ECommsCampaignBuilderProps) {
   // console.log("ECommsCampaignBuilder session:", session);
 
-  const { sportTeamList, universityMetaData } = useUniversitiesStore();
+  const [sportTeamList, setSportTeamList] = useState<any[]>([]);
+  const [universityMetaData, setUniversityMetaData] = useState<any>(null);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -85,6 +89,34 @@ export default function CampaignBuilder({
     "default"
   );
   const [includeUniversityLogo, setIncludeUniversityLogo] = useState(true);
+
+  // Fetch university metadata
+  useEffect(() => {
+    const fetchUniversityData = async () => {
+      try {
+        const metaData = await getUniversityMetaByUniversityName("Yale");
+        setUniversityMetaData(metaData);
+      } catch (error) {
+        console.error("Error fetching university metadata:", error);
+      }
+    };
+
+    fetchUniversityData();
+  }, []);
+
+  // Fetch sport teams
+  useEffect(() => {
+    const fetchSportTeams = async () => {
+      try {
+        const teams = await getTeamsByUniversityName("Yale");
+        setSportTeamList(teams);
+      } catch (error) {
+        console.error("Error fetching sport teams:", error);
+      }
+    };
+
+    fetchSportTeams();
+  }, []);
 
   useEffect(() => {
     const fetchTotalCounts = async () => {
