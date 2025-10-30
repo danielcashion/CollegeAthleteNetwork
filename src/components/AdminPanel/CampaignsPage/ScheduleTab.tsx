@@ -38,7 +38,6 @@ type Props = {
   templateId?: string | null; // campaign template ID for S3 key
   // Campaign and session data for SQS integration
   campaign?: CampaignData | null;
-  session?: any;
   // Filter criteria for fetching recipients
   campaignFilters?: {
     gender: string | null;
@@ -61,7 +60,6 @@ export default function ScheduleTab({
   emailBody,
   templateId,
   campaign,
-  session,
   campaignFilters,
   universityMetaData = null,
   includeUniversityLogo = false,
@@ -136,8 +134,8 @@ export default function ScheduleTab({
   }, [sendOption]);
 
   const handleSend = async () => {
-    if (!campaign || !session || !campaignFilters) {
-      toast.error("Missing campaign, session, or filter data");
+    if (!campaign || !campaignFilters) {
+      toast.error("Missing campaign or filter data");
       return;
     }
 
@@ -257,16 +255,14 @@ export default function ScheduleTab({
       const sports = campaignFilters.sports || undefined;
 
       console.log("Fetching recipients with filters:", {
-        university_name:
-          session.user?.university_affiliation || campaign.university_name,
+        university_name: "Yale",
         gender_id,
         max_roster_year,
         sports,
       });
 
       const emailListResponse = await getEmailListByUniversityAndFilters({
-        university_name:
-          session.user?.university_affiliation || campaign.university_name,
+        university_name: "Yale",
         gender_id,
         max_roster_year,
         sports,

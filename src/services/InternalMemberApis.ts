@@ -233,3 +233,43 @@ export const getEmailListByUniversityAndFilters = async ({
     throw error;
   }
 };
+
+export const getCampaignEventSummaryByCampaignId = async (
+  campaign_id: string
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaign_metrics?task=campaign_event_summary&campaign_id=${campaign_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching campaign summary by ID:", error);
+    throw error;
+  }
+};
+
+export const getCampaignLineChartByCampaignId = async (campaign_id: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaign_metrics?task=campaign_line_chart&campaign_id=${campaign_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching campaign line chart by ID:", error);
+    throw error;
+  }
+};
+
+export const getCampaignTimeSeriesByCampaignId = async (
+  campaign_id: string
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaign_metrics?task=campaign_timeseries&campaign_id=${campaign_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching campaign time series by ID:", error);
+    throw error;
+  }
+};
