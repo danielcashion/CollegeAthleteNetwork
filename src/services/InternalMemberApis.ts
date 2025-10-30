@@ -88,11 +88,12 @@ export const createInternalEmailTemplate = async (
 };
 
 export const updateInternalEmailTemplate = async (
+  templateId: string,
   templateData: InternalEmailTemplate
 ) => {
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates?campaign_template_id=${templateId}`,
       templateData
     );
     return response.data;
@@ -270,6 +271,22 @@ export const getCampaignTimeSeriesByCampaignId = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching campaign time series by ID:", error);
+    throw error;
+  }
+};
+
+export const getTotalCountsByUniversity = async ({
+  university_name,
+}: {
+  university_name: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?task=total_counts&university_name=${university_name}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total counts:", error);
     throw error;
   }
 };

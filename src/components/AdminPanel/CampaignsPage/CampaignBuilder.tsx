@@ -10,10 +10,10 @@ import AnalyticsTab from "./AnalyticsTab";
 import { CircularProgress } from "@mui/material";
 import {
   getTotalCountsByUniversity,
-  createCampaignTemplate,
-  getCampaignTemplateById,
-  updateCampaignTemplate,
-} from "@/services/EComServices";
+  getInternalEmailTemplatesById,
+  updateInternalEmailTemplate,
+  createInternalEmailTemplate,
+} from "@/services/InternalMemberApis";
 import { updateInternalCampaign } from "@/services/InternalMemberApis";
 import { useUniversitiesStore } from "@/store/universitiesStore";
 import SaveDraftCampaignModal from "./SaveDraftCampaignModal";
@@ -90,7 +90,7 @@ export default function CampaignBuilder({
     const fetchTotalCounts = async () => {
       try {
         const data = await getTotalCountsByUniversity({
-          university_name: session?.user?.university_affiliation,
+          university_name: "Yale",
         });
 
         // console.log("Fetched total counts:", data);
@@ -101,7 +101,7 @@ export default function CampaignBuilder({
     };
 
     fetchTotalCounts();
-  }, [session?.user?.university]);
+  }, []);
 
   // Initialize form fields when editing a campaign
   useEffect(() => {
@@ -146,7 +146,7 @@ export default function CampaignBuilder({
       if (editingCampaign.campaign_template_id) {
         const fetchTemplateData = async () => {
           try {
-            const response = await getCampaignTemplateById(
+            const response = await getInternalEmailTemplatesById(
               editingCampaign.campaign_template_id!
             );
             if (response && response.length > 0) {
@@ -283,8 +283,7 @@ export default function CampaignBuilder({
       const templateData = {
         campaign_template_id: currentTemplateId,
         campaign_type: "email",
-        university_name: session?.user?.university_affiliation || "Yale",
-        member_id: session?.user?.member_id || null,
+        university_name: "Yale",
         campaign_title: `Template for ${
           createdCampaign?.campaign_name || initialCampaignName || "Campaign"
         }`,
@@ -295,7 +294,7 @@ export default function CampaignBuilder({
         email_subject: cleanEmailField(subject),
         is_systemwide_YN: 0,
         is_active_YN: 1,
-        created_by: session?.user?.member_id || "1",
+        created_by: "1",
         editor_type: editorType,
       };
 
@@ -303,13 +302,13 @@ export default function CampaignBuilder({
       let response;
       if (templateId) {
         // Template exists, update it
-        response = await updateCampaignTemplate(
+        response = await updateInternalEmailTemplate(
           currentTemplateId,
           templateData
         );
       } else {
         // Create new template
-        response = await createCampaignTemplate(templateData);
+        response = await createInternalEmailTemplate(templateData);
       }
 
       if (response) {
@@ -330,7 +329,6 @@ export default function CampaignBuilder({
               include_logo_YN: includeUniversityLogo ? 1 : 0,
               university_colors_YN: colorScheme === "university" ? 1 : 0,
               updated_datetime: new Date().toISOString(),
-              updated_by: session?.user?.member_id || "1",
             };
 
             await updateInternalCampaign(
@@ -385,8 +383,7 @@ export default function CampaignBuilder({
       const templateData = {
         campaign_template_id: currentTemplateId,
         campaign_type: "email",
-        university_name: session?.user?.university_affiliation || "Yale",
-        member_id: session?.user?.member_id || null,
+        university_name: "Yale",
         campaign_title: `Template for ${
           createdCampaign?.campaign_name || initialCampaignName || "Campaign"
         }`,
@@ -397,22 +394,23 @@ export default function CampaignBuilder({
         email_subject: cleanEmailField(subject),
         is_systemwide_YN: 0,
         is_active_YN: 1,
-        created_by: session?.user?.member_id || "1",
         editor_type: editorType,
       };
 
       // Update existing template or create new one (in background)
       if (templateId) {
-        updateCampaignTemplate(templateId, templateData).catch((error) => {
-          console.error("Background template update failed:", error);
-        });
+        updateInternalEmailTemplate(templateId, templateData).catch(
+          (error: any) => {
+            console.error("Background template update failed:", error);
+          }
+        );
       } else {
         if (templateData.email_body) {
-          createCampaignTemplate(templateData)
+          createInternalEmailTemplate(templateData)
             .then(() => {
               setTemplateId(currentTemplateId);
             })
-            .catch((error) => {
+            .catch((error: any) => {
               console.error("Background template creation failed:", error);
             });
         }
@@ -438,7 +436,6 @@ export default function CampaignBuilder({
           include_logo_YN: includeUniversityLogo ? 1 : 0,
           aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
           updated_datetime: new Date().toISOString(),
-          updated_by: session?.user?.member_id || "1",
         };
         updateInternalCampaign(
           campaignToUpdate.campaign_id,
@@ -483,7 +480,6 @@ export default function CampaignBuilder({
         campaign_name: newCampaignName,
         aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
         updated_datetime: new Date().toISOString(),
-        updated_by: session?.user?.member_id || "1",
       };
 
       await updateInternalCampaign(
@@ -620,7 +616,6 @@ export default function CampaignBuilder({
             <AnimatedPanel index={activeIndex}>
               <AudienceTab
                 onNext={() => handleTabSwitch(1)}
-                session={session}
                 gender={gender}
                 setGenderAction={setGender}
                 sports={sports}
@@ -672,7 +667,6 @@ export default function CampaignBuilder({
                 onBack={() => handleTabSwitch(1)}
                 audience_size={filteredTotal.athletes}
                 audience_emails={filteredTotal.emails}
-                session={session}
                 campaign={
                   editingCampaign ||
                   createdCampaign ||
@@ -706,7 +700,6 @@ export default function CampaignBuilder({
                 emailBody={body}
                 templateId={templateId}
                 campaign={editingCampaign || createdCampaign}
-                session={session}
                 campaignFilters={{
                   gender,
                   sports,
@@ -740,7 +733,6 @@ export default function CampaignBuilder({
       <SaveDraftCampaignModal
         isOpen={saveDraftModalOpen}
         onClose={() => setSaveDraftModalOpen(false)}
-        session={session}
         campaignFilters={{
           gender,
           sports,
@@ -800,9 +792,7 @@ export default function CampaignBuilder({
               const templateData = {
                 campaign_template_id: finalTemplateId,
                 campaign_type: "email",
-                university_name:
-                  session?.user?.university_affiliation || "Yale",
-                member_id: session?.user?.member_id || null,
+                university_name: "Yale",
                 campaign_title: `Template for ${
                   editingCampaign?.campaign_name ??
                   createdCampaign?.campaign_name ??
@@ -816,7 +806,6 @@ export default function CampaignBuilder({
                 email_subject: subject,
                 is_systemwide_YN: 0,
                 is_active_YN: 1,
-                created_by: session?.user?.member_id || "1",
                 editor_type: editorType,
               };
 
@@ -824,13 +813,15 @@ export default function CampaignBuilder({
               let templateResponse;
               if (templateId) {
                 // Template exists, update it
-                templateResponse = await updateCampaignTemplate(
+                templateResponse = await updateInternalEmailTemplate(
                   finalTemplateId,
                   templateData
                 );
               } else {
                 // Create new template
-                templateResponse = await createCampaignTemplate(templateData);
+                templateResponse = await createInternalEmailTemplate(
+                  templateData
+                );
               }
 
               if (templateResponse) {
@@ -854,8 +845,7 @@ export default function CampaignBuilder({
                 createdCampaign?.campaign_desc ??
                 initialCampaignDesc ??
                 undefined,
-              university_name: session?.user?.university_affiliation,
-              member_id: session?.user?.member_id,
+              university_name: "Yale",
               campaign_type: commType === "event" ? "event" : "email",
               aws_configuration_set:
                 process.env.AWS_SES_CONFIGURATION_SET || "",

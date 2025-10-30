@@ -10,7 +10,7 @@ export interface InternalMember {
 export interface InternalEmailTemplate {
   campaign_template_id: string;
   campaign_type?: string | null;
-  template_title: string;
+  template_title?: string;
   template_description?: string;
   template_creator?: string;
   template_task?: string;

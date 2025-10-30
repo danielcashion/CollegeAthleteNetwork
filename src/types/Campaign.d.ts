@@ -2,11 +2,11 @@ export interface CampaignData {
   campaign_id: string;
   campaign_name: string;
   campaign_desc?: string;
-  university_name: string;
-  member_id: string;
-  campaign_type: string;
+  university_name?: string;
+  member_id?: string;
+  campaign_type?: string;
   event_id?: string;
-  aws_configuration_set: string;
+  aws_configuration_set?: string;
   campaign_filters?: string;
   is_scheduled_YN?: number;
   scheduled_datetime?: string;
