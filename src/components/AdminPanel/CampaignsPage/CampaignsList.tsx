@@ -70,9 +70,14 @@ const ActionsDropdown = ({
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const dropdownHeight = 280; // Approximate height of dropdown
+      const buffer = 20; // Add buffer for better spacing
       
-      // If there's not enough space below, position above
-      if (buttonRect.bottom + dropdownHeight > viewportHeight) {
+      // Check if there's enough space below the button
+      const spaceBelow = viewportHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+      
+      // Position above if there's not enough space below, but enough space above
+      if (spaceBelow < dropdownHeight + buffer && spaceAbove >= dropdownHeight + buffer) {
         setDropdownPosition('top');
       } else {
         setDropdownPosition('bottom');
@@ -116,11 +121,15 @@ const ActionsDropdown = ({
 
       {isOpen && (
         <div 
-          className={`absolute right-0 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1 ${
+          className={`absolute right-0 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-[60] py-1 ${
             dropdownPosition === 'top' 
-              ? 'bottom-full mb-1' 
-              : 'top-full mt-1'
+              ? 'bottom-full mb-2' 
+              : 'top-full mt-2'
           }`}
+          style={{
+            maxHeight: '280px',
+            overflowY: 'auto'
+          }}
         >
           <button
             onClick={handleEdit}
@@ -625,10 +634,11 @@ export default function CampaignsList({
                 )}
               </div>
             ) : (
-              <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
-                <table className="w-full">
-                  <thead className="sticky top-0 z-10">
-                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+              <div className="relative">
+                <div className="overflow-x-auto max-h-[75vh] overflow-y-auto pb-20">
+                  <table className="w-full">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                         <button
                           className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
@@ -835,6 +845,7 @@ export default function CampaignsList({
                     ))}
                   </tbody>
                 </table>
+              </div>
               </div>
             )}
           </div>
