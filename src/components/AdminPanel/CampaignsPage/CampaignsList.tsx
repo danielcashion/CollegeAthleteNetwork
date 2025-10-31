@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Search, Mail } from "lucide-react";
+import { Search, Mail, RefreshCw } from "lucide-react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { Plus, Loader } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -580,6 +580,23 @@ export default function CampaignsList({
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Refresh Button Section */}
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">{sortedCampaigns.length}</span> campaign{sortedCampaigns.length !== 1 ? 's' : ''} found
+                </div>
+                <button
+                  onClick={fetchCampaigns}
+                  disabled={loading}
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+
             {sortedCampaigns.length === 0 ? (
               <div className="text-center py-20 px-8">
                 <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
