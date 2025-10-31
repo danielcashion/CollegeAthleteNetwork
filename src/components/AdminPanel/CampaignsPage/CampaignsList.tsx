@@ -529,9 +529,15 @@ export default function CampaignsList({
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">College Athlete Network Engagement Campaigns</h1>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  The College Athlete Network
+                </h1>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  Client Engagement Campaigns
+                </h1>
                 <p className="text-blue-100 mt-1">
-                  Manage our email & SMS communications to effectively engage our audience
+                  Manage our email & SMS communications to effectively engage
+                  our audience
                 </p>
               </div>
             </div>
@@ -570,15 +576,21 @@ export default function CampaignsList({
             <div className="w-16 h-16 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mb-4 shadow-xl">
               <Loader className="w-8 h-8 text-white animate-spin" />
             </div>
-            <p className="text-gray-600 text-lg font-medium">Loading campaigns...</p>
-            <p className="text-gray-400 text-sm mt-1">Please wait while we fetch your campaigns</p>
+            <p className="text-gray-600 text-lg font-medium">
+              Loading campaigns...
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              Please wait while we fetch your campaigns
+            </p>
           </div>
         ) : error ? (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-12 text-center">
             <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <div className="w-8 h-8 bg-red-500 rounded-full"></div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Campaigns</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Error Loading Campaigns
+            </h3>
             <p className="text-red-500 mb-4">{error}</p>
             <button
               onClick={fetchCampaigns}
@@ -593,14 +605,17 @@ export default function CampaignsList({
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
               <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">{sortedCampaigns.length}</span> campaign{sortedCampaigns.length !== 1 ? 's' : ''} found
+                  <span className="font-medium">{sortedCampaigns.length}</span>{" "}
+                  campaign{sortedCampaigns.length !== 1 ? "s" : ""} found
                 </div>
                 <button
                   onClick={fetchCampaigns}
                   disabled={loading}
                   className="flex items-center space-x-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                  />
                   <span>Refresh</span>
                 </button>
               </div>
@@ -611,12 +626,13 @@ export default function CampaignsList({
                 <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
                   <Mail className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">No Campaigns Found</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  No Campaigns Found
+                </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  {searchTerm 
+                  {searchTerm
                     ? `No campaigns match your search for "${searchTerm}". Try adjusting your search terms.`
-                    : "Get started by creating your first email campaign to engage your audience effectively."
-                  }
+                    : "Get started by creating your first email campaign to engage your audience effectively."}
                 </p>
                 {!searchTerm && (
                   <button
@@ -639,213 +655,222 @@ export default function CampaignsList({
                   <table className="w-full">
                     <thead className="sticky top-0 z-10">
                       <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("campaign_name")}
-                        >
-                          <span>Campaign</span>
-                          {getSortIcon("campaign_name")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("campaign_type")}
-                        >
-                          <span>Type</span>
-                          {getSortIcon("campaign_type")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("campaign_status")}
-                        >
-                          <span>Status</span>
-                          {getSortIcon("campaign_status")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("audience_size")}
-                        >
-                          <span>Audience</span>
-                          {getSortIcon("audience_size")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("audience_emails")}
-                        >
-                          <span>Emails</span>
-                          {getSortIcon("audience_emails")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        Sent/Scheduled
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("created_datetime")}
-                        >
-                          <span>Created</span>
-                          {getSortIcon("created_datetime")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        <button
-                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                          onClick={() => handleSort("updated_datetime")}
-                        >
-                          <span>Updated</span>
-                          {getSortIcon("updated_datetime")}
-                        </button>
-                      </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                        </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {sortedCampaigns.map((campaign, index) => (
-                      <tr
-                        key={campaign.campaign_id || index}
-                        className="hover:bg-gray-50 transition-colors duration-150"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
-                            <StyledTooltip
-                              title={`Click to edit ${campaign.campaign_name}`}
-                              arrow
-                              placement="top"
-                            >
-                              <button
-                                onClick={() => editCampaignAction(campaign)}
-                                className="text-left font-semibold text-gray-900 hover:text-[#1C315F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20 rounded"
-                              >
-                                {campaign.campaign_name}
-                              </button>
-                            </StyledTooltip>
-                            {campaign.campaign_desc && (
-                              <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                                {campaign.campaign_desc}
-                              </p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
-                            {campaign.campaign_type || "Email"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                              campaign.campaign_status === "active"
-                                ? "bg-green-100 text-green-800"
-                                : campaign.campaign_status === "sent"
-                                ? "bg-blue-100 text-blue-800"
-                                : campaign.campaign_status === "scheduled"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : campaign.campaign_status === "processing"
-                                ? "bg-orange-100 text-orange-800"
-                                : campaign.campaign_status === "failed"
-                                ? "bg-red-100 text-red-800"
-                                : campaign.campaign_status === "draft"
-                                ? "bg-gray-200 text-gray-800"
-                                : "bg-gray-200 text-gray-800"
-                            }`}
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("campaign_name")}
                           >
-                            {campaign.campaign_status || "Draft"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          <div className="flex items-center">
-                            <div className="w-2 h-2 bg-[#1C315F] rounded-full mr-2"></div>
-                            {campaign.audience_size
-                              ? Number(campaign.audience_size).toLocaleString()
-                              : "0"}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          <div className="flex items-center">
-                            <Mail className="w-4 h-4 text-gray-400 mr-2" />
-                            {campaign.audience_emails
-                              ? Number(campaign.audience_emails).toLocaleString()
-                              : "0"}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {(() => {
-                            const scheduledDate = campaign.scheduled_datetime
-                              ? new Date(campaign.scheduled_datetime)
-                              : null;
-                            const sentDate = campaign.send_datetime
-                              ? new Date(campaign.send_datetime)
-                              : null;
-
-                            const displayDate =
-                              scheduledDate && sentDate
-                                ? scheduledDate > sentDate
-                                  ? scheduledDate
-                                  : sentDate
-                                : scheduledDate || sentDate;
-
-                            if (!displayDate) return <span className="text-gray-400">—</span>;
-
-                            const month = (displayDate.getMonth() + 1)
-                              .toString()
-                              .padStart(2, "0");
-                            const day = displayDate
-                              .getDate()
-                              .toString()
-                              .padStart(2, "0");
-                            const year = displayDate.getFullYear();
-                            const hours24 = displayDate.getHours();
-                            const hours12 = hours24 % 12 || 12;
-                            const minutes = displayDate
-                              .getMinutes()
-                              .toString()
-                              .padStart(2, "0");
-                            const ampm = hours24 >= 12 ? "PM" : "AM";
-
-                            return (
-                              <div>
-                                <div className="font-medium">{`${month}/${day}/${year}`}</div>
-                                <div className="text-xs text-gray-500">{`${hours12}:${minutes} ${ampm}`}</div>
-                              </div>
-                            );
-                          })()}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {campaign.created_datetime
-                            ? new Date(campaign.created_datetime).toLocaleDateString()
-                            : "—"}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {campaign.updated_datetime
-                            ? new Date(campaign.updated_datetime).toLocaleDateString()
-                            : "—"}
-                        </td>
-                        <td className="px-6 py-4">
-                          <ActionsDropdown
-                            campaign={campaign}
-                            onDeleteClick={handleDeleteClick}
-                            onViewClick={handleViewClick}
-                            onEmailListClick={handleEmailListClick}
-                            onEditClick={editCampaignAction}
-                            onDuplicateClick={handleDuplicateClick}
-                          />
-                        </td>
+                            <span>Campaign</span>
+                            {getSortIcon("campaign_name")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("campaign_type")}
+                          >
+                            <span>Type</span>
+                            {getSortIcon("campaign_type")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("campaign_status")}
+                          >
+                            <span>Status</span>
+                            {getSortIcon("campaign_status")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("audience_size")}
+                          >
+                            <span>Audience</span>
+                            {getSortIcon("audience_size")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("audience_emails")}
+                          >
+                            <span>Emails</span>
+                            {getSortIcon("audience_emails")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          Sent/Scheduled
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("created_datetime")}
+                          >
+                            <span>Created</span>
+                            {getSortIcon("created_datetime")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("updated_datetime")}
+                          >
+                            <span>Updated</span>
+                            {getSortIcon("updated_datetime")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {sortedCampaigns.map((campaign, index) => (
+                        <tr
+                          key={campaign.campaign_id || index}
+                          className="hover:bg-gray-50 transition-colors duration-150"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <StyledTooltip
+                                title={`Click to edit ${campaign.campaign_name}`}
+                                arrow
+                                placement="top"
+                              >
+                                <button
+                                  onClick={() => editCampaignAction(campaign)}
+                                  className="text-left font-semibold text-gray-900 hover:text-[#1C315F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20 rounded"
+                                >
+                                  {campaign.campaign_name}
+                                </button>
+                              </StyledTooltip>
+                              {campaign.campaign_desc && (
+                                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                                  {campaign.campaign_desc}
+                                </p>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                              {campaign.campaign_type || "Email"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                campaign.campaign_status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : campaign.campaign_status === "sent"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : campaign.campaign_status === "scheduled"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : campaign.campaign_status === "processing"
+                                  ? "bg-orange-100 text-orange-800"
+                                  : campaign.campaign_status === "failed"
+                                  ? "bg-red-100 text-red-800"
+                                  : campaign.campaign_status === "draft"
+                                  ? "bg-gray-200 text-gray-800"
+                                  : "bg-gray-200 text-gray-800"
+                              }`}
+                            >
+                              {campaign.campaign_status || "Draft"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            <div className="flex items-center">
+                              <div className="w-2 h-2 bg-[#1C315F] rounded-full mr-2"></div>
+                              {campaign.audience_size
+                                ? Number(
+                                    campaign.audience_size
+                                  ).toLocaleString()
+                                : "0"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            <div className="flex items-center">
+                              <Mail className="w-4 h-4 text-gray-400 mr-2" />
+                              {campaign.audience_emails
+                                ? Number(
+                                    campaign.audience_emails
+                                  ).toLocaleString()
+                                : "0"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            {(() => {
+                              const scheduledDate = campaign.scheduled_datetime
+                                ? new Date(campaign.scheduled_datetime)
+                                : null;
+                              const sentDate = campaign.send_datetime
+                                ? new Date(campaign.send_datetime)
+                                : null;
+
+                              const displayDate =
+                                scheduledDate && sentDate
+                                  ? scheduledDate > sentDate
+                                    ? scheduledDate
+                                    : sentDate
+                                  : scheduledDate || sentDate;
+
+                              if (!displayDate)
+                                return <span className="text-gray-400">—</span>;
+
+                              const month = (displayDate.getMonth() + 1)
+                                .toString()
+                                .padStart(2, "0");
+                              const day = displayDate
+                                .getDate()
+                                .toString()
+                                .padStart(2, "0");
+                              const year = displayDate.getFullYear();
+                              const hours24 = displayDate.getHours();
+                              const hours12 = hours24 % 12 || 12;
+                              const minutes = displayDate
+                                .getMinutes()
+                                .toString()
+                                .padStart(2, "0");
+                              const ampm = hours24 >= 12 ? "PM" : "AM";
+
+                              return (
+                                <div>
+                                  <div className="font-medium">{`${month}/${day}/${year}`}</div>
+                                  <div className="text-xs text-gray-500">{`${hours12}:${minutes} ${ampm}`}</div>
+                                </div>
+                              );
+                            })()}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {campaign.created_datetime
+                              ? new Date(
+                                  campaign.created_datetime
+                                ).toLocaleDateString()
+                              : "—"}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {campaign.updated_datetime
+                              ? new Date(
+                                  campaign.updated_datetime
+                                ).toLocaleDateString()
+                              : "—"}
+                          </td>
+                          <td className="px-6 py-4">
+                            <ActionsDropdown
+                              campaign={campaign}
+                              onDeleteClick={handleDeleteClick}
+                              onViewClick={handleViewClick}
+                              onEmailListClick={handleEmailListClick}
+                              onEditClick={editCampaignAction}
+                              onDuplicateClick={handleDuplicateClick}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
@@ -903,14 +928,20 @@ export default function CampaignsList({
                 <Plus className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Create New Campaign</h2>
-                <p className="text-sm text-gray-500">Get started with your campaign setup</p>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Create New Campaign
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Get started with your campaign setup
+                </p>
               </div>
             </div>
 
             {preCreateError && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <p className="text-sm text-red-600 font-medium">{preCreateError}</p>
+                <p className="text-sm text-red-600 font-medium">
+                  {preCreateError}
+                </p>
               </div>
             )}
 
@@ -995,8 +1026,18 @@ export default function CampaignsList({
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -1015,16 +1056,21 @@ export default function CampaignsList({
                 <GrDuplicate className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Duplicate Campaign</h2>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Duplicate Campaign
+                </h2>
                 <p className="text-sm text-gray-500">
-                  Create a copy of &quot;{campaignToDuplicate?.campaign_name}&quot;
+                  Create a copy of &quot;{campaignToDuplicate?.campaign_name}
+                  &quot;
                 </p>
               </div>
             </div>
 
             {duplicateError && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <p className="text-sm text-red-600 font-medium">{duplicateError}</p>
+                <p className="text-sm text-red-600 font-medium">
+                  {duplicateError}
+                </p>
               </div>
             )}
 
@@ -1093,7 +1139,9 @@ export default function CampaignsList({
                 {isDuplicating && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 )}
-                <span>{isDuplicating ? "Duplicating..." : "Duplicate Campaign"}</span>
+                <span>
+                  {isDuplicating ? "Duplicating..." : "Duplicate Campaign"}
+                </span>
               </button>
             </div>
 
@@ -1111,8 +1159,18 @@ export default function CampaignsList({
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
