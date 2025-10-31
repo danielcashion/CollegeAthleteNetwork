@@ -73,12 +73,6 @@ export default function AudienceTab({
   const noneSelected = selectedYears.length === 0;
   const someSelected = !noneSelected && !allYearsSelected;
 
-  // Debug logging
-  useEffect(() => {
-    console.log("AudienceTab - universityOptions:", universityOptions);
-    console.log("AudienceTab - selectedUniversities:", selectedUniversities);
-  }, [universityOptions, selectedUniversities]);
-
   // Fetch historical campaigns on component mount
   useEffect(() => {
     const fetchHistoricalCampaigns = async () => {

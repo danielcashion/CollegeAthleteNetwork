@@ -53,8 +53,6 @@ export default function CampaignBuilder({
   initialCampaignDesc,
   editingCampaign,
 }: ECommsCampaignBuilderProps) {
-  // console.log("ECommsCampaignBuilder session:", session);
-
   const [sportTeamList, setSportTeamList] = useState<any[]>([]);
   const [universityMetaData, setUniversityMetaData] = useState<any>(null);
   const [allUniversities, setAllUniversities] = useState<any[]>([]);
@@ -97,11 +95,9 @@ export default function CampaignBuilder({
     const fetchUniversities = async () => {
       try {
         const universities = await getAllUniversities();
-        console.log("Raw universities response:", universities);
 
         // Ensure we have an array
         if (Array.isArray(universities)) {
-          console.log("Universities is an array, length:", universities.length);
           setAllUniversities(universities);
         } else {
           console.error("Universities data is not an array:", universities);
@@ -194,8 +190,6 @@ export default function CampaignBuilder({
   // Initialize form fields when editing a campaign
   useEffect(() => {
     if (editingCampaign) {
-      // console.log("Initializing form for editing campaign:", editingCampaign);
-
       // Parse campaign filters if they exist
       if (editingCampaign.campaign_filters) {
         try {
@@ -299,10 +293,6 @@ export default function CampaignBuilder({
 
   // Calculate university options
   const universityOptions = useMemo(() => {
-    console.log(
-      "Computing universityOptions, allUniversities:",
-      allUniversities
-    );
     if (!Array.isArray(allUniversities)) {
       console.log("allUniversities is not an array");
       return [];
@@ -313,7 +303,7 @@ export default function CampaignBuilder({
         label: university.university_name,
       }))
       .sort((a: any, b: any) => a.label.localeCompare(b.label));
-    console.log("Computed university options:", options);
+
     return options;
   }, [allUniversities]);
 
