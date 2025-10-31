@@ -41,7 +41,9 @@ const ActionsDropdown = ({
   onDuplicateClick: (campaign: CampaignData) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,6 +62,22 @@ const ActionsDropdown = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [isOpen]);
+
+  // Check dropdown position when opening
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = 280; // Approximate height of dropdown
+      
+      // If there's not enough space below, position above
+      if (buttonRect.bottom + dropdownHeight > viewportHeight) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
   }, [isOpen]);
 
   const handleView = () => {
@@ -89,6 +107,7 @@ const ActionsDropdown = ({
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20"
       >
@@ -96,7 +115,13 @@ const ActionsDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1">
+        <div 
+          className={`absolute right-0 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1 ${
+            dropdownPosition === 'top' 
+              ? 'bottom-full mb-1' 
+              : 'top-full mt-1'
+          }`}
+        >
           <button
             onClick={handleEdit}
             className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
@@ -485,7 +510,7 @@ export default function CampaignsList({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-[700px] bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Enhanced Header Section */}
       <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white shadow-xl">
         <div className="px-8 py-8">

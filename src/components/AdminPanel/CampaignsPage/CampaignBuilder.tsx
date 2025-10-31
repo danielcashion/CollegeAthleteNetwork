@@ -416,9 +416,7 @@ export default function CampaignBuilder({
         campaign_template_id: currentTemplateId,
         campaign_type: "email",
         university_names: "Yale",
-        template_title: `Template for ${
-          createdCampaign?.campaign_name || initialCampaignName || "Campaign"
-        }`,
+        template_title: `${createdCampaign?.campaign_name || initialCampaignName || "Campaign"}`,
         email_body: cleanEmailField(body),
         email_from_name: senderName,
         email_from_address: senderEmail,
