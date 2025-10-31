@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import FunnelChart from "./FunnelChart";
 import PresetModal from "./PresetModal";
 import CampaignEmailsList from "./CampaignEmailsList";
@@ -25,6 +25,9 @@ type Props = {
   filteredCounts: any[];
   campaignName?: string;
   onCampaignNameUpdate?: (newName: string) => void;
+  selectedUniversities: string[];
+  setSelectedUniversitiesAction: (universities: string[]) => void;
+  universityOptions: { value: string; label: string }[];
 };
 
 export default function AudienceTab({
@@ -42,10 +45,15 @@ export default function AudienceTab({
   filteredCounts,
   campaignName,
   onCampaignNameUpdate,
+  selectedUniversities,
+  setSelectedUniversitiesAction,
+  universityOptions,
 }: Props) {
   const [openPreset, setOpenPreset] = useState(false);
   const [sportsDropdownOpen, setSportsDropdownOpen] = useState(false);
   const [yearsDropdownOpen, setYearsDropdownOpen] = useState(false);
+  const [universitiesDropdownOpen, setUniversitiesDropdownOpen] =
+    useState(false);
   const [showEmailsList, setShowEmailsList] = useState(false);
   const [isEditingCampaignName, setIsEditingCampaignName] = useState(false);
   const [tempCampaignName, setTempCampaignName] = useState("");
@@ -59,10 +67,17 @@ export default function AudienceTab({
   const selectAllRef = useRef<HTMLInputElement>(null);
   const sportsDropdownRef = useRef<HTMLDivElement>(null);
   const yearsDropdownRef = useRef<HTMLDivElement>(null);
+  const universitiesDropdownRef = useRef<HTMLDivElement>(null);
 
   const allYearsSelected = selectedYears.length === years.length;
   const noneSelected = selectedYears.length === 0;
   const someSelected = !noneSelected && !allYearsSelected;
+
+  // Debug logging
+  useEffect(() => {
+    console.log("AudienceTab - universityOptions:", universityOptions);
+    console.log("AudienceTab - selectedUniversities:", selectedUniversities);
+  }, [universityOptions, selectedUniversities]);
 
   // Fetch historical campaigns on component mount
   useEffect(() => {
@@ -109,6 +124,12 @@ export default function AudienceTab({
       ) {
         setYearsDropdownOpen(false);
       }
+      if (
+        universitiesDropdownRef.current &&
+        !universitiesDropdownRef.current.contains(event.target as Node)
+      ) {
+        setUniversitiesDropdownOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -122,6 +143,14 @@ export default function AudienceTab({
       sports.includes(sportValue)
         ? sports.filter((x) => x !== sportValue)
         : [...sports, sportValue]
+    );
+  };
+
+  const handleUniversitySelect = (universityValue: string) => {
+    setSelectedUniversitiesAction(
+      selectedUniversities.includes(universityValue)
+        ? selectedUniversities.filter((x) => x !== universityValue)
+        : [...selectedUniversities, universityValue]
     );
   };
 
@@ -149,6 +178,16 @@ export default function AudienceTab({
     }
   };
 
+  const handleSelectAllUniversities = () => {
+    if (selectedUniversities.length === universityOptions.length) {
+      setSelectedUniversitiesAction([]);
+    } else {
+      setSelectedUniversitiesAction(
+        universityOptions.map((option) => option.value)
+      );
+    }
+  };
+
   // Campaign name editing functions
   const startEditingCampaignName = () => {
     setTempCampaignName(campaignName || "");
@@ -167,6 +206,7 @@ export default function AudienceTab({
         setIsEditingCampaignName(false);
         setTempCampaignName("");
       } catch (error) {
+        console.log("Error updating campaign name:", error);
         toast.error("Failed to update campaign name");
       }
     } else {
@@ -201,6 +241,9 @@ export default function AudienceTab({
         if (filters.selectedYears && Array.isArray(filters.selectedYears)) {
           setSelectedYearsAction(filters.selectedYears);
         }
+        if (filters.universities && Array.isArray(filters.universities)) {
+          setSelectedUniversitiesAction(filters.universities);
+        }
 
         setSelectedHistoricalCampaign(campaignId);
         toast.success("Applied filters from historical campaign");
@@ -220,6 +263,7 @@ export default function AudienceTab({
       gender,
       sports,
       selectedYears,
+      universities: selectedUniversities,
     }),
   };
 
@@ -295,7 +339,7 @@ export default function AudienceTab({
               name="distributionType"
               value="historical"
               checked={distributionType === "historical"}
-              onChange={(e) => {
+              onChange={() => {
                 setDistributionType("historical");
               }}
               className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
@@ -310,7 +354,7 @@ export default function AudienceTab({
               name="distributionType"
               value="custom"
               checked={distributionType === "custom"}
-              onChange={(e) => {
+              onChange={() => {
                 setDistributionType("custom");
                 setSelectedHistoricalCampaign("");
               }}
@@ -367,6 +411,96 @@ export default function AudienceTab({
                 )}
             </div>
             <div className="w-full">
+              {/* University Selection */}
+              <div className="w-full mb-6">
+                <Tooltip
+                  title="Select one or more universities for this campaign"
+                  placement="left"
+                  arrow
+                >
+                  <label className="block text-sm text-gray-600">
+                    Universities *
+                  </label>
+                </Tooltip>
+
+                <div className="relative mt-1" ref={universitiesDropdownRef}>
+                  <button
+                    className="h-10 w-full rounded border border-gray-300 bg-white pl-4 pr-8 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 text-left flex items-center justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    onClick={() =>
+                      distributionType === "custom" &&
+                      setUniversitiesDropdownOpen(!universitiesDropdownOpen)
+                    }
+                    disabled={distributionType === "historical"}
+                  >
+                    {selectedUniversities.length > 0
+                      ? `${selectedUniversities.length} universit${
+                          selectedUniversities.length > 1 ? "ies" : "y"
+                        } selected`
+                      : "Select Universities"}
+                    <FaAngleDown
+                      className={`h-4 w-4 transition-transform ${
+                        universitiesDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {universitiesDropdownOpen &&
+                    distributionType === "custom" && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto">
+                        <div className="p-3 border-b border-gray-200">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={
+                                selectedUniversities.length ===
+                                universityOptions.length
+                              }
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                handleSelectAllUniversities();
+                              }}
+                              className="appearance-none bg-white shrink-0 w-5 h-5 border border-primary rounded cursor-pointer checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                            />
+                            <span className="text-sm font-medium">
+                              {selectedUniversities.length ===
+                              universityOptions.length
+                                ? "Unselect All"
+                                : "Select All"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          {universityOptions.map((option, i) => (
+                            <div
+                              key={i}
+                              className="px-2 py-1 hover:bg-gray-100 cursor-pointer flex items-center gap-2 rounded"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedUniversities.includes(
+                                  option.value
+                                )}
+                                onChange={(e) => {
+                                  e.stopPropagation();
+                                  handleUniversitySelect(option.value);
+                                }}
+                                className="appearance-none bg-white shrink-0 w-5 h-5 border border-primary rounded cursor-pointer checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                              />
+                              <span
+                                className="text-sm"
+                                onClick={() =>
+                                  handleUniversitySelect(option.value)
+                                }
+                              >
+                                {option.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              </div>
+
               <div className="w-full grid grid-cols-3 gap-4 mb-6">
                 <div className="col-span-1">
                   <Tooltip
@@ -724,7 +858,7 @@ export default function AudienceTab({
       <PresetModal
         open={openPreset}
         onClose={() => setOpenPreset(false)}
-        onSave={(name: string, shared: boolean) => {
+        onSave={() => {
           toast.success("Preset saved");
           setOpenPreset(false);
         }}

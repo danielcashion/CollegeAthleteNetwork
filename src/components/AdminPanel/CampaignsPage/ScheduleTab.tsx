@@ -44,6 +44,8 @@ type Props = {
     sports: string[];
     selectedYears: number[];
   };
+  // Selected universities
+  selectedUniversities?: string[];
   // University logo props
   universityMetaData?: University | null;
   includeUniversityLogo?: boolean;
@@ -61,6 +63,7 @@ export default function ScheduleTab({
   templateId,
   campaign,
   campaignFilters,
+  selectedUniversities = [],
   universityMetaData = null,
   includeUniversityLogo = false,
   colorScheme = "default",
@@ -254,15 +257,22 @@ export default function ScheduleTab({
       const max_roster_year = campaignFilters.selectedYears || undefined;
       const sports = campaignFilters.sports || undefined;
 
+      // Check if universities are selected
+      if (!selectedUniversities || selectedUniversities.length === 0) {
+        toast.error("No universities selected for this campaign");
+        setUploading(false);
+        return;
+      }
+
       console.log("Fetching recipients with filters:", {
-        university_name: "Yale",
+        university_name: selectedUniversities,
         gender_id,
         max_roster_year,
         sports,
       });
 
       const emailListResponse = await getEmailListByUniversityAndFilters({
-        university_name: "Yale",
+        university_name: JSON.stringify(selectedUniversities),
         gender_id,
         max_roster_year,
         sports,

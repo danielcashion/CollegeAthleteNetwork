@@ -149,8 +149,7 @@ export default function TemplateTab({
   };
 
   // Get university affiliation from session for the modal
-  const universityName =
-    (session as any)?.user?.university_affiliation || "Yale";
+  const universityName = "Yale";
 
   return (
     <>

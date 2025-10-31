@@ -109,6 +109,7 @@ export default function ReviewScheduleTab({
         gender: filters.gender,
         sports: filters.sports,
         selectedYears: filters.selectedYears,
+        universities: filters.universities || [],
       };
     } catch (err) {
       console.error("Error parsing campaign filters:", err);
@@ -156,12 +157,12 @@ export default function ReviewScheduleTab({
         gender_id: firstEmail.gender_id,
         email_address: firstEmail.email_address,
         correlation_id: "", // Not needed for replacement
-        university_name: campaign?.university_name || "Yale",
+        university_name: "Yale",
       } as EmailRecipientData;
     }
     // Fallback to sample data if no emails loaded yet
     return getSampleEmailData();
-  }, [emails, campaign?.university_name]);
+  }, [emails]);
 
   // Template data with variables replaced
   const replacedTemplateData = useMemo(() => {
@@ -221,6 +222,17 @@ export default function ReviewScheduleTab({
       return;
     }
 
+    // Check if universities are selected
+    if (
+      !apiFilterCriteria.universities ||
+      apiFilterCriteria.universities.length === 0
+    ) {
+      console.log("No universities selected");
+      setEmails([]);
+      setEmailsLoading(false);
+      return;
+    }
+
     try {
       setEmailsLoading(true);
       setEmailsError(null);
@@ -237,16 +249,9 @@ export default function ReviewScheduleTab({
       const max_roster_year = apiFilterCriteria.selectedYears || undefined;
       const sports = apiFilterCriteria.sports || undefined;
 
-      //  console.log("Making API call with:", {
-      //   university_name:
-      //     session.user?.university_affiliation || campaign.university_name,
-      //   gender_id,
-      //   max_roster_year,
-      //   sports,
-      // });
-
+      // Fetch emails for all selected universities using the array format
       const response = await getEmailListByUniversityAndFilters({
-        university_name: "Yale",
+        university_name: JSON.stringify(apiFilterCriteria.universities),
         gender_id,
         max_roster_year,
         sports,

@@ -57,6 +57,7 @@ export default function CampaignEmailsList({
         gender: filters.gender,
         sports: filters.sports,
         selectedYears: filters.selectedYears,
+        universities: filters.universities || [],
       };
     } catch (err) {
       console.error("Error parsing campaign filters:", err);
@@ -113,6 +114,15 @@ export default function CampaignEmailsList({
         return;
       }
 
+      // Check if universities are selected
+      if (
+        !apiFilterCriteria.universities ||
+        apiFilterCriteria.universities.length === 0
+      ) {
+        setError("No universities selected for this campaign.");
+        return;
+      }
+
       // Map gender string to gender_id array
       const genderMap: { [key: string]: number } = {
         M: 1,
@@ -125,10 +135,9 @@ export default function CampaignEmailsList({
       const max_roster_year = apiFilterCriteria.selectedYears || undefined;
       const sports = apiFilterCriteria.sports || undefined;
 
-      // TODO: Get university name from campaign or make it configurable
-      // For now using Yale as default but this should be dynamic
+      // Fetch emails for all selected universities
       const response = await getEmailListByUniversityAndFilters({
-        university_name: "Yale",
+        university_name: JSON.stringify(apiFilterCriteria.universities),
         gender_id,
         max_roster_year,
         sports,
@@ -139,9 +148,15 @@ export default function CampaignEmailsList({
       // The API returns [data, metadata], so we take the first element
       if (Array.isArray(response) && response.length > 0) {
         console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
-        console.log("All field names in first row:", Object.keys(response[0][0] || {})); // Debug: Log all available fields
-        console.log("Total number of fields:", Object.keys(response[0][0] || {}).length); // Debug: Count fields
-        
+        console.log(
+          "All field names in first row:",
+          Object.keys(response[0][0] || {})
+        ); // Debug: Log all available fields
+        console.log(
+          "Total number of fields:",
+          Object.keys(response[0][0] || {}).length
+        ); // Debug: Count fields
+
         // Map and add stable ids for selection handling
         const mapped = response[0].map((e: any, idx: number) => {
           // Log all fields for first few rows to understand the data structure
@@ -149,26 +164,46 @@ export default function CampaignEmailsList({
             console.log(`Row ${idx} fields:`, Object.keys(e));
             console.log(`Row ${idx} data:`, e);
           }
-          
+
           return {
             id: `${e.email_address || e.email || `row_${idx}`}_${idx}`,
             // Map API fields to expected interface fields - try multiple possible field names
-            athlete_name: e.athlete_name || e.name || e.full_name || e.first_name + " " + e.last_name || "Unknown",
-            max_roster_year: e.max_roster_year || e.graduation_year || e.year || e.roster_year || e.grad_year || 0,
+            athlete_name:
+              e.athlete_name ||
+              e.name ||
+              e.full_name ||
+              e.first_name + " " + e.last_name ||
+              "Unknown",
+            max_roster_year:
+              e.max_roster_year ||
+              e.graduation_year ||
+              e.year ||
+              e.roster_year ||
+              e.grad_year ||
+              0,
             sport: e.sport || e.sport_name || e.team_sport || "Unknown",
-            gender_id: e.gender_id || e.gender || (e.gender_name === "M" ? 1 : e.gender_name === "W" ? 2 : 1),
-            email_address: e.email_address || e.email || e.email_addr || "No email",
+            gender_id:
+              e.gender_id ||
+              e.gender ||
+              (e.gender_name === "M" ? 1 : e.gender_name === "W" ? 2 : 1),
+            email_address:
+              e.email_address || e.email || e.email_addr || "No email",
           };
         });
-        
+
         console.log("Mapped data sample:", mapped.slice(0, 3)); // Debug: Log first 3 mapped rows
         console.log("Total mapped records:", mapped.length);
-        
+
         // Set emails as returned; sorting for the UI is handled by `sortedEmails`
         setEmails(mapped);
       } else {
         console.log("No data returned from API or unexpected response format");
-        console.log("Response structure:", typeof response, Array.isArray(response), response?.length);
+        console.log(
+          "Response structure:",
+          typeof response,
+          Array.isArray(response),
+          response?.length
+        );
         setEmails([]);
       }
     } catch (err) {

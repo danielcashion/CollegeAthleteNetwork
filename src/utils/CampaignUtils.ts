@@ -153,6 +153,6 @@ export function getSampleEmailData(session?: any): EmailRecipientData {
     gender_id: 1,
     email_address: session?.email || "johndoe@gmail.com",
     correlation_id: "e9253846-9c91-11f0-8b40-067d001b966d",
-    university_name: session?.university_affiliation || "University",
+    university_name: "Yale",
   };
 }

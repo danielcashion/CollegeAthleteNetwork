@@ -22,6 +22,7 @@ import ConfirmSaveDraftModal from "./ConfirmSaveDraftModal";
 import { CampaignData } from "@/types/Campaign";
 import { getVarcharEight } from "@/helpers/getVarCharId";
 import { cleanEmailField } from "@/services/InternalMemberApis";
+import { getAllUniversities } from "@/services/universityApi";
 
 const TABS = [
   "Define Audience",
@@ -56,6 +57,7 @@ export default function CampaignBuilder({
 
   const [sportTeamList, setSportTeamList] = useState<any[]>([]);
   const [universityMetaData, setUniversityMetaData] = useState<any>(null);
+  const [allUniversities, setAllUniversities] = useState<any[]>([]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -69,6 +71,9 @@ export default function CampaignBuilder({
   const [gender, setGender] = useState<string | null>(null);
   const [sports, setSports] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<number[]>(years);
+  const [selectedUniversities, setSelectedUniversities] = useState<string[]>(
+    []
+  );
 
   // Template states
   const [commType, setCommType] = useState<"general" | "event">("general");
@@ -87,11 +92,44 @@ export default function CampaignBuilder({
   );
   const [includeUniversityLogo, setIncludeUniversityLogo] = useState(true);
 
-  // Fetch university metadata
+  // Fetch all universities on mount
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const universities = await getAllUniversities();
+        console.log("Raw universities response:", universities);
+
+        // Ensure we have an array
+        if (Array.isArray(universities)) {
+          console.log("Universities is an array, length:", universities.length);
+          setAllUniversities(universities);
+        } else {
+          console.error("Universities data is not an array:", universities);
+          setAllUniversities([]);
+        }
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+        toast.error("Failed to load universities");
+        setAllUniversities([]);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
+
+  // Fetch university metadata when selected universities change
   useEffect(() => {
     const fetchUniversityData = async () => {
+      if (selectedUniversities.length === 0) {
+        setUniversityMetaData(null);
+        return;
+      }
+
       try {
-        const metaData = await getUniversityMetaByUniversityName("Yale");
+        // Fetch metadata for the first selected university (for logo/colors)
+        const metaData = await getUniversityMetaByUniversityName(
+          selectedUniversities[0]
+        );
         setUniversityMetaData(metaData);
       } catch (error) {
         console.error("Error fetching university metadata:", error);
@@ -99,38 +137,59 @@ export default function CampaignBuilder({
     };
 
     fetchUniversityData();
-  }, []);
+  }, [selectedUniversities]);
 
-  // Fetch sport teams
+  // Fetch sport teams for selected universities
   useEffect(() => {
     const fetchSportTeams = async () => {
+      if (selectedUniversities.length === 0) {
+        setSportTeamList([]);
+        return;
+      }
+
       try {
-        const teams = await getTeamsByUniversityName("Yale");
-        setSportTeamList(teams);
+        // Fetch teams for all selected universities
+        const teamsPromises = selectedUniversities.map((university) =>
+          getTeamsByUniversityName(university)
+        );
+        const teamsResults = await Promise.all(teamsPromises);
+
+        // Combine all teams from all universities
+        const allTeams = teamsResults.flat();
+        setSportTeamList(allTeams);
       } catch (error) {
         console.error("Error fetching sport teams:", error);
       }
     };
 
     fetchSportTeams();
-  }, []);
+  }, [selectedUniversities]);
 
+  // Fetch total counts for selected universities
   useEffect(() => {
     const fetchTotalCounts = async () => {
-      try {
-        const data = await getTotalCountsByUniversity({
-          university_name: "Yale",
-        });
+      if (selectedUniversities.length === 0) {
+        setTotalCounts([]);
+        return;
+      }
 
-        // console.log("Fetched total counts:", data);
-        setTotalCounts(data);
+      try {
+        // Fetch counts for all selected universities
+        const countsPromises = selectedUniversities.map((university) =>
+          getTotalCountsByUniversity({ university_name: university })
+        );
+        const countsResults = await Promise.all(countsPromises);
+
+        // Combine all counts from all universities
+        const allCounts = countsResults.flat();
+        setTotalCounts(allCounts);
       } catch (error) {
         console.error("Error fetching total counts:", error);
       }
     };
 
     fetchTotalCounts();
-  }, []);
+  }, [selectedUniversities]);
 
   // Initialize form fields when editing a campaign
   useEffect(() => {
@@ -144,8 +203,22 @@ export default function CampaignBuilder({
           setGender(filters.gender || null);
           setSports(filters.sports || []);
           setSelectedYears(filters.selectedYears || years);
+          setSelectedUniversities(filters.universities || []);
         } catch (error) {
           console.error("Error parsing campaign filters:", error);
+        }
+      }
+
+      // Parse university_names if it exists
+      if (editingCampaign.university_names) {
+        try {
+          const universities = JSON.parse(editingCampaign.university_names);
+          if (Array.isArray(universities)) {
+            setSelectedUniversities(universities);
+          }
+        } catch (error) {
+          console.log("Error parsing university_names:", error);
+          setSelectedUniversities([editingCampaign.university_names]);
         }
       }
 
@@ -223,6 +296,26 @@ export default function CampaignBuilder({
         .sort((a: any, b: any) => a.label.localeCompare(b.label)) || []),
     ];
   }, [sportTeamList]);
+
+  // Calculate university options
+  const universityOptions = useMemo(() => {
+    console.log(
+      "Computing universityOptions, allUniversities:",
+      allUniversities
+    );
+    if (!Array.isArray(allUniversities)) {
+      console.log("allUniversities is not an array");
+      return [];
+    }
+    const options = allUniversities
+      .map((university: any) => ({
+        value: university.university_name,
+        label: university.university_name,
+      }))
+      .sort((a: any, b: any) => a.label.localeCompare(b.label));
+    console.log("Computed university options:", options);
+    return options;
+  }, [allUniversities]);
 
   // Filter the data based on selected filters
   useEffect(() => {
@@ -338,7 +431,9 @@ export default function CampaignBuilder({
             gender_id: gender === "M" ? [1] : gender === "F" ? [2] : [],
             max_roster_year: selectedYears,
             sports: sports,
+            universities: selectedUniversities,
           }),
+          university_names: JSON.stringify(selectedUniversities),
           email_from_name: senderName,
           email_from_address: senderEmail,
           reply_to_address: replyTo || null,
@@ -391,6 +486,7 @@ export default function CampaignBuilder({
       const updatedCampaignData = {
         ...campaignToUpdate,
         campaign_name: newCampaignName,
+        university_names: JSON.stringify(selectedUniversities),
         aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
         updated_datetime: new Date().toISOString(),
       };
@@ -546,6 +642,9 @@ export default function CampaignBuilder({
                   initialCampaignName
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
+                selectedUniversities={selectedUniversities}
+                setSelectedUniversitiesAction={setSelectedUniversities}
+                universityOptions={universityOptions}
               />
               <TemplateTab
                 onNextAction={handleTemplateNext}
@@ -618,6 +717,7 @@ export default function CampaignBuilder({
                   sports,
                   selectedYears,
                 }}
+                selectedUniversities={selectedUniversities}
                 universityMetaData={universityMetaData}
                 includeUniversityLogo={includeUniversityLogo}
                 colorScheme={colorScheme}
