@@ -107,7 +107,7 @@ export default function ReviewScheduleTab({
     console.log("=== Computing apiFilterCriteria ===");
     console.log("campaign:", campaign);
     console.log("campaign?.campaign_filters:", campaign?.campaign_filters);
-    
+
     if (!campaign?.campaign_filters) {
       console.log("No campaign filters found, returning null");
       return null;
@@ -116,21 +116,21 @@ export default function ReviewScheduleTab({
     try {
       const filters = JSON.parse(campaign.campaign_filters);
       console.log("Parsed filters:", filters);
-      
+
       const criteria = {
         gender: filters.gender,
         sports: filters.sports,
         selectedYears: filters.selectedYears,
         universities: filters.universities || [],
       };
-      
+
       console.log("Computed apiFilterCriteria:", criteria);
       return criteria;
     } catch (err) {
       console.error("Error parsing campaign filters:", err);
       return null;
     }
-  }, [campaign?.campaign_filters]);
+  }, [campaign]);
 
   // Sorted list of first 5 emails, excluding excluded emails
   const sortedEmails = useMemo(() => {
@@ -229,7 +229,7 @@ export default function ReviewScheduleTab({
     console.log("=== fetchEmails called ===");
     console.log("apiFilterCriteria:", apiFilterCriteria);
     console.log("campaign:", campaign);
-    
+
     if (!apiFilterCriteria || !campaign) {
       console.log("Missing required data - apiFilterCriteria or campaign");
       setEmailsLoading(false);
@@ -305,14 +305,16 @@ export default function ReviewScheduleTab({
     console.log("=== useEffect for fetchEmails triggered ===");
     console.log("apiFilterCriteria:", apiFilterCriteria);
     console.log("campaign:", campaign);
-    
+
     if (apiFilterCriteria) {
       console.log("Calling fetchEmails...");
       fetchEmails();
     } else {
-      console.log("apiFilterCriteria is null/undefined, not calling fetchEmails");
+      console.log(
+        "apiFilterCriteria is null/undefined, not calling fetchEmails"
+      );
     }
-  }, [apiFilterCriteria, fetchEmails]);
+  }, [apiFilterCriteria, fetchEmails, campaign]);
 
   // Initialize excluded emails from campaign filters - updates when campaign filters change
   useEffect(() => {
@@ -979,7 +981,7 @@ export default function ReviewScheduleTab({
             <CampaignEmailsList
               campaign={campaign}
               onClose={() => setShowEmailsList(false)}
-              onCampaignUpdated={(updatedCampaign: CampaignData) => {
+              onCampaignUpdated={() => {
                 // Optionally handle campaign updates here
                 // console.log("Campaign updated:", updatedCampaign);
               }}
