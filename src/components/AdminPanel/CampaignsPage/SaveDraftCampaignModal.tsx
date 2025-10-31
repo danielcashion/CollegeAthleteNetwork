@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { IoClose } from "react-icons/io5";
 import { createInternalCampaign } from "@/services/InternalMemberApis";
 import type { CampaignData } from "@/types/Campaign";
@@ -16,7 +16,9 @@ interface SaveDraftCampaignModalProps {
     gender: string | null;
     sports: string[];
     selectedYears: number[];
+    universities: string[];
   };
+  selectedUniversities: string[];
   audienceData: {
     athletes: number;
     emails: number;
@@ -47,6 +49,7 @@ export default function SaveDraftCampaignModal({
   isOpen,
   onClose,
   campaignFilters,
+  selectedUniversities,
   audienceData,
   onSaved,
   initialCampaignName,
@@ -58,6 +61,14 @@ export default function SaveDraftCampaignModal({
   const [campaignName, setCampaignName] = useState(initialCampaignName ?? "");
   const [campaignDesc, setCampaignDesc] = useState(initialCampaignDesc ?? "");
   const [saving, setSaving] = useState(false);
+
+  const handleClose = useCallback(() => {
+    if (!saving) {
+      setCampaignName("");
+      setCampaignDesc("");
+      onClose();
+    }
+  }, [saving, onClose]);
 
   // Handle Escape key press
   useEffect(() => {
@@ -71,7 +82,7 @@ export default function SaveDraftCampaignModal({
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, saving]);
+  }, [isOpen, saving, handleClose]);
 
   if (!isOpen) return null;
 
@@ -90,6 +101,7 @@ export default function SaveDraftCampaignModal({
         campaign_type: "email",
         aws_configuration_set: "CollegeAthleteNetworkEventbridge",
         campaign_filters: JSON.stringify(campaignFilters),
+        university_names: JSON.stringify(selectedUniversities),
         audience_size: audienceData.athletes.toString(),
         audience_emails: audienceData.emails.toString(),
         campaign_status: "draft",
@@ -129,14 +141,6 @@ export default function SaveDraftCampaignModal({
       toast.error("Failed to save campaign draft");
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleClose = () => {
-    if (!saving) {
-      setCampaignName("");
-      setCampaignDesc("");
-      onClose();
     }
   };
 

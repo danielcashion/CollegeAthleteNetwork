@@ -66,7 +66,6 @@ export default function ScheduleTab({
   selectedUniversities = [],
   universityMetaData = null,
   includeUniversityLogo = false,
-  colorScheme = "default",
   campaignName,
   onCampaignNameUpdate,
 }: Props) {
@@ -134,7 +133,7 @@ export default function ScheduleTab({
         );
       }
     }
-  }, [sendOption]);
+  }, [sendOption, selectedTime]);
 
   const handleSend = async () => {
     if (!campaign || !campaignFilters) {
@@ -663,6 +662,7 @@ export default function ScheduleTab({
                         parts.find((p) => p.type === "timeZoneName")?.value ||
                         "";
                     } catch (e) {
+                      console.log("Failed to get timezone abbreviation:", e);
                       tzAbbr = "";
                     }
 

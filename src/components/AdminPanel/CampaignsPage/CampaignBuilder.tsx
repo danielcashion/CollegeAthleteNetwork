@@ -750,7 +750,9 @@ export default function CampaignBuilder({
           gender,
           sports,
           selectedYears,
+          universities: selectedUniversities,
         }}
+        selectedUniversities={selectedUniversities}
         audienceData={{
           athletes: filteredTotal.athletes,
           emails: filteredTotal.emails,
@@ -816,7 +818,9 @@ export default function CampaignBuilder({
                 gender,
                 sports,
                 selectedYears,
+                universities: selectedUniversities,
               }),
+              university_names: JSON.stringify(selectedUniversities),
               audience_size: String(filteredTotal.athletes),
               audience_emails: String(filteredTotal.emails),
               campaign_status: "draft",

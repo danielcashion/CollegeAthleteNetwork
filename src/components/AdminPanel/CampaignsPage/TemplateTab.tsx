@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import ImportTemplateModal from "./ImportTemplateModal";
 import StyledTooltip from "@/components/common/StyledTooltip";
 import toast from "react-hot-toast";
@@ -52,7 +51,6 @@ export default function TemplateTab({
   templateId,
   setTemplateIdAction,
 }: Props) {
-  const { data: session } = useSession();
   const [importTemplateModalOpen, setImportTemplateModalOpen] = useState(false);
   const [isEditingCampaignName, setIsEditingCampaignName] = useState(false);
   const [tempCampaignName, setTempCampaignName] = useState("");
