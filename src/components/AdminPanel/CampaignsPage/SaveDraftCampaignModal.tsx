@@ -95,16 +95,16 @@ export default function SaveDraftCampaignModal({
         const templateData = {
           campaign_template_id: templateId,
           campaign_type: "email",
-          university_name: "Yale",
-          campaign_title: `Template for ${campaignName.trim()}`,
+          university_names: "Yale",
+          template_title: `Template for ${campaignName.trim()}`,  // Example title. Needs to be fixed.
           email_body: cleanEmailField(emailData.body),
           email_from_name: emailData.senderName,
           email_from_address: emailData.senderEmail,
           reply_to_address: emailData.replyTo || null,
           email_subject: cleanEmailField(emailData.subject),
-          is_systemwide_YN: 0,
+          is_systemwide_YN: 1,
           is_active_YN: 1,
-          created_by: "1",
+          created_by: "admin",
           editor_type: emailData.editorType || "html",
         };
 

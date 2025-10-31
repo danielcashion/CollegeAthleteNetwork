@@ -122,7 +122,7 @@ export default function CampaignBuilder({
     const fetchTotalCounts = async () => {
       try {
         const data = await getTotalCountsByUniversity({
-          university_name: "Yale",
+          university_names: "Yale",
         });
 
         // console.log("Fetched total counts:", data);
@@ -315,8 +315,8 @@ export default function CampaignBuilder({
       const templateData = {
         campaign_template_id: currentTemplateId,
         campaign_type: "email",
-        university_name: "Yale",
-        campaign_title: `Template for ${
+        university_names: "Yale",
+        template_title: `Template for ${
           createdCampaign?.campaign_name || initialCampaignName || "Campaign"
         }`,
         email_body: cleanEmailField(body),
@@ -415,8 +415,8 @@ export default function CampaignBuilder({
       const templateData = {
         campaign_template_id: currentTemplateId,
         campaign_type: "email",
-        university_name: "Yale",
-        campaign_title: `Template for ${
+        university_names: "Yale",
+        template_title: `Template for ${
           createdCampaign?.campaign_name || initialCampaignName || "Campaign"
         }`,
         email_body: cleanEmailField(body),
@@ -824,8 +824,8 @@ export default function CampaignBuilder({
               const templateData = {
                 campaign_template_id: finalTemplateId,
                 campaign_type: "email",
-                university_name: "Yale",
-                campaign_title: `Template for ${
+                university_names: "Yale",
+                template_title: `Template for ${
                   editingCampaign?.campaign_name ??
                   createdCampaign?.campaign_name ??
                   initialCampaignName ??

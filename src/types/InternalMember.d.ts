@@ -20,8 +20,8 @@ export interface InternalEmailTemplate {
   email_from_address?: string | null;
   reply_to_address?: string | null;
   email_subject?: string | null;
-  reponse_type?: string | null;
-  reponse_options?: string | null;
+  response_type?: string | null;
+  response_options?: string | null;
   is_systemwide_YN?: number | null;
   is_active_YN?: number | null;
   created_by?: string;

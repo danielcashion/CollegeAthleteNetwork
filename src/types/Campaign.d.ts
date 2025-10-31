@@ -2,12 +2,13 @@ export interface CampaignData {
   campaign_id: string;
   campaign_name: string;
   campaign_desc?: string;
-  university_name?: string;
+  university_names?: string;
   campaign_type?: string;
   event_id?: string;
   aws_configuration_set?: string;
   campaign_filters?: string;
   is_scheduled_YN?: number;
+  editor_type?: string;
   scheduled_datetime?: string;
   audience_size?: string;
   audience_emails?: string;
@@ -17,6 +18,7 @@ export interface CampaignData {
   reply_to_address?: string;
   email_subject?: string;
   email_pre_header_text?: string;
+  attachments_urls?: string;
   email_body?: string;
   campaign_template_id?: string;
   campaign_status?: string;
@@ -31,15 +33,17 @@ export interface CampaignData {
   created_datetime?: string;
   updated_by?: string;
   updated_datetime?: string;
-  attachments_url?: string;
-  editor_type?: string;
 }
 
 export interface CampaignTemplate {
   campaign_template_id?: string;
   campaign_type: string;
-  university_name?: string | null;
-  campaign_title: string;
+  template_title: string;
+  template_description: string;
+  template_creator: string;
+  template_task: string;
+  template_params?: string;
+  university_names?: string | null;
   email_body?: string;
   email_from_name: string;
   email_from_address: string;
