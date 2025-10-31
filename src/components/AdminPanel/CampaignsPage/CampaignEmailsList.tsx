@@ -137,7 +137,7 @@ export default function CampaignEmailsList({
 
       // Fetch emails for all selected universities
       const response = await getEmailListByUniversityAndFilters({
-        university_name: JSON.stringify(apiFilterCriteria.universities),
+        university_name: apiFilterCriteria.universities,
         gender_id,
         max_roster_year,
         sports,

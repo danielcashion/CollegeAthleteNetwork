@@ -201,7 +201,7 @@ export const getEmailListByUniversityAndFilters = async ({
   max_roster_year,
   sports,
 }: {
-  university_name: string; // Can be a single university name or JSON stringified array like '["Yale","Harvard"]'
+  university_name: string | string[]; // Can be a single university name, array of names, or comma-separated string
   gender_id?: number[];
   max_roster_year?: number[];
   sports?: string[];
@@ -213,10 +213,13 @@ export const getEmailListByUniversityAndFilters = async ({
   try {
     // Build query parameters
     const params = new URLSearchParams();
-    // params.append("task", "get_email_list_test");
     params.append("task", "get_single_university_current_students");
-    // university_name can be a JSON array string for multiple universities: '["Yale","Harvard"]'
-    params.append("university_name", university_name);
+
+    // Convert university_name to comma-separated string if it's an array
+    const universityParam = Array.isArray(university_name)
+      ? university_name.join(",")
+      : university_name;
+    params.append("university_name", universityParam);
 
     // Add optional array parameters
     if (gender_id && gender_id.length > 0) {

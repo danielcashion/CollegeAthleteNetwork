@@ -47,8 +47,6 @@ export default function CampaignBuilder({
   openSaveDraftOnMount,
   editingCampaign,
 }: ECommsCampaignBuilderProps) {
-  console.log("editingCampaign:", editingCampaign);
-
   const [sportTeamList, setSportTeamList] = useState<any[]>([]);
   const [universityMetaData, setUniversityMetaData] = useState<any>(null);
   const [allUniversities, setAllUniversities] = useState<any[]>([]);

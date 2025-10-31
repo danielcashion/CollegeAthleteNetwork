@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import HtmlViewer from "../General/HtmlViewer";
 import toast from "react-hot-toast";
 import { getEmailListByUniversityAndFilters } from "@/services/InternalMemberApis";
@@ -35,7 +41,6 @@ type Props = {
   campaign_status?: string;
   sendTestEmailAction?: (email: string) => Promise<void> | void;
   campaign?: CampaignData;
-  session?: any;
   // Template ID to fetch template data
   templateId?: string | null;
   // University logo props
@@ -56,9 +61,7 @@ export default function ReviewScheduleTab({
   campaign,
   campaign_name,
   campaign_status,
-  sendTestEmailAction,
   templateId,
-  session,
   universityMetaData = null,
   includeUniversityLogo = false,
   colorScheme = "default",
@@ -101,16 +104,28 @@ export default function ReviewScheduleTab({
 
   // Extract only the API-relevant filter criteria
   const apiFilterCriteria = useMemo(() => {
-    if (!campaign?.campaign_filters) return null;
+    console.log("=== Computing apiFilterCriteria ===");
+    console.log("campaign:", campaign);
+    console.log("campaign?.campaign_filters:", campaign?.campaign_filters);
+    
+    if (!campaign?.campaign_filters) {
+      console.log("No campaign filters found, returning null");
+      return null;
+    }
 
     try {
       const filters = JSON.parse(campaign.campaign_filters);
-      return {
+      console.log("Parsed filters:", filters);
+      
+      const criteria = {
         gender: filters.gender,
         sports: filters.sports,
         selectedYears: filters.selectedYears,
         universities: filters.universities || [],
       };
+      
+      console.log("Computed apiFilterCriteria:", criteria);
+      return criteria;
     } catch (err) {
       console.error("Error parsing campaign filters:", err);
       return null;
@@ -210,14 +225,13 @@ export default function ReviewScheduleTab({
   };
 
   // Fetch emails when component mounts and campaign filters change
-  const fetchEmails = async () => {
-    // // console.log("fetchEmails called");
-    // // console.log("apiFilterCriteria:", apiFilterCriteria);
-    // // console.log("session:", session);
-    // // console.log("campaign:", campaign);
-
-    if (!apiFilterCriteria || !session || !campaign) {
-      // // console.log("Missing required data, stopping fetch");
+  const fetchEmails = useCallback(async () => {
+    console.log("=== fetchEmails called ===");
+    console.log("apiFilterCriteria:", apiFilterCriteria);
+    console.log("campaign:", campaign);
+    
+    if (!apiFilterCriteria || !campaign) {
+      console.log("Missing required data - apiFilterCriteria or campaign");
       setEmailsLoading(false);
       return;
     }
@@ -251,16 +265,18 @@ export default function ReviewScheduleTab({
 
       // Fetch emails for all selected universities using the array format
       const response = await getEmailListByUniversityAndFilters({
-        university_name: JSON.stringify(apiFilterCriteria.universities),
+        university_name: apiFilterCriteria.universities,
         gender_id,
         max_roster_year,
         sports,
       });
 
-      // The API returns [data, metadata], so we take the first element
-      // console.log("API response:", response);
+      console.log("API Response:", response); // Debug: Log the actual API response
 
+      // The API returns [data, metadata], so we take the first element
       if (Array.isArray(response) && response.length > 0) {
+        console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
+
         // Map and add stable ids for selection handling
         const mapped = response[0].map((e: any, idx: number) => ({
           id: `${e.email_address ?? "row"}_${idx}`,
@@ -270,10 +286,11 @@ export default function ReviewScheduleTab({
           gender_id: e.gender_id,
           email_address: e.email_address,
         }));
-        // console.log("Mapped emails:", mapped);
+        console.log("Mapped emails:", mapped.slice(0, 3)); // Debug: Log first 3 mapped rows
+        console.log("Total mapped records:", mapped.length);
         setEmails(mapped);
       } else {
-        // console.log("No emails found in response");
+        console.log("No emails found in response");
         setEmails([]);
       }
     } catch (err) {
@@ -282,21 +299,20 @@ export default function ReviewScheduleTab({
     } finally {
       setEmailsLoading(false);
     }
-  };
+  }, [apiFilterCriteria, campaign]);
 
   useEffect(() => {
-    // console.log("useEffect triggered");
-    // console.log("apiFilterCriteria:", apiFilterCriteria);
-    // console.log("session:", session);
-    // console.log("campaign:", campaign);
-
-    if (apiFilterCriteria && (session || campaign)) {
+    console.log("=== useEffect for fetchEmails triggered ===");
+    console.log("apiFilterCriteria:", apiFilterCriteria);
+    console.log("campaign:", campaign);
+    
+    if (apiFilterCriteria) {
+      console.log("Calling fetchEmails...");
       fetchEmails();
     } else {
-      // console.log("Conditions not met for fetching emails");
-      setEmailsLoading(false);
+      console.log("apiFilterCriteria is null/undefined, not calling fetchEmails");
     }
-  }, [apiFilterCriteria, session, campaign]);
+  }, [apiFilterCriteria, fetchEmails]);
 
   // Initialize excluded emails from campaign filters - updates when campaign filters change
   useEffect(() => {

@@ -271,7 +271,7 @@ export default function ScheduleTab({
       });
 
       const emailListResponse = await getEmailListByUniversityAndFilters({
-        university_name: JSON.stringify(selectedUniversities),
+        university_name: selectedUniversities,
         gender_id,
         max_roster_year,
         sports,
