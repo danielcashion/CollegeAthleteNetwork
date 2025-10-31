@@ -536,8 +536,8 @@ export default function CampaignsList({
                   Client Engagement Campaigns
                 </h1>
                 <p className="text-blue-100 mt-1">
-                  Manage our email & SMS communications to effectively engage
-                  our audience
+                  Manage our email & future SMS communications to effectively
+                  engage our audience
                 </p>
               </div>
             </div>
@@ -548,7 +548,7 @@ export default function CampaignsList({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-white focus:border-white transition-all duration-200 bg-white/90 backdrop-blur-sm"
+                  className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-white focus:border-white transition-all duration-200 bg-white/90 backdrop-blur-sm text-[#1C315F]"
                   placeholder="Search campaigns..."
                 />
               </div>
@@ -779,7 +779,7 @@ export default function CampaignsList({
                               {campaign.campaign_status || "Draft"}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900">
+                          <td className="px-6 py-4 text-sm  text-gray-900">
                             <div className="flex items-center">
                               <div className="w-2 h-2 bg-[#1C315F] rounded-full mr-2"></div>
                               {campaign.audience_size

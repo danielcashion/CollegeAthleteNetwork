@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { getInternalEmailTemplates, deleteInternalEmailTemplate } from "@/services/InternalMemberApis";
 import { InternalEmailTemplate } from "@/types/InternalMember";
-import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle, X } from "lucide-react";
+import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle } from "lucide-react";
 import EmailTemplateEditor from "./EmailTemplateEditor";
 import EmailTemplateViewer from "./EmailTemplateViewer";
 
@@ -108,8 +108,16 @@ export default function EmailTemplatesMain() {
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">Email Templates Library</h1>
-                <p className="text-blue-100 mt-1">Managing & organizing our email campaign templates</p>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  The College Athlete Network
+                </h1>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  Campaign Templates Library
+                </h1>
+
+                <p className="text-blue-100 mt-1">
+                  Managing & organizing our email campaign templates
+                </p>
               </div>
             </div>
             <button
@@ -130,8 +138,12 @@ export default function EmailTemplatesMain() {
             <div className="w-16 h-16 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mb-4 shadow-xl">
               <Loader2 className="w-8 h-8 text-white animate-spin" />
             </div>
-            <p className="text-gray-600 text-lg font-medium">Loading templates...</p>
-            <p className="text-gray-400 text-sm mt-1">Please wait while we fetch your email templates</p>
+            <p className="text-gray-600 text-lg font-medium">
+              Loading templates...
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              Please wait while we fetch your email templates
+            </p>
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
@@ -140,9 +152,12 @@ export default function EmailTemplatesMain() {
                 <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
                   <Mail className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">No Email Templates Found</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  No Email Templates Found
+                </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  Get started by creating your first email template. Templates help you maintain consistent messaging across campaigns.
+                  Get started by creating your first email template. Templates
+                  help you maintain consistent messaging across campaigns.
                 </p>
                 <button
                   onClick={handleCreate}
@@ -157,12 +172,24 @@ export default function EmailTemplatesMain() {
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Template Title</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Description</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Creator</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Database Task</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Created</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Template Title
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Description
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Creator
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Database Task
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Created
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -189,14 +216,20 @@ export default function EmailTemplatesMain() {
                         <td className="px-6 py-5">
                           <div className="flex items-center max-w-32">
                             <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">
-                              {template.template_creator?.charAt(0).toUpperCase() || "U"}
+                              {template.template_creator
+                                ?.charAt(0)
+                                .toUpperCase() || "U"}
                             </div>
-                            <span 
+                            <span
                               className="text-sm text-gray-900 truncate"
                               title={template.template_creator}
                             >
-                              {template.template_creator && template.template_creator.length > 12
-                                ? `${template.template_creator.substring(0, 12)}...`
+                              {template.template_creator &&
+                              template.template_creator.length > 12
+                                ? `${template.template_creator.substring(
+                                    0,
+                                    12
+                                  )}...`
                                 : template.template_creator}
                             </span>
                           </div>
@@ -209,7 +242,9 @@ export default function EmailTemplatesMain() {
                         <td className="px-6 py-5">
                           <div className="text-sm text-gray-600">
                             {template.created_datetime
-                              ? new Date(template.created_datetime).toLocaleString(undefined, {
+                              ? new Date(
+                                  template.created_datetime
+                                ).toLocaleString(undefined, {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
@@ -291,7 +326,9 @@ export default function EmailTemplatesMain() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">Delete Email Template</h3>
-                  <p className="text-red-100 text-sm">This action cannot be undone</p>
+                  <p className="text-red-100 text-sm">
+                    This action cannot be undone
+                  </p>
                 </div>
               </div>
             </div>
@@ -308,14 +345,19 @@ export default function EmailTemplatesMain() {
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
                   <p className="text-sm text-red-800 mb-2">
-                    <strong>Warning:</strong> This will permanently delete the template and all its associated data.
+                    <strong>Warning:</strong> This will permanently delete the
+                    template and all its associated data.
                   </p>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Type <span className="font-mono bg-gray-100 px-2 py-1 rounded text-red-600">delete</span> to confirm:
+                  Type{" "}
+                  <span className="font-mono bg-gray-100 px-2 py-1 rounded text-red-600">
+                    delete
+                  </span>{" "}
+                  to confirm:
                 </label>
                 <input
                   type="text"
@@ -339,7 +381,9 @@ export default function EmailTemplatesMain() {
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                disabled={deleteConfirmText.toLowerCase() !== "delete" || isDeleting}
+                disabled={
+                  deleteConfirmText.toLowerCase() !== "delete" || isDeleting
+                }
                 className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center space-x-2"
               >
                 {isDeleting ? (
