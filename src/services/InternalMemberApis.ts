@@ -76,9 +76,13 @@ export const createInternalEmailTemplate = async (
   templateData: InternalEmailTemplate
 ) => {
   try {
+    // Remove university_name field before sending to API
+    const templateDataWithoutUniversity = { ...templateData };
+    delete (templateDataWithoutUniversity as any).university_name;
+    
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_templates`,
-      templateData
+      templateDataWithoutUniversity
     );
     return response.data;
   } catch (error) {
