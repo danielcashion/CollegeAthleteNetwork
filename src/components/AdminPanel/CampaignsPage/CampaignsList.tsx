@@ -529,9 +529,9 @@ export default function CampaignsList({
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">Email Campaigns</h1>
+                <h1 className="text-3xl font-bold tracking-tight">College Athlete Network Engagement Campaigns</h1>
                 <p className="text-blue-100 mt-1">
-                  Manage your email and SMS communications to effectively engage your audience
+                  Manage our email & SMS communications to effectively engage our audience
                 </p>
               </div>
             </div>
