@@ -79,7 +79,6 @@ export default function CampaignBuilder({
   const [replyTo, setReplyTo] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-  const [editorType, setEditorType] = useState<"text-editor" | "html">("html");
   const [templateId, setTemplateId] = useState<string | null>(null);
 
   // New states for color scheme and university logo
@@ -120,7 +119,7 @@ export default function CampaignBuilder({
     const fetchTotalCounts = async () => {
       try {
         const data = await getTotalCountsByUniversity({
-          university_names: "Yale",
+          university_name: "Yale",
         });
 
         // console.log("Fetched total counts:", data);
@@ -160,9 +159,6 @@ export default function CampaignBuilder({
       );
       setReplyTo(editingCampaign.reply_to_address || "");
       setSubject(editingCampaign.email_subject || "");
-      setEditorType(
-        editingCampaign.editor_type === "html" ? "html" : "text-editor"
-      );
       setTemplateId(editingCampaign.campaign_template_id || null);
 
       // Initialize new template options with default values
@@ -203,7 +199,7 @@ export default function CampaignBuilder({
       // Set the created campaign for modal display
       setCreatedCampaign(editingCampaign);
     }
-  }, [editingCampaign, years]);
+  }, [editingCampaign]);
 
   // If requested, open the Save Draft modal when the builder mounts
   useEffect(() => {
@@ -257,7 +253,7 @@ export default function CampaignBuilder({
     }
 
     setFilteredCounts(filtered);
-  }, [totalCounts, gender, sports, selectedYears, years.length]);
+  }, [totalCounts, gender, sports, selectedYears]);
 
   // Calculate totals and filtered totals
   const totals = useMemo(() => {
@@ -347,7 +343,8 @@ export default function CampaignBuilder({
           email_from_address: senderEmail,
           reply_to_address: replyTo || null,
           email_subject: cleanEmailField(subject),
-          editor_type: editorType,
+          editor_type: "html",
+          campaign_template_id: templateId,
           university_colors_YN: colorScheme === "university" ? 1 : 0,
           include_logo_YN: includeUniversityLogo ? 1 : 0,
           aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
@@ -565,8 +562,6 @@ export default function CampaignBuilder({
                 setSubjectAction={setSubject}
                 body={body}
                 setBodyAction={setBody}
-                editorType={editorType}
-                setEditorTypeAction={setEditorType}
                 colorScheme={colorScheme}
                 setColorSchemeAction={setColorScheme}
                 includeUniversityLogo={includeUniversityLogo}
@@ -577,6 +572,8 @@ export default function CampaignBuilder({
                   initialCampaignName
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
+                templateId={templateId}
+                setTemplateIdAction={setTemplateId}
               />
               <ReviewTab
                 onNext={() => handleTabSwitch(3)}
@@ -670,7 +667,7 @@ export default function CampaignBuilder({
           replyTo,
           subject,
           body,
-          editorType,
+          editorType: "html",
         }}
         colorScheme={colorScheme}
         includeUniversityLogo={includeUniversityLogo}
@@ -733,7 +730,7 @@ export default function CampaignBuilder({
               email_from_address: senderEmail || undefined,
               reply_to_address: replyTo || undefined,
               email_subject: subject || undefined,
-              editor_type: editorType,
+              editor_type: "html",
             };
 
             // If we're editing, preserve original creation info

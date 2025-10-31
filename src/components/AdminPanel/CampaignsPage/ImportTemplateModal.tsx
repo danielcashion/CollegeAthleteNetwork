@@ -13,13 +13,13 @@ interface ImportTemplateModalProps {
     subject: string;
     body: string;
     replyToAddress?: string;
+    templateId?: string;
   }) => void;
 }
 
 export default function ImportTemplateModal({
   isOpen,
   onCloseAction,
-  universityName,
   onTemplateSelectAction,
 }: ImportTemplateModalProps) {
   const [templates, setTemplates] = useState<InternalEmailTemplate[]>([]);
@@ -66,6 +66,7 @@ export default function ImportTemplateModal({
       subject: template.email_subject || "",
       body: template.email_body || "",
       replyToAddress: template.reply_to_address || "",
+      templateId: template.campaign_template_id || "",
     });
     onCloseAction();
   };
