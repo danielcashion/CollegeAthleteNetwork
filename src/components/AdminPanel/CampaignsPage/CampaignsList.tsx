@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Search, Mail } from "lucide-react";
+import { Search, Mail, RefreshCw } from "lucide-react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { Plus, Loader } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -41,7 +41,9 @@ const ActionsDropdown = ({
   onDuplicateClick: (campaign: CampaignData) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,6 +62,27 @@ const ActionsDropdown = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [isOpen]);
+
+  // Check dropdown position when opening
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = 280; // Approximate height of dropdown
+      const buffer = 20; // Add buffer for better spacing
+      
+      // Check if there's enough space below the button
+      const spaceBelow = viewportHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+      
+      // Position above if there's not enough space below, but enough space above
+      if (spaceBelow < dropdownHeight + buffer && spaceAbove >= dropdownHeight + buffer) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
   }, [isOpen]);
 
   const handleView = () => {
@@ -89,6 +112,7 @@ const ActionsDropdown = ({
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20"
       >
@@ -96,7 +120,17 @@ const ActionsDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1">
+        <div 
+          className={`absolute right-0 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-[60] py-1 ${
+            dropdownPosition === 'top' 
+              ? 'bottom-full mb-2' 
+              : 'top-full mt-2'
+          }`}
+          style={{
+            maxHeight: '280px',
+            overflowY: 'auto'
+          }}
+        >
           <button
             onClick={handleEdit}
             className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
@@ -485,7 +519,7 @@ export default function CampaignsList({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-[700px] bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Enhanced Header Section */}
       <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white shadow-xl">
         <div className="px-8 py-8">
@@ -555,6 +589,23 @@ export default function CampaignsList({
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Refresh Button Section */}
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">{sortedCampaigns.length}</span> campaign{sortedCampaigns.length !== 1 ? 's' : ''} found
+                </div>
+                <button
+                  onClick={fetchCampaigns}
+                  disabled={loading}
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+
             {sortedCampaigns.length === 0 ? (
               <div className="text-center py-20 px-8">
                 <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
@@ -583,10 +634,11 @@ export default function CampaignsList({
                 )}
               </div>
             ) : (
-              <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
-                <table className="w-full">
-                  <thead className="sticky top-0 z-10">
-                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+              <div className="relative">
+                <div className="overflow-x-auto max-h-[75vh] overflow-y-auto pb-20">
+                  <table className="w-full">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                         <button
                           className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
@@ -793,6 +845,7 @@ export default function CampaignsList({
                     ))}
                   </tbody>
                 </table>
+              </div>
               </div>
             )}
           </div>

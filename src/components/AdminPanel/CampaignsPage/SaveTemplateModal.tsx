@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { createInternalEmailTemplate } from "@/services/InternalMemberApis";
 import { InternalEmailTemplate } from "@/types/InternalMember.d";
 import { getVarcharEight } from "@/helpers/getVarCharId";
 import toast from "react-hot-toast";
@@ -79,9 +78,6 @@ export default function SaveTemplateModal({
         created_datetime: new Date().toISOString(),
       };
 
-      await createInternalEmailTemplate(emailTemplate);
-
-      toast.success("Template saved successfully!");
 
       if (onSaved) {
         onSaved(emailTemplate.campaign_template_id);
