@@ -788,9 +788,8 @@ export default function CampaignBuilder({
             // Build campaign payload from available builder state
             const campaignData: any = {
               campaign_id:
-                editingCampaign?.campaign_id ??
-                createdCampaign?.campaign_id ??
-                getVarcharEight(),
+                editingCampaign?.campaign_id ?? createdCampaign?.campaign_id,
+
               campaign_name:
                 editingCampaign?.campaign_name ??
                 createdCampaign?.campaign_name ??
