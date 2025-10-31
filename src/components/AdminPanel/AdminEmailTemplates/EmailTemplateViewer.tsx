@@ -1,7 +1,7 @@
 "use client";
 import { InternalEmailTemplate } from "@/types/InternalMember";
-import { X, Eye, Calendar, User, Settings, Mail, FileText } from "lucide-react";
-import { useEffect } from "react";
+import { X, Eye, Calendar, User, Mail, FileText, ChevronDown, ChevronUp, Database, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 import HtmlViewer from "../General/HtmlViewer";
 
 interface EmailTemplateViewerProps {
@@ -15,6 +15,10 @@ export default function EmailTemplateViewer({
   onClose,
   template,
 }: EmailTemplateViewerProps) {
+  // Accordion state - default to closed for better Template Preview visibility
+  const [isAdditionalInfoOpen, setIsAdditionalInfoOpen] = useState(false);
+  const [isEmailConfigOpen, setIsEmailConfigOpen] = useState(false);
+
   // Handle Escape key press
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -100,7 +104,7 @@ export default function EmailTemplateViewer({
             {/* Task */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl flex items-center justify-center">
-                <Settings className="w-5 h-5 text-white" />
+                <Database className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Database Task</p>
@@ -156,7 +160,7 @@ export default function EmailTemplateViewer({
             {template.is_systemwide_YN !== null && (
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-xl flex items-center justify-center">
-                  <Settings className="w-5 h-5 text-white" />
+                  <Globe className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">System-wide</p>
@@ -171,73 +175,99 @@ export default function EmailTemplateViewer({
           {/* Additional Details Section */}
           {(template.template_description || template.campaign_type || template.template_params) && (
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <h4 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
-                <FileText className="w-4 h-4 mr-2 text-[#1C315F]" />
-                Additional Information
-              </h4>
-              <div className="grid grid-cols-1 gap-4">
-                {template.template_description && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Description</p>
-                    <p className="text-sm text-gray-700">{template.template_description}</p>
-                  </div>
+              <button
+                onClick={() => setIsAdditionalInfoOpen(!isAdditionalInfoOpen)}
+                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-4 hover:text-[#1C315F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20 rounded-lg p-2 -m-2"
+              >
+                <div className="flex items-center">
+                  <FileText className="w-4 h-4 mr-2 text-[#1C315F]" />
+                  Additional Information
+                </div>
+                {isAdditionalInfoOpen ? (
+                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
                 )}
-                
-                {template.campaign_type && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Campaign Type</p>
-                    <p className="text-sm text-gray-700">{template.campaign_type}</p>
-                  </div>
-                )}
+              </button>
+              
+              {isAdditionalInfoOpen && (
+                <div className="grid grid-cols-1 gap-4 transition-all duration-300 ease-in-out">
+                  {template.template_description && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Description</p>
+                      <p className="text-sm text-gray-700">{template.template_description}</p>
+                    </div>
+                  )}
+                  
+                  {template.campaign_type && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Campaign Type</p>
+                      <p className="text-sm text-gray-700">{template.campaign_type}</p>
+                    </div>
+                  )}
 
-                {template.template_params && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Template Parameters</p>
-                    <code className="text-xs text-gray-700 bg-gray-100 p-2 rounded-lg block overflow-x-auto">
-                      {template.template_params}
-                    </code>
-                  </div>
-                )}
-              </div>
+                  {template.template_params && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Template Parameters</p>
+                      <code className="text-xs text-gray-700 bg-gray-100 p-2 rounded-lg block overflow-x-auto">
+                        {template.template_params}
+                      </code>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {/* Email Configuration Section */}
           {(template.email_subject || template.email_from_name || template.email_from_address || template.reply_to_address) && (
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <h4 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
-                <Mail className="w-4 h-4 mr-2 text-[#1C315F]" />
-                Email Configuration
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {template.email_subject && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Subject Line</p>
-                    <p className="text-sm text-gray-700 font-medium">{template.email_subject}</p>
-                  </div>
+              <button
+                onClick={() => setIsEmailConfigOpen(!isEmailConfigOpen)}
+                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-4 hover:text-[#1C315F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20 rounded-lg p-2 -m-2"
+              >
+                <div className="flex items-center">
+                  <Mail className="w-4 h-4 mr-2 text-[#1C315F]" />
+                  Email Configuration
+                </div>
+                {isEmailConfigOpen ? (
+                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
                 )}
+              </button>
+              
+              {isEmailConfigOpen && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-300 ease-in-out">
+                  {template.email_subject && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Subject Line</p>
+                      <p className="text-sm text-gray-700 font-medium">{template.email_subject}</p>
+                    </div>
+                  )}
 
-                {template.email_from_name && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">From Name</p>
-                    <p className="text-sm text-gray-700">{template.email_from_name}</p>
-                  </div>
-                )}
+                  {template.email_from_name && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">From Name</p>
+                      <p className="text-sm text-gray-700">{template.email_from_name}</p>
+                    </div>
+                  )}
 
-                {template.email_from_address && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">From Address</p>
-                    <p className="text-sm text-gray-700 font-mono">{template.email_from_address}</p>
-                  </div>
-                )}
+                  {template.email_from_address && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">From Address</p>
+                      <p className="text-sm text-gray-700 font-mono">{template.email_from_address}</p>
+                    </div>
+                  )}
 
-                {template.reply_to_address && (
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Reply To</p>
-                    <p className="text-sm text-gray-700 font-mono">{template.reply_to_address}</p>
-                  </div>
-                )}
-              </div>
+                  {template.reply_to_address && (
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Reply To</p>
+                      <p className="text-sm text-gray-700 font-mono">{template.reply_to_address}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
