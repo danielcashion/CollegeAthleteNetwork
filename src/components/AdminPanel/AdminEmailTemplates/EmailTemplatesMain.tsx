@@ -144,7 +144,7 @@ export default function EmailTemplatesMain() {
                           </div>
                         </td>
                         <td className="px-6 py-5">
-                          <div className="max-w-sm">
+                          <div className="max-w-xs">
                             <p
                               title={template.template_description}
                               className="text-sm text-gray-600 truncate hover:text-gray-900 cursor-help transition-colors"
@@ -154,11 +154,18 @@ export default function EmailTemplatesMain() {
                           </div>
                         </td>
                         <td className="px-6 py-5">
-                          <div className="flex items-center">
-                            <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">
+                          <div className="flex items-center max-w-32">
+                            <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">
                               {template.template_creator?.charAt(0).toUpperCase() || "U"}
                             </div>
-                            <span className="text-sm text-gray-900">{template.template_creator}</span>
+                            <span 
+                              className="text-sm text-gray-900 truncate"
+                              title={template.template_creator}
+                            >
+                              {template.template_creator && template.template_creator.length > 12
+                                ? `${template.template_creator.substring(0, 12)}...`
+                                : template.template_creator}
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-5">
