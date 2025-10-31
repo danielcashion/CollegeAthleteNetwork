@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getInternalEmailTemplates } from "@/services/InternalMemberApis";
+import { getInternalEmailTemplates, deleteInternalEmailTemplate } from "@/services/InternalMemberApis";
 import { InternalEmailTemplate } from "@/types/InternalMember";
-import { Eye, Edit, Trash2, Plus, Mail, Loader2 } from "lucide-react";
+import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle, X } from "lucide-react";
 import EmailTemplateEditor from "./EmailTemplateEditor";
 import EmailTemplateViewer from "./EmailTemplateViewer";
 
@@ -16,6 +16,12 @@ export default function EmailTemplatesMain() {
   const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
   const [templateToEdit, setTemplateToEdit] =
     useState<InternalEmailTemplate | null>(null);
+  
+  // Delete modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState<InternalEmailTemplate | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchTemplates();
@@ -60,8 +66,35 @@ export default function EmailTemplatesMain() {
   };
 
   const handleDelete = (template: InternalEmailTemplate) => {
-    // Functionality to be implemented later
-    console.log("Delete template:", template.campaign_template_id);
+    setTemplateToDelete(template);
+    setShowDeleteModal(true);
+    setDeleteConfirmText("");
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!templateToDelete || deleteConfirmText.toLowerCase() !== "delete") {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deleteInternalEmailTemplate(templateToDelete.campaign_template_id);
+      await fetchTemplates(); // Refresh the templates list
+      setShowDeleteModal(false);
+      setTemplateToDelete(null);
+      setDeleteConfirmText("");
+    } catch (error) {
+      console.error("Error deleting template:", error);
+      // You could add a toast notification here for error handling
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setTemplateToDelete(null);
+    setDeleteConfirmText("");
   };
 
   return (
@@ -245,6 +278,86 @@ export default function EmailTemplatesMain() {
         template={templateToEdit}
         mode={editorMode}
       />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && templateToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">Delete Email Template</h3>
+                  <p className="text-red-100 text-sm">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              <div className="text-center">
+                <p className="text-gray-700 mb-4">
+                  Are you sure you want to delete the template{" "}
+                  <span className="font-semibold text-gray-900">
+                    &ldquo;{templateToDelete.template_title}&rdquo;
+                  </span>
+                  ?
+                </p>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                  <p className="text-sm text-red-800 mb-2">
+                    <strong>Warning:</strong> This will permanently delete the template and all its associated data.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Type <span className="font-mono bg-gray-100 px-2 py-1 rounded text-red-600">delete</span> to confirm:
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
+                  placeholder="Type 'delete' to confirm"
+                  disabled={isDeleting}
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                onClick={handleDeleteCancel}
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={deleteConfirmText.toLowerCase() !== "delete" || isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center space-x-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Confirm Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

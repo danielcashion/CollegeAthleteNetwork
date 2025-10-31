@@ -5,7 +5,7 @@ import {
   createInternalEmailTemplate,
   updateInternalEmailTemplate,
 } from "@/services/InternalMemberApis";
-import { X, Save, Loader2 } from "lucide-react";
+import { X, Save, Loader2, Edit, Eye, Code, Mail, Settings, Info, AlertCircle } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import HtmlViewer from "../General/HtmlViewer";
 
@@ -52,6 +52,30 @@ export default function EmailTemplateEditor({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Handle Escape key press
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen && !loading) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isOpen, onClose, loading]);
+
+  // Handle click outside modal
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget && !loading) {
+      onClose();
+    }
+  };
 
   useEffect(() => {
     if (template && mode === "edit") {
@@ -153,50 +177,56 @@ export default function EmailTemplateEditor({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-[1600px] max-h-[95vh] flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-              {mode === "edit"
-                ? "Edit Email Template"
-                : "Create Email Template"}
-            </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              {mode === "edit"
-                ? "Modify your existing email template"
-                : "Build a new email template for your campaigns"}
-            </p>
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      onClick={handleBackdropClick}
+    >
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-[1600px] max-h-[95vh] flex flex-col overflow-hidden">
+        {/* Enhanced Header */}
+        <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white">
+          <div className="px-8 py-6">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  {mode === "edit" ? (
+                    <Edit className="w-6 h-6 text-white" />
+                  ) : (
+                    <Mail className="w-6 h-6 text-white" />
+                  )}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">
+                    {mode === "edit" ? "Edit Email Template" : "Create Email Template"}
+                  </h2>
+                  <p className="text-blue-100 mt-1">
+                    {mode === "edit" 
+                      ? "Modify your existing email template" 
+                      : "Build a new email template for your campaigns"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-xl transition-all duration-200"
+                disabled={loading}
+                aria-label="Close editor"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-all duration-200"
-            disabled={loading}
-            aria-label="Close editor"
-          >
-            <X size={24} />
-          </button>
         </div>
 
-        {/* Error Message */}
+        {/* Enhanced Error Message */}
         {error && (
-          <div className="mx-8 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-3">
+          <div className="mx-8 mt-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl flex items-start space-x-3 shadow-sm">
             <div className="flex-shrink-0">
-              <svg
-                className="w-5 h-5 text-red-400 mt-0.5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                <AlertCircle className="w-5 h-5 text-white" />
+              </div>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-red-800">Error</h3>
+              <h3 className="text-sm font-semibold text-red-800">Error</h3>
               <p className="text-sm text-red-700 mt-1">{error}</p>
             </div>
           </div>
@@ -208,31 +238,21 @@ export default function EmailTemplateEditor({
             {/* Left Side - Form Fields and HTML Editor */}
             <div className="w-1/2 border-r border-gray-200 overflow-y-auto">
               <div className="p-8 space-y-6">
-                {/* Basic Information Section */}
+                {/* Enhanced Basic Information Section */}
                 <div className="space-y-4">
-                  <div className="border-b border-gray-100 pb-3">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg
-                        className="w-5 h-5 text-blue-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <Info className="w-4 h-4 text-white" />
+                      </div>
                       Basic Information
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 ml-11">
                       General template details and metadata
                     </p>
                   </div>
 
-                  {/* Template Title */}
+                  {/* Enhanced Template Title */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Title <span className="text-red-500">*</span>
@@ -242,13 +262,13 @@ export default function EmailTemplateEditor({
                       name="template_title"
                       value={formData.template_title || ""}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="e.g., Welcome Email, Newsletter Template"
                       required
                     />
                   </div>
 
-                  {/* Template Description */}
+                  {/* Enhanced Template Description */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Description
@@ -258,13 +278,13 @@ export default function EmailTemplateEditor({
                       value={formData.template_description || ""}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 resize-none group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="Describe the purpose and target audience for this template"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Template Creator */}
+                    {/* Enhanced Template Creator */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Creator
@@ -274,12 +294,12 @@ export default function EmailTemplateEditor({
                         name="template_creator"
                         value={formData.template_creator || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                         placeholder="Creator name"
                       />
                     </div>
 
-                    {/* Status */}
+                    {/* Enhanced Status */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Status
@@ -288,7 +308,7 @@ export default function EmailTemplateEditor({
                         name="is_active_YN"
                         value={formData.is_active_YN ?? 1}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       >
                         <option value={1}>✅ Active</option>
                         <option value={0}>⏸️ Inactive</option>
@@ -297,38 +317,22 @@ export default function EmailTemplateEditor({
                   </div>
                 </div>
 
-                {/* Technical Configuration Section */}
+                {/* Enhanced Technical Configuration Section */}
                 <div className="space-y-4">
-                  <div className="border-b border-gray-100 pb-3">
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg
-                        className="w-5 h-5 text-purple-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <Settings className="w-4 h-4 text-white" />
+                      </div>
                       Technical Configuration
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 ml-11">
                       Advanced settings for template processing
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Campaign Type */}
+                    {/* Enhanced Campaign Type */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Campaign Type
@@ -338,12 +342,12 @@ export default function EmailTemplateEditor({
                         name="campaign_type"
                         value={formData.campaign_type || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                         placeholder="e.g., promotional, informational"
                       />
                     </div>
 
-                    {/* System-wide */}
+                    {/* Enhanced System-wide */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         System-wide Template
@@ -352,7 +356,7 @@ export default function EmailTemplateEditor({
                         name="is_systemwide_YN"
                         value={formData.is_systemwide_YN ?? 0}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       >
                         <option value={1}>✅ Yes</option>
                         <option value={0}>❌ No</option>
@@ -360,7 +364,7 @@ export default function EmailTemplateEditor({
                     </div>
                   </div>
 
-                  {/* Template Task */}
+                  {/* Enhanced Template Task */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Task
@@ -373,12 +377,12 @@ export default function EmailTemplateEditor({
                       name="template_task"
                       value={formData.template_task || ""}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="Must align with Database Task from /messages endpoint"
                     />
                   </div>
 
-                  {/* Template Parameters */}
+                  {/* Enhanced Template Parameters */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Template Parameters
@@ -391,37 +395,27 @@ export default function EmailTemplateEditor({
                       value={formData.template_params || ""}
                       onChange={handleInputChange}
                       rows={2}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 resize-none group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="e.g., user_name, university_name, course_title"
                     />
                   </div>
                 </div>
 
-                {/* Email Settings Section */}
+                {/* Enhanced Email Settings Section */}
                 <div className="space-y-4">
-                  <div className="border-b border-gray-100 pb-3">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg
-                        className="w-5 h-5 text-blue-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3">
+                        <Mail className="w-4 h-4 text-white" />
+                      </div>
                       Email Settings
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 ml-11">
                       Configure email headers and metadata
                     </p>
                   </div>
 
-                  {/* Email Subject */}
+                  {/* Enhanced Email Subject */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Email Subject
@@ -431,13 +425,13 @@ export default function EmailTemplateEditor({
                       name="email_subject"
                       value={formData.email_subject || ""}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="e.g., Welcome to College Athlete Network!"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Email From Name */}
+                    {/* Enhanced Email From Name */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         From Name
@@ -447,12 +441,12 @@ export default function EmailTemplateEditor({
                         name="email_from_name"
                         value={formData.email_from_name || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                         placeholder="e.g., CAN Team"
                       />
                     </div>
 
-                    {/* Email From Address */}
+                    {/* Enhanced Email From Address */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         From Address
@@ -462,13 +456,13 @@ export default function EmailTemplateEditor({
                         name="email_from_address"
                         value={formData.email_from_address || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                         placeholder="e.g., noreply@example.com"
                       />
                     </div>
                   </div>
 
-                  {/* Reply To Address */}
+                  {/* Enhanced Reply To Address */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Reply To Address
@@ -478,37 +472,27 @@ export default function EmailTemplateEditor({
                       name="reply_to_address"
                       value={formData.reply_to_address || ""}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors group-hover:border-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
                       placeholder="e.g., support@example.com"
                     />
                   </div>
                 </div>
 
-                {/* HTML Editor Section */}
+                {/* Enhanced HTML Editor Section */}
                 <div className="space-y-4">
-                  <div className="border-b border-gray-100 pb-3">
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                        <Code className="w-4 h-4 text-white" />
+                      </div>
                       Email Body <span className="text-red-500">*</span>
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 ml-11">
                       Write your email template HTML with live preview
                     </p>
                   </div>
 
-                  <div className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                  <div className="border border-gray-300 rounded-xl overflow-hidden shadow-lg bg-white">
                     <Editor
                       height="500px"
                       defaultLanguage="html"
@@ -533,66 +517,40 @@ export default function EmailTemplateEditor({
               </div>
             </div>
 
-            {/* Right Side - Live Preview */}
+            {/* Enhanced Right Side - Live Preview */}
             <div className="w-1/2 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
               <div className="px-8 py-6 bg-white border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <svg
-                        className="w-5 h-5 text-blue-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <Eye className="w-4 h-4 text-white" />
+                      </div>
                       Live Preview
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 ml-11">
                       Real-time preview of your email template
                     </p>
                   </div>
                   <div className="flex items-center space-x-2 text-xs text-gray-500">
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    <span>Live</span>
+                    <span className="font-medium">Live</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-8">
-                <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
                   {formData.email_body ? (
                     <div className="p-6">
                       <HtmlViewer htmlContent={formData.email_body} />
                     </div>
                   ) : (
                     <div className="p-12 text-center">
-                      <svg
-                        className="w-16 h-16 text-gray-300 mx-auto mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                      <h4 className="text-lg font-medium text-gray-900 mb-2">
+                      <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <Code className="w-10 h-10 text-gray-400" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
                         No Content Yet
                       </h4>
                       <p className="text-gray-500 max-w-sm mx-auto">
@@ -607,55 +565,47 @@ export default function EmailTemplateEditor({
           </div>
         </form>
 
-        {/* Footer */}
-        <div className="px-8 py-6 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-          <div className="flex items-center text-sm text-gray-500">
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {mode === "edit"
-              ? "Modifying existing template"
-              : "Creating new template"}
-          </div>
+        {/* Enhanced Footer */}
+        <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center text-sm text-gray-600">
+              <div className="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center mr-3">
+                <Info className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-medium">
+                {mode === "edit" ? "Modifying existing template" : "Creating new template"}
+              </span>
+            </div>
 
-          <div className="flex items-center space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="px-6 py-2.5 bg-blueMain text-white rounded-lg hover:bg-blue-700 focus:bg-blue-700 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  <span>{mode === "edit" ? "Updating..." : "Creating..."}</span>
-                </>
-              ) : (
-                <>
-                  <Save size={18} />
-                  <span>
-                    {mode === "edit" ? "Update Template" : "Create Template"}
-                  </span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 shadow-sm"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] focus:bg-[#243a66] transition-all duration-200 font-semibold flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#1C315F] focus:ring-offset-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>{mode === "edit" ? "Updating..." : "Creating..."}</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-5 h-5" />
+                    <span>
+                      {mode === "edit" ? "Update Template" : "Create Template"}
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
