@@ -20,7 +20,6 @@ import {
 import SaveDraftCampaignModal from "./SaveDraftCampaignModal";
 import ConfirmSaveDraftModal from "./ConfirmSaveDraftModal";
 import { CampaignData } from "@/types/Campaign";
-import { getVarcharEight } from "@/helpers/getVarCharId";
 import { cleanEmailField } from "@/services/InternalMemberApis";
 import { getAllUniversities } from "@/services/universityApi";
 
@@ -39,9 +38,6 @@ interface ECommsCampaignBuilderProps {
   onBackToList?: () => void;
   // If true, open the Save Draft modal as soon as the builder mounts
   openSaveDraftOnMount?: boolean;
-  // Optional initial campaign name/description when opening builder via 'Create Campaign'
-  initialCampaignName?: string;
-  initialCampaignDesc?: string;
   // When editing an existing campaign, pass the campaign data
   editingCampaign?: CampaignData | null;
 }
@@ -49,10 +45,10 @@ interface ECommsCampaignBuilderProps {
 export default function CampaignBuilder({
   onBackToList,
   openSaveDraftOnMount,
-  initialCampaignName,
-  initialCampaignDesc,
   editingCampaign,
 }: ECommsCampaignBuilderProps) {
+  console.log("editingCampaign:", editingCampaign);
+
   const [sportTeamList, setSportTeamList] = useState<any[]>([]);
   const [universityMetaData, setUniversityMetaData] = useState<any>(null);
   const [allUniversities, setAllUniversities] = useState<any[]>([]);
@@ -536,11 +532,7 @@ export default function CampaignBuilder({
                     className="bg-white text-sky-700 font-semibold px-4 py-2 rounded shadow hover:shadow-md"
                     onClick={() => {
                       // If we already have a created campaign name, show confirm modal
-                      if (
-                        editingCampaign ||
-                        createdCampaign?.campaign_name ||
-                        initialCampaignName
-                      ) {
+                      if (editingCampaign || createdCampaign?.campaign_name) {
                         setConfirmSaveOpen(true);
                       } else {
                         setSaveDraftModalOpen(true);
@@ -628,8 +620,7 @@ export default function CampaignBuilder({
                 filteredCounts={filteredCounts}
                 campaignName={
                   createdCampaign?.campaign_name ??
-                  editingCampaign?.campaign_name ??
-                  initialCampaignName
+                  editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 selectedUniversities={selectedUniversities}
@@ -657,8 +648,7 @@ export default function CampaignBuilder({
                 setIncludeUniversityLogoAction={setIncludeUniversityLogo}
                 campaignName={
                   createdCampaign?.campaign_name ??
-                  editingCampaign?.campaign_name ??
-                  initialCampaignName
+                  editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 templateId={templateId}
@@ -669,16 +659,10 @@ export default function CampaignBuilder({
                 onBack={() => handleTabSwitch(1)}
                 audience_size={filteredTotal.athletes}
                 audience_emails={filteredTotal.emails}
-                campaign={
-                  editingCampaign ||
-                  createdCampaign ||
-                  initialCampaignName ||
-                  undefined
-                }
+                campaign={editingCampaign || createdCampaign || undefined}
                 campaign_name={
                   editingCampaign?.campaign_name ||
                   createdCampaign?.campaign_name ||
-                  initialCampaignName ||
                   undefined
                 }
                 campaign_status={
@@ -692,8 +676,7 @@ export default function CampaignBuilder({
                 colorScheme={colorScheme}
                 campaignName={
                   createdCampaign?.campaign_name ??
-                  editingCampaign?.campaign_name ??
-                  initialCampaignName
+                  editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
               />
@@ -713,8 +696,7 @@ export default function CampaignBuilder({
                 colorScheme={colorScheme}
                 campaignName={
                   createdCampaign?.campaign_name ??
-                  editingCampaign?.campaign_name ??
-                  initialCampaignName
+                  editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
               />
@@ -723,8 +705,7 @@ export default function CampaignBuilder({
                 onBackAction={() => handleTabSwitch(3)}
                 campaignName={
                   createdCampaign?.campaign_name ??
-                  editingCampaign?.campaign_name ??
-                  initialCampaignName
+                  editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
               />
@@ -747,12 +728,8 @@ export default function CampaignBuilder({
           athletes: filteredTotal.athletes,
           emails: filteredTotal.emails,
         }}
-        initialCampaignName={
-          editingCampaign?.campaign_name || initialCampaignName
-        }
-        initialCampaignDesc={
-          editingCampaign?.campaign_desc || initialCampaignDesc
-        }
+        initialCampaignName={editingCampaign?.campaign_name}
+        initialCampaignDesc={editingCampaign?.campaign_desc}
         emailData={{
           senderName,
           senderEmail,
@@ -778,7 +755,6 @@ export default function CampaignBuilder({
         campaignName={
           editingCampaign?.campaign_name ??
           createdCampaign?.campaign_name ??
-          initialCampaignName ??
           "Unnamed campaign"
         }
         onConfirm={async () => {
@@ -793,12 +769,10 @@ export default function CampaignBuilder({
               campaign_name:
                 editingCampaign?.campaign_name ??
                 createdCampaign?.campaign_name ??
-                initialCampaignName ??
                 "",
               campaign_desc:
                 editingCampaign?.campaign_desc ??
                 createdCampaign?.campaign_desc ??
-                initialCampaignDesc ??
                 undefined,
               campaign_type: commType === "event" ? "event" : "email",
               aws_configuration_set:

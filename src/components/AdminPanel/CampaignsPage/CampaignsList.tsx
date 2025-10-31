@@ -20,7 +20,7 @@ import toast from "react-hot-toast";
 import { getVarcharEight } from "@/helpers/getVarCharId";
 
 interface ECommsListProps {
-  createCampaignAction: (name: string, desc: string) => void;
+  createCampaignAction: (campaign: CampaignData) => void;
   editCampaignAction: (campaign: CampaignData) => void;
 }
 
@@ -41,7 +41,9 @@ const ActionsDropdown = ({
   onDuplicateClick: (campaign: CampaignData) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
+  const [dropdownPosition, setDropdownPosition] = useState<"bottom" | "top">(
+    "bottom"
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -71,16 +73,19 @@ const ActionsDropdown = ({
       const viewportHeight = window.innerHeight;
       const dropdownHeight = 280; // Approximate height of dropdown
       const buffer = 20; // Add buffer for better spacing
-      
+
       // Check if there's enough space below the button
       const spaceBelow = viewportHeight - buttonRect.bottom;
       const spaceAbove = buttonRect.top;
-      
+
       // Position above if there's not enough space below, but enough space above
-      if (spaceBelow < dropdownHeight + buffer && spaceAbove >= dropdownHeight + buffer) {
-        setDropdownPosition('top');
+      if (
+        spaceBelow < dropdownHeight + buffer &&
+        spaceAbove >= dropdownHeight + buffer
+      ) {
+        setDropdownPosition("top");
       } else {
-        setDropdownPosition('bottom');
+        setDropdownPosition("bottom");
       }
     }
   }, [isOpen]);
@@ -120,15 +125,13 @@ const ActionsDropdown = ({
       </button>
 
       {isOpen && (
-        <div 
+        <div
           className={`absolute right-0 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-[60] py-1 ${
-            dropdownPosition === 'top' 
-              ? 'bottom-full mb-2' 
-              : 'top-full mt-2'
+            dropdownPosition === "top" ? "bottom-full mb-2" : "top-full mt-2"
           }`}
           style={{
-            maxHeight: '280px',
-            overflowY: 'auto'
+            maxHeight: "280px",
+            overflowY: "auto",
           }}
         >
           <button
@@ -355,8 +358,8 @@ export default function CampaignsList({
       // Refresh campaigns list
       fetchCampaigns();
 
-      // Call the createCampaignAction to open the campaign builder
-      createCampaignAction(newCampaignName.trim(), newCampaignDesc.trim());
+      // Call the createCampaignAction to open the campaign builder with the created campaign
+      createCampaignAction(campaignData);
     } catch (error) {
       console.error("Error creating campaign:", error);
       toast.error("Failed to create campaign");

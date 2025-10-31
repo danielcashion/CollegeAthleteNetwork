@@ -11,18 +11,10 @@ export default function CampaignsPageMain() {
   const [editingCampaign, setEditingCampaign] = useState<CampaignData | null>(
     null
   );
-  const [initialCampaignName, setInitialCampaignName] = useState<
-    string | undefined
-  >(undefined);
-  const [initialCampaignDesc, setInitialCampaignDesc] = useState<
-    string | undefined
-  >(undefined);
 
-  const handleCreateCampaign = (name: string, desc: string) => {
-    setEditingCampaign(null); // Clear any editing state
-    setInitialCampaignName(name);
-    setInitialCampaignDesc(desc);
-    setOpenSaveDraftOnMount(false); // we already have basics, don't prompt again
+  const handleCreateCampaign = (campaign: CampaignData) => {
+    setEditingCampaign(campaign); // Set the created campaign as editing campaign
+    setOpenSaveDraftOnMount(false); // we already have the campaign created
     setView("builder");
   };
 
@@ -49,8 +41,6 @@ export default function CampaignsPageMain() {
           onBackToList={handleBackToList}
           openSaveDraftOnMount={openSaveDraftOnMount}
           editingCampaign={editingCampaign}
-          initialCampaignName={initialCampaignName}
-          initialCampaignDesc={initialCampaignDesc}
         />
       )}
     </div>

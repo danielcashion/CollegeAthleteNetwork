@@ -23,12 +23,8 @@ interface SaveDraftCampaignModalProps {
     athletes: number;
     emails: number;
   };
-  // optional callback invoked after a successful save with created campaign info
-  onSaved?: (created: {
-    campaign_id: string;
-    campaign_name: string;
-    campaign_desc?: string;
-  }) => void;
+  // optional callback invoked after a successful save with created campaign data
+  onSaved?: (created: CampaignData) => void;
   initialCampaignName?: string;
   initialCampaignDesc?: string;
   // Email template data
@@ -124,13 +120,9 @@ export default function SaveDraftCampaignModal({
       await createInternalCampaign(campaignData);
       toast.success("Campaign draft saved successfully!");
 
-      // notify parent that a campaign draft was created
+      // notify parent that a campaign draft was created with full campaign data
       if (typeof onSaved === "function") {
-        onSaved({
-          campaign_id: campaignData.campaign_id,
-          campaign_name: campaignData.campaign_name,
-          campaign_desc: campaignData.campaign_desc,
-        });
+        onSaved(campaignData);
       }
       // Reset form and close modal
       setCampaignName("");
