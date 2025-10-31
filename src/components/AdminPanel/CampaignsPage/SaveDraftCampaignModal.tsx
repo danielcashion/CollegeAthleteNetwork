@@ -1,10 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
-import {
-  createInternalCampaign,
-  createInternalEmailTemplate,
-} from "@/services/InternalMemberApis";
+import { createInternalCampaign } from "@/services/InternalMemberApis";
 import type { CampaignData } from "@/types/Campaign";
 import toast from "react-hot-toast";
 import InputField from "@/components/MUI/InputTextField";
@@ -86,36 +83,6 @@ export default function SaveDraftCampaignModal({
 
     setSaving(true);
     try {
-      let templateId: string | null = null;
-
-      // Create template if email data is provided
-      if (emailData && emailData.body) {
-        templateId = getVarcharEight();
-
-        const templateData = {
-          campaign_template_id: templateId,
-          campaign_type: "email",
-          university_names: "Yale",
-          template_title: `Template for ${campaignName.trim()}`,  // Example title. Needs to be fixed.
-          email_body: cleanEmailField(emailData.body),
-          email_from_name: emailData.senderName,
-          email_from_address: emailData.senderEmail,
-          reply_to_address: emailData.replyTo || null,
-          email_subject: cleanEmailField(emailData.subject),
-          is_systemwide_YN: 1,
-          is_active_YN: 1,
-          created_by: "admin",
-          editor_type: emailData.editorType || "html",
-        };
-
-        const templateResponse = await createInternalEmailTemplate(
-          templateData
-        );
-        if (!templateResponse) {
-          templateId = null;
-        }
-      }
-
       const campaignData: CampaignData = {
         campaign_id: getVarcharEight(),
         campaign_name: campaignName.trim(),
@@ -130,8 +97,6 @@ export default function SaveDraftCampaignModal({
         include_logo_YN: includeUniversityLogo ? 1 : 0,
         university_colors_YN: colorScheme === "university" ? 1 : 0,
         created_datetime: new Date().toISOString(),
-        // Use template_id instead of individual email fields
-        campaign_template_id: templateId || undefined,
         // Keep basic email info for backward compatibility
         email_from_name: emailData?.senderName || undefined,
         email_from_address: emailData?.senderEmail || undefined,

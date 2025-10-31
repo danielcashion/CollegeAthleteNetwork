@@ -11,8 +11,6 @@ import { CircularProgress } from "@mui/material";
 import {
   getTotalCountsByUniversity,
   getInternalEmailTemplatesById,
-  updateInternalEmailTemplate,
-  createInternalEmailTemplate,
 } from "@/services/InternalMemberApis";
 import { updateInternalCampaign } from "@/services/InternalMemberApis";
 import {
@@ -304,148 +302,37 @@ export default function CampaignBuilder({
   // Function to handle moving from Template tab to Review tab
   const handleTemplateNext = async () => {
     try {
-      let currentTemplateId = templateId;
+      // Update campaign with template options if we have a campaign
+      if (createdCampaign || editingCampaign) {
+        try {
+          const campaignData = {
+            ...(editingCampaign || createdCampaign),
+            include_logo_YN: includeUniversityLogo ? 1 : 0,
+            university_colors_YN: colorScheme === "university" ? 1 : 0,
+            updated_datetime: new Date().toISOString(),
+          };
 
-      // If we don't have a template ID, generate one
-      if (!currentTemplateId) {
-        currentTemplateId = getVarcharEight();
-      }
+          await updateInternalCampaign(campaignData.campaign_id, campaignData);
 
-      // Create template data
-      const templateData = {
-        campaign_template_id: currentTemplateId,
-        campaign_type: "email",
-        university_names: "Yale",
-        template_title: `Template for ${
-          createdCampaign?.campaign_name || initialCampaignName || "Campaign"
-        }`,
-        email_body: cleanEmailField(body),
-        email_from_name: senderName,
-        email_from_address: senderEmail,
-        reply_to_address: replyTo || null,
-        email_subject: cleanEmailField(subject),
-        is_systemwide_YN: 0,
-        is_active_YN: 1,
-        created_by: "1",
-        editor_type: editorType,
-      };
-
-      // Update existing template or create new one
-      let response;
-      if (templateId) {
-        // Template exists, update it
-        response = await updateInternalEmailTemplate(
-          currentTemplateId,
-          templateData
-        );
-      } else {
-        // Create new template
-        response = await createInternalEmailTemplate(templateData);
-      }
-
-      if (response) {
-        setTemplateId(currentTemplateId);
-        console.log(
-          "Template",
-          templateId ? "updated" : "created",
-          "with ID:",
-          currentTemplateId
-        );
-
-        // Update campaign with template_id if we have a campaign
-        if (createdCampaign || editingCampaign) {
-          try {
-            const campaignData = {
-              ...(editingCampaign || createdCampaign),
-              campaign_template_id: currentTemplateId,
-              include_logo_YN: includeUniversityLogo ? 1 : 0,
-              university_colors_YN: colorScheme === "university" ? 1 : 0,
-              updated_datetime: new Date().toISOString(),
-            };
-
-            await updateInternalCampaign(
-              campaignData.campaign_id,
-              campaignData
-            );
-            console.log(
-              "Campaign updated with template_id:",
-              currentTemplateId
-            );
-
-            // Update the created campaign state
-            setCreatedCampaign(campaignData);
-          } catch (updateError) {
-            console.error(
-              "Error updating campaign with campaign_template_id:",
-              updateError
-            );
-            // Don't block the flow, just log the error
-          }
+          // Update the created campaign state
+          setCreatedCampaign(campaignData);
+        } catch (updateError) {
+          console.error("Error updating campaign:", updateError);
+          // Don't block the flow, just log the error
         }
-
-        // Move to review tab
-        setActiveIndex(2);
-      } else {
-        toast.error(
-          "Failed to " + (templateId ? "update" : "create") + " template"
-        );
       }
+
+      // Move to review tab
+      setActiveIndex(2);
     } catch (error) {
-      console.error(
-        "Error " + (templateId ? "updating" : "creating") + " template:",
-        error
-      );
-      toast.error(
-        "Failed to " + (templateId ? "update" : "create") + " template"
-      );
+      console.error("Error updating campaign:", error);
+      toast.error("Failed to proceed to review");
     }
   };
 
   // Function to handle background saving when switching tabs
   const handleBackgroundSave = async () => {
     try {
-      let currentTemplateId = templateId;
-
-      // If we don't have a template ID, generate one
-      if (!currentTemplateId) {
-        currentTemplateId = getVarcharEight();
-      }
-
-      // Create template data
-      const templateData = {
-        campaign_template_id: currentTemplateId,
-        campaign_type: "email",
-        university_names: "Yale",
-        template_title: `${createdCampaign?.campaign_name || initialCampaignName || "Campaign"}`,
-        email_body: cleanEmailField(body),
-        email_from_name: senderName,
-        email_from_address: senderEmail,
-        reply_to_address: replyTo || null,
-        email_subject: cleanEmailField(subject),
-        is_systemwide_YN: 0,
-        is_active_YN: 1,
-        editor_type: editorType,
-      };
-
-      // Update existing template or create new one (in background)
-      if (templateId) {
-        updateInternalEmailTemplate(templateId, templateData).catch(
-          (error: any) => {
-            console.error("Background template update failed:", error);
-          }
-        );
-      } else {
-        if (templateData.email_body) {
-          createInternalEmailTemplate(templateData)
-            .then(() => {
-              setTemplateId(currentTemplateId);
-            })
-            .catch((error: any) => {
-              console.error("Background template creation failed:", error);
-            });
-        }
-      }
-
       // Update campaign if we have one
       const campaignToUpdate = editingCampaign || createdCampaign;
       if (campaignToUpdate) {
@@ -456,7 +343,6 @@ export default function CampaignBuilder({
             max_roster_year: selectedYears,
             sports: sports,
           }),
-          campaign_template_id: currentTemplateId,
           email_from_name: senderName,
           email_from_address: senderEmail,
           reply_to_address: replyTo || null,
@@ -810,55 +696,6 @@ export default function CampaignBuilder({
           setConfirmSaveOpen(false);
           setSaving(true);
           try {
-            let finalTemplateId = templateId;
-
-            // Create or update template if needed
-            if (body || senderName || subject) {
-              // Generate new template ID if we don't have one
-              if (!finalTemplateId) {
-                finalTemplateId = getVarcharEight();
-              }
-
-              const templateData = {
-                campaign_template_id: finalTemplateId,
-                campaign_type: "email",
-                university_names: "Yale",
-                template_title: `Template for ${
-                  editingCampaign?.campaign_name ??
-                  createdCampaign?.campaign_name ??
-                  initialCampaignName ??
-                  "Campaign"
-                }`,
-                email_body: body,
-                email_from_name: senderName,
-                email_from_address: senderEmail,
-                reply_to_address: replyTo || null,
-                email_subject: subject,
-                is_systemwide_YN: 0,
-                is_active_YN: 1,
-                editor_type: editorType,
-              };
-
-              // Update existing template or create new one
-              let templateResponse;
-              if (templateId) {
-                // Template exists, update it
-                templateResponse = await updateInternalEmailTemplate(
-                  finalTemplateId,
-                  templateData
-                );
-              } else {
-                // Create new template
-                templateResponse = await createInternalEmailTemplate(
-                  templateData
-                );
-              }
-
-              if (templateResponse) {
-                setTemplateId(finalTemplateId);
-              }
-            }
-
             // Build campaign payload from available builder state
             const campaignData: any = {
               campaign_id:
@@ -890,8 +727,7 @@ export default function CampaignBuilder({
               include_logo_YN: includeUniversityLogo ? 1 : 0,
               university_colors_YN: colorScheme === "university" ? 1 : 0,
               updated_datetime: new Date().toISOString(),
-              // Use template_id instead of individual email fields
-              campaign_template_id: finalTemplateId || undefined,
+              campaign_template_id: templateId || undefined,
               // Keep basic email info for backward compatibility
               email_from_name: senderName || undefined,
               email_from_address: senderEmail || undefined,
