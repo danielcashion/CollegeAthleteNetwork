@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import InputField from "@/components/MUI/InputTextField";
-import { Search } from "lucide-react";
+import { Search, Mail } from "lucide-react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { Plus, Loader } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -91,50 +90,49 @@ const ActionsDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+        className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20"
       >
         <BsThreeDotsVertical className="h-4 w-4 text-gray-600" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-          <div className="py-1">
-            <button
-              onClick={handleEdit}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <FiEdit2 className="h-4 w-4" />
-              Edit Campaign
-            </button>
-            <button
-              onClick={handleView}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <FiEye className="h-4 w-4" />
-              Review Details
-            </button>
-            <button
-              onClick={handleEmailList}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <FiAtSign className="h-4 w-4" />
-              View Recipients
-            </button>
-            <button
-              onClick={handleDuplicate}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <GrDuplicate className="h-4 w-4" />
-              Duplicate
-            </button>
-            <button
-              onClick={() => onDeleteClick(campaign)}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <FiTrash2 className="h-4 w-4" />
-              Delete Campaign
-            </button>
-          </div>
+        <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1">
+          <button
+            onClick={handleEdit}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+          >
+            <FiEdit2 className="h-4 w-4 text-blue-500" />
+            <span>Edit Campaign</span>
+          </button>
+          <button
+            onClick={handleView}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+          >
+            <FiEye className="h-4 w-4 text-green-500" />
+            <span>Review Details</span>
+          </button>
+          <button
+            onClick={handleEmailList}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+          >
+            <FiAtSign className="h-4 w-4 text-purple-500" />
+            <span>View Recipients</span>
+          </button>
+          <button
+            onClick={handleDuplicate}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+          >
+            <GrDuplicate className="h-4 w-4 text-orange-500" />
+            <span>Duplicate</span>
+          </button>
+          <div className="border-t border-gray-100 my-1"></div>
+          <button
+            onClick={() => onDeleteClick(campaign)}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+          >
+            <FiTrash2 className="h-4 w-4" />
+            <span>Delete Campaign</span>
+          </button>
         </div>
       )}
     </div>
@@ -487,268 +485,321 @@ export default function CampaignsList({
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-md">
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
-            <h1 className="text-2xl font-extrabold font-merriweather text-primary">
-              Campaigns
-            </h1>
-            <p className="text-primary mt-1">
-              Manage your email and SMS communications to effectively engage
-              your audience.
-            </p>
-          </div>
-          <div className="flex gap-4 items-start">
-            <div className="relative w-72">
-              <Search className="absolute right-3 top-3 h-4 w-4 text-gray-500 pointer-events-none" />
-              <InputField
-                label="Campaign Search"
-                value={searchTerm}
-                setValue={setSearchTerm}
-                clearEnabled={true}
-              />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Enhanced Header Section */}
+      <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white shadow-xl">
+        <div className="px-8 py-8">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <Mail className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Email Campaigns</h1>
+                <p className="text-blue-100 mt-1">
+                  Manage your email and SMS communications to effectively engage your audience
+                </p>
+              </div>
             </div>
-            <button
-              onClick={() => {
-                setShowPreCreateModal(true);
-                setNewCampaignName("");
-                setNewCampaignDesc("");
-                setPreCreateError(null);
-              }}
-              className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-semibold"
-            >
-              <Plus className="h-4 w-4" />
-              Create Campaign
-            </button>
+            <div className="flex gap-4 items-center">
+              <div className="relative w-80">
+                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-white focus:border-white transition-all duration-200 bg-white/90 backdrop-blur-sm"
+                  placeholder="Search campaigns..."
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setShowPreCreateModal(true);
+                  setNewCampaignName("");
+                  setNewCampaignDesc("");
+                  setPreCreateError(null);
+                }}
+                className="flex items-center space-x-2 px-6 py-3 bg-white text-[#1C315F] rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                <Plus className="w-5 h-5" />
+                <span>Create Campaign</span>
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div className="relative overflow-x-auto h-[70vh]">
-          <table className="w-full text-sm border-collapse">
-            <thead className="sticky top-0 z-10 bg-primary text-white shadow-sm rounded-xl w-full">
-              <tr>
-                <th className="px-4 py-3 text-left font-semibold rounded-l-xl w-1/3">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("campaign_name")}
-                  >
-                    Campaign Name & Description {getSortIcon("campaign_name")}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("campaign_type")}
-                  >
-                    Type {getSortIcon("campaign_type")}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-center font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("campaign_status")}
-                  >
-                    Status {getSortIcon("campaign_status")}
-                  </button>
-                </th>
-
-                <th className="px-4 py-3 text-left font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("audience_size")}
-                  >
-                    Audience Size {getSortIcon("audience_size")}
-                  </button>
-                </th>
-
-                <th className="px-4 py-3 text-left font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("audience_emails")}
-                  >
-                    Targeted Emails {getSortIcon("audience_emails")}
-                  </button>
-                </th>
-
-                <th className="px-4 py-3 text-center font-semibold">
-                  Sent/Scheduled Date
-                </th>
-
-                <th className="px-4 py-3 text-left font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("created_datetime")}
-                  >
-                    Created On {getSortIcon("created_datetime")}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left font-semibold">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={() => handleSort("updated_datetime")}
-                  >
-                    Last Update {getSortIcon("updated_datetime")}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-right font-semibold rounded-r-xl">
-                  <div className="flex items-center justify-end gap-1">
-                    Actions
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedCampaigns.map((campaign, index) => (
-                <tr
-                  key={campaign.campaign_id || index}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="px-4 py-3 text-left w-1/3">
-                    <StyledTooltip
-                      title={`Click to Edit ${campaign.campaign_name} Campaign Details`}
-                      arrow
-                      placement="top"
-                    >
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => editCampaignAction(campaign)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ")
-                            editCampaignAction(campaign);
-                        }}
-                        className="font-medium text-gray-900 cursor-pointer hover:text-blue-600 hover:font-bold focus:outline-none focus:ring-2 focus:ring-primary/40"
-                        aria-label={`Edit campaign ${campaign.campaign_name}`}
-                      >
-                        {campaign.campaign_name}
-                      </div>
-                    </StyledTooltip>
-                    {campaign.campaign_desc && (
-                      <div className="text-sm text-gray-600 overflow-hidden line-clamp-1">
-                        {campaign.campaign_desc}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-left">
-                    <span className="capitalize">
-                      {campaign.campaign_type || "-"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        campaign.campaign_status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : campaign.campaign_status === "sent"
-                          ? "bg-blue-100 text-blue-800"
-                          : campaign.campaign_status === "scheduled"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : campaign.campaign_status === "processing"
-                          ? "bg-orange-100 text-orange-800"
-                          : campaign.campaign_status === "failed"
-                          ? "bg-red-100 text-red-800"
-                          : campaign.campaign_status === "draft"
-                          ? "bg-gray-200 text-gray-800"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
-                    >
-                      {campaign.campaign_status || "-"}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-3 text-center">
-                    {campaign.audience_size
-                      ? Number(campaign.audience_size).toLocaleString()
-                      : "-"}
-                  </td>
-
-                  <td className="px-4 py-3 text-center">
-                    {campaign.audience_emails
-                      ? Number(campaign.audience_emails).toLocaleString()
-                      : "-"}
-                  </td>
-
-                  <td className="px-4 py-3 text-center">
-                    {(() => {
-                      const scheduledDate = campaign.scheduled_datetime
-                        ? new Date(campaign.scheduled_datetime)
-                        : null;
-                      const sentDate = campaign.send_datetime
-                        ? new Date(campaign.send_datetime)
-                        : null;
-
-                      // Get the greater of the two dates
-                      const displayDate =
-                        scheduledDate && sentDate
-                          ? scheduledDate > sentDate
-                            ? scheduledDate
-                            : sentDate
-                          : scheduledDate || sentDate;
-
-                      if (!displayDate) return "-";
-
-                      // Format as MM/DD/YYYY HH:MM AM/PM
-                      const month = (displayDate.getMonth() + 1)
-                        .toString()
-                        .padStart(2, "0");
-                      const day = displayDate
-                        .getDate()
-                        .toString()
-                        .padStart(2, "0");
-                      const year = displayDate.getFullYear();
-                      const hours24 = displayDate.getHours();
-                      const hours12 = hours24 % 12 || 12; // Convert to 12-hour format
-                      const minutes = displayDate
-                        .getMinutes()
-                        .toString()
-                        .padStart(2, "0");
-                      const ampm = hours24 >= 12 ? "PM" : "AM";
-
-                      return `${month}/${day}/${year} ${hours12}:${minutes} ${ampm}`;
-                    })()}
-                  </td>
-
-                  <td className="px-4 py-3 text-left">
-                    {campaign.created_datetime
-                      ? new Date(campaign.created_datetime).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td className="px-4 py-3 text-left">
-                    {campaign.updated_datetime
-                      ? new Date(campaign.updated_datetime).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end">
-                      <ActionsDropdown
-                        campaign={campaign}
-                        onDeleteClick={handleDeleteClick}
-                        onViewClick={handleViewClick}
-                        onEmailListClick={handleEmailListClick}
-                        onEditClick={editCampaignAction}
-                        onDuplicateClick={handleDuplicateClick}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {sortedCampaigns.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={9}
-                    className="px-4 py-8 text-center text-gray-500"
-                  >
-                    No campaigns found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
         </div>
       </div>
 
-      {/* Delete Campaign Modal */}
+      {/* Main Content */}
+      <div className="px-8 py-8">
+        {loading ? (
+          <div className="flex flex-col justify-center items-center py-20">
+            <div className="w-16 h-16 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mb-4 shadow-xl">
+              <Loader className="w-8 h-8 text-white animate-spin" />
+            </div>
+            <p className="text-gray-600 text-lg font-medium">Loading campaigns...</p>
+            <p className="text-gray-400 text-sm mt-1">Please wait while we fetch your campaigns</p>
+          </div>
+        ) : error ? (
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-12 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-red-500 rounded-full"></div>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Campaigns</h3>
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+              onClick={fetchCampaigns}
+              className="px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {sortedCampaigns.length === 0 ? (
+              <div className="text-center py-20 px-8">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+                  <Mail className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">No Campaigns Found</h3>
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  {searchTerm 
+                    ? `No campaigns match your search for "${searchTerm}". Try adjusting your search terms.`
+                    : "Get started by creating your first email campaign to engage your audience effectively."
+                  }
+                </p>
+                {!searchTerm && (
+                  <button
+                    onClick={() => {
+                      setShowPreCreateModal(true);
+                      setNewCampaignName("");
+                      setNewCampaignDesc("");
+                      setPreCreateError(null);
+                    }}
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span>Create Your First Campaign</span>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
+                <table className="w-full">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("campaign_name")}
+                        >
+                          <span>Campaign</span>
+                          {getSortIcon("campaign_name")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("campaign_type")}
+                        >
+                          <span>Type</span>
+                          {getSortIcon("campaign_type")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("campaign_status")}
+                        >
+                          <span>Status</span>
+                          {getSortIcon("campaign_status")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("audience_size")}
+                        >
+                          <span>Audience</span>
+                          {getSortIcon("audience_size")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("audience_emails")}
+                        >
+                          <span>Emails</span>
+                          {getSortIcon("audience_emails")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Sent/Scheduled
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("created_datetime")}
+                        >
+                          <span>Created</span>
+                          {getSortIcon("created_datetime")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        <button
+                          className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                          onClick={() => handleSort("updated_datetime")}
+                        >
+                          <span>Updated</span>
+                          {getSortIcon("updated_datetime")}
+                        </button>
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                        </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {sortedCampaigns.map((campaign, index) => (
+                      <tr
+                        key={campaign.campaign_id || index}
+                        className="hover:bg-gray-50 transition-colors duration-150"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <StyledTooltip
+                              title={`Click to edit ${campaign.campaign_name}`}
+                              arrow
+                              placement="top"
+                            >
+                              <button
+                                onClick={() => editCampaignAction(campaign)}
+                                className="text-left font-semibold text-gray-900 hover:text-[#1C315F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1C315F]/20 rounded"
+                              >
+                                {campaign.campaign_name}
+                              </button>
+                            </StyledTooltip>
+                            {campaign.campaign_desc && (
+                              <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                                {campaign.campaign_desc}
+                              </p>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                            {campaign.campaign_type || "Email"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                              campaign.campaign_status === "active"
+                                ? "bg-green-100 text-green-800"
+                                : campaign.campaign_status === "sent"
+                                ? "bg-blue-100 text-blue-800"
+                                : campaign.campaign_status === "scheduled"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : campaign.campaign_status === "processing"
+                                ? "bg-orange-100 text-orange-800"
+                                : campaign.campaign_status === "failed"
+                                ? "bg-red-100 text-red-800"
+                                : campaign.campaign_status === "draft"
+                                ? "bg-gray-200 text-gray-800"
+                                : "bg-gray-200 text-gray-800"
+                            }`}
+                          >
+                            {campaign.campaign_status || "Draft"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-[#1C315F] rounded-full mr-2"></div>
+                            {campaign.audience_size
+                              ? Number(campaign.audience_size).toLocaleString()
+                              : "0"}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          <div className="flex items-center">
+                            <Mail className="w-4 h-4 text-gray-400 mr-2" />
+                            {campaign.audience_emails
+                              ? Number(campaign.audience_emails).toLocaleString()
+                              : "0"}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          {(() => {
+                            const scheduledDate = campaign.scheduled_datetime
+                              ? new Date(campaign.scheduled_datetime)
+                              : null;
+                            const sentDate = campaign.send_datetime
+                              ? new Date(campaign.send_datetime)
+                              : null;
+
+                            const displayDate =
+                              scheduledDate && sentDate
+                                ? scheduledDate > sentDate
+                                  ? scheduledDate
+                                  : sentDate
+                                : scheduledDate || sentDate;
+
+                            if (!displayDate) return <span className="text-gray-400">—</span>;
+
+                            const month = (displayDate.getMonth() + 1)
+                              .toString()
+                              .padStart(2, "0");
+                            const day = displayDate
+                              .getDate()
+                              .toString()
+                              .padStart(2, "0");
+                            const year = displayDate.getFullYear();
+                            const hours24 = displayDate.getHours();
+                            const hours12 = hours24 % 12 || 12;
+                            const minutes = displayDate
+                              .getMinutes()
+                              .toString()
+                              .padStart(2, "0");
+                            const ampm = hours24 >= 12 ? "PM" : "AM";
+
+                            return (
+                              <div>
+                                <div className="font-medium">{`${month}/${day}/${year}`}</div>
+                                <div className="text-xs text-gray-500">{`${hours12}:${minutes} ${ampm}`}</div>
+                              </div>
+                            );
+                          })()}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {campaign.created_datetime
+                            ? new Date(campaign.created_datetime).toLocaleDateString()
+                            : "—"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {campaign.updated_datetime
+                            ? new Date(campaign.updated_datetime).toLocaleDateString()
+                            : "—"}
+                        </td>
+                        <td className="px-6 py-4">
+                          <ActionsDropdown
+                            campaign={campaign}
+                            onDeleteClick={handleDeleteClick}
+                            onViewClick={handleViewClick}
+                            onEmailListClick={handleEmailListClick}
+                            onEditClick={editCampaignAction}
+                            onDuplicateClick={handleDuplicateClick}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
       <DeleteCampaignModal
         isOpen={deleteModalOpen}
         onCloseAction={handleDeleteModalClose}
@@ -756,7 +807,6 @@ export default function CampaignsList({
         onDeleteSuccessAction={handleDeleteSuccess}
       />
 
-      {/* View Campaign Modal */}
       <ViewCampaignModal
         isOpen={viewModalOpen}
         onClose={handleViewModalClose}
@@ -774,10 +824,7 @@ export default function CampaignsList({
               campaign={selectedCampaign}
               onClose={() => setShowEmailsList(false)}
               onCampaignUpdated={(updatedCampaign: CampaignData) => {
-                // Update the selected campaign to reflect changes
                 setSelectedCampaign(updatedCampaign);
-
-                // Update the campaign in the campaigns list without refetching
                 setCampaigns((prevCampaigns) =>
                   prevCampaigns.map((campaign) =>
                     campaign.campaign_id === updatedCampaign.campaign_id
@@ -790,27 +837,33 @@ export default function CampaignsList({
           )}
         </div>
       </Drawer>
+
+      {/* Pre-Create Modal */}
       {showPreCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div
             ref={modalRef}
-            className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6 relative"
+            className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8 relative transform transition-all duration-300"
           >
-            <h2 className="text-xl font-semibold text-primary mb-1">
-              Create New Campaign
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Provide a campaign name and a short description to get started.
-              You can refine everything else in the builder workflow.
-            </p>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-xl flex items-center justify-center">
+                <Plus className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Create New Campaign</h2>
+                <p className="text-sm text-gray-500">Get started with your campaign setup</p>
+              </div>
+            </div>
+
             {preCreateError && (
-              <div className="mb-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-                {preCreateError}
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-sm text-red-600 font-medium">{preCreateError}</p>
               </div>
             )}
-            <div className="space-y-4">
+
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Campaign Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -819,33 +872,35 @@ export default function CampaignsList({
                   onChange={(e) => setNewCampaignName(e.target.value)}
                   maxLength={120}
                   disabled={isCreating}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="e.g. Fall Alumni Update"
+                  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="e.g., Fall Alumni Update"
                   autoFocus
                 />
-                <div className="text-xs text-gray-400 mt-1 text-right">
-                  {newCampaignName.length}/120
+                <div className="text-xs text-gray-400 mt-2 text-right">
+                  {newCampaignName.length}/120 characters
                 </div>
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={newCampaignDesc}
                   onChange={(e) => setNewCampaignDesc(e.target.value)}
-                  rows={3}
+                  rows={4}
                   maxLength={300}
                   disabled={isCreating}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="Short internal summary of purpose..."
+                  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="Brief summary of your campaign's purpose and goals..."
                 />
-                <div className="text-xs text-gray-400 mt-1 text-right">
-                  {newCampaignDesc.length}/300
+                <div className="text-xs text-gray-400 mt-2 text-right">
+                  {newCampaignDesc.length}/300 characters
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-3">
+
+            <div className="mt-8 flex justify-end space-x-3">
               <button
                 onClick={() => {
                   setShowPreCreateModal(false);
@@ -854,83 +909,75 @@ export default function CampaignsList({
                   setPreCreateError(null);
                 }}
                 disabled={isCreating}
-                className="px-5 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  if (!newCampaignName.trim() || !newCampaignDesc.trim()) {
-                    setPreCreateError(
-                      "Both name and description are required."
-                    );
-                    return;
-                  }
-                  handleCreateCampaignDraft();
-                }}
+                onClick={handleCreateCampaignDraft}
                 disabled={
                   isCreating ||
                   !newCampaignName.trim() ||
                   !newCampaignDesc.trim()
                 }
-                className="px-6 py-2 rounded-lg bg-primary text-white font-semibold shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
                 {isCreating && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 )}
-                {isCreating ? "Creating..." : "Continue"}
+                <span>{isCreating ? "Creating..." : "Create Campaign"}</span>
               </button>
             </div>
+
             <button
               onClick={() => {
                 if (!isCreating) {
                   setShowPreCreateModal(false);
+                  setNewCampaignName("");
+                  setNewCampaignDesc("");
                   setPreCreateError(null);
                 }
               }}
               disabled={isCreating}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         </div>
       )}
+
+      {/* Duplicate Modal */}
       {showDuplicateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div
             ref={duplicateModalRef}
-            className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6 relative"
+            className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8 relative transform transition-all duration-300"
           >
-            <h2 className="text-xl font-semibold text-primary mb-1">
-              Duplicate Campaign
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Create a copy of &quot;{campaignToDuplicate?.campaign_name}&quot;.
-              You can modify the name and description below.
-            </p>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+                <GrDuplicate className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Duplicate Campaign</h2>
+                <p className="text-sm text-gray-500">
+                  Create a copy of &quot;{campaignToDuplicate?.campaign_name}&quot;
+                </p>
+              </div>
+            </div>
+
             {duplicateError && (
-              <div className="mb-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-                {duplicateError}
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-sm text-red-600 font-medium">{duplicateError}</p>
               </div>
             )}
-            <div className="space-y-4">
+
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Campaign Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -939,33 +986,35 @@ export default function CampaignsList({
                   onChange={(e) => setDuplicateCampaignName(e.target.value)}
                   maxLength={120}
                   disabled={isDuplicating}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="e.g. Fall Alumni Update Copy"
+                  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="e.g., Fall Alumni Update Copy"
                   autoFocus
                 />
-                <div className="text-xs text-gray-400 mt-1 text-right">
-                  {duplicateCampaignName.length}/120
+                <div className="text-xs text-gray-400 mt-2 text-right">
+                  {duplicateCampaignName.length}/120 characters
                 </div>
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={duplicateCampaignDesc}
                   onChange={(e) => setDuplicateCampaignDesc(e.target.value)}
-                  rows={3}
+                  rows={4}
                   maxLength={300}
                   disabled={isDuplicating}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="Short internal summary of purpose..."
+                  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="Brief summary of your duplicated campaign..."
                 />
-                <div className="text-xs text-gray-400 mt-1 text-right">
-                  {duplicateCampaignDesc.length}/300
+                <div className="text-xs text-gray-400 mt-2 text-right">
+                  {duplicateCampaignDesc.length}/300 characters
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-3">
+
+            <div className="mt-8 flex justify-end space-x-3">
               <button
                 onClick={() => {
                   setShowDuplicateModal(false);
@@ -975,36 +1024,26 @@ export default function CampaignsList({
                   setCampaignToDuplicate(null);
                 }}
                 disabled={isDuplicating}
-                className="px-5 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  if (
-                    !duplicateCampaignName.trim() ||
-                    !duplicateCampaignDesc.trim()
-                  ) {
-                    setDuplicateError(
-                      "Both name and description are required."
-                    );
-                    return;
-                  }
-                  handleDuplicateCampaign();
-                }}
+                onClick={handleDuplicateCampaign}
                 disabled={
                   isDuplicating ||
                   !duplicateCampaignName.trim() ||
                   !duplicateCampaignDesc.trim()
                 }
-                className="px-6 py-2 rounded-lg bg-primary text-white font-semibold shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-orange-400 to-orange-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
                 {isDuplicating && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 )}
-                {isDuplicating ? "Duplicating..." : "Duplicate Campaign"}
+                <span>{isDuplicating ? "Duplicating..." : "Duplicate Campaign"}</span>
               </button>
             </div>
+
             <button
               onClick={() => {
                 if (!isDuplicating) {
@@ -1016,22 +1055,11 @@ export default function CampaignsList({
                 }
               }}
               disabled={isDuplicating}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
