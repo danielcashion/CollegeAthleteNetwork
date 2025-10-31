@@ -20,7 +20,6 @@ interface ImportTemplateModalProps {
 export default function ImportTemplateModal({
   isOpen,
   onCloseAction,
-  universityName,
   onTemplateSelectAction,
 }: ImportTemplateModalProps) {
   const [templates, setTemplates] = useState<InternalEmailTemplate[]>([]);
