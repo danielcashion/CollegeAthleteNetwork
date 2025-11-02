@@ -1,3 +1,18 @@
+# *
 User-agent: *
 Allow: /
-Sitemap: https://www.collegeathletenetwork.org/sitemap.xml 
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+
+# Host
+Host: https://www.collegeathletenetwork.org
+
+# Sitemaps
+Sitemap: https://www.collegeathletenetwork.org/sitemap.xml
+Sitemap: https://www.collegeathletenetwork.org/server-sitemap.xml

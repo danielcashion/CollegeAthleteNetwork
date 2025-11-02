@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import type { CampaignData } from "@/types/Campaign";
 import {
   getCampaignEventSummaryByCampaignId,
@@ -63,7 +62,7 @@ export default function AnalyticsTab({
   onCampaignNameUpdate,
   onBackAction,
 }: AnalyticsTabProps) {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(false);

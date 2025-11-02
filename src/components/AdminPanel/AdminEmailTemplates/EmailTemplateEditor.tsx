@@ -146,12 +146,15 @@ export default function EmailTemplateEditor({
 
     try {
       if (mode === "edit" && template?.campaign_template_id) {
-        await updateInternalEmailTemplate({
-          ...formData,
-          campaign_template_id: template.campaign_template_id,
-          updated_by: formData.template_creator || "",
-          updated_datetime: new Date().toISOString(),
-        } as InternalEmailTemplate);
+        await updateInternalEmailTemplate(
+          template.campaign_template_id,
+          {
+            ...formData,
+            campaign_template_id: template.campaign_template_id,
+            updated_by: formData.template_creator || "",
+            updated_datetime: new Date().toISOString(),
+          } as InternalEmailTemplate
+        );
       } else {
         await createInternalEmailTemplate({
           ...formData,

@@ -112,7 +112,7 @@ export default function ViewCampaignModal({
           else if (prev === undefined) el.removeAttribute("aria-hidden");
           else el.setAttribute("aria-hidden", prev);
         });
-      } catch (err) {
+      } catch {
         // noop
       }
     };
@@ -134,7 +134,7 @@ export default function ViewCampaignModal({
     if (!dateString) return "Not set";
     try {
       return new Date(dateString).toLocaleString();
-    } catch (error) {
+    } catch {
       return "Invalid date";
     }
   };
@@ -294,7 +294,7 @@ export default function ViewCampaignModal({
                   <span className="font-medium text-sm">University</span>
                 </div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {campaign.university_name || "Not specified"}
+                  {campaign.university_names || "Not specified"}
                 </p>
               </div>
 
@@ -566,13 +566,13 @@ export default function ViewCampaignModal({
               </div>
             </div>
 
-            {campaign.attachments_url && (
+            {campaign.attachments_urls && (
               <div className="mt-4">
                 <span className="text-md font-medium text-gray-700">
                   Attachments:
                 </span>
                 <p className="text-md text-gray-600">
-                  {campaign.attachments_url}
+                  {campaign.attachments_urls}
                 </p>
               </div>
             )}

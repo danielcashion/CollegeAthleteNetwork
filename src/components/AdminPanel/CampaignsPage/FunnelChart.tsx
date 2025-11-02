@@ -76,7 +76,9 @@ export default function FunnelChart({ values, labels }: Props) {
         if (target)
           target.style.cursor =
             elements && elements.length ? "pointer" : "default";
-      } catch (e) {}
+      } catch {
+        // Ignore hover errors
+      }
     },
     onClick: (event: any, elements: any[]) => handleClick(event, elements),
   };

@@ -23,7 +23,9 @@ export default function TimelineTable({
   console.log("Rendering TimelineTable with events:", events);
 
   const [modalOpen, setModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalTitle, setModalTitle] = useState<string | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalBody, setModalBody] = useState<React.ReactNode | undefined>(
     undefined
   );
