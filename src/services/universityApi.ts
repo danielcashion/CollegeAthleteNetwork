@@ -64,3 +64,53 @@ export const postSurvey = async (payload: {
     throw error;
   }
 };
+
+export const getAllUniversities = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/university`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teams of university:", error);
+    throw error;
+  }
+};
+
+export const getAllUniversitiesMeta = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/university_meta`
+    );
+    return response.data[0];
+  } catch (error) {
+    console.error("Error fetching teams of university:", error);
+    throw error;
+  }
+};
+
+export const getUniversityMetaByUniversityName = async (
+  university_name: string
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/university_meta?university_name=${university_name}`
+    );
+    return response.data[0];
+  } catch (error) {
+    console.error("Error fetching teams of university:", error);
+    throw error;
+  }
+};
+
+export const getTeamsByUniversityName = async (university_name: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/university_teams?university_name=${university_name}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching university teams:", error);
+    throw error;
+  }
+};
