@@ -5,6 +5,7 @@ import { InternalEmailTemplate } from "@/types/InternalMember";
 import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle } from "lucide-react";
 import EmailTemplateEditor from "./EmailTemplateEditor";
 import EmailTemplateViewer from "./EmailTemplateViewer";
+import { SkeletonTable } from "@/components/common/Skeleton";
 
 export default function EmailTemplatesMain() {
   const [templates, setTemplates] = useState<InternalEmailTemplate[]>([]);
@@ -134,16 +135,16 @@ export default function EmailTemplatesMain() {
       {/* Main Content */}
       <div className="px-8 py-8">
         {loading ? (
-          <div className="flex flex-col justify-center items-center py-20">
-            <div className="w-16 h-16 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mb-4 shadow-xl">
-              <Loader2 className="w-8 h-8 text-white animate-spin" />
+          <div className="space-y-6">
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mb-4 shadow-xl mx-auto">
+                <Loader2 className="w-8 h-8 text-white animate-spin" />
+              </div>
+              <p className="text-gray-600 text-lg font-medium">
+                Loading templates...
+              </p>
             </div>
-            <p className="text-gray-600 text-lg font-medium">
-              Loading templates...
-            </p>
-            <p className="text-gray-400 text-sm mt-1">
-              Please wait while we fetch your email templates
-            </p>
+            <SkeletonTable rows={5} columns={5} />
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
