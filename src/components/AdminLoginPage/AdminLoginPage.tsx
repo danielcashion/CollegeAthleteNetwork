@@ -3,6 +3,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import Image from "next/image";
+import CANWhiteLogo from "../../../public/Logos/CANLogo-horizontal-white.png";
+import CANColorLogo from "../../../public/Logos/CANLogo1200X1200Color.png";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -38,14 +41,25 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#F2F5F7]">
-      <div className="bg-gradient-to-r from-blueMain to-redMain text-white py-8 flex flex-col items-center px-4">
-        <div className="text-center max-w-2xl">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 small-caps">
-            The College Athlete Network Admin Portal
-          </h1>
-          <p className="text-xl opacity-90 font-light">
-            Access to our administrative dashboard
-          </p>
+      <div className="bg-gradient-to-r from-blueMain to-redMain text-white py-8 px-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-center gap-8">
+          <div className="flex-shrink-0">
+            <Image
+              src={CANWhiteLogo}
+              alt="The College Athlete Network"
+              height={60}
+              width={240}
+              priority
+            />
+          </div>
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 small-caps">
+              Admin Portal
+            </h1>
+            <p className="text-lg opacity-90 font-light">
+              Access to our administrative dashboard
+            </p>
+          </div>
         </div>
       </div>
 
@@ -53,10 +67,14 @@ export default function AdminLoginPage() {
         <div className="w-full max-w-lg">
           <div className="bg-white rounded-3xl shadow-[0_10px_60px_rgba(0,0,0,0.1)] p-10 border border-gray-100">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-r from-blueMain to-redMain rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-4 border-gray-100">
+                <Image
+                  src={CANColorLogo}
+                  alt="The College Athlete Network"
+                  height={60}
+                  width={60}
+                  className="rounded-full"
+                />
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
               <p className="text-gray-600">Please sign in to your admin account</p>
