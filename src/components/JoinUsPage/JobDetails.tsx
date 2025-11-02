@@ -86,7 +86,14 @@ const JobDetails = ({ job, setSelectedJob }: jobDetailProps) => {
     <div className="w-full py-8 px-6 sm:p-8 min-h-screen flex flex-col">
       <div className="flex flex-row items-center justify-between gap-4">
         <h2 className="text-3xl font-bold text-[#1C315F]">Job Details</h2>
-        <img src="/Logos/CANLogo1200X1200Color.png" alt="College Athlete Network Logo" className="w-[130px] object-contain" />
+        <Image 
+          src={Logo} 
+          alt="College Athlete Network Logo" 
+          className="w-[130px] object-contain" 
+          width={130}
+          height={130}
+          priority
+        />
         <button
           onClick={() => setSelectedJob(null)}
           className="p-[8px] rounded-full hover:bg-gray-100"

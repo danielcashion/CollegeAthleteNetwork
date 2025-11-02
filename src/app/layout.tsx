@@ -10,6 +10,7 @@ import CanVideoModal from "@/components/Modals/CanVideoModal";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 
 export const openSans = Open_Sans({
   subsets: ["latin"],
@@ -86,7 +87,9 @@ export default function RootLayout({
             <Navbar />
           </nav>
           <main id="main-content" aria-label="Main content" role="main">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </main>
           <footer id="site-footer" aria-label="Site footer" role="contentinfo">
             <Footer />
