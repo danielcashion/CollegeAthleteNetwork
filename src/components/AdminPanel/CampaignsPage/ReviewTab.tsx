@@ -857,115 +857,104 @@ export default function ReviewScheduleTab({
         </button>
       </div>
       {testModalOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="send-test-title"
-          aria-describedby="send-test-desc"
-        >
-          <div className="w-full h-full overflow-y-auto">
-            <div
-              className="max-w-md w-full mx-auto mt-20 mb-10 px-4 animate-in"
-              style={{ animation: "fadeIn 140ms ease-out" }}
-            >
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3
-                      id="send-test-title"
-                      className="text-xl text-primary font-semibold"
-                    >
-                      Send Test Email
-                    </h3>
-                    <p
-                      id="send-test-desc"
-                      className="text-sm text-gray-500 mt-0.5"
-                    >
-                      Enter a destination address to receive a preview of this
-                      message.
-                    </p>
-                  </div>
-                  <button
-                    onClick={closeModal}
-                    disabled={sending}
-                    aria-label="Close"
-                    className="text-gray-500 hover:text-gray-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="test-email"
-                      className="block text-sm text-primary font-medium mb-1"
-                    >
-                      Test Email Address
-                    </label>
-                    <input
-                      ref={inputRef}
-                      id="test-email"
-                      type="email"
-                      disabled={sending}
-                      className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
-                        submitted && !isValid
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                      placeholder="your@email.com"
-                      value={testEmail}
-                      onChange={(e) => setTestEmail(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !sending) {
-                          e.preventDefault();
-                          handleSend();
-                        }
-                        if (e.key === "Escape" && !sending) {
-                          e.preventDefault();
-                          closeModal();
-                        }
-                      }}
-                      aria-invalid={submitted && !isValid ? "true" : "false"}
-                      aria-describedby={
-                        !isValid && submitted ? "test-email-error" : undefined
-                      }
-                    />
-                    {submitted && !isValid && (
-                      <p
-                        id="test-email-error"
-                        className="mt-1 text-xs text-red-600"
-                      >
-                        Please enter a valid email address.
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="mt-6 flex justify-end gap-2">
-                  <button
-                    onClick={closeModal}
-                    disabled={sending}
-                    className="px-4 py-2 text-sm rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSend}
-                    disabled={sending || (!isValid && submitted)}
-                    className={`px-4 py-2 text-sm font-medium rounded shadow text-white transition-colors flex items-center gap-2 ${
-                      isValid && !sending
-                        ? "bg-primary hover:bg-primary/90"
-                        : "bg-primary opacity-80 cursor-not-allowed"
-                    }`}
-                  >
-                    {sending && (
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                    )}
-                    {sending ? "Sending..." : "Send Test Email"}
-                  </button>
-                </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div
+            className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 relative transform transition-all duration-300 mx-4"
+            style={{ animation: "fadeIn 140ms ease-out" }}
+          >
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-xl flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Send Test Email</h3>
+                <p className="text-sm text-gray-500">
+                  Preview your campaign before sending
+                </p>
               </div>
             </div>
+
+            <div className="mb-6">
+              <label
+                htmlFor="test-email"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                Test Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                ref={inputRef}
+                id="test-email"
+                type="email"
+                disabled={sending}
+                className={`w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  submitted && !isValid
+                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                    : ""
+                }`}
+                placeholder="your@email.com"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !sending) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                  if (e.key === "Escape" && !sending) {
+                    e.preventDefault();
+                    closeModal();
+                  }
+                }}
+                aria-invalid={submitted && !isValid ? "true" : "false"}
+                aria-describedby={
+                  !isValid && submitted ? "test-email-error" : undefined
+                }
+                autoFocus
+              />
+              {submitted && !isValid && (
+                <p
+                  id="test-email-error"
+                  className="mt-2 text-sm text-red-600 font-medium"
+                >
+                  Please enter a valid email address.
+                </p>
+              )}
+              <p className="mt-2 text-xs text-gray-500">
+                The test email will include all template variables replaced with sample data for preview.
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={closeModal}
+                disabled={sending}
+                className="px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSend}
+                disabled={sending || (!isValid && submitted)}
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+              >
+                {sending && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                )}
+                <span>{sending ? "Sending..." : "Send Test Email"}</span>
+              </button>
+            </div>
+
+            <button
+              onClick={closeModal}
+              disabled={sending}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
