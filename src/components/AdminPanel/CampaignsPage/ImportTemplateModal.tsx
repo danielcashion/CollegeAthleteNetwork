@@ -7,7 +7,6 @@ import { Loader } from "lucide-react";
 interface ImportTemplateModalProps {
   isOpen: boolean;
   onCloseAction: () => void;
-  universityName: string;
   onTemplateSelectAction: (template: {
     senderName: string;
     subject: string;

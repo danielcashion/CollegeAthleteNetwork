@@ -31,6 +31,7 @@ type Props = {
   onCampaignNameUpdate?: (newName: string) => void;
   templateId: string | null;
   setTemplateIdAction: (value: string | null) => void;
+  selectedUniversities?: string[];
 };
 
 export default function TemplateTab({
@@ -145,9 +146,6 @@ export default function TemplateTab({
     setReplyToAction("");
     toast.success("Template cleared");
   };
-
-  // Get university affiliation from session for the modal
-  const universityName = "Yale";
 
   return (
     <>
@@ -494,7 +492,6 @@ export default function TemplateTab({
       <ImportTemplateModal
         isOpen={importTemplateModalOpen}
         onCloseAction={() => setImportTemplateModalOpen(false)}
-        universityName={universityName}
         onTemplateSelectAction={handleTemplateSelect}
       />
     </>

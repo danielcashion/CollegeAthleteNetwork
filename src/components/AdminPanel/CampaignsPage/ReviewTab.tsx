@@ -188,12 +188,15 @@ export default function ReviewScheduleTab({
         gender_id: firstEmail.gender_id,
         email_address: firstEmail.email_address,
         correlation_id: "", // Not needed for replacement
-        university_name: "Yale",
+        university_name:
+          campaignFilters?.universities?.[0] ||
+          apiFilterCriteria?.universities?.[0] ||
+          "",
       } as EmailRecipientData;
     }
     // Fallback to sample data if no emails loaded yet
     return getSampleEmailData();
-  }, [emails]);
+  }, [emails, campaignFilters, apiFilterCriteria]);
 
   // Template data with variables replaced
   const replacedTemplateData = useMemo(() => {
