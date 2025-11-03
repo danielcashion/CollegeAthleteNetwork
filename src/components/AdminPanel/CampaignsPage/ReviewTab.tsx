@@ -51,6 +51,13 @@ type Props = {
   // Campaign name editing props
   campaignName?: string;
   onCampaignNameUpdate?: (newName: string) => void;
+  // Campaign filters passed directly from parent
+  campaignFilters?: {
+    gender: string | null;
+    sports: string[];
+    selectedYears: number[];
+    universities: string[];
+  };
 };
 
 export default function ReviewScheduleTab({
@@ -67,6 +74,7 @@ export default function ReviewScheduleTab({
   colorScheme = "default",
   campaignName,
   onCampaignNameUpdate,
+  campaignFilters,
 }: Props) {
   // // console.log("campaign: ", campaign);
 
@@ -105,9 +113,17 @@ export default function ReviewScheduleTab({
   // Extract only the API-relevant filter criteria
   const apiFilterCriteria = useMemo(() => {
     console.log("=== Computing apiFilterCriteria ===");
+    console.log("campaignFilters prop:", campaignFilters);
     console.log("campaign:", campaign);
     console.log("campaign?.campaign_filters:", campaign?.campaign_filters);
 
+    // First, try to use the campaignFilters prop if available
+    if (campaignFilters) {
+      console.log("Using campaignFilters prop");
+      return campaignFilters;
+    }
+
+    // Fall back to parsing from campaign if no prop provided
     if (!campaign?.campaign_filters) {
       console.log("No campaign filters found, returning null");
       return null;
@@ -130,7 +146,7 @@ export default function ReviewScheduleTab({
       console.error("Error parsing campaign filters:", err);
       return null;
     }
-  }, [campaign]);
+  }, [campaign, campaignFilters]);
 
   // Sorted list of first 5 emails, excluding excluded emails
   const sortedEmails = useMemo(() => {
@@ -214,6 +230,22 @@ export default function ReviewScheduleTab({
     includeUniversityLogo,
     colorScheme,
   ]);
+
+  // Create a campaign object for the emails list drawer with current filter state
+  const campaignForDrawer = useMemo(() => {
+    // If we have campaignFilters prop, use it to create a fresh campaign object
+    if (campaignFilters) {
+      return {
+        campaign_id: campaign?.campaign_id,
+        campaign_name: campaignName || "Filtered Audience",
+        audience_size: audience_size,
+        audience_emails: audience_emails,
+        campaign_filters: JSON.stringify(campaignFilters),
+      };
+    }
+    // Otherwise, fall back to the campaign prop
+    return campaign;
+  }, [campaign, campaignFilters, campaignName, audience_size, audience_emails]);
 
   const toggleSort = (col: keyof EmailData | "gender") => {
     if (sortBy === col) {
@@ -864,12 +896,24 @@ export default function ReviewScheduleTab({
           >
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-xl flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <svg
+                  className="w-5 h-5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Send Test Email</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Send Test Email
+                </h3>
                 <p className="text-sm text-gray-500">
                   Preview your campaign before sending
                 </p>
@@ -921,7 +965,8 @@ export default function ReviewScheduleTab({
                 </p>
               )}
               <p className="mt-2 text-xs text-gray-500">
-                The test email will include all template variables replaced with sample data for preview.
+                The test email will include all template variables replaced with
+                sample data for preview.
               </p>
             </div>
 
@@ -951,8 +996,18 @@ export default function ReviewScheduleTab({
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Close"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -966,9 +1021,9 @@ export default function ReviewScheduleTab({
         onClose={() => setShowEmailsList(false)}
       >
         <div className="w-[900px]">
-          {campaign && (
+          {campaignForDrawer && (
             <CampaignEmailsList
-              campaign={campaign}
+              campaign={campaignForDrawer}
               onClose={() => setShowEmailsList(false)}
               onCampaignUpdated={() => {
                 // Optionally handle campaign updates here

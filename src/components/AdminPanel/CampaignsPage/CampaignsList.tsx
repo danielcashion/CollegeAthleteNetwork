@@ -524,11 +524,11 @@ export default function CampaignsList({
   return (
     <div className="min-h-[700px] bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Enhanced Header Section */}
-      <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white shadow-xl">
+      <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white rounded-lg shadow-xl">
         <div className="px-8 py-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div>

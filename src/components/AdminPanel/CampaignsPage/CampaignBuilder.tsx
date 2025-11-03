@@ -677,6 +677,12 @@ export default function CampaignBuilder({
                   editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
+                campaignFilters={{
+                  gender,
+                  sports,
+                  selectedYears,
+                  universities: selectedUniversities,
+                }}
               />
               <ScheduleTab
                 onBack={() => handleTabSwitch(2)}
