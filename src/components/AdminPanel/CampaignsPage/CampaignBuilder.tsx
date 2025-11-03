@@ -651,6 +651,7 @@ export default function CampaignBuilder({
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 templateId={templateId}
                 setTemplateIdAction={setTemplateId}
+                selectedUniversities={selectedUniversities}
               />
               <ReviewTab
                 onNext={() => handleTabSwitch(3)}
@@ -694,7 +695,6 @@ export default function CampaignBuilder({
                   sports,
                   selectedYears,
                 }}
-                selectedUniversities={selectedUniversities}
                 universityMetaData={universityMetaData}
                 includeUniversityLogo={includeUniversityLogo}
                 colorScheme={colorScheme}
