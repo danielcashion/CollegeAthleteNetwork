@@ -409,16 +409,22 @@ export default function TemplateTab({
                     <p className="text-sm font-semibold text-gray-600">
                       Template Title:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.template_title}
-                    </p>
+                    <StyledTooltip
+                      title={`Template ID: ${selectedTemplate.campaign_template_id}`}
+                      placement="top"
+                      arrow
+                    >
+                      <p className="text-base text-gray-800 cursor-help">
+                        {selectedTemplate.template_title}
+                      </p>
+                    </StyledTooltip>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-600">
-                      Template ID:
+                      From Address:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.campaign_template_id}
+                    <p className="text-base text-gray-800 break-words">
+                      {selectedTemplate.email_from_address}
                     </p>
                   </div>
                   <div>
