@@ -723,6 +723,7 @@ export default function CampaignBuilder({
                   sports,
                   selectedYears,
                 }}
+                selectedUniversities={selectedUniversities}
                 universityMetaData={universityMetaData}
                 includeUniversityLogo={includeUniversityLogo}
                 colorScheme={colorScheme}
