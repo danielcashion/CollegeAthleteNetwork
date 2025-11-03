@@ -112,14 +112,14 @@ export default function ReviewScheduleTab({
 
   // Extract only the API-relevant filter criteria
   const apiFilterCriteria = useMemo(() => {
-    console.log("=== Computing apiFilterCriteria ===");
-    console.log("campaignFilters prop:", campaignFilters);
-    console.log("campaign:", campaign);
-    console.log("campaign?.campaign_filters:", campaign?.campaign_filters);
+    // console.log("=== Computing apiFilterCriteria ===");
+    // console.log("campaignFilters prop:", campaignFilters);
+    // console.log("campaign:", campaign);
+    // console.log("campaign?.campaign_filters:", campaign?.campaign_filters);
 
     // First, try to use the campaignFilters prop if available
     if (campaignFilters) {
-      console.log("Using campaignFilters prop");
+      // console.log("Using campaignFilters prop");
       return campaignFilters;
     }
 
@@ -140,7 +140,7 @@ export default function ReviewScheduleTab({
         universities: filters.universities || [],
       };
 
-      console.log("Computed apiFilterCriteria:", criteria);
+      // console.log("Computed apiFilterCriteria:", criteria);
       return criteria;
     } catch (err) {
       console.error("Error parsing campaign filters:", err);
@@ -210,6 +210,13 @@ export default function ReviewScheduleTab({
         includeUniversityLogo,
         colorScheme
       ),
+      senderEmail: replaceTemplateVariablesWithLogo(
+        templateData.senderEmail,
+        replacementData,
+        universityMetaData,
+        includeUniversityLogo,
+        colorScheme
+      ),
       subject: replaceTemplateVariablesWithLogo(
         templateData.subject,
         replacementData,
@@ -260,9 +267,9 @@ export default function ReviewScheduleTab({
 
   // Fetch emails when component mounts and campaign filters change
   const fetchEmails = useCallback(async () => {
-    console.log("=== fetchEmails called ===");
-    console.log("apiFilterCriteria:", apiFilterCriteria);
-    console.log("campaign:", campaign);
+    // console.log("=== fetchEmails called ===");
+    // console.log("apiFilterCriteria:", apiFilterCriteria);
+    // console.log("campaign:", campaign);
 
     if (!apiFilterCriteria || !campaign) {
       console.log("Missing required data - apiFilterCriteria or campaign");
@@ -305,11 +312,11 @@ export default function ReviewScheduleTab({
         sports,
       });
 
-      console.log("API Response:", response); // Debug: Log the actual API response
+      // console.log("API Response:", response); // Debug: Log the actual API response
 
       // The API returns [data, metadata], so we take the first element
       if (Array.isArray(response) && response.length > 0) {
-        console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
+        // console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
 
         // Map and add stable ids for selection handling
         const mapped = response[0].map((e: any, idx: number) => ({
@@ -320,11 +327,11 @@ export default function ReviewScheduleTab({
           gender_id: e.gender_id,
           email_address: e.email_address,
         }));
-        console.log("Mapped emails:", mapped.slice(0, 3)); // Debug: Log first 3 mapped rows
-        console.log("Total mapped records:", mapped.length);
+        // console.log("Mapped emails:", mapped.slice(0, 3)); // Debug: Log first 3 mapped rows
+        // console.log("Total mapped records:", mapped.length);
         setEmails(mapped);
       } else {
-        console.log("No emails found in response");
+        // console.log("No emails found in response");
         setEmails([]);
       }
     } catch (err) {
@@ -336,12 +343,12 @@ export default function ReviewScheduleTab({
   }, [apiFilterCriteria, campaign]);
 
   useEffect(() => {
-    console.log("=== useEffect for fetchEmails triggered ===");
-    console.log("apiFilterCriteria:", apiFilterCriteria);
-    console.log("campaign:", campaign);
+    // console.log("=== useEffect for fetchEmails triggered ===");
+    // console.log("apiFilterCriteria:", apiFilterCriteria);
+    // console.log("campaign:", campaign);
 
     if (apiFilterCriteria) {
-      console.log("Calling fetchEmails...");
+      // console.log("Calling fetchEmails...");
       fetchEmails();
     } else {
       console.log(
