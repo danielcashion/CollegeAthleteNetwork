@@ -377,7 +377,7 @@ export default function ScheduleTab({
               recipient.step_10 !== null
                 ? (recipient.step_10 || "").toString()
                 : "",
-            checklist_steps: recipient.checklist_steps || "",
+            checklist_text: recipient.checklist_text || "",
             checklist_color: recipient.checklist_color || "",
           },
         }));
