@@ -76,7 +76,7 @@ export default function ReviewScheduleTab({
   onCampaignNameUpdate,
   campaignFilters,
 }: Props) {
-  // // console.log("campaign: ", campaign);
+  console.log("campaignfileters prop:", campaignFilters);
 
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
@@ -190,8 +190,7 @@ export default function ReviewScheduleTab({
         correlation_id: "", // Not needed for replacement
         university_name:
           campaignFilters?.universities?.[0] ||
-          apiFilterCriteria?.universities?.[0] ||
-          "",
+          apiFilterCriteria?.universities?.[0],
       } as EmailRecipientData;
     }
     // Fallback to sample data if no emails loaded yet

@@ -22,7 +22,33 @@ const schema = z.object({
         email: z.email({ message: "Please enter a valid email address" }),
         university: z.string().optional(),
         segment: z.string().optional(),
-        vars: z.record(z.string(), z.string()).optional(), // custom variables for each recipient
+        vars: z
+          .object({
+            correlation_id: z.string().optional(),
+            university_name: z.string().optional(),
+            athlete_id: z.string().optional(),
+            athlete_name: z.string().optional(),
+            sport: z.string().optional(),
+            gender_id: z.string().optional(),
+            max_roster_year: z.string().optional(),
+            seeking_text: z.string().optional(),
+            seeking_color: z.string().optional(),
+            email_address: z.string().optional(),
+            step_1: z.string().optional(),
+            step_2: z.string().optional(),
+            step_3: z.string().optional(),
+            step_4: z.string().optional(),
+            step_5: z.string().optional(),
+            step_6: z.string().optional(),
+            step_7: z.string().optional(),
+            step_8: z.string().optional(),
+            step_9: z.string().optional(),
+            step_10: z.string().optional(),
+            checklist_steps: z.string().optional(),
+            checklist_color: z.string().optional(),
+          })
+          .passthrough()
+          .optional(), // passthrough allows additional custom variables
       })
     )
     .min(1),
