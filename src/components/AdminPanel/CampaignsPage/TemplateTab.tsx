@@ -40,6 +40,7 @@ export default function TemplateTab({
   commType,
   setCommTypeAction,
   setSenderNameAction,
+  setSenderEmailAction,
   setReplyToAction,
   setSubjectAction,
   setBodyAction,
@@ -120,12 +121,14 @@ export default function TemplateTab({
 
   const handleTemplateSelect = (template: {
     senderName: string;
+    senderEmail: string;
     subject: string;
     body: string;
     replyToAddress?: string;
     templateId?: string;
   }) => {
     setSenderNameAction(template.senderName);
+    setSenderEmailAction(template.senderEmail);
     setSubjectAction(template.subject);
     setBodyAction(template.body);
     if (template.replyToAddress) {
@@ -142,6 +145,7 @@ export default function TemplateTab({
     setSelectedTemplate(null);
     setBodyAction("");
     setSenderNameAction("");
+    setSenderEmailAction("");
     setSubjectAction("");
     setReplyToAction("");
     toast.success("Template cleared");

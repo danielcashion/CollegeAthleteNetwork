@@ -69,6 +69,8 @@ export default function ScheduleTab({
   campaignName,
   onCampaignNameUpdate,
 }: Props) {
+  console.log("campaign: ", campaign);
+
   const [sendOption, setSendOption] = useState<"now" | "schedule">("now");
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [timeOpen, setTimeOpen] = useState(false);

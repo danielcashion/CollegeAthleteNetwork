@@ -9,6 +9,7 @@ interface ImportTemplateModalProps {
   onCloseAction: () => void;
   onTemplateSelectAction: (template: {
     senderName: string;
+    senderEmail: string;
     subject: string;
     body: string;
     replyToAddress?: string;
@@ -62,6 +63,7 @@ export default function ImportTemplateModal({
   const handleTemplateSelect = (template: InternalEmailTemplate) => {
     onTemplateSelectAction({
       senderName: template.email_from_name || "",
+      senderEmail: template.email_from_address || "",
       subject: template.email_subject || "",
       body: template.email_body || "",
       replyToAddress: template.reply_to_address || "",
