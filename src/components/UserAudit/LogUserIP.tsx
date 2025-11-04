@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logIpAddress } from "@/app/api/logUserIP/logIPAddress";
 import { useAppStore } from "@/store/appStore";
 
 const LogUserIP = () => {
@@ -14,43 +13,47 @@ const LogUserIP = () => {
 
     const logIPAndLocation = async () => {
       try {
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const { ip } = await ipRes.json();
-        if (!ip) throw new Error("No IP returned");
+        console.log("Starting IP logging process...");
+        
+        // Use our internal API route instead of external APIs directly
+        const response = await fetch("/api/logUserIP", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Send empty body since the API route handles IP detection
+          body: JSON.stringify({}),
+        });
 
-        const geoRes = await fetch(
-          `https://api.ipapi.com/api/${ip}?access_key=${process.env.NEXT_PUBLIC_IPAPI_KEY}`
-        );
-        const geo = await geoRes.json();
-        const { city, region_code: state, latitude, longitude } = geo;
-        if (!city || !state) {
-          console.error("Incomplete geo data:", geo);
-          return;
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`API error: ${response.status} - ${errorData.message || response.statusText}`);
         }
 
-        const payload = {
-          app: "CANHomepage",
-          ip,
-          city,
-          state,
-          latitude,
-          longitude,
-          created_datetime: new Date().toISOString(),
-          created_by: "iplogger",
-          is_active_YN: 1,
-        };
-        await logIpAddress(payload);
+        const data = await response.json();
+        console.log("IP logging response:", data);
 
-        setUserIp(ip);
+        if (data.success && data.ip) {
+          setUserIp(data.ip);
+          console.log("Successfully logged IP:", data.ip, "Location:", data.location);
+        } else {
+          console.warn("IP logging completed but no IP returned:", data);
+        }
+
       } catch (err: any) {
         console.error("Error logging IP or location:", err);
+        
+        // Don't retry on client errors (4xx) but allow the component to continue
+        if (err.message?.includes("4")) {
+          console.log("Client error detected, not retrying");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     logIPAndLocation();
-  }, [userIp]);
+  }, [userIp, loading, setUserIp]);
 
   return null;
 };
