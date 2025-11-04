@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Image from "next/image";
@@ -16,6 +16,14 @@ export default function AdminLoginPage() {
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.replace("/admin/dashboard");
+    }
+  }, [session, status, router]);
 
   // Email validation
   const validateEmail = (email: string) => {

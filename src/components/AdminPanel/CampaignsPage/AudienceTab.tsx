@@ -355,7 +355,23 @@ export default function AudienceTab({
               className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
             />
             <span className="text-sm font-medium">
-              Use a Custom Distribution List
+              Create a Bespoke Distribution List
+            </span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="distributionType"
+              value="custom"
+              checked={distributionType === "custom"}
+              onChange={() => {
+                setDistributionType("custom");
+                setSelectedHistoricalCampaign("");
+              }}
+              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
+            />
+            <span className="text-sm font-medium">
+              Utilize Custom Database &quot;Task&quot; Filters
             </span>
           </label>
         </div>
