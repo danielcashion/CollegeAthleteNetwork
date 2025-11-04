@@ -518,7 +518,7 @@ export default function EmailTemplateEditor({
                         suggestOnTriggerCharacters: true,
                         acceptSuggestionOnEnter: "on",
                         tabCompletion: "on",
-                        wordBasedSuggestions: "on",
+                        wordBasedSuggestions: "off",
                         parameterHints: { enabled: true },
                         autoClosingBrackets:  "never",
                         autoClosingQuotes: "never",
