@@ -239,26 +239,54 @@ export default function CampaignBuilder({
             if (response && response.length > 0) {
               const template = response[0];
               setBody(template.email_body || "");
-              // Also update other template fields if they're not set in campaign
+
+              // Update state variables if not set in campaign
               if (!editingCampaign.email_from_name)
                 setSenderName(template.email_from_name || "");
+              if (!editingCampaign.email_from_address)
+                setSenderEmail(template.email_from_address || "");
               if (!editingCampaign.email_subject)
                 setSubject(template.email_subject || "");
               if (!editingCampaign.reply_to_address)
                 setReplyTo(template.reply_to_address || "");
+
+              // Update the campaign object with template data for use in ScheduleTab
+              const updatedCampaign = {
+                ...editingCampaign,
+                email_from_name:
+                  editingCampaign.email_from_name ||
+                  template.email_from_name ||
+                  "",
+                email_from_address:
+                  editingCampaign.email_from_address ||
+                  template.email_from_address ||
+                  "",
+                email_subject:
+                  editingCampaign.email_subject || template.email_subject || "",
+                reply_to_address:
+                  editingCampaign.reply_to_address ||
+                  template.reply_to_address ||
+                  "",
+                email_body: template.email_body || "",
+              };
+              setCreatedCampaign(updatedCampaign);
+            } else {
+              // No template data found, just set the campaign as is
+              setCreatedCampaign(editingCampaign);
             }
           } catch (error) {
             console.error("Error fetching template data:", error);
+            // On error, still set the campaign
+            setCreatedCampaign(editingCampaign);
           }
         };
         fetchTemplateData();
       } else {
         // Fallback to email_body if no template_id (for backward compatibility)
         setBody(editingCampaign.email_body || "");
+        // Set the created campaign for modal display
+        setCreatedCampaign(editingCampaign);
       }
-
-      // Set the created campaign for modal display
-      setCreatedCampaign(editingCampaign);
     }
   }, [editingCampaign]);
 
@@ -651,6 +679,7 @@ export default function CampaignBuilder({
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 templateId={templateId}
                 setTemplateIdAction={setTemplateId}
+                selectedUniversities={selectedUniversities}
               />
               <ReviewTab
                 onNext={() => handleTabSwitch(3)}
@@ -677,12 +706,18 @@ export default function CampaignBuilder({
                   editingCampaign?.campaign_name
                 }
                 onCampaignNameUpdate={handleCampaignNameUpdate}
+                campaignFilters={{
+                  gender,
+                  sports,
+                  selectedYears,
+                  universities: selectedUniversities,
+                }}
               />
               <ScheduleTab
                 onBack={() => handleTabSwitch(2)}
                 emailBody={body}
                 templateId={templateId}
-                campaign={editingCampaign || createdCampaign}
+                campaign={createdCampaign || editingCampaign}
                 campaignFilters={{
                   gender,
                   sports,

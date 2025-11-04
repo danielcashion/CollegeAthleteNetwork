@@ -35,7 +35,7 @@ export default function CampaignEmailsList({
   onClose,
   onCampaignUpdated,
 }: CampaignEmailsListProps) {
-  console.log(campaign);
+  // console.log(campaign);
   const [emails, setEmails] = useState<EmailData[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [excludedEmails, setExcludedEmails] = useState<string[]>([]);
@@ -143,19 +143,19 @@ export default function CampaignEmailsList({
         sports,
       });
 
-      console.log("API Response:", response); // Debug: Log the actual API response
+      // console.log("API Response:", response); // Debug: Log the actual API response
 
       // The API returns [data, metadata], so we take the first element
       if (Array.isArray(response) && response.length > 0) {
-        console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
-        console.log(
-          "All field names in first row:",
-          Object.keys(response[0][0] || {})
-        ); // Debug: Log all available fields
-        console.log(
-          "Total number of fields:",
-          Object.keys(response[0][0] || {}).length
-        ); // Debug: Count fields
+        // console.log("First row of data:", response[0][0]); // Debug: Log first row to see field names
+        // console.log(
+        //   "All field names in first row:",
+        //   Object.keys(response[0][0] || {})
+        // ); // Debug: Log all available fields
+        // console.log(
+        //   "Total number of fields:",
+        //   Object.keys(response[0][0] || {}).length
+        // ); // Debug: Count fields
 
         // Map and add stable ids for selection handling
         const mapped = response[0].map((e: any, idx: number) => {

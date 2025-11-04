@@ -327,11 +327,58 @@ export default function ScheduleTab({
           university: recipient.university_name || "",
           segment: recipient.sport || "",
           vars: {
+            correlation_id: recipient.correlation_id || "",
+            university_name: recipient.university_name || "",
+            athlete_id: (recipient.athlete_id || "").toString(),
             athlete_name: recipient.athlete_name || "",
-            max_roster_year: (recipient.max_roster_year || "").toString(),
             sport: recipient.sport || "",
             gender_id: (recipient.gender_id || "").toString(),
-            university_name: recipient.university_name || "",
+            max_roster_year: (recipient.max_roster_year || "").toString(),
+            seeking_text: recipient.seeking_text || "",
+            seeking_color: recipient.seeking_color || "",
+            email_address: recipient.email_address || "",
+            step_1:
+              recipient.step_1 !== null
+                ? (recipient.step_1 || "").toString()
+                : "",
+            step_2:
+              recipient.step_2 !== null
+                ? (recipient.step_2 || "").toString()
+                : "",
+            step_3:
+              recipient.step_3 !== null
+                ? (recipient.step_3 || "").toString()
+                : "",
+            step_4:
+              recipient.step_4 !== null
+                ? (recipient.step_4 || "").toString()
+                : "",
+            step_5:
+              recipient.step_5 !== null
+                ? (recipient.step_5 || "").toString()
+                : "",
+            step_6:
+              recipient.step_6 !== null
+                ? (recipient.step_6 || "").toString()
+                : "",
+            step_7:
+              recipient.step_7 !== null
+                ? (recipient.step_7 || "").toString()
+                : "",
+            step_8:
+              recipient.step_8 !== null
+                ? (recipient.step_8 || "").toString()
+                : "",
+            step_9:
+              recipient.step_9 !== null
+                ? (recipient.step_9 || "").toString()
+                : "",
+            step_10:
+              recipient.step_10 !== null
+                ? (recipient.step_10 || "").toString()
+                : "",
+            checklist_text: recipient.checklist_text || "",
+            checklist_color: recipient.checklist_color || "",
           },
         }));
 

@@ -31,6 +31,7 @@ type Props = {
   onCampaignNameUpdate?: (newName: string) => void;
   templateId: string | null;
   setTemplateIdAction: (value: string | null) => void;
+  selectedUniversities?: string[];
 };
 
 export default function TemplateTab({
@@ -39,6 +40,7 @@ export default function TemplateTab({
   commType,
   setCommTypeAction,
   setSenderNameAction,
+  setSenderEmailAction,
   setReplyToAction,
   setSubjectAction,
   setBodyAction,
@@ -119,12 +121,14 @@ export default function TemplateTab({
 
   const handleTemplateSelect = (template: {
     senderName: string;
+    senderEmail: string;
     subject: string;
     body: string;
     replyToAddress?: string;
     templateId?: string;
   }) => {
     setSenderNameAction(template.senderName);
+    setSenderEmailAction(template.senderEmail);
     setSubjectAction(template.subject);
     setBodyAction(template.body);
     if (template.replyToAddress) {
@@ -141,13 +145,11 @@ export default function TemplateTab({
     setSelectedTemplate(null);
     setBodyAction("");
     setSenderNameAction("");
+    setSenderEmailAction("");
     setSubjectAction("");
     setReplyToAction("");
     toast.success("Template cleared");
   };
-
-  // Get university affiliation from session for the modal
-  const universityName = "Yale";
 
   return (
     <>
@@ -409,16 +411,22 @@ export default function TemplateTab({
                     <p className="text-sm font-semibold text-gray-600">
                       Template Title:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.template_title}
-                    </p>
+                    <StyledTooltip
+                      title={`Template ID: ${selectedTemplate.campaign_template_id}`}
+                      placement="top"
+                      arrow
+                    >
+                      <p className="text-base text-gray-800 cursor-help">
+                        {selectedTemplate.template_title}
+                      </p>
+                    </StyledTooltip>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-600">
-                      Template ID:
+                      From Address:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.campaign_template_id}
+                    <p className="text-base text-gray-800 break-words">
+                      {selectedTemplate.email_from_address}
                     </p>
                   </div>
                   <div>
@@ -494,7 +502,6 @@ export default function TemplateTab({
       <ImportTemplateModal
         isOpen={importTemplateModalOpen}
         onCloseAction={() => setImportTemplateModalOpen(false)}
-        universityName={universityName}
         onTemplateSelectAction={handleTemplateSelect}
       />
     </>
