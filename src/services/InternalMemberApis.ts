@@ -213,13 +213,16 @@ export const getEmailListByUniversityAndFilters = async ({
   try {
     // Build query parameters
     const params = new URLSearchParams();
-    params.append("task", "get_single_university_current_students");
+    params.append("task", "get_single_university_current_students_test");
 
     // Convert university_name to comma-separated string if it's an array
-    const universityParam = Array.isArray(university_name)
-      ? university_name.join(",")
-      : university_name;
-    params.append("university_name", universityParam);
+    // const universityParam = Array.isArray(university_name)
+    //   ? university_name.join(",")
+    //   : university_name;
+    // changes made here by Dan Nov 4th, 2025
+    if (university_name && university_name.length > 0) {
+      params.append("university_name", JSON.stringify(university_name));
+    }
 
     // Add optional array parameters
     if (gender_id && gender_id.length > 0) {
