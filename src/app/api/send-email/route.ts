@@ -9,16 +9,21 @@ const sesClient = new SESClient({
   },
 });
 
-const fromAddress = process.env.EMAIL_FROM || "";
 const defaultRecipient = "daniel.cashion.nyc@gmail.com";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
   try {
-    const { to, subject, body, isHtml } = await request.json();
+    const { to, subject, body, isHtml, fromName, fromAddress } = await request.json();
 
     const recipient = to?.trim() || defaultRecipient;
+    
+    // Use provided fromAddress or fall back to environment variable
+    const senderAddress = fromAddress?.trim() || process.env.EMAIL_FROM || "";
+    
+    // Use provided fromName or fall back to default
+    const senderName = fromName?.trim() || "The College Athlete Network";
 
     if (!subject || !body) {
       return NextResponse.json(
@@ -32,11 +37,19 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    if (!fromAddress) {
-      console.error("EMAIL_FROM is not configured.");
+    if (!senderAddress) {
+      console.error("No sender email address provided and EMAIL_FROM is not configured.");
       return NextResponse.json(
         { message: "Server misconfiguration." },
         { status: 500 }
+      );
+    }
+
+    // Validate sender email format
+    if (!emailRegex.test(senderAddress)) {
+      return NextResponse.json(
+        { message: "Invalid sender email address." },
+        { status: 400 }
       );
     }
 
@@ -63,7 +76,7 @@ export async function POST(request: NextRequest) {
     }
 
     const emailParams = {
-      Source: `The College Athlete Network <${fromAddress}>`,
+      Source: `${senderName} <${senderAddress}>`,
       Destination: { ToAddresses: [recipient] },
       Message: {
         Subject: {

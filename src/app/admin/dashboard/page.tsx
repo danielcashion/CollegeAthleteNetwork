@@ -1,3 +1,5 @@
+import DashboardMain from "@/components/AdminPanel/DashboardPage/DashboardMain";
+
 export default function DashboardPage() {
-  return <div>statistics and any graphs or visuals will go here</div>;
+  return <DashboardMain />;
 }
