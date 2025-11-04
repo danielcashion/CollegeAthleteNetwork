@@ -435,9 +435,11 @@ export default function ReviewScheduleTab({
       },
       body: JSON.stringify({
         to: email,
-        subject: `${replacedTemplateData?.subject?.trim() || "Test Email"}`,
+        subject: `${replacedTemplateData?.subject?.trim() || "Sample Email"}`,
         body: replacedTemplateData?.body || "<p>No content available</p>",
         isHtml: true,
+        fromName: replacedTemplateData?.senderName || "The College Athlete Network",
+        fromAddress: replacedTemplateData?.senderEmail || "admin@collegeathletenetwork.org",
       }),
     });
 
