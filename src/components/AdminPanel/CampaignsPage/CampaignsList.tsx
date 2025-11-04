@@ -562,10 +562,12 @@ export default function CampaignsList({
                   setNewCampaignDesc("");
                   setPreCreateError(null);
                 }}
-                className="flex items-center space-x-2 px-6 py-3 bg-white text-[#1C315F] rounded-xl hover:bg-red-50 transition-all duration-200 font-semibold shadow-2xl hover:shadow-xl transform hover:-translate-y-0.5"
+                className="flex items-center space-x-3 px-8 py-3.5 bg-gradient-to-r from-blueMain to-redMain text-white rounded-xl hover:opacity-90 hover:shadow-3xl transition-all duration-200 font-semibold shadow-3xl transform hover:-translate-y-0.5 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueMain"
               >
-                <Plus className="w-5 h-5" />
-                <span>Create Campaign</span>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <Plus className="w-10 h-10" />
+                </div>
+                <span>Create New Campaign</span>
               </button>
             </div>
           </div>
@@ -996,7 +998,7 @@ export default function CampaignsList({
                   setPreCreateError(null);
                 }}
                 disabled={isCreating}
-                className="px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:transform-none"
               >
                 Cancel
               </button>
@@ -1007,7 +1009,7 @@ export default function CampaignsList({
                   !newCampaignName.trim() ||
                   !newCampaignDesc.trim()
                 }
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blueMain to-redMain text-white font-semibold shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueMain disabled:transform-none"
               >
                 {isCreating && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
