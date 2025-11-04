@@ -1,7 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Image from "next/image";
 import CANWhiteLogo from "../../../public/Logos/CANLogo-horizontal-white.png";
@@ -15,15 +14,9 @@ export default function AdminLoginPage() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
-  const { data: session, status } = useSession();
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (status === "authenticated" && session) {
-      router.replace("/admin/dashboard");
-    }
-  }, [session, status, router]);
+  // Note: Removed useSession hook to prevent client-side conflicts
+  // Server-side session check in page.tsx handles redirects
 
   // Email validation
   const validateEmail = (email: string) => {
@@ -85,20 +78,27 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
+      console.log("Attempting sign in...");
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
+        callbackUrl: "/admin/dashboard"
       });
 
+      console.log("Sign in result:", result);
+
       if (result?.error) {
+        console.log("Sign in error:", result.error);
         setError(result.error);
       } else if (result?.ok) {
-        router.push("/admin/dashboard");
+        console.log("Sign in successful, redirecting to dashboard");
+        // Use window.location instead of router.push to force a full page reload
+        window.location.href = "/admin/dashboard";
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
       console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
