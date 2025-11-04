@@ -507,12 +507,22 @@ export default function EmailTemplateEditor({
                         fontSize: 14,
                         lineNumbers: "on",
                         scrollBeyondLastLine: false,
-                        wordWrap: "on",
+                        wordWrap: "off",
                         automaticLayout: true,
                         padding: { top: 16, bottom: 16 },
                         renderLineHighlight: "all",
                         selectOnLineNumbers: true,
                         smoothScrolling: true,
+                        // Disable autocomplete suggestions
+                        quickSuggestions: false,
+                        suggestOnTriggerCharacters: true,
+                        acceptSuggestionOnEnter: "on",
+                        tabCompletion: "on",
+                        wordBasedSuggestions: "off",
+                        parameterHints: { enabled: true },
+                        autoClosingBrackets:  "never",
+                        autoClosingQuotes: "never",
+                        autoSurround: "never",
                       }}
                     />
                   </div>
