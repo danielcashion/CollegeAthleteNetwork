@@ -47,6 +47,12 @@ The new API route uses multiple methods to detect IP:
   - Better error handling and logging
   - Cleaner async/await pattern
 
+### 5. **Created Conditional Wrapper**
+- **File**: `/src/components/ConditionalLogUserIP.tsx`
+- **Purpose**: Conditionally renders LogUserIP based on current path
+- **Logic**: Excludes IP logging for all `/admin` routes
+- **Integration**: Updated root layout to use conditional component
+
 ## 🔧 **Technical Details**
 
 ### API Route Features:
@@ -64,7 +70,7 @@ NEXT_PUBLIC_API_URL=your_external_api_url (optional - for external logging)
 
 ## 🚀 **Expected Behavior After Fix**
 
-### Success Case:
+### Success Case (Non-Admin Pages):
 1. Component loads
 2. Calls `/api/logUserIP`
 3. Server detects IP from headers or external API
@@ -72,6 +78,11 @@ NEXT_PUBLIC_API_URL=your_external_api_url (optional - for external logging)
 5. Logs to external API (if configured)
 6. Returns success response
 7. Sets userIp in app store
+
+### Admin Pages:
+- **No IP logging occurs** for any route starting with `/admin`
+- ConditionalLogUserIP component returns null for admin routes
+- Improves privacy and performance for admin users
 
 ### Fallback Cases:
 - **No IP detected**: Returns "unknown" but doesn't fail
@@ -94,3 +105,4 @@ Successfully logged IP: xxx.xxx.xxx.xxx Location: {...}
 4. **Debugging**: Comprehensive logging
 5. **Resilience**: Graceful error handling
 6. **Compatibility**: Works with various hosting providers
+7. **Privacy**: No IP logging for admin users (routes starting with `/admin`)

@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from "next/app";
-import LogUserIP from "@/components/UserAudit/LogUserIP";
+import ConditionalLogUserIP from "@/components/UserAudit/ConditionalLogUserIP";
 import CanVideoModal from "@/components/Modals/CanVideoModal";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
@@ -95,7 +95,7 @@ export default function RootLayout({
             <Footer />
           </footer>
           <CanVideoModal />
-          <LogUserIP />
+          <ConditionalLogUserIP />
           <Analytics />
           <ToasterProvider />
           <GoogleAnalyticsClient />
