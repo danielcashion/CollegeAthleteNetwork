@@ -29,3 +29,17 @@ export interface InternalEmailTemplate {
   updated_by?: string | null;
   updated_datetime?: string | null;
 }
+
+export interface DatabaseTask {
+  task_id: number;
+  task_name: string;
+  task_description: string;
+  sproc_name: string;
+  req_params: string | null;
+  optional_params: string | null;
+  is_active_YN: number;
+  created_by: string;
+  created_datetime: string;
+  updated_by: string | null;
+  updated_datetime: string | null;
+}

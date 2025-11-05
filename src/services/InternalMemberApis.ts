@@ -1,4 +1,4 @@
-import { InternalEmailTemplate } from "@/types/InternalMember";
+import { InternalEmailTemplate, DatabaseTask } from "@/types/InternalMember";
 import axios from "axios";
 import { CampaignData } from "@/types/Campaign";
 
@@ -299,6 +299,44 @@ export const getTotalCountsByUniversity = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching total counts:", error);
+    throw error;
+  }
+};
+
+export const getInternalCampaignTasks = async (): Promise<DatabaseTask[]> => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks`;
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching internal campaign tasks:", error);
+    throw error;
+  }
+};
+
+export const updateInternalCampaignTask = async (
+  taskId: number,
+  taskData: Partial<DatabaseTask>
+): Promise<DatabaseTask> => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks?task_id=${taskId}`,
+      taskData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating internal campaign task:", error);
+    throw error;
+  }
+};
+
+export const deleteInternalCampaignTask = async (taskId: number): Promise<void> => {
+  try {
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks?task_id=${taskId}`
+    );
+  } catch (error) {
+    console.error("Error deleting internal campaign task:", error);
     throw error;
   }
 };
