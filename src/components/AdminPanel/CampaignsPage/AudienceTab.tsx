@@ -371,7 +371,7 @@ export default function AudienceTab({
               className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
             />
             <span className="text-sm font-medium">
-              Utilize Custom Database &quot;Task&quot; Filters
+              Utilize Custom Database &quot;Task&quot; For Custom Response Output
             </span>
           </label>
         </div>
