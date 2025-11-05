@@ -1,24 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
-import { InternalEmailTemplate } from "@/types/InternalMember";
+import { InternalEmailTemplate, DatabaseTask } from "@/types/InternalMember";
 import {
   createInternalEmailTemplate,
   updateInternalEmailTemplate,
+  getInternalCampaignTasks,
 } from "@/services/InternalMemberApis";
-import { X, Save, Loader2, Edit, Eye, Code, Mail, Settings, Info, AlertCircle } from "lucide-react";
+import {
+  X,
+  Save,
+  Loader2,
+  Edit,
+  Eye,
+  Code,
+  Mail,
+  Settings,
+  Info,
+  AlertCircle,
+} from "lucide-react";
 import Editor from "@monaco-editor/react";
 import HtmlViewer from "../General/HtmlViewer";
-
-const getVarcharEight = () => {
-  const CHARSET = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-
-  const randomArray = new Uint8Array(8);
-  crypto.getRandomValues(randomArray);
-
-  return Array.from(randomArray, (num) =>
-    CHARSET.charAt(num % CHARSET.length)
-  ).join("");
-};
+import { getVarcharEight } from "@/helpers/getVarCharId";
 
 interface EmailTemplateEditorProps {
   isOpen: boolean;
@@ -52,6 +54,21 @@ export default function EmailTemplateEditor({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [campaignTasks, setCampaignTasks] = useState<DatabaseTask[]>([]);
+
+  // Fetch campaign tasks on initial render
+  useEffect(() => {
+    const fetchCampaignTasks = async () => {
+      try {
+        const tasks = await getInternalCampaignTasks();
+        setCampaignTasks(tasks);
+      } catch (error) {
+        console.error("Error fetching campaign tasks:", error);
+      }
+    };
+
+    fetchCampaignTasks();
+  }, []);
 
   // Handle Escape key press
   useEffect(() => {
@@ -146,15 +163,12 @@ export default function EmailTemplateEditor({
 
     try {
       if (mode === "edit" && template?.campaign_template_id) {
-        await updateInternalEmailTemplate(
-          template.campaign_template_id,
-          {
-            ...formData,
-            campaign_template_id: template.campaign_template_id,
-            updated_by: formData.template_creator || "",
-            updated_datetime: new Date().toISOString(),
-          } as InternalEmailTemplate
-        );
+        await updateInternalEmailTemplate(template.campaign_template_id, {
+          ...formData,
+          campaign_template_id: template.campaign_template_id,
+          updated_by: formData.template_creator || "",
+          updated_datetime: new Date().toISOString(),
+        } as InternalEmailTemplate);
       } else {
         await createInternalEmailTemplate({
           ...formData,
@@ -180,7 +194,7 @@ export default function EmailTemplateEditor({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
@@ -199,11 +213,13 @@ export default function EmailTemplateEditor({
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">
-                    {mode === "edit" ? "Edit Email Template" : "Create Email Template"}
+                    {mode === "edit"
+                      ? "Edit Email Template"
+                      : "Create Email Template"}
                   </h2>
                   <p className="text-blue-100 mt-1">
-                    {mode === "edit" 
-                      ? "Modify your existing email template" 
+                    {mode === "edit"
+                      ? "Modify your existing email template"
                       : "Build a new email template for your campaigns"}
                   </p>
                 </div>
@@ -375,14 +391,19 @@ export default function EmailTemplateEditor({
                         (API Integration)
                       </span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="template_task"
                       value={formData.template_task || ""}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 group-hover:border-gray-400 bg-white shadow-sm"
-                      placeholder="Must align with Database Task from /messages endpoint"
-                    />
+                    >
+                      <option value="">Select a task...</option>
+                      {campaignTasks.map((task) => (
+                        <option key={task.task_id} value={task.task_name}>
+                          {task.task_name} - {task.task_description}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* Enhanced Template Parameters */}
@@ -520,7 +541,7 @@ export default function EmailTemplateEditor({
                         tabCompletion: "on",
                         wordBasedSuggestions: "off",
                         parameterHints: { enabled: true },
-                        autoClosingBrackets:  "never",
+                        autoClosingBrackets: "never",
                         autoClosingQuotes: "never",
                         autoSurround: "never",
                       }}
@@ -586,7 +607,9 @@ export default function EmailTemplateEditor({
                 <Info className="w-4 h-4 text-white" />
               </div>
               <span className="font-medium">
-                {mode === "edit" ? "Modifying existing template" : "Creating new template"}
+                {mode === "edit"
+                  ? "Modifying existing template"
+                  : "Creating new template"}
               </span>
             </div>
 
@@ -607,7 +630,9 @@ export default function EmailTemplateEditor({
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>{mode === "edit" ? "Updating..." : "Creating..."}</span>
+                    <span>
+                      {mode === "edit" ? "Updating..." : "Creating..."}
+                    </span>
                   </>
                 ) : (
                   <>
