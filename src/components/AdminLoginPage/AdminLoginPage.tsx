@@ -78,7 +78,6 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      console.log("Attempting sign in...");
       const result = await signIn("credentials", {
         email,
         password,
@@ -86,13 +85,9 @@ export default function AdminLoginPage() {
         callbackUrl: "/admin/dashboard"
       });
 
-      console.log("Sign in result:", result);
-
       if (result?.error) {
-        console.log("Sign in error:", result.error);
         setError(result.error);
       } else if (result?.ok) {
-        console.log("Sign in successful, redirecting to dashboard");
         // Use window.location instead of router.push to force a full page reload
         window.location.href = "/admin/dashboard";
       }
