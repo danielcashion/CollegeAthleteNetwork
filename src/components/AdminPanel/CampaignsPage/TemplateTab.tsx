@@ -31,6 +31,8 @@ type Props = {
   onCampaignNameUpdate?: (newName: string) => void;
   templateId: string | null;
   setTemplateIdAction: (value: string | null) => void;
+  templateTask: string | null;
+  setTemplateTaskAction: (value: string | null) => void;
   selectedUniversities?: string[];
 };
 
@@ -52,6 +54,7 @@ export default function TemplateTab({
   onCampaignNameUpdate,
   templateId,
   setTemplateIdAction,
+  setTemplateTaskAction,
 }: Props) {
   const [importTemplateModalOpen, setImportTemplateModalOpen] = useState(false);
   const [isEditingCampaignName, setIsEditingCampaignName] = useState(false);
@@ -65,6 +68,7 @@ export default function TemplateTab({
     const fetchTemplate = async () => {
       if (!templateId) {
         setSelectedTemplate(null);
+        setTemplateTaskAction(null);
         return;
       }
 
@@ -73,6 +77,8 @@ export default function TemplateTab({
         const templateData = await getInternalEmailTemplatesById(templateId);
         if (templateData && templateData.length > 0) {
           setSelectedTemplate(templateData[0]);
+          // Store the template_task for API calls
+          setTemplateTaskAction(templateData[0].template_task || null);
         }
       } catch (error) {
         console.error("Error fetching template:", error);
@@ -83,7 +89,7 @@ export default function TemplateTab({
     };
 
     fetchTemplate();
-  }, [templateId]);
+  }, [templateId, setTemplateTaskAction]);
 
   // Campaign name editing functions
   const startEditingCampaignName = () => {
@@ -142,6 +148,7 @@ export default function TemplateTab({
 
   const handleClearTemplate = () => {
     setTemplateIdAction(null);
+    setTemplateTaskAction(null);
     setSelectedTemplate(null);
     setBodyAction("");
     setSenderNameAction("");

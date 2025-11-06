@@ -77,12 +77,17 @@ export default function CampaignBuilder({
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [templateId, setTemplateId] = useState<string | null>(null);
+  const [templateTask, setTemplateTask] = useState<string | null>(null);
 
   // New states for color scheme and university logo
   const [colorScheme, setColorScheme] = useState<"university" | "default">(
     "default"
   );
   const [includeUniversityLogo, setIncludeUniversityLogo] = useState(true);
+
+  useEffect(() => {
+    console.log("template task added: ", templateTask);
+  }, [templateTask]);
 
   // Fetch all universities on mount
   useEffect(() => {
@@ -239,6 +244,9 @@ export default function CampaignBuilder({
             if (response && response.length > 0) {
               const template = response[0];
               setBody(template.email_body || "");
+
+              // Store the template_task for API calls
+              setTemplateTask(template.template_task);
 
               // Update state variables if not set in campaign
               if (!editingCampaign.email_from_name)
@@ -652,6 +660,7 @@ export default function CampaignBuilder({
                 selectedUniversities={selectedUniversities}
                 setSelectedUniversitiesAction={setSelectedUniversities}
                 universityOptions={universityOptions}
+                templateTask={templateTask}
               />
               <TemplateTab
                 onNextAction={handleTemplateNext}
@@ -679,6 +688,8 @@ export default function CampaignBuilder({
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 templateId={templateId}
                 setTemplateIdAction={setTemplateId}
+                templateTask={templateTask}
+                setTemplateTaskAction={setTemplateTask}
                 selectedUniversities={selectedUniversities}
               />
               <ReviewTab
@@ -698,6 +709,7 @@ export default function CampaignBuilder({
                   "draft"
                 }
                 templateId={templateId}
+                templateTask={templateTask}
                 universityMetaData={universityMetaData}
                 includeUniversityLogo={includeUniversityLogo}
                 colorScheme={colorScheme}
@@ -717,6 +729,7 @@ export default function CampaignBuilder({
                 onBack={() => handleTabSwitch(2)}
                 emailBody={body}
                 templateId={templateId}
+                templateTask={templateTask}
                 campaign={createdCampaign || editingCampaign}
                 campaignFilters={{
                   gender,

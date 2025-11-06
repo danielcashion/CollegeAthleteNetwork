@@ -24,6 +24,7 @@ type Props = {
   filteredTotal: { athletes: number; emails: number };
   filteredCounts: any[];
   campaignName?: string;
+  templateTask: string | null;
   onCampaignNameUpdate?: (newName: string) => void;
   selectedUniversities: string[];
   setSelectedUniversitiesAction: (universities: string[]) => void;
@@ -44,6 +45,7 @@ export default function AudienceTab({
   filteredTotal,
   filteredCounts,
   campaignName,
+  templateTask,
   onCampaignNameUpdate,
   selectedUniversities,
   setSelectedUniversitiesAction,
@@ -371,7 +373,8 @@ export default function AudienceTab({
               className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
             />
             <span className="text-sm font-medium">
-              Utilize Custom Database &quot;Task&quot; For Custom Response Output
+              Utilize Custom Database &quot;Task&quot; For Custom Response
+              Output
             </span>
           </label>
         </div>
@@ -887,6 +890,7 @@ export default function AudienceTab({
           <CampaignEmailsList
             campaign={campaign}
             onClose={() => setShowEmailsList(false)}
+            templateTask={templateTask}
           />
         </div>
       </Drawer>

@@ -43,6 +43,8 @@ type Props = {
   campaign?: CampaignData;
   // Template ID to fetch template data
   templateId?: string | null;
+  // Template task for API calls
+  templateTask?: string | null;
   // University logo props
   universityMetaData?: University | null;
   includeUniversityLogo?: boolean;
@@ -69,6 +71,7 @@ export default function ReviewScheduleTab({
   campaign_name,
   campaign_status,
   templateId,
+  templateTask,
   universityMetaData = null,
   includeUniversityLogo = false,
   colorScheme = "default",
@@ -277,6 +280,13 @@ export default function ReviewScheduleTab({
       return;
     }
 
+    // Check if we have a templateTask - it's required for the API
+    if (!templateTask) {
+      console.log("No template task available yet");
+      setEmailsLoading(false);
+      return;
+    }
+
     // Check if universities are selected
     if (
       !apiFilterCriteria.universities ||
@@ -310,6 +320,7 @@ export default function ReviewScheduleTab({
         gender_id,
         max_roster_year,
         sports,
+        task: templateTask, // Pass the templateTask from the selected template (now guaranteed to exist)
       });
 
       // console.log("API Response:", response); // Debug: Log the actual API response
@@ -340,7 +351,7 @@ export default function ReviewScheduleTab({
     } finally {
       setEmailsLoading(false);
     }
-  }, [apiFilterCriteria, campaign]);
+  }, [apiFilterCriteria, campaign, templateTask]);
 
   useEffect(() => {
     // console.log("=== useEffect for fetchEmails triggered ===");
@@ -438,8 +449,11 @@ export default function ReviewScheduleTab({
         subject: `${replacedTemplateData?.subject?.trim() || "Sample Email"}`,
         body: replacedTemplateData?.body || "<p>No content available</p>",
         isHtml: true,
-        fromName: replacedTemplateData?.senderName || "The College Athlete Network",
-        fromAddress: replacedTemplateData?.senderEmail || "admin@collegeathletenetwork.org",
+        fromName:
+          replacedTemplateData?.senderName || "The College Athlete Network",
+        fromAddress:
+          replacedTemplateData?.senderEmail ||
+          "admin@collegeathletenetwork.org",
       }),
     });
 
@@ -1040,6 +1054,7 @@ export default function ReviewScheduleTab({
                 // Optionally handle campaign updates here
                 // console.log("Campaign updated:", updatedCampaign);
               }}
+              templateTask={templateTask}
             />
           )}
         </div>

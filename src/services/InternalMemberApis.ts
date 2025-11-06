@@ -200,11 +200,13 @@ export const getEmailListByUniversityAndFilters = async ({
   gender_id,
   max_roster_year,
   sports,
+  task,
 }: {
   university_name: string | string[]; // Can be a single university name or json string of names
   gender_id?: number[];
   max_roster_year?: number[];
   sports?: string[];
+  task: string; // Task parameter is REQUIRED to specify which API endpoint to use
 }) => {
   if (!university_name) {
     throw new Error("university_name is required");
@@ -213,7 +215,7 @@ export const getEmailListByUniversityAndFilters = async ({
   try {
     // Build query parameters
     const params = new URLSearchParams();
-    params.append("task", "get_single_university_current_students_test");
+    params.append("task", task);
 
     // Convert university_name to comma-separated string if it's an array -- DELETED 11/5/2025
     // const universityParam = Array.isArray(university_name)
@@ -329,7 +331,9 @@ export const updateInternalCampaignTask = async (
   }
 };
 
-export const deleteInternalCampaignTask = async (taskId: number): Promise<void> => {
+export const deleteInternalCampaignTask = async (
+  taskId: number
+): Promise<void> => {
   try {
     await axios.delete(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks?task_id=${taskId}`
