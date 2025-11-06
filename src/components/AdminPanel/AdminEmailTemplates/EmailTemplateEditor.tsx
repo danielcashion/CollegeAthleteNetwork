@@ -400,7 +400,7 @@ export default function EmailTemplateEditor({
                       <option value="">Select a task...</option>
                       {campaignTasks.map((task) => (
                         <option key={task.task_id} value={task.task_name}>
-                          {task.task_name} - {task.task_description}
+                          {task.task_name}; {task.task_description}
                         </option>
                       ))}
                     </select>
