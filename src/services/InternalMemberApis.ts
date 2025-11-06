@@ -217,13 +217,13 @@ export const getEmailListByUniversityAndFilters = async ({
     const params = new URLSearchParams();
     params.append("task", task);
 
-    // Convert university_name to comma-separated string if it's an array -- DELETED 11/5/2025
-    // const universityParam = Array.isArray(university_name)
-    //   ? university_name.join(",")
-    //   : university_name;
-    // changes made here by Dan Nov 4th, 2025
-    if (university_name && university_name.length > 0) {
-      params.append("university_name", JSON.stringify(university_name));
+    // Convert university_name to comma-separated string if it's an array
+    const universityParam = Array.isArray(university_name)
+      ? university_name.join(",")
+      : university_name;
+
+    if (universityParam && universityParam.length > 0) {
+      params.append("university_name", universityParam);
     }
 
     if (gender_id && gender_id.length > 0) {
