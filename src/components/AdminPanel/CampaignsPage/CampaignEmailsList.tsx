@@ -19,6 +19,7 @@ interface CampaignEmailsListProps {
   campaign: any;
   onClose?: () => void;
   onCampaignUpdated?: (campaign: CampaignData) => void;
+  templateTask?: string | null;
 }
 
 interface EmailData {
@@ -34,6 +35,7 @@ export default function CampaignEmailsList({
   campaign,
   onClose,
   onCampaignUpdated,
+  templateTask,
 }: CampaignEmailsListProps) {
   // console.log(campaign);
   const [emails, setEmails] = useState<EmailData[]>([]);
@@ -114,6 +116,16 @@ export default function CampaignEmailsList({
         return;
       }
 
+      // Check if we have a templateTask - it's required for the API
+      if (!templateTask) {
+        toast.error(
+          "Task not found, you first need to select a template in Design Messaging tab (2nd tab)"
+        );
+        console.log("No template task available yet");
+        setLoading(false);
+        return;
+      }
+
       // Check if universities are selected
       if (
         !apiFilterCriteria.universities ||
@@ -141,6 +153,7 @@ export default function CampaignEmailsList({
         gender_id,
         max_roster_year,
         sports,
+        task: templateTask, // Pass the templateTask from the selected template (now guaranteed to exist)
       });
 
       // console.log("API Response:", response); // Debug: Log the actual API response
@@ -212,7 +225,7 @@ export default function CampaignEmailsList({
     } finally {
       setLoading(false);
     }
-  }, [apiFilterCriteria]); // Add apiFilterCriteria as dependency
+  }, [apiFilterCriteria, templateTask]); // Add templateTask as dependency
 
   // Restore persisted sort state for this campaign (if any) - only runs once per campaign
   useEffect(() => {

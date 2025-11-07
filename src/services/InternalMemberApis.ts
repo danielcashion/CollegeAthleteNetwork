@@ -1,4 +1,4 @@
-import { InternalEmailTemplate } from "@/types/InternalMember";
+import { InternalEmailTemplate, DatabaseTask } from "@/types/InternalMember";
 import axios from "axios";
 import { CampaignData } from "@/types/Campaign";
 
@@ -200,11 +200,13 @@ export const getEmailListByUniversityAndFilters = async ({
   gender_id,
   max_roster_year,
   sports,
+  task,
 }: {
-  university_name: string | string[]; // Can be a single university name, array of names, or comma-separated string
+  university_name: string | string[]; // Can be a single university name or json string of names
   gender_id?: number[];
   max_roster_year?: number[];
   sports?: string[];
+  task: string; // Task parameter is REQUIRED to specify which API endpoint to use
 }) => {
   if (!university_name) {
     throw new Error("university_name is required");
@@ -213,18 +215,12 @@ export const getEmailListByUniversityAndFilters = async ({
   try {
     // Build query parameters
     const params = new URLSearchParams();
-    params.append("task", "get_single_university_current_students");
+    params.append("task", task);
 
-    // Convert university_name to comma-separated string if it's an array
-    // const universityParam = Array.isArray(university_name)
-    //   ? university_name.join(",")
-    //   : university_name;
-    // changes made here by Dan Nov 4th, 2025
     if (university_name && university_name.length > 0) {
       params.append("university_name", JSON.stringify(university_name));
     }
 
-    // Add optional array parameters
     if (gender_id && gender_id.length > 0) {
       params.append("gender_id", JSON.stringify(gender_id));
     }
@@ -290,15 +286,70 @@ export const getCampaignTimeSeriesByCampaignId = async (
 export const getTotalCountsByUniversity = async ({
   university_name,
 }: {
-  university_name: string;
-}) => {
+  university_name: any;
+  }) => {
+  
+  if (!university_name) {
+    throw new Error("university_name is required");
+  }
+  
+  const params = new URLSearchParams();
+  const task = "total_counts";
+  params.append("task", task);
+
+  if (university_name && university_name.length > 0) {
+    params.append("university_name", university_name);
+  }
+
+  console.log("Fetching total counts with params:", params.toString());
+
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?task=total_counts&university_name=${university_name}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?${params.toString()}`
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching total counts:", error);
+    throw error;
+  }
+};
+
+export const getInternalCampaignTasks = async (): Promise<DatabaseTask[]> => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks`;
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching internal campaign tasks:", error);
+    throw error;
+  }
+};
+
+export const updateInternalCampaignTask = async (
+  taskId: number,
+  taskData: Partial<DatabaseTask>
+): Promise<DatabaseTask> => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks?task_id=${taskId}`,
+      taskData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating internal campaign task:", error);
+    throw error;
+  }
+};
+
+export const deleteInternalCampaignTask = async (
+  taskId: number
+): Promise<void> => {
+  try {
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/internal_campaigns_tasks?task_id=${taskId}`
+    );
+  } catch (error) {
+    console.error("Error deleting internal campaign task:", error);
     throw error;
   }
 };

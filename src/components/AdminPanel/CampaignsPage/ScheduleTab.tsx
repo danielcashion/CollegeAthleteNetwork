@@ -36,6 +36,7 @@ type Props = {
   onScheduleSend?: (scheduledAt: string) => void; // ISO string
   emailBody?: string; // raw HTML body without variable replacement
   templateId?: string | null; // campaign template ID for S3 key
+  templateTask?: string | null; // template task for API calls
   // Campaign and session data for SQS integration
   campaign?: CampaignData | null;
   // Filter criteria for fetching recipients
@@ -61,6 +62,7 @@ export default function ScheduleTab({
   onScheduleSend,
   emailBody,
   templateId,
+  templateTask,
   campaign,
   campaignFilters,
   selectedUniversities = [],
@@ -263,18 +265,21 @@ export default function ScheduleTab({
         return;
       }
 
-      console.log("Fetching recipients with filters:", {
-        university_name: selectedUniversities,
-        gender_id,
-        max_roster_year,
-        sports,
-      });
+      // Check if we have a templateTask - it's required for the API
+      if (!templateTask) {
+        toast.error(
+          "Template task is missing. Please select a template first."
+        );
+        setUploading(false);
+        return;
+      }
 
       const emailListResponse = await getEmailListByUniversityAndFilters({
         university_name: selectedUniversities,
         gender_id,
         max_roster_year,
         sports,
+        task: templateTask, // Pass the templateTask from the selected template (now guaranteed to exist)
       });
 
       // The API returns [data, metadata], so we take the first element

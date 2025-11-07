@@ -43,6 +43,8 @@ type Props = {
   campaign?: CampaignData;
   // Template ID to fetch template data
   templateId?: string | null;
+  // Template task for API calls
+  templateTask?: string | null;
   // University logo props
   universityMetaData?: University | null;
   includeUniversityLogo?: boolean;
@@ -58,6 +60,10 @@ type Props = {
     selectedYears: number[];
     universities: string[];
   };
+  emailBody?: string;
+  subject?: string;
+  senderName?: string;
+  replyTo?: string;
 };
 
 export default function ReviewScheduleTab({
@@ -69,15 +75,16 @@ export default function ReviewScheduleTab({
   campaign_name,
   campaign_status,
   templateId,
+  templateTask,
   universityMetaData = null,
   includeUniversityLogo = false,
   colorScheme = "default",
   campaignName,
   onCampaignNameUpdate,
   campaignFilters,
+  emailBody,
+  replyTo
 }: Props) {
-  console.log("campaignfileters prop:", campaignFilters);
-
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -225,7 +232,7 @@ export default function ReviewScheduleTab({
         colorScheme
       ),
       body: replaceTemplateVariablesWithLogo(
-        templateData.body,
+        emailBody || "No Preview Available",
         replacementData,
         universityMetaData,
         includeUniversityLogo,
@@ -238,6 +245,7 @@ export default function ReviewScheduleTab({
     universityMetaData,
     includeUniversityLogo,
     colorScheme,
+    emailBody,
   ]);
 
   // Create a campaign object for the emails list drawer with current filter state
@@ -277,6 +285,13 @@ export default function ReviewScheduleTab({
       return;
     }
 
+    // Check if we have a templateTask - it's required for the API
+    if (!templateTask) {
+      console.log("No template task available yet");
+      setEmailsLoading(false);
+      return;
+    }
+
     // Check if universities are selected
     if (
       !apiFilterCriteria.universities ||
@@ -310,6 +325,7 @@ export default function ReviewScheduleTab({
         gender_id,
         max_roster_year,
         sports,
+        task: templateTask, // Pass the templateTask from the selected template (now guaranteed to exist)
       });
 
       // console.log("API Response:", response); // Debug: Log the actual API response
@@ -340,7 +356,7 @@ export default function ReviewScheduleTab({
     } finally {
       setEmailsLoading(false);
     }
-  }, [apiFilterCriteria, campaign]);
+  }, [apiFilterCriteria, campaign, templateTask]);
 
   useEffect(() => {
     // console.log("=== useEffect for fetchEmails triggered ===");
@@ -427,28 +443,206 @@ export default function ReviewScheduleTab({
     setSending(false);
   };
 
-  const sendTestEmail = async (email: string) => {
-    const response = await fetch("/api/send-email", {
+  const sendTestEmail = async (testEmailAddress: string) => {
+    if (!campaign || !campaignFilters || !templateId || !templateTask) {
+      throw new Error("Missing required campaign or template data");
+    }
+
+    // Process the email body to handle university logo (same as ScheduleTab)
+    let processedEmailBody = emailBody || "";
+
+    if (processedEmailBody) {
+      // Replace university logo URL placeholder
+      const universityLogoUrl =
+        includeUniversityLogo && universityMetaData?.logo_url
+          ? universityMetaData.logo_url
+          : "";
+
+      processedEmailBody = processedEmailBody.replace(
+        /\{\{university_logo\}\}/g,
+        universityLogoUrl
+      );
+
+      // Remove university logo img tag if logo should not be included
+      if (!includeUniversityLogo) {
+        processedEmailBody = processedEmailBody.replace(
+          /<img[^>]*id\s*=\s*["']university_logo["'][^>]*>/gi,
+          ""
+        );
+      }
+    }
+
+    // Upload the HTML template to S3
+    const uploadResponse = await fetch("/api/upload-html-template", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        to: email,
-        subject: `${replacedTemplateData?.subject?.trim() || "Sample Email"}`,
-        body: replacedTemplateData?.body || "<p>No content available</p>",
-        isHtml: true,
-        fromName: replacedTemplateData?.senderName || "The College Athlete Network",
-        fromAddress: replacedTemplateData?.senderEmail || "admin@collegeathletenetwork.org",
+        htmlContent: processedEmailBody,
+        templateId: templateId,
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to send test email");
+    const uploadResult = await uploadResponse.json();
+
+    if (!uploadResult.success) {
+      throw new Error(`Failed to upload email template: ${uploadResult.error}`);
     }
 
-    return response.json();
+    // Fetch recipients using the campaign filters to get sample data
+    const genderMap: { [key: string]: number } = {
+      M: 1,
+      F: 2,
+    };
+
+    const gender_id = campaignFilters.gender
+      ? [genderMap[campaignFilters.gender]]
+      : undefined;
+    const max_roster_year = campaignFilters.selectedYears || undefined;
+    const sports = campaignFilters.sports || undefined;
+
+    // Check if universities are selected
+    if (
+      !campaignFilters.universities ||
+      campaignFilters.universities.length === 0
+    ) {
+      throw new Error("No universities selected for this campaign");
+    }
+
+    const emailListResponse = await getEmailListByUniversityAndFilters({
+      university_name: campaignFilters.universities,
+      gender_id,
+      max_roster_year,
+      sports,
+      task: templateTask,
+    });
+
+    // The API returns [data, metadata], so we take the first element
+    const recipientsData =
+      Array.isArray(emailListResponse) && emailListResponse.length > 0
+        ? emailListResponse[0]
+        : [];
+
+    if (!recipientsData || recipientsData.length === 0) {
+      throw new Error("No recipients data found for template variables");
+    }
+
+    // Use the FIRST recipient's data for template variables
+    const firstRecipient = recipientsData[0];
+
+    // CRITICAL: Create a single test recipient using the entered email address
+    // but with the first recipient's data for template variables
+    const testRecipient = {
+      recipient_id: firstRecipient.correlation_id || "test-recipient",
+      email: testEmailAddress, // USE THE ENTERED TEST EMAIL ADDRESS
+      university: firstRecipient.university_name || "",
+      segment: firstRecipient.sport || "",
+      vars: {
+        correlation_id: firstRecipient.correlation_id || "",
+        university_name: firstRecipient.university_name || "",
+        athlete_id: (firstRecipient.athlete_id || "").toString(),
+        athlete_name: firstRecipient.athlete_name || "",
+        sport: firstRecipient.sport || "",
+        gender_id: (firstRecipient.gender_id || "").toString(),
+        max_roster_year: (firstRecipient.max_roster_year || "").toString(),
+        seeking_text: firstRecipient.seeking_text || "",
+        seeking_color: firstRecipient.seeking_color || "",
+        email_address: testEmailAddress, // USE THE TEST EMAIL HERE TOO
+        step_1:
+          firstRecipient.step_1 !== null
+            ? (firstRecipient.step_1 || "").toString()
+            : "",
+        step_2:
+          firstRecipient.step_2 !== null
+            ? (firstRecipient.step_2 || "").toString()
+            : "",
+        step_3:
+          firstRecipient.step_3 !== null
+            ? (firstRecipient.step_3 || "").toString()
+            : "",
+        step_4:
+          firstRecipient.step_4 !== null
+            ? (firstRecipient.step_4 || "").toString()
+            : "",
+        step_5:
+          firstRecipient.step_5 !== null
+            ? (firstRecipient.step_5 || "").toString()
+            : "",
+        step_6:
+          firstRecipient.step_6 !== null
+            ? (firstRecipient.step_6 || "").toString()
+            : "",
+        step_7:
+          firstRecipient.step_7 !== null
+            ? (firstRecipient.step_7 || "").toString()
+            : "",
+        step_8:
+          firstRecipient.step_8 !== null
+            ? (firstRecipient.step_8 || "").toString()
+            : "",
+        step_9:
+          firstRecipient.step_9 !== null
+            ? (firstRecipient.step_9 || "").toString()
+            : "",
+        step_10:
+          firstRecipient.step_10 !== null
+            ? (firstRecipient.step_10 || "").toString()
+            : "",
+        checklist_text: firstRecipient.checklist_text || "",
+        checklist_color: firstRecipient.checklist_color || "",
+      },
+    };
+
+    console.log("=== campaign details ===", campaign);
+
+    // Prepare SQS payload with only the test recipient
+    // Use a test correlation ID
+    const testCorrelationId = `test-${
+      firstRecipient.correlation_id || Date.now()
+    }`;
+    
+    console.log("replacedTemplateData:", replacedTemplateData);
+
+    const sqsPayload = {
+      campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
+      correlation_id: testCorrelationId,
+      subject: `[TEST]; ${replacedTemplateData?.subject}`, // Add [TEST] prefix to subject
+      template_key: templateId,
+      from_name: replacedTemplateData?.senderName || "The College Athlete Network",
+      from_address:
+        replacedTemplateData?.senderEmail || "admin@collegeathletenetwork.org",
+      reply_to_address:
+        replyTo || "admin@collegeathletenetwork.org",
+        
+      recipients: [testRecipient], // ONLY ONE RECIPIENT: THE TEST EMAIL
+
+    };
+
+    console.log("Sending test email to SQS:", {
+      ...sqsPayload,
+      recipients: `1 test recipient (${testEmailAddress})`,
+    });
+
+    // Send to SQS
+    const sqsResponse = await fetch("/api/notifications/enqueue", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sqsPayload),
+    });
+
+    const sqsResult = await sqsResponse.json();
+
+    if (!sqsResponse.ok) {
+      console.error("SQS enqueue failed for test email:", sqsResult);
+      throw new Error(
+        `Failed to enqueue test email: ${sqsResult.error || "Unknown error"}`
+      );
+    }
+
+    return sqsResult;
   };
 
   const handleSend = async () => {
@@ -1040,6 +1234,7 @@ export default function ReviewScheduleTab({
                 // Optionally handle campaign updates here
                 // console.log("Campaign updated:", updatedCampaign);
               }}
+              templateTask={templateTask}
             />
           )}
         </div>

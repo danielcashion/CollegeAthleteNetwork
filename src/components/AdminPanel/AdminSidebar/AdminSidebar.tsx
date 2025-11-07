@@ -3,7 +3,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Home, LayoutDashboard, Mail, Send } from "lucide-react";
+import { LogOut, Home, LayoutDashboard, Mail, Send, Database } from "lucide-react";
 import Logo from "../../../../public/Logos/CANLogo-horizontal-white.png";
 import Image from "next/image";
 
@@ -22,6 +22,11 @@ const adminSidebarItems = [
     href: "/admin/email-templates",
     icon: Mail,
     label: "Templates",
+  },
+  {
+    href: "/admin/database-tasks",
+    icon: Database,
+    label: "Database Tasks",
   },
 ];
 

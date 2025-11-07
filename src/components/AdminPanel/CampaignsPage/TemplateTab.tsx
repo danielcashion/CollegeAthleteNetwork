@@ -5,8 +5,10 @@ import StyledTooltip from "@/components/common/StyledTooltip";
 import toast from "react-hot-toast";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import { getInternalEmailTemplatesById } from "@/services/InternalMemberApis";
-import HtmlViewer from "../General/HtmlViewer";
 import { InternalEmailTemplate } from "@/types/InternalMember";
+import Editor from "@monaco-editor/react";
+import { Code, Eye, X } from "lucide-react";
+import HtmlViewer from "../General/HtmlViewer";
 
 type Props = {
   onNextAction?: () => void;
@@ -31,7 +33,11 @@ type Props = {
   onCampaignNameUpdate?: (newName: string) => void;
   templateId: string | null;
   setTemplateIdAction: (value: string | null) => void;
+  templateTask: string | null;
+  setTemplateTaskAction: (value: string | null) => void;
   selectedUniversities?: string[];
+  emailBody: string;
+  setEmailBody: (value: string) => void;
 };
 
 export default function TemplateTab({
@@ -49,9 +55,12 @@ export default function TemplateTab({
   includeUniversityLogo,
   setIncludeUniversityLogoAction,
   campaignName,
+  emailBody,
+  setEmailBody,
   onCampaignNameUpdate,
   templateId,
   setTemplateIdAction,
+  setTemplateTaskAction,
 }: Props) {
   const [importTemplateModalOpen, setImportTemplateModalOpen] = useState(false);
   const [isEditingCampaignName, setIsEditingCampaignName] = useState(false);
@@ -59,12 +68,14 @@ export default function TemplateTab({
   const [selectedTemplate, setSelectedTemplate] =
     useState<InternalEmailTemplate | null>(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   // Fetch template data if templateId exists
   useEffect(() => {
     const fetchTemplate = async () => {
       if (!templateId) {
         setSelectedTemplate(null);
+        setTemplateTaskAction(null);
         return;
       }
 
@@ -73,6 +84,8 @@ export default function TemplateTab({
         const templateData = await getInternalEmailTemplatesById(templateId);
         if (templateData && templateData.length > 0) {
           setSelectedTemplate(templateData[0]);
+          // Store the template_task for API calls
+          setTemplateTaskAction(templateData[0].template_task || null);
         }
       } catch (error) {
         console.error("Error fetching template:", error);
@@ -83,7 +96,7 @@ export default function TemplateTab({
     };
 
     fetchTemplate();
-  }, [templateId]);
+  }, [templateId, setTemplateTaskAction]);
 
   // Campaign name editing functions
   const startEditingCampaignName = () => {
@@ -131,6 +144,7 @@ export default function TemplateTab({
     setSenderEmailAction(template.senderEmail);
     setSubjectAction(template.subject);
     setBodyAction(template.body);
+    setEmailBody(template.body);
     if (template.replyToAddress) {
       setReplyToAction(template.replyToAddress);
     }
@@ -142,13 +156,23 @@ export default function TemplateTab({
 
   const handleClearTemplate = () => {
     setTemplateIdAction(null);
+    setTemplateTaskAction(null);
     setSelectedTemplate(null);
     setBodyAction("");
     setSenderNameAction("");
     setSenderEmailAction("");
     setSubjectAction("");
     setReplyToAction("");
+    setEmailBody("");
     toast.success("Template cleared");
+  };
+
+  const handlePreviewEmail = () => {
+    if (emailBody || selectedTemplate?.email_body) {
+      setIsPreviewModalOpen(true);
+    } else {
+      toast.error("No email content to preview");
+    }
   };
 
   return (
@@ -223,6 +247,16 @@ export default function TemplateTab({
                 aria-label="Import template from library"
               >
                 Import Template
+              </button>
+            </StyledTooltip>
+            <StyledTooltip title="Preview the email" placement="top" arrow>
+              <button
+                className="bg-primary text-white border px-4 py-2 text-sm rounded shadow-lg hover:font-bold transition-all duration-200"
+                onClick={handlePreviewEmail}
+                aria-label="Preview template from library"
+                disabled={!emailBody && !selectedTemplate?.email_body}
+              >
+                Preview Email
               </button>
             </StyledTooltip>
             {selectedTemplate && (
@@ -446,6 +480,7 @@ export default function TemplateTab({
                     </p>
                   </div>
                 </div>
+                <div>
                 {selectedTemplate.template_description && (
                   <div>
                     <p className="text-sm font-semibold text-gray-600 mb-1">
@@ -456,25 +491,92 @@ export default function TemplateTab({
                     </p>
                   </div>
                 )}
+                <div>
+                <p className="text-sm font-semibold text-gray-600">
+                  Task Name:
+                </p>
+                <p className="text-base text-gray-800">
+                  {selectedTemplate.template_task}
+                </p>
+              </div>
+                    </div>
               </div>
 
-              <div className="border border-gray-300 rounded-lg overflow-hidden">
-                <div className="bg-gray-100 px-4 py-2 border-b border-gray-300">
-                  <p className="text-sm font-semibold text-gray-700">
-                    HTML Preview
+
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                      <Code className="w-4 h-4 text-white" />
+                    </div>
+                    Email Body Editor
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1 ml-11">
+                    Edit the email template HTML{" "}
+                    <b>(changes won&apos;t affect the original template)</b>
                   </p>
                 </div>
-                <div className="max-h-[500px] overflow-auto">
-                  <HtmlViewer htmlContent={selectedTemplate.email_body || ""} />
+
+                <div className="border border-gray-300 rounded-xl overflow-hidden shadow-lg bg-white">
+                  <Editor
+                    height="500px"
+                    defaultLanguage="html"
+                    value={emailBody || selectedTemplate.email_body || ""}
+                    onChange={(value) => setEmailBody(value || "")}
+                    theme="vs-light"
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: "on",
+                      scrollBeyondLastLine: false,
+                      wordWrap: "off",
+                      automaticLayout: true,
+                      padding: { top: 16, bottom: 16 },
+                      renderLineHighlight: "all",
+                      selectOnLineNumbers: true,
+                      smoothScrolling: true,
+                      quickSuggestions: false,
+                      suggestOnTriggerCharacters: true,
+                      acceptSuggestionOnEnter: "on",
+                      tabCompletion: "on",
+                      wordBasedSuggestions: "off",
+                      parameterHints: { enabled: true },
+                      autoClosingBrackets: "never",
+                      autoClosingQuotes: "never",
+                      autoSurround: "never",
+                    }}
+                  />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500 text-lg mb-2">No template selected</p>
-              <p className="text-gray-400 text-sm">
-                Click &quot;Import Template&quot; above to select a template
-              </p>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                    <Code className="w-4 h-4 text-white" />
+                  </div>
+                  Email Body Editor
+                </h3>
+                <p className="text-sm text-gray-600 mt-1 ml-11">
+                  Import a template to start editing
+                </p>
+              </div>
+
+              <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-gray-50">
+                <div className="text-center py-24">
+                  <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Code className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 text-lg mb-2">
+                    No template selected
+                  </p>
+                  <p className="text-gray-400 text-sm">
+                    Click &quot;Import Template&quot; above to select a template
+                    and start editing
+                  </p>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -504,6 +606,92 @@ export default function TemplateTab({
         onCloseAction={() => setImportTemplateModalOpen(false)}
         onTemplateSelectAction={handleTemplateSelect}
       />
+
+      {/* Preview Email Modal */}
+      {isPreviewModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsPreviewModalOpen(false);
+            }
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white">
+              <div className="px-8 py-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Eye className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold tracking-tight">
+                        Email Preview
+                      </h2>
+                      <p className="text-blue-100 mt-1">
+                        Preview how your email will look to recipients
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsPreviewModalOpen(false)}
+                    className="text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-xl transition-all duration-200"
+                    aria-label="Close preview"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Metadata */}
+            {selectedTemplate && (
+              <div className="px-8 py-4 bg-gray-50 border-b border-gray-200">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-600">From: </span>
+                    <span className="text-gray-800">
+                      {selectedTemplate.email_from_name} &lt;
+                      {selectedTemplate.email_from_address}&gt;
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-600">
+                      Subject:{" "}
+                    </span>
+                    <span className="text-gray-800">
+                      {selectedTemplate.email_subject}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Preview Content */}
+            <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <HtmlViewer
+                  htmlContent={emailBody || selectedTemplate?.email_body || ""}
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-8 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsPreviewModalOpen(false)}
+                  className="px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-[#1C315F] focus:ring-offset-2 shadow-lg"
+                >
+                  Close Preview
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
