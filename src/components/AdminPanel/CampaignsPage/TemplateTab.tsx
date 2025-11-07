@@ -7,7 +7,8 @@ import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import { getInternalEmailTemplatesById } from "@/services/InternalMemberApis";
 import { InternalEmailTemplate } from "@/types/InternalMember";
 import Editor from "@monaco-editor/react";
-import { Code } from "lucide-react";
+import { Code, Eye, X } from "lucide-react";
+import HtmlViewer from "../General/HtmlViewer";
 
 type Props = {
   onNextAction?: () => void;
@@ -67,6 +68,7 @@ export default function TemplateTab({
   const [selectedTemplate, setSelectedTemplate] =
     useState<InternalEmailTemplate | null>(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   // Fetch template data if templateId exists
   useEffect(() => {
@@ -161,7 +163,16 @@ export default function TemplateTab({
     setSenderEmailAction("");
     setSubjectAction("");
     setReplyToAction("");
+    setEmailBody("");
     toast.success("Template cleared");
+  };
+
+  const handlePreviewEmail = () => {
+    if (emailBody || selectedTemplate?.email_body) {
+      setIsPreviewModalOpen(true);
+    } else {
+      toast.error("No email content to preview");
+    }
   };
 
   return (
@@ -236,6 +247,16 @@ export default function TemplateTab({
                 aria-label="Import template from library"
               >
                 Import Template
+              </button>
+            </StyledTooltip>
+            <StyledTooltip title="Preview the email" placement="top" arrow>
+              <button
+                className="bg-primary text-white border px-4 py-2 text-sm rounded shadow-lg hover:font-bold transition-all duration-200"
+                onClick={handlePreviewEmail}
+                aria-label="Preview template from library"
+                disabled={!emailBody && !selectedTemplate?.email_body}
+              >
+                Preview Email
               </button>
             </StyledTooltip>
             {selectedTemplate && (
@@ -574,6 +595,92 @@ export default function TemplateTab({
         onCloseAction={() => setImportTemplateModalOpen(false)}
         onTemplateSelectAction={handleTemplateSelect}
       />
+
+      {/* Preview Email Modal */}
+      {isPreviewModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsPreviewModalOpen(false);
+            }
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] text-white">
+              <div className="px-8 py-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Eye className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold tracking-tight">
+                        Email Preview
+                      </h2>
+                      <p className="text-blue-100 mt-1">
+                        Preview how your email will look to recipients
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsPreviewModalOpen(false)}
+                    className="text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-xl transition-all duration-200"
+                    aria-label="Close preview"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Metadata */}
+            {selectedTemplate && (
+              <div className="px-8 py-4 bg-gray-50 border-b border-gray-200">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-600">From: </span>
+                    <span className="text-gray-800">
+                      {selectedTemplate.email_from_name} &lt;
+                      {selectedTemplate.email_from_address}&gt;
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-600">
+                      Subject:{" "}
+                    </span>
+                    <span className="text-gray-800">
+                      {selectedTemplate.email_subject}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Preview Content */}
+            <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <HtmlViewer
+                  htmlContent={emailBody || selectedTemplate?.email_body || ""}
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-8 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsPreviewModalOpen(false)}
+                  className="px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-[#1C315F] focus:ring-offset-2 shadow-lg"
+                >
+                  Close Preview
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
