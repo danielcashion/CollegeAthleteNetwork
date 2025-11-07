@@ -20,6 +20,7 @@ export default function DeleteCampaignModal({
   onDeleteSuccessAction,
 }: DeleteCampaignModalProps) {
   const [deleting, setDeleting] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Add event listeners for modal close on outside click or Escape
@@ -75,9 +76,13 @@ export default function DeleteCampaignModal({
 
   const handleClose = () => {
     if (!deleting) {
+      setConfirmationText("");
       onCloseAction();
     }
   };
+
+  // Check if the confirmation text matches "delete"
+  const isDeleteConfirmed = confirmationText.toLowerCase().trim() === "delete";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -107,7 +112,7 @@ export default function DeleteCampaignModal({
             </span>
             ?
           </p>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
             <p className="text-red-800 text-sm font-bold">
               This action cannot be undone
             </p>
@@ -115,6 +120,21 @@ export default function DeleteCampaignModal({
               All campaign data, including filters and configurations, will be
               permanently removed.
             </p>
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              To confirm deletion, type <span className="font-bold text-red-600">&quot;delete&quot;</span> in the box below:
+            </label>
+            <input
+              type="text"
+              value={confirmationText}
+              onChange={(e) => setConfirmationText(e.target.value)}
+              placeholder="Type 'delete' to confirm"
+              disabled={deleting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              autoComplete="off"
+            />
           </div>
         </div>
 
@@ -128,7 +148,7 @@ export default function DeleteCampaignModal({
           </button>
           <button
             onClick={handleDelete}
-            disabled={deleting}
+            disabled={deleting || !isDeleteConfirmed}
             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {deleting && (
