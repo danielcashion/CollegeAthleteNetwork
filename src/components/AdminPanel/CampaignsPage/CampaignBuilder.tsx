@@ -730,10 +730,11 @@ export default function CampaignBuilder({
                   selectedYears,
                   universities: selectedUniversities,
                 }}
+                emailBody={emailBody}
               />
               <ScheduleTab
                 onBack={() => handleTabSwitch(2)}
-                emailBody={body}
+                emailBody={emailBody}
                 templateId={templateId}
                 templateTask={templateTask}
                 campaign={createdCampaign || editingCampaign}

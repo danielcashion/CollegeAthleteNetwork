@@ -60,6 +60,7 @@ type Props = {
     selectedYears: number[];
     universities: string[];
   };
+  emailBody?: string;
 };
 
 export default function ReviewScheduleTab({
@@ -78,9 +79,8 @@ export default function ReviewScheduleTab({
   campaignName,
   onCampaignNameUpdate,
   campaignFilters,
+  emailBody,
 }: Props) {
-  console.log("campaignfileters prop:", campaignFilters);
-
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -228,7 +228,7 @@ export default function ReviewScheduleTab({
         colorScheme
       ),
       body: replaceTemplateVariablesWithLogo(
-        templateData.body,
+        emailBody || "No Preview Available",
         replacementData,
         universityMetaData,
         includeUniversityLogo,
@@ -241,6 +241,7 @@ export default function ReviewScheduleTab({
     universityMetaData,
     includeUniversityLogo,
     colorScheme,
+    emailBody,
   ]);
 
   // Create a campaign object for the emails list drawer with current filter state

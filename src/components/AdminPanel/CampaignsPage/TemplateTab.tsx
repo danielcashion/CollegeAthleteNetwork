@@ -5,8 +5,9 @@ import StyledTooltip from "@/components/common/StyledTooltip";
 import toast from "react-hot-toast";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import { getInternalEmailTemplatesById } from "@/services/InternalMemberApis";
-import HtmlViewer from "../General/HtmlViewer";
 import { InternalEmailTemplate } from "@/types/InternalMember";
+import Editor from "@monaco-editor/react";
+import { Code } from "lucide-react";
 
 type Props = {
   onNextAction?: () => void;
@@ -470,25 +471,80 @@ export default function TemplateTab({
                 )}
               </div>
 
-              <div className="border border-gray-300 rounded-lg overflow-hidden">
-                <div className="bg-gray-100 px-4 py-2 border-b border-gray-300">
-                  <p className="text-sm font-semibold text-gray-700">
-                    HTML Preview
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                      <Code className="w-4 h-4 text-white" />
+                    </div>
+                    Email Body Editor
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1 ml-11">
+                    Edit the email template HTML{" "}
+                    <b>(changes won&apos;t affect the original template)</b>
                   </p>
                 </div>
-                <div className="max-h-[500px] overflow-auto">
-                  <HtmlViewer
-                    htmlContent={emailBody || selectedTemplate.email_body || ""}
+
+                <div className="border border-gray-300 rounded-xl overflow-hidden shadow-lg bg-white">
+                  <Editor
+                    height="500px"
+                    defaultLanguage="html"
+                    value={emailBody || selectedTemplate.email_body || ""}
+                    onChange={(value) => setEmailBody(value || "")}
+                    theme="vs-light"
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: "on",
+                      scrollBeyondLastLine: false,
+                      wordWrap: "off",
+                      automaticLayout: true,
+                      padding: { top: 16, bottom: 16 },
+                      renderLineHighlight: "all",
+                      selectOnLineNumbers: true,
+                      smoothScrolling: true,
+                      quickSuggestions: false,
+                      suggestOnTriggerCharacters: true,
+                      acceptSuggestionOnEnter: "on",
+                      tabCompletion: "on",
+                      wordBasedSuggestions: "off",
+                      parameterHints: { enabled: true },
+                      autoClosingBrackets: "never",
+                      autoClosingQuotes: "never",
+                      autoSurround: "never",
+                    }}
                   />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500 text-lg mb-2">No template selected</p>
-              <p className="text-gray-400 text-sm">
-                Click &quot;Import Template&quot; above to select a template
-              </p>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                    <Code className="w-4 h-4 text-white" />
+                  </div>
+                  Email Body Editor
+                </h3>
+                <p className="text-sm text-gray-600 mt-1 ml-11">
+                  Import a template to start editing
+                </p>
+              </div>
+
+              <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-gray-50">
+                <div className="text-center py-24">
+                  <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Code className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 text-lg mb-2">
+                    No template selected
+                  </p>
+                  <p className="text-gray-400 text-sm">
+                    Click &quot;Import Template&quot; above to select a template
+                    and start editing
+                  </p>
+                </div>
+              </div>
             </div>
           )}
         </div>
