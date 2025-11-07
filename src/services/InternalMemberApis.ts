@@ -217,13 +217,8 @@ export const getEmailListByUniversityAndFilters = async ({
     const params = new URLSearchParams();
     params.append("task", task);
 
-    // Convert university_name to comma-separated string if it's an array
-    const universityParam = Array.isArray(university_name)
-      ? university_name.join(",")
-      : university_name;
-
-    if (universityParam && universityParam.length > 0) {
-      params.append("university_name", universityParam);
+    if (university_name && university_name.length > 0) {
+      params.append("university_name", JSON.stringify(university_name));
     }
 
     if (gender_id && gender_id.length > 0) {
@@ -291,11 +286,26 @@ export const getCampaignTimeSeriesByCampaignId = async (
 export const getTotalCountsByUniversity = async ({
   university_name,
 }: {
-  university_name: string;
-}) => {
+  university_name: string | string[];
+  }) => {
+  
+  if (!university_name) {
+    throw new Error("university_name is required");
+  }
+  
+  const params = new URLSearchParams();
+  const task = "total_counts";
+  params.append("task", task);
+
+  if (university_name && university_name.length > 0) {
+    params.append("university_name", JSON.stringify(university_name));
+  }
+
+  console.log("Fetching total counts with params:", params.toString());
+
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?task=total_counts&university_name=${university_name}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?${params.toString()}}`
     );
     return response.data;
   } catch (error) {
