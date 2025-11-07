@@ -84,8 +84,6 @@ export default function ReviewScheduleTab({
   onCampaignNameUpdate,
   campaignFilters,
   emailBody,
-  subject,
-  senderName,
   senderEmail,
   replyTo
 }: Props) {
@@ -605,15 +603,17 @@ export default function ReviewScheduleTab({
     const testCorrelationId = `test-${
       firstRecipient.correlation_id || Date.now()
     }`;
+    
+    console.log("replacedTemplateData:", replacedTemplateData);
 
     const sqsPayload = {
       campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
       correlation_id: testCorrelationId,
-      subject: `[TEST]; ${replaceTemplateData.subject}`, // Add [TEST] prefix to subject
+      subject: `[TEST]; ${replacedTemplateData.subject}`, // Add [TEST] prefix to subject
       template_key: templateId,
-      from_name: replaceTemplateData.senderName || "The College Athlete Network",
+      from_name: replacedTemplateData.senderName || "The College Athlete Network",
       from_address:
-        senderEmail || "admin@collegeathletenetwork.org",
+        replacedTemplateData.senderEmail || "admin@collegeathletenetwork.org",
       reply_to_address:
         replyTo || "admin@collegeathletenetwork.org",
         
