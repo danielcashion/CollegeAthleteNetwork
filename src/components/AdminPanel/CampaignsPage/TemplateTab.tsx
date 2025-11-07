@@ -480,6 +480,7 @@ export default function TemplateTab({
                     </p>
                   </div>
                 </div>
+                <div>
                 {selectedTemplate.template_description && (
                   <div>
                     <p className="text-sm font-semibold text-gray-600 mb-1">
@@ -490,7 +491,17 @@ export default function TemplateTab({
                     </p>
                   </div>
                 )}
+                <div>
+                <p className="text-sm font-semibold text-gray-600">
+                  Task Name:
+                </p>
+                <p className="text-base text-gray-800">
+                  {selectedTemplate.template_task}
+                </p>
               </div>
+                    </div>
+              </div>
+
 
               <div className="space-y-4">
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
