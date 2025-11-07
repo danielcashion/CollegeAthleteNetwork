@@ -34,6 +34,8 @@ type Props = {
   templateTask: string | null;
   setTemplateTaskAction: (value: string | null) => void;
   selectedUniversities?: string[];
+  emailBody: string;
+  setEmailBody: (value: string) => void;
 };
 
 export default function TemplateTab({
@@ -51,6 +53,8 @@ export default function TemplateTab({
   includeUniversityLogo,
   setIncludeUniversityLogoAction,
   campaignName,
+  emailBody,
+  setEmailBody,
   onCampaignNameUpdate,
   templateId,
   setTemplateIdAction,
@@ -137,6 +141,7 @@ export default function TemplateTab({
     setSenderEmailAction(template.senderEmail);
     setSubjectAction(template.subject);
     setBodyAction(template.body);
+    setEmailBody(template.body);
     if (template.replyToAddress) {
       setReplyToAction(template.replyToAddress);
     }
@@ -472,7 +477,9 @@ export default function TemplateTab({
                   </p>
                 </div>
                 <div className="max-h-[500px] overflow-auto">
-                  <HtmlViewer htmlContent={selectedTemplate.email_body || ""} />
+                  <HtmlViewer
+                    htmlContent={emailBody || selectedTemplate.email_body || ""}
+                  />
                 </div>
               </div>
             </div>
