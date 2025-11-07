@@ -58,6 +58,7 @@ export default function CampaignBuilder({
   const [saveDraftModalOpen, setSaveDraftModalOpen] = useState(false);
   const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState<any | null>(null);
+  const [emailBody, setEmailBody] = useState<string>("");
 
   // Filter states moved from AudienceTab
   const [gender, setGender] = useState<string | null>(null);
@@ -419,6 +420,7 @@ export default function CampaignBuilder({
             include_logo_YN: includeUniversityLogo ? 1 : 0,
             university_colors_YN: colorScheme === "university" ? 1 : 0,
             updated_datetime: new Date().toISOString(),
+            email_body: emailBody,
           };
 
           await updateInternalCampaign(campaignData.campaign_id, campaignData);
@@ -453,6 +455,7 @@ export default function CampaignBuilder({
             sports: sports,
             universities: selectedUniversities,
           }),
+          email_body: emailBody,
           university_names: JSON.stringify(selectedUniversities),
           email_from_name: senderName,
           email_from_address: senderEmail,
@@ -509,6 +512,7 @@ export default function CampaignBuilder({
         university_names: JSON.stringify(selectedUniversities),
         aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
         updated_datetime: new Date().toISOString(),
+        email_body: emailBody,
       };
 
       await updateInternalCampaign(
@@ -685,6 +689,8 @@ export default function CampaignBuilder({
                   createdCampaign?.campaign_name ??
                   editingCampaign?.campaign_name
                 }
+                emailBody={emailBody}
+                setEmailBody={setEmailBody}
                 onCampaignNameUpdate={handleCampaignNameUpdate}
                 templateId={templateId}
                 setTemplateIdAction={setTemplateId}
@@ -724,10 +730,11 @@ export default function CampaignBuilder({
                   selectedYears,
                   universities: selectedUniversities,
                 }}
+                emailBody={emailBody}
               />
               <ScheduleTab
                 onBack={() => handleTabSwitch(2)}
-                emailBody={body}
+                emailBody={emailBody}
                 templateId={templateId}
                 templateTask={templateTask}
                 campaign={createdCampaign || editingCampaign}
@@ -844,6 +851,7 @@ export default function CampaignBuilder({
               reply_to_address: replyTo || undefined,
               email_subject: subject || undefined,
               editor_type: "html",
+              email_body: emailBody,
             };
 
             // If we're editing, preserve original creation info
