@@ -735,7 +735,6 @@ export default function CampaignBuilder({
                 }}
                 emailBody={emailBody}
                 senderName={senderName}
-                senderEmail={senderEmail}
                 subject = {subject}
                 replyTo={replyTo}
               />

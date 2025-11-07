@@ -286,7 +286,7 @@ export const getCampaignTimeSeriesByCampaignId = async (
 export const getTotalCountsByUniversity = async ({
   university_name,
 }: {
-  university_name: string | string[];
+  university_name: any;
   }) => {
   
   if (!university_name) {
