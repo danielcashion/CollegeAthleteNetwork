@@ -601,12 +601,6 @@ export default function ReviewScheduleTab({
     console.log("=== campaign details ===", campaign);
 
     // Prepare SQS payload with only the test recipient
-    const sanitizedSubject = (
-      (subject) || "Test Email"
-    )
-
-    const sanitizedEmail =  "admin@collegeathletenetwork.org";
-
     // Use a test correlation ID
     const testCorrelationId = `test-${
       firstRecipient.correlation_id || Date.now()
@@ -615,9 +609,9 @@ export default function ReviewScheduleTab({
     const sqsPayload = {
       campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
       correlation_id: testCorrelationId,
-      subject: `[TEST]; ${sanitizedSubject}`, // Add [TEST] prefix to subject
+      subject: `[TEST]; ${replaceTemplateData.subject}`, // Add [TEST] prefix to subject
       template_key: templateId,
-      from_name: senderName || "The College Athlete Network",
+      from_name: replaceTemplateData.senderName || "The College Athlete Network",
       from_address:
         senderEmail || "admin@collegeathletenetwork.org",
       reply_to_address:

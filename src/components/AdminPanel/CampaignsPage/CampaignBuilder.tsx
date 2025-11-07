@@ -22,10 +22,9 @@ import ConfirmSaveDraftModal from "./ConfirmSaveDraftModal";
 import { CampaignData } from "@/types/Campaign";
 import { cleanEmailField } from "@/services/InternalMemberApis";
 import { getAllUniversities } from "@/services/universityApi";
-import {
-  replaceTemplateVariablesWithLogo,
-  getSampleEmailData,
-} from "@/utils/CampaignUtils";
+// import {  
+//   replaceTemplateVariablesWithLogo
+// } from "@/utils/CampaignUtils";
 
 const TABS = [
   "Define Audience",
