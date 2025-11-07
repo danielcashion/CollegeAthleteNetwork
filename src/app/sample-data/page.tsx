@@ -27,7 +27,7 @@ const SampleDataPage = async () => {
       <div className="flex flex-col">
         <SampleDataTopSection />
         <div className="w-full py-32 flex flex-col gap-6 items-center justify-center">
-          <p className="text-3xl font-semibold">Error Fetching Data</p>
+          <p className="text-3xl text-[#1C315f] font-semibold">Could not refresh data. Please check back later.</p>
         </div>
       </div>
     );
