@@ -119,7 +119,7 @@ export default function CampaignEmailsList({
       // Check if we have a templateTask - it's required for the API
       if (!templateTask) {
         toast.error(
-          "Task not found, please select a template in Design Messaging tab"
+          "Task not found, you first need to select a template in Design Messaging tab (2nd tab)"
         );
         console.log("No template task available yet");
         setLoading(false);

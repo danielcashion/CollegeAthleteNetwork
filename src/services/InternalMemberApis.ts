@@ -298,14 +298,14 @@ export const getTotalCountsByUniversity = async ({
   params.append("task", task);
 
   if (university_name && university_name.length > 0) {
-    params.append("university_name", JSON.stringify(university_name));
+    params.append("university_name", university_name);
   }
 
   console.log("Fetching total counts with params:", params.toString());
 
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?${params.toString()}}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?${params.toString()}`
     );
     return response.data;
   } catch (error) {

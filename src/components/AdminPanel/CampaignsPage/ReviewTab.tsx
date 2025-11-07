@@ -61,6 +61,10 @@ type Props = {
     universities: string[];
   };
   emailBody?: string;
+  subject?: string;
+  senderName?: string;
+  senderEmail?: string;
+  replyTo?: string;
 };
 
 export default function ReviewScheduleTab({
@@ -80,6 +84,10 @@ export default function ReviewScheduleTab({
   onCampaignNameUpdate,
   campaignFilters,
   emailBody,
+  subject,
+  senderName,
+  senderEmail,
+  replyTo
 }: Props) {
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
@@ -590,12 +598,14 @@ export default function ReviewScheduleTab({
       },
     };
 
+    console.log("=== campaign details ===", campaign);
+
     // Prepare SQS payload with only the test recipient
     const sanitizedSubject = (
-      (campaign.email_subject as string) || "Test Email"
+      (subject) || "Test Email"
     )
-      .replace(/\r?\n/g, " ")
-      .trim();
+
+    const sanitizedEmail =  "admin@collegeathletenetwork.org";
 
     // Use a test correlation ID
     const testCorrelationId = `test-${
@@ -605,16 +615,16 @@ export default function ReviewScheduleTab({
     const sqsPayload = {
       campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
       correlation_id: testCorrelationId,
-      subject: `[TEST] ${sanitizedSubject}`, // Add [TEST] prefix to subject
+      subject: `[TEST]; ${sanitizedSubject}`, // Add [TEST] prefix to subject
       template_key: templateId,
-      from_name: campaign.email_from_name || "College Athlete Network",
+      from_name: senderName || "The College Athlete Network",
       from_address:
-        campaign.email_from_address || "admin@collegeathletenetwork.org",
+        senderEmail || "admin@collegeathletenetwork.org",
       reply_to_address:
-        campaign.reply_to_address ||
-        campaign.email_from_address ||
-        "admin@collegeathletenetwork.org",
+        replyTo || "admin@collegeathletenetwork.org",
+        
       recipients: [testRecipient], // ONLY ONE RECIPIENT: THE TEST EMAIL
+
     };
 
     console.log("Sending test email to SQS:", {

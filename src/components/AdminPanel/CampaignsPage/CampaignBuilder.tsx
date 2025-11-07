@@ -22,6 +22,10 @@ import ConfirmSaveDraftModal from "./ConfirmSaveDraftModal";
 import { CampaignData } from "@/types/Campaign";
 import { cleanEmailField } from "@/services/InternalMemberApis";
 import { getAllUniversities } from "@/services/universityApi";
+import {
+  replaceTemplateVariablesWithLogo,
+  getSampleEmailData,
+} from "@/utils/CampaignUtils";
 
 const TABS = [
   "Define Audience",
@@ -58,7 +62,7 @@ export default function CampaignBuilder({
   const [saveDraftModalOpen, setSaveDraftModalOpen] = useState(false);
   const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
   const [createdCampaign, setCreatedCampaign] = useState<any | null>(null);
-  const [emailBody, setEmailBody] = useState<string>("");
+  const [emailBody, setEmailBody] = useState<string>(editingCampaign?.email_body || "");
 
   // Filter states moved from AudienceTab
   const [gender, setGender] = useState<string | null>(null);
@@ -731,6 +735,10 @@ export default function CampaignBuilder({
                   universities: selectedUniversities,
                 }}
                 emailBody={emailBody}
+                senderName={senderName}
+                senderEmail={senderEmail}
+                subject = {subject}
+                replyTo={replyTo}
               />
               <ScheduleTab
                 onBack={() => handleTabSwitch(2)}
