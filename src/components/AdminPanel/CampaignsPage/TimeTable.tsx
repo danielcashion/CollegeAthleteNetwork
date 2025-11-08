@@ -5,6 +5,8 @@ import StyledTooltip from "@/components/common/StyledTooltip";
 import DrilldownModal from "./DrilldownModal";
 import EmailListModal from "./EmailListsModal";
 
+import { TimeSeriesEvent } from "./EventsTable";
+
 interface TimelineTableProps {
   timeline: TimelinePoint[];
   events?: any[];
@@ -13,12 +15,18 @@ interface TimelineTableProps {
     day: number,
     eventType: "SEND" | "OPEN" | "CLICK"
   ) => string[];
+  // function to retrieve full event objects for a given day and event type (for modal display)
+  getEventsFor?: (
+    day: number,
+    eventType: "SEND" | "OPEN" | "CLICK"
+  ) => TimeSeriesEvent[];
 }
 
 export default function TimelineTable({
   timeline,
   events,
   getEmailsFor,
+  getEventsFor,
 }: TimelineTableProps) {
   console.log("Rendering TimelineTable with events:", events);
 
@@ -34,6 +42,9 @@ export default function TimelineTable({
   const [emailListModalOpen, setEmailListModalOpen] = useState(false);
   const [emailListModalTitle, setEmailListModalTitle] = useState("");
   const [emailListModalEmails, setEmailListModalEmails] = useState<string[]>(
+    []
+  );
+  const [emailListModalEvents, setEmailListModalEvents] = useState<TimeSeriesEvent[]>(
     []
   );
 
@@ -151,7 +162,17 @@ export default function TimelineTable({
 
                 const openEmailListModal = () => {
                   setEmailListModalTitle(`${metric.label} - Day ${dayIndex}`);
-                  setEmailListModalEmails(emails);
+                  
+                  // Use full events if getEventsFor is available, otherwise fall back to emails
+                  if (getEventsFor && metric.eventType) {
+                    const events = getEventsFor(dayIndex, metric.eventType as "SEND" | "OPEN" | "CLICK");
+                    setEmailListModalEvents(events);
+                    setEmailListModalEmails([]); // Clear emails when using events
+                  } else {
+                    setEmailListModalEmails(emails);
+                    setEmailListModalEvents([]); // Clear events when using emails
+                  }
+                  
                   setEmailListModalOpen(true);
                 };
 
@@ -220,6 +241,7 @@ export default function TimelineTable({
         isOpen={emailListModalOpen}
         onClose={() => setEmailListModalOpen(false)}
         emails={emailListModalEmails}
+        events={emailListModalEvents}
         title={emailListModalTitle}
       />
     </div>

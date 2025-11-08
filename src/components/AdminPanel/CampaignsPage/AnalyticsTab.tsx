@@ -258,6 +258,59 @@ export default function AnalyticsTab({
     return list;
   };
 
+  // Helper to get full event objects for a given day and event type (for modal display)
+  const getEventsFor = (day: number, eventType: "SEND" | "OPEN" | "CLICK"): TimeSeriesEvent[] => {
+    if (!data) return [] as TimeSeriesEvent[];
+    // Accept multiple candidate mappings for days_ago to tolerate off-by-one or 1-based vs 0-based
+    const candidates = new Set<number>([day, Math.max(0, day - 1), day + 1]);
+
+    // preserve multiplicity (one entry per event) so counts align with chart numbers
+    let events = data.timeSeriesEvents
+      .filter(
+        (e) =>
+          candidates.has(Number(e.days_ago)) &&
+          e.event_type.toUpperCase() === eventType
+      );
+
+    // Fallback: if no matches found, try a direct equality on day (legacy behavior) or nearest-day heuristic
+    if (events.length === 0) {
+      events = data.timeSeriesEvents
+        .filter(
+          (e) =>
+            Number(e.days_ago) === day &&
+            e.event_type.toUpperCase() === eventType
+        );
+    }
+
+    // Another fallback: if still empty, try matching by closest days_ago value
+    if (events.length === 0 && data.timeSeriesEvents.length > 0) {
+      const numericDays = Array.from(
+        new Set(data.timeSeriesEvents.map((e) => Number(e.days_ago)))
+      ).sort((a, b) => a - b);
+      if (numericDays.length > 0) {
+        // find closest
+        let closest = numericDays[0];
+        let minDiff = Math.abs(day - closest);
+        for (const d of numericDays) {
+          const diff = Math.abs(day - d);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closest = d;
+          }
+        }
+        events = data.timeSeriesEvents
+          .filter(
+            (e) =>
+              Number(e.days_ago) === closest &&
+              e.event_type.toUpperCase() === eventType
+          );
+      }
+    }
+    
+    // Sort by datetime (occurred_at) in descending order (newest first)
+    return events.sort((a, b) => new Date(b.occurred_at).getTime() - new Date(a.occurred_at).getTime());
+  };
+
   // Prepare metrics for the cards component
   const campaignMetrics: CampaignMetrics | null = data
     ? {
@@ -383,6 +436,7 @@ export default function AnalyticsTab({
             timeline={data.timeline}
             events={data.timeSeriesEvents}
             getEmailsFor={getEmailsFor}
+            getEventsFor={getEventsFor}
           />
 
           <EventsTable
