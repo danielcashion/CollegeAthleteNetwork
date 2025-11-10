@@ -2,23 +2,39 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Copy, Check } from "lucide-react";
 import toast from "react-hot-toast";
+import { TimeSeriesEvent } from "./EventsTable";
 
 interface EmailListModalProps {
   isOpen: boolean;
   onClose: () => void;
-  emails: string[];
+  emails?: string[]; // Keep for backward compatibility
+  events?: TimeSeriesEvent[]; // New prop for full event data
   title: string;
 }
 
 export default function EmailListModal({
   isOpen,
   onClose,
-  emails,
+  emails = [],
+  events = [],
   title,
 }: EmailListModalProps) {
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
+  // Determine which data to use - events take precedence
+  const displayData = events.length > 0 ? events : emails.map(email => ({ recipient_email: email, occurred_at: '' }));
+  const emailList = events.length > 0 ? events.map(e => e.recipient_email) : emails;
+
+  const formatDateTime = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleString();
+    } catch {
+      return 'Invalid date';
+    }
+  };
 
   const handleCopyEmail = (email: string) => {
     navigator.clipboard.writeText(email);
@@ -28,8 +44,8 @@ export default function EmailListModal({
   };
 
   const handleCopyAll = () => {
-    navigator.clipboard.writeText(emails.join("\n"));
-    toast.success(`${emails.length} emails copied to clipboard`);
+    navigator.clipboard.writeText(emailList.join("\n"));
+    toast.success(`${emailList.length} emails copied to clipboard`);
   };
 
   return (
@@ -45,7 +61,7 @@ export default function EmailListModal({
           </button>
         </div>
 
-        {emails.length > 0 && (
+        {displayData.length > 0 && (
           <div className="mb-4">
             <button
               onClick={handleCopyAll}
@@ -60,40 +76,55 @@ export default function EmailListModal({
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-primary text-white rounded-t-lg">
-                <th className="px-4 py-2 text-left font-semibold rounded-tl-lg w-12">
+                <th className="px-4 py-2 text-left font-semibold w-12">
                   {/* Empty header for the icon column */}
                 </th>
-                <th className="px-4 py-2 text-left font-semibold rounded-tr-lg">
+                <th className="px-4 py-2 text-left font-semibold">
                   Email Address
                 </th>
+                {events.length > 0 && (
+                  <th className="px-4 py-2 text-left font-semibold rounded-tr-lg">
+                    Date & Time
+                  </th>
+                )}
+                {events.length === 0 && (
+                  <th className="px-4 py-2 text-left font-semibold rounded-tr-lg opacity-0">
+                    {/* Spacer for when no datetime */}
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
-              {emails.map((email, index) => (
+              {displayData.map((item, index) => (
                 <tr
                   key={index}
                   className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                 >
                   <td className="px-4 py-2 text-center">
                     <button
-                      onClick={() => handleCopyEmail(email)}
+                      onClick={() => handleCopyEmail(item.recipient_email)}
                       className="text-gray-500 hover:text-gray-700"
                     >
-                      {copiedEmail === email ? (
+                      {copiedEmail === item.recipient_email ? (
                         <Check size={16} className="text-green-500" />
                       ) : (
                         <Copy size={16} />
                       )}
                     </button>
                   </td>
-                  <td className="px-4 py-2 break-words">{email}</td>
+                  <td className="px-4 py-2 break-words">{item.recipient_email}</td>
+                  {events.length > 0 && (
+                    <td className="px-4 py-2 text-sm text-gray-600">
+                      {formatDateTime(('occurred_at' in item) ? item.occurred_at : '')}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {emails.length === 0 && (
+        {displayData.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             No email addresses found.
           </div>
