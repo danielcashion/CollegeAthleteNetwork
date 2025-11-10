@@ -179,9 +179,14 @@ export default function CampaignBuilder({
         );
         const countsResults = await Promise.all(countsPromises);
 
-        // Combine all counts from all universities
-        const allCounts = countsResults.flat();
-        setTotalCounts(allCounts);
+        // Each API call returns [data, metadata], so we need to extract the data parts
+        // and then combine all the data arrays from all universities
+        const allCounts = countsResults
+          .map(result => Array.isArray(result) && result.length > 0 ? result[0] : [])
+          .flat();
+        
+        // Wrap in array to match expected structure
+        setTotalCounts([allCounts]);
       } catch (error) {
         console.error("Error fetching total counts:", error);
       }
@@ -379,11 +384,11 @@ export default function CampaignBuilder({
     }
 
     const totalAthletes = totalCounts[0].reduce(
-      (sum: number, item: any) => sum + item.athletes_num,
+      (sum: number, item: any) => sum + (item.athletes_num || 0),
       0
     );
     const totalEmails = totalCounts[0].reduce(
-      (sum: number, item: any) => sum + item.emails_num,
+      (sum: number, item: any) => sum + (item.emails_num || 0),
       0
     );
 
