@@ -825,7 +825,7 @@ export default function CampaignsList({
                                   </div>
                                 }
                                 arrow
-                                placement="top"
+                                placement="right"
                                 enterDelay={500}
                                 leaveDelay={200}
                               >
