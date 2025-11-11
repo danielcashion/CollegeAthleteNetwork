@@ -249,7 +249,7 @@ export default function ScheduleTab({
       // Fetch recipients using the campaign filters
       const genderMap: { [key: string]: number } = {
         M: 1,
-        F: 2,
+        W: 2,
       };
 
       const gender_id = campaignFilters.gender

@@ -310,7 +310,7 @@ export default function ReviewScheduleTab({
       // Map gender string to gender_id array
       const genderMap: { [key: string]: number } = {
         M: 1,
-        F: 2,
+        W: 2,
       };
 
       const gender_id = apiFilterCriteria.gender
@@ -493,7 +493,7 @@ export default function ReviewScheduleTab({
     // Fetch recipients using the campaign filters to get sample data
     const genderMap: { [key: string]: number } = {
       M: 1,
-      F: 2,
+      W: 2,
     };
 
     const gender_id = campaignFilters.gender

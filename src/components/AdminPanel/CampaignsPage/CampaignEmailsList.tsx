@@ -138,7 +138,7 @@ export default function CampaignEmailsList({
       // Map gender string to gender_id array
       const genderMap: { [key: string]: number } = {
         M: 1,
-        F: 2,
+        W: 2,
       };
 
       const gender_id = apiFilterCriteria.gender
