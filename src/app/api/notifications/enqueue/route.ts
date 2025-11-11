@@ -13,7 +13,7 @@ const schema = z.object({
   subject: z.string().min(1).max(512),
   template_key: z.string().min(1),
   from_name: z.string().min(1),
-  from_address: z.email(),
+  from_address: z.string().min(1), // Allow template variables, validate after replacement
   reply_to_address: z.email(),
   recipients: z
     .array(
@@ -64,6 +64,26 @@ function chunk<T>(arr: T[], size = 10): T[][] {
   return out;
 }
 
+// Function to replace template variables in a string
+function replaceTemplateVariables(template: string, vars: Record<string, any>): string {
+  let result = template;
+  
+  // Replace variables in the format {{variable_name}}
+  Object.entries(vars).forEach(([key, value]) => {
+    const placeholder = `{{${key}}}`;
+    const stringValue = value?.toString() || '';
+    result = result.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), stringValue);
+  });
+  
+  return result;
+}
+
+// Function to validate email format after template replacement
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
 export async function POST(req: NextRequest) {
   if (!SQS_QUEUE_URL) {
     console.error("Missing AWS_SQS_EMAIL_QUEUE_URL env var");
@@ -98,23 +118,45 @@ export async function POST(req: NextRequest) {
     const oversized: { recipient_id: string; email: string; size: number }[] =
       [];
     const bodies = recipients.map((r) => {
+      // Prepare vars for template replacement
+      const recipientVars = {
+        university_name: r.university ?? "",
+        row_id: r.recipient_id,
+        ...r.vars,
+      };
+      
+      // Replace template variables in from_name and from_address
+      const processedFromName = replaceTemplateVariables(from_name, recipientVars);
+      const processedFromAddress = replaceTemplateVariables(from_address, recipientVars);
+      const processedSubject = replaceTemplateVariables(subject, recipientVars);
+      
+      // Debug logging for template replacement
+      console.log(`Template replacement for recipient ${r.recipient_id}:`, {
+        original_from_address: from_address,
+        processed_from_address: processedFromAddress,
+        original_from_name: from_name,
+        processed_from_name: processedFromName,
+        vars: recipientVars
+      });
+      
+      // Validate the processed email address
+      if (!isValidEmail(processedFromAddress)) {
+        throw new Error(`Invalid email address after template replacement: ${processedFromAddress} for recipient ${r.recipient_id}`);
+      }
+      
       const messageBody = JSON.stringify({
         event: "email.send",
         correlationId: correlation_id,
-        campaignId: campaign_id, // TODO: change to be the `row_id/correlation_id` from our API `message_list` endpoint response
+        campaignId: campaign_id, 
         university_name: r.university ?? "",
         recipientId: r.recipient_id,
         email_to_address: r.email,
-        email_from_name: from_name,
-        email_from_address: from_address,
+        email_from_name: processedFromName,
+        email_from_address: processedFromAddress,
         reply_to_address: reply_to_address,
-        email_subject: subject,
+        email_subject: processedSubject,
         templateKey: template_key,
-        vars: {
-          university_name: r.university ?? "",
-          row_id: r.recipient_id,
-          ...r.vars,
-        },
+        vars: recipientVars,
         configurationSet: SES_CONFIGURATION_SET,
         tags: [
           { Name: "campaign_id", Value: campaign_id.toUpperCase() },
