@@ -1,11 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getInternalEmailTemplates, deleteInternalEmailTemplate } from "@/services/InternalMemberApis";
+import { getInternalEmailTemplates, deleteInternalEmailTemplate, createInternalEmailTemplate } from "@/services/InternalMemberApis";
 import { InternalEmailTemplate } from "@/types/InternalMember";
-import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle } from "lucide-react";
+import { Eye, Edit, Trash2, Plus, Mail, Loader2, AlertTriangle, Copy } from "lucide-react";
 import EmailTemplateEditor from "./EmailTemplateEditor";
 import EmailTemplateViewer from "./EmailTemplateViewer";
 import { SkeletonTable } from "@/components/common/Skeleton";
+import { getVarcharEight } from "@/helpers/getVarCharId";
+import toast from "react-hot-toast";
 
 export default function EmailTemplatesMain() {
   const [templates, setTemplates] = useState<InternalEmailTemplate[]>([]);
@@ -24,9 +26,28 @@ export default function EmailTemplatesMain() {
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Duplicate modal state
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [templateToDuplicate, setTemplateToDuplicate] = useState<InternalEmailTemplate | null>(null);
+  const [duplicateTemplateName, setDuplicateTemplateName] = useState("");
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [isDuplicating, setIsDuplicating] = useState(false);
+
   useEffect(() => {
     fetchTemplates();
   }, []);
+
+  // Handle ESC key to close duplicate modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showDuplicateModal && !isDuplicating) {
+        handleDuplicateCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showDuplicateModal, isDuplicating]);
 
   const fetchTemplates = async () => {
     try {
@@ -96,6 +117,61 @@ export default function EmailTemplatesMain() {
     setShowDeleteModal(false);
     setTemplateToDelete(null);
     setDeleteConfirmText("");
+  };
+
+  const handleDuplicate = (template: InternalEmailTemplate) => {
+    setTemplateToDuplicate(template);
+    setDuplicateTemplateName(`${template.template_title} Copy`);
+    setDuplicateError(null);
+    setShowDuplicateModal(true);
+  };
+
+  const handleDuplicateConfirm = async () => {
+    if (!duplicateTemplateName.trim()) {
+      setDuplicateError("Template name is required.");
+      return;
+    }
+
+    if (!templateToDuplicate) {
+      setDuplicateError("Missing template data");
+      return;
+    }
+
+    setIsDuplicating(true);
+    try {
+      const duplicatedTemplateData: InternalEmailTemplate = {
+        ...templateToDuplicate,
+        campaign_template_id: getVarcharEight(),
+        template_title: duplicateTemplateName.trim(),
+        created_datetime: new Date().toISOString(),
+        updated_datetime: new Date().toISOString(),
+      };
+
+      await createInternalEmailTemplate(duplicatedTemplateData);
+      toast.success("Template duplicated successfully!");
+
+      // Reset form and close modal
+      setDuplicateTemplateName("");
+      setDuplicateError(null);
+      setShowDuplicateModal(false);
+      setTemplateToDuplicate(null);
+
+      // Refresh templates list
+      fetchTemplates();
+    } catch (error) {
+      console.error("Error duplicating template:", error);
+      toast.error("Failed to duplicate template");
+      setDuplicateError("Failed to duplicate template. Please try again.");
+    } finally {
+      setIsDuplicating(false);
+    }
+  };
+
+  const handleDuplicateCancel = () => {
+    setShowDuplicateModal(false);
+    setTemplateToDuplicate(null);
+    setDuplicateTemplateName("");
+    setDuplicateError(null);
   };
 
   return (
@@ -280,6 +356,16 @@ export default function EmailTemplatesMain() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
+                                handleDuplicate(template);
+                              }}
+                              className="p-2 text-orange-600 hover:text-orange-800 hover:bg-orange-50 rounded-lg transition-all duration-200 group/btn"
+                              title="Duplicate Template"
+                            >
+                              <Copy className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 handleDelete(template);
                               }}
                               className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-200 group/btn"
@@ -396,6 +482,86 @@ export default function EmailTemplatesMain() {
                   <>
                     <Trash2 className="w-4 h-4" />
                     <span>Confirm Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Duplicate Confirmation Modal */}
+      {showDuplicateModal && templateToDuplicate && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Copy className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">Duplicate Email Template</h3>
+                  <p className="text-orange-100 text-sm">
+                    Create a copy of &quot;{templateToDuplicate.template_title}&quot;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              {duplicateError && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-sm text-red-600 font-medium">
+                    {duplicateError}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  New Template Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={duplicateTemplateName}
+                  onChange={(e) => setDuplicateTemplateName(e.target.value)}
+                  maxLength={120}
+                  disabled={isDuplicating}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="Enter new template name"
+                  autoFocus
+                />
+                <div className="text-xs text-gray-400 mt-2 text-right">
+                  {duplicateTemplateName.length}/120 characters
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                onClick={handleDuplicateCancel}
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
+                disabled={isDuplicating}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDuplicateConfirm}
+                disabled={!duplicateTemplateName.trim() || isDuplicating}
+                className="px-4 py-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center space-x-2"
+              >
+                {isDuplicating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Duplicating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Duplicate Template</span>
                   </>
                 )}
               </button>

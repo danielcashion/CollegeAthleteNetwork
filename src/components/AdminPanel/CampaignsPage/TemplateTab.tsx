@@ -249,16 +249,7 @@ export default function TemplateTab({
                 Import Template
               </button>
             </StyledTooltip>
-            <StyledTooltip title="Preview the email" placement="top" arrow>
-              <button
-                className="bg-primary text-white border px-4 py-2 text-sm rounded shadow-lg hover:font-bold transition-all duration-200"
-                onClick={handlePreviewEmail}
-                aria-label="Preview template from library"
-                disabled={!emailBody && !selectedTemplate?.email_body}
-              >
-                Preview Email
-              </button>
-            </StyledTooltip>
+
             {selectedTemplate && (
               <StyledTooltip
                 title="Clear the current template selection"
@@ -274,6 +265,16 @@ export default function TemplateTab({
                 </button>
               </StyledTooltip>
             )}
+            <StyledTooltip title="Preview the email" placement="top" arrow>
+              <button
+                className="bg-primary text-white border px-4 py-2 text-sm rounded shadow-lg hover:font-bold transition-all duration-200"
+                onClick={handlePreviewEmail}
+                aria-label="Preview template from library"
+                disabled={!emailBody && !selectedTemplate?.email_body}
+              >
+                Preview Email
+              </button>
+            </StyledTooltip>
           </div>
         </div>
 
@@ -481,27 +482,26 @@ export default function TemplateTab({
                   </div>
                 </div>
                 <div>
-                {selectedTemplate.template_description && (
+                  {selectedTemplate.template_description && (
+                    <div>
+                      <p className="text-sm font-semibold text-gray-600 mb-1">
+                        Description:
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        {selectedTemplate.template_description}
+                      </p>
+                    </div>
+                  )}
                   <div>
-                    <p className="text-sm font-semibold text-gray-600 mb-1">
-                      Description:
+                    <p className="text-sm font-semibold text-gray-600">
+                      Task Name:
                     </p>
-                    <p className="text-sm text-gray-700">
-                      {selectedTemplate.template_description}
+                    <p className="text-base text-gray-800">
+                      {selectedTemplate.template_task}
                     </p>
                   </div>
-                )}
-                <div>
-                <p className="text-sm font-semibold text-gray-600">
-                  Task Name:
-                </p>
-                <p className="text-base text-gray-800">
-                  {selectedTemplate.template_task}
-                </p>
+                </div>
               </div>
-                    </div>
-              </div>
-
 
               <div className="space-y-4">
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-4">
