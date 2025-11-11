@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Search, Mail, RefreshCw, X } from "lucide-react";
+import { Search, Mail, RefreshCw, X, User } from "lucide-react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { Plus, Loader } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -424,6 +424,37 @@ export default function CampaignsList({
           return sortDirection === "asc" ? aNum - bNum : bNum - aNum;
         }
 
+        // Special handling for scheduled_datetime (Sent/Scheduled column)
+        if (sortColumn === "scheduled_datetime") {
+          // Get the display date for each campaign (same logic as in the table cell)
+          const getDisplayDate = (campaign: CampaignData) => {
+            const scheduledDate = campaign.scheduled_datetime
+              ? new Date(campaign.scheduled_datetime)
+              : null;
+            const sentDate = campaign.send_datetime
+              ? new Date(campaign.send_datetime)
+              : null;
+
+            return scheduledDate && sentDate
+              ? scheduledDate > sentDate
+                ? scheduledDate
+                : sentDate
+              : scheduledDate || sentDate;
+          };
+
+          const aDate = getDisplayDate(a);
+          const bDate = getDisplayDate(b);
+
+          // Handle null dates (put them at the end)
+          if (!aDate && !bDate) return 0;
+          if (!aDate) return sortDirection === "asc" ? 1 : -1;
+          if (!bDate) return sortDirection === "asc" ? -1 : 1;
+
+          return sortDirection === "asc" 
+            ? aDate.getTime() - bDate.getTime()
+            : bDate.getTime() - aDate.getTime();
+        }
+
         if (typeof aValue === "number" && typeof bValue === "number") {
           return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
         }
@@ -711,15 +742,6 @@ export default function CampaignsList({
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                           <button
                             className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                            onClick={() => handleSort("campaign_type")}
-                          >
-                            <span>Type</span>
-                            {getSortIcon("campaign_type")}
-                          </button>
-                        </th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                          <button
-                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
                             onClick={() => handleSort("campaign_status")}
                           >
                             <span>Status</span>
@@ -735,26 +757,25 @@ export default function CampaignsList({
                             {getSortIcon("university_names")}
                           </button>
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                          <button
-                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                            onClick={() => handleSort("audience_size")}
-                          >
-                            <span>Audience</span>
-                            {getSortIcon("audience_size")}
-                          </button>
+                        <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <div className="flex justify-center">
+                            <button
+                              className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                              onClick={() => handleSort("audience_size")}
+                            >
+                              <span>Audience/# Emails</span>
+                              {getSortIcon("audience_size")}
+                            </button>
+                          </div>
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                           <button
                             className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                            onClick={() => handleSort("audience_emails")}
+                            onClick={() => handleSort("scheduled_datetime")}
                           >
-                            <span>Emails</span>
-                            {getSortIcon("audience_emails")}
+                            <span>Sent/Scheduled</span>
+                            {getSortIcon("scheduled_datetime")}
                           </button>
-                        </th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                          Sent/Scheduled
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                           <button
@@ -763,15 +784,6 @@ export default function CampaignsList({
                           >
                             <span>Created</span>
                             {getSortIcon("created_datetime")}
-                          </button>
-                        </th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                          <button
-                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
-                            onClick={() => handleSort("updated_datetime")}
-                          >
-                            <span>Updated</span>
-                            {getSortIcon("updated_datetime")}
                           </button>
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
@@ -788,9 +800,34 @@ export default function CampaignsList({
                           <td className="px-6 py-4">
                             <div className="flex flex-col">
                               <StyledTooltip
-                                title={`Click to edit ${campaign.campaign_name}`}
+                                title={
+                                  <div className="space-y-3 p-2 bg-white rounded-lg border border-gray-200 shadow-lg">
+                                    <div>
+                                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Campaign Name</div>
+                                      <div className="text-sm font-medium" style={{ color: '#1C315F' }}>{campaign.campaign_name}</div>
+                                    </div>
+                                    {campaign.campaign_desc && (
+                                      <div>
+                                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</div>
+                                        <div className="text-sm" style={{ color: '#1C315F' }}>{campaign.campaign_desc}</div>
+                                      </div>
+                                    )}
+                                    <div>
+                                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Type</div>
+                                      <div className="text-sm capitalize" style={{ color: '#1C315F' }}>{campaign.campaign_type || "Email"}</div>
+                                    </div>
+                                    {campaign.updated_datetime && (
+                                      <div>
+                                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Last Updated</div>
+                                        <div className="text-sm" style={{ color: '#1C315F' }}>{new Date(campaign.updated_datetime).toLocaleDateString()}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                }
                                 arrow
                                 placement="top"
+                                enterDelay={500}
+                                leaveDelay={200}
                               >
                                 <button
                                   onClick={() => editCampaignAction(campaign)}
@@ -801,15 +838,12 @@ export default function CampaignsList({
                               </StyledTooltip>
                               {campaign.campaign_desc && (
                                 <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                                  {campaign.campaign_desc}
+                                  {campaign.campaign_desc.length > 80 
+                                    ? `${campaign.campaign_desc.substring(0, 80)}...` 
+                                    : campaign.campaign_desc}
                                 </p>
                               )}
                             </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
-                              {campaign.campaign_type || "Email"}
-                            </span>
                           </td>
                           <td className="px-6 py-4">
                             <span
@@ -860,24 +894,21 @@ export default function CampaignsList({
                               })()}
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm  text-gray-900">
-                            <div className="flex items-center">
-                              <div className="w-2 h-2 bg-[#1C315F] rounded-full mr-2"></div>
-                              {campaign.audience_size
-                                ? Number(
-                                    campaign.audience_size
-                                  ).toLocaleString()
-                                : "0"}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-900">
-                            <div className="flex items-center">
-                              <Mail className="w-4 h-4 text-gray-400 mr-2" />
-                              {campaign.audience_emails
-                                ? Number(
-                                    campaign.audience_emails
-                                  ).toLocaleString()
-                                : "0"}
+                          <td className="px-6 py-4 text-sm text-gray-900 text-center">
+                            <div className="flex items-center justify-center">
+                              <User className="w-4 h-4 text-gray-400 mr-2" />
+                              <span>
+                                {campaign.audience_size
+                                  ? Number(campaign.audience_size).toLocaleString()
+                                  : "0"}
+                                {" / "}
+                              </span>
+                              <Mail className="w-4 h-4 text-gray-400 mr-1 ml-1" />
+                              <span>
+                                {campaign.audience_emails
+                                  ? Number(campaign.audience_emails).toLocaleString()
+                                  : "0"}
+                              </span>
                             </div>
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">
@@ -923,19 +954,36 @@ export default function CampaignsList({
                               );
                             })()}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {campaign.created_datetime
-                              ? new Date(
-                                  campaign.created_datetime
-                                ).toLocaleDateString()
-                              : "—"}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {campaign.updated_datetime
-                              ? new Date(
-                                  campaign.updated_datetime
-                                ).toLocaleDateString()
-                              : "—"}
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            {(() => {
+                              if (!campaign.created_datetime) {
+                                return <span className="text-gray-400">—</span>;
+                              }
+
+                              const createdDate = new Date(campaign.created_datetime);
+                              const month = (createdDate.getMonth() + 1)
+                                .toString()
+                                .padStart(2, "0");
+                              const day = createdDate
+                                .getDate()
+                                .toString()
+                                .padStart(2, "0");
+                              const year = createdDate.getFullYear();
+                              const hours24 = createdDate.getHours();
+                              const hours12 = hours24 % 12 || 12;
+                              const minutes = createdDate
+                                .getMinutes()
+                                .toString()
+                                .padStart(2, "0");
+                              const ampm = hours24 >= 12 ? "PM" : "AM";
+
+                              return (
+                                <div>
+                                  <div className="font-medium">{`${month}/${day}/${year}`}</div>
+                                  <div className="text-xs text-gray-500">{`${hours12}:${minutes} ${ampm}`}</div>
+                                </div>
+                              );
+                            })()}
                           </td>
                           <td className="px-6 py-4">
                             <ActionsDropdown

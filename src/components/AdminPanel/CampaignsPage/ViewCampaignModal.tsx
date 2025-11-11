@@ -270,8 +270,8 @@ export default function ViewCampaignModal({
               </div>
 
               <div className="bg-gray-200 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiMail className="h-5 w-5 text-primary" />
+                <div className="flex items-center  gap-2 mb-2">
+                  <FiMail className="h-5 w-5  text-primary" />
                   <span className="font-medium text-sm">Email Addresses</span>
                 </div>
                 <div className="flex flex-row items-center justify-between gap-2">
@@ -293,8 +293,16 @@ export default function ViewCampaignModal({
                   <FiMapPin className="h-5 w-5 text-primary" />
                   <span className="font-medium text-sm">University</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {campaign.university_names || "Not specified"}
+                <p className="text-2xl font-bold text-center text-gray-900">
+                  {(() => {
+                    if (!campaign.university_names) return "Not specified";
+                    try {
+                      const universities = JSON.parse(campaign.university_names);
+                      return Array.isArray(universities) ? universities.join(", ") : campaign.university_names;
+                    } catch {
+                      return campaign.university_names;
+                    }
+                  })()}
                 </p>
               </div>
 
@@ -303,7 +311,7 @@ export default function ViewCampaignModal({
                   <FiTag className="h-5 w-5 text-primary" />
                   <span className="font-medium text-sm">Campaign Type</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 capitalize">
+                <p className="text-2xl text-center font-bold text-gray-900 capitalize">
                   {campaign.campaign_type || "Not specified"}
                 </p>
               </div>

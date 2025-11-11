@@ -480,26 +480,24 @@ export default function TemplateTab({
                       {selectedTemplate.email_from_name}
                     </p>
                   </div>
-                </div>
-                <div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-600">
+                      Description:
+                    </p>
+                    <p className="text-base text-gray-800">
+                      {selectedTemplate.template_description}
+                    </p>
+                  </div>
                   {selectedTemplate.template_description && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">
-                        Description:
+                      <p className="text-sm font-semibold text-gray-600">
+                        Task Name:
                       </p>
                       <p className="text-sm text-gray-700">
-                        {selectedTemplate.template_description}
+                        {selectedTemplate.template_task}
                       </p>
                     </div>
                   )}
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">
-                      Task Name:
-                    </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.template_task}
-                    </p>
-                  </div>
                 </div>
               </div>
 
