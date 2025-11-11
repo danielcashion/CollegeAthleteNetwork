@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Search, Mail, RefreshCw } from "lucide-react";
+import { Search, Mail, RefreshCw, X } from "lucide-react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { Plus, Loader } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -181,6 +181,7 @@ export default function CampaignsList({
   editCampaignAction,
 }: ECommsListProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [universityFilter, setUniversityFilter] = useState("");
   const [sortColumn, setSortColumn] = useState<keyof CampaignData | null>(
     "created_datetime"
   );
@@ -378,19 +379,36 @@ export default function CampaignsList({
     }
   };
 
-  const filteredCampaigns = campaigns.filter(
-    (campaign) =>
-      campaign.campaign_name
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      campaign.campaign_desc
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      campaign.campaign_type
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      campaign.campaign_status?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCampaigns = campaigns.filter((campaign) => {
+    // Search term filter
+    const matchesSearchTerm =
+      campaign.campaign_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      campaign.campaign_desc?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      campaign.campaign_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      campaign.campaign_status?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // University filter
+    const matchesUniversityFilter = !universityFilter || (() => {
+      if (!campaign.university_names) return false;
+      
+      try {
+        // Parse the university_names JSON array
+        const universities = JSON.parse(campaign.university_names);
+        if (Array.isArray(universities)) {
+          return universities.some(university => 
+            university.toLowerCase().includes(universityFilter.toLowerCase())
+          );
+        }
+      } catch {
+        // If parsing fails, treat it as a string and search directly
+        return campaign.university_names.toLowerCase().includes(universityFilter.toLowerCase());
+      }
+      
+      return false;
+    })();
+
+    return matchesSearchTerm && matchesUniversityFilter;
+  });
 
   const sortedCampaigns = sortColumn
     ? [...filteredCampaigns].sort((a, b) => {
@@ -613,16 +631,37 @@ export default function CampaignsList({
                   <span className="font-medium">{sortedCampaigns.length}</span>{" "}
                   campaign{sortedCampaigns.length !== 1 ? "s" : ""} found
                 </div>
-                <button
-                  onClick={fetchCampaigns}
-                  disabled={loading}
-                  className="flex items-center space-x-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <RefreshCw
-                    className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
-                  />
-                  <span>Refresh</span>
-                </button>
+                <div className="flex items-center space-x-4">
+                  {/* University Filter */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={universityFilter}
+                      onChange={(e) => setUniversityFilter(e.target.value)}
+                      className="w-64 px-4 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1C315F] focus:border-[#1C315F] transition-all duration-200 text-sm"
+                      placeholder="Filter by university..."
+                    />
+                    {universityFilter && (
+                      <button
+                        onClick={() => setUniversityFilter("")}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                        aria-label="Clear university filter"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    onClick={fetchCampaigns}
+                    disabled={loading}
+                    className="flex items-center space-x-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <RefreshCw
+                      className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                    />
+                    <span>Refresh</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -685,6 +724,15 @@ export default function CampaignsList({
                           >
                             <span>Status</span>
                             {getSortIcon("campaign_status")}
+                          </button>
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                          <button
+                            className="flex items-center space-x-1 hover:text-[#1C315F] transition-colors"
+                            onClick={() => handleSort("university_names")}
+                          >
+                            <span>Target</span>
+                            {getSortIcon("university_names")}
                           </button>
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
@@ -783,6 +831,34 @@ export default function CampaignsList({
                             >
                               {campaign.campaign_status || "Draft"}
                             </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900 max-w-xs">
+                            <div className="truncate" title={(() => {
+                              if (!campaign.university_names) return "No universities selected";
+                              try {
+                                const universities = JSON.parse(campaign.university_names);
+                                return Array.isArray(universities) ? universities.join(", ") : campaign.university_names;
+                              } catch {
+                                return campaign.university_names;
+                              }
+                            })()}>
+                              {(() => {
+                                if (!campaign.university_names) return (
+                                  <span className="text-gray-400 italic">No universities</span>
+                                );
+                                try {
+                                  const universities = JSON.parse(campaign.university_names);
+                                  if (Array.isArray(universities)) {
+                                    return universities.length > 2 
+                                      ? `${universities.slice(0, 2).join(", ")} +${universities.length - 2} more`
+                                      : universities.join(", ");
+                                  }
+                                  return campaign.university_names;
+                                } catch {
+                                  return campaign.university_names;
+                                }
+                              })()}
+                            </div>
                           </td>
                           <td className="px-6 py-4 text-sm  text-gray-900">
                             <div className="flex items-center">

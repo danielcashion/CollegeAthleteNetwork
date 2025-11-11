@@ -90,7 +90,7 @@ export default function CampaignBuilder({
   const [includeUniversityLogo, setIncludeUniversityLogo] = useState(true);
 
   useEffect(() => {
-    console.log("template task added: ", templateTask);
+   //  console.log("template task added: ", templateTask);
   }, [templateTask]);
 
   // Fetch all universities on mount
@@ -375,7 +375,7 @@ export default function CampaignBuilder({
     }
 
     setFilteredCounts(filtered);
-  }, [totalCounts, gender, sports, selectedYears]);
+  }, [totalCounts, gender, sports, selectedYears, selectedUniversities]);
 
   // Calculate totals and filtered totals
   const totals = useMemo(() => {
