@@ -286,24 +286,26 @@ export const getCampaignTimeSeriesByCampaignId = async (
 export const getTotalCountsByUniversity = async ({
   university_name,
 }: {
-  university_name: any;
-  }) => {
-  
+  university_name: string | string[];
+}) => {
   if (!university_name) {
     throw new Error("university_name is required");
   }
-  
-  const params = new URLSearchParams();
-  const task = "total_counts";
-  params.append("task", task);
-
-  if (university_name && university_name.length > 0) {
-    params.append("university_name", university_name);
-  }
-
-  console.log("Fetching total counts with params:", params.toString());
 
   try {
+    // Build query parameters
+    const params = new URLSearchParams();
+    const task = "total_counts";
+    params.append("task", task);
+
+    if (university_name && university_name.length > 0) {
+      // Ensure university_name is always an array before JSON.stringify
+      const universityArray = Array.isArray(university_name) ? university_name : [university_name];
+      params.append("university_name", JSON.stringify(universityArray));
+    }
+
+    // console.log("Fetching total counts with params:", params.toString());
+
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/messaging?${params.toString()}`
     );
