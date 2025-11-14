@@ -178,7 +178,6 @@ export default function ScheduleTab({
             is_scheduled_YN: 1,
             scheduled_datetime: utcIso,
           });
-          console.log("Campaign scheduled for:", utcIso);
           toast.success(
             `Campaign scheduled successfully for ${combined.format(
               "MMM D, YYYY h:mm A"
@@ -400,9 +399,6 @@ export default function ScheduleTab({
         console.warn(
           `Filtered out ${filteredCount} recipients (invalid data or excluded emails)`
         );
-        console.log(
-          `Sending to ${recipients.length} recipients after filtering`
-        );
       }
 
       // Prepare SQS payload
@@ -431,10 +427,6 @@ export default function ScheduleTab({
         recipients,
       };
 
-      console.log("Sending to SQS:", {
-        ...sqsPayload,
-        recipients: `${recipients.length} recipients`,
-      });
 
       // Send to SQS
       const sqsResponse = await fetch("/api/notifications/enqueue", {

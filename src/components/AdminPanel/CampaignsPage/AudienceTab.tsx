@@ -202,7 +202,7 @@ export default function AudienceTab({
         setIsEditingCampaignName(false);
         setTempCampaignName("");
       } catch (error) {
-        console.log("Error updating campaign name:", error);
+        console.error("Error updating campaign name:", error);
         toast.error("Failed to update campaign name");
       }
     } else {

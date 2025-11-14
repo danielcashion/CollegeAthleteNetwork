@@ -81,7 +81,6 @@ export async function POST(request: NextRequest) {
 
   try {
     await sesClient.send(command);
-    console.log("Email sent successfully");
     return NextResponse.json(
       { message: "Email sent successfully" },
       { status: 200 }

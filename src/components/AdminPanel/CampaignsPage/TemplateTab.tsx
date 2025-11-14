@@ -117,7 +117,7 @@ export default function TemplateTab({
         setTempCampaignName("");
       } catch (error) {
         toast.error("Failed to update campaign name");
-        console.log(error);
+        console.error("Failed to update campaign name:", error);
       }
     } else {
       cancelEditingCampaignName();

@@ -25,7 +25,6 @@ async function getImageFormat(imageData: Buffer): Promise<string | null> {
 
 const getImage = async (imageUrl: string) => {
   try {
-    console.log({ imageUrl });
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
     if (response.status !== 200) {
       throw new Error(
@@ -94,7 +93,7 @@ function getExtension(str: string) {
   return lastDotIndex !== -1 ? str.slice(lastDotIndex + 1) : "";
 }
 
-function getFIleName(str: string) {
+function getFileName(str: string) {
   const lastDotIndex = str.lastIndexOf(".");
   return lastDotIndex !== -1 ? str.slice(0, lastDotIndex) : "";
 }
@@ -109,7 +108,7 @@ export async function generateUploadUrl(
   }
 
   const fileExtension = getExtension(filename);
-  const fileNameWithoutExtension = getFIleName(filename);
+  const fileNameWithoutExtension = getFileName(filename);
 
   const bucketName = S3_BUCKET;
   const oppFolderName = "Opportunities"; // The folder name in your S3 bucket
@@ -142,7 +141,7 @@ export async function generateUploadUrlforAvailabilities(
   }
 
   const fileExtension = getExtension(filename);
-  const fileNameWithoutExtension = getFIleName(filename);
+  const fileNameWithoutExtension = getFileName(filename);
 
   const bucketName = S3_BUCKET;
   const uploadFolderName = "Availabilities"; // The folder name in your S3 bucket
@@ -175,7 +174,7 @@ export async function uploadDocument(
   }
 
   const fileExtension = getExtension(filename);
-  const fileNameWithoutExtension = getFIleName(filename);
+  const fileNameWithoutExtension = getFileName(filename);
 
   const bucketName = S3_BUCKET;
   const uploadFolderName = "Documents"; // The folder name in your S3 bucket
