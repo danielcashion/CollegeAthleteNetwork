@@ -219,7 +219,7 @@ export default function CampaignBuilder({
             setSelectedUniversities(universities);
           }
         } catch (error) {
-          console.log("Error parsing university_names:", error);
+          console.error("Error parsing university_names:", error);
           setSelectedUniversities([editingCampaign.university_names]);
         }
       }
@@ -333,7 +333,7 @@ export default function CampaignBuilder({
   // Calculate university options
   const universityOptions = useMemo(() => {
     if (!Array.isArray(allUniversities)) {
-      console.log("allUniversities is not an array");
+      console.error("allUniversities is not an array");
       return [];
     }
     const options = allUniversities

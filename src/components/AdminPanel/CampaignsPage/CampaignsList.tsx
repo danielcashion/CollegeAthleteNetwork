@@ -91,7 +91,6 @@ const ActionsDropdown = ({
   }, [isOpen]);
 
   const handleView = () => {
-    console.log("View campaign:", campaign.campaign_name);
     setIsOpen(false);
     onViewClick(campaign);
   };
@@ -103,13 +102,11 @@ const ActionsDropdown = ({
   };
 
   const handleEdit = () => {
-    console.log("Edit campaign:", campaign.campaign_name);
     setIsOpen(false);
     onEditClick(campaign);
   };
 
   const handleDuplicate = () => {
-    console.log("Duplicate campaign:", campaign.campaign_name);
     setIsOpen(false);
     onDuplicateClick(campaign);
   };
@@ -295,8 +292,6 @@ export default function CampaignsList({
         updated_datetime: new Date().toISOString(),
       };
 
-      console.log("Duplicating campaign with data:", duplicatedCampaignData);
-
       await createInternalCampaign(duplicatedCampaignData);
       toast.success("Campaign duplicated successfully!");
 
@@ -344,8 +339,6 @@ export default function CampaignsList({
         created_datetime: new Date().toISOString(),
         updated_datetime: new Date().toISOString(),
       };
-
-      console.log("Creating campaign with data:", campaignData);
 
       await createInternalCampaign(campaignData);
       toast.success("Campaign created successfully!");
@@ -825,7 +818,7 @@ export default function CampaignsList({
                                   </div>
                                 }
                                 arrow
-                                placement="top"
+                                placement="right"
                                 enterDelay={500}
                                 leaveDelay={200}
                               >

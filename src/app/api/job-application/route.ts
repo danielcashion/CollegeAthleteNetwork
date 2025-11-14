@@ -116,7 +116,6 @@ export async function POST(request: NextRequest) {
 
   try {
     await sesClient.send(new SendEmailCommand(emailParams));
-    console.log("Job application email sent");
     return NextResponse.json(
       { message: "Application submitted." },
       { status: 200 }

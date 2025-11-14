@@ -130,15 +130,6 @@ export async function POST(req: NextRequest) {
       const processedFromAddress = replaceTemplateVariables(from_address, recipientVars);
       const processedSubject = replaceTemplateVariables(subject, recipientVars);
       
-      // Debug logging for template replacement
-      console.log(`Template replacement for recipient ${r.recipient_id}:`, {
-        original_from_address: from_address,
-        processed_from_address: processedFromAddress,
-        original_from_name: from_name,
-        processed_from_name: processedFromName,
-        vars: recipientVars
-      });
-      
       // Validate the processed email address
       if (!isValidEmail(processedFromAddress)) {
         throw new Error(`Invalid email address after template replacement: ${processedFromAddress} for recipient ${r.recipient_id}`);
@@ -206,15 +197,7 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Log the entries being sent to SQS
-    console.log(
-      "SQS Entries to be sent:",
-      entries.map((entry) => ({
-        Id: entry.Id,
-        MessageBody: JSON.parse(entry.MessageBody), // Parse to make it readable
-        MessageAttributes: entry.MessageAttributes,
-      }))
-    );
+    // Prepare entries to be sent to SQS
 
     // 3) Batch send in chunks of 10
     const chunks = chunk(entries, 10);
