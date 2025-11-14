@@ -740,7 +740,8 @@ export default function CampaignBuilder({
                 }}
                 emailBody={emailBody}
                 senderName={senderName}
-                subject = {subject}
+                senderEmail={senderEmail}
+                subject={subject}
                 replyTo={replyTo}
               />
               <ScheduleTab

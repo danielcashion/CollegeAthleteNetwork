@@ -63,6 +63,7 @@ type Props = {
   emailBody?: string;
   subject?: string;
   senderName?: string;
+  senderEmail?: string;
   replyTo?: string;
 };
 
@@ -83,6 +84,9 @@ export default function ReviewScheduleTab({
   onCampaignNameUpdate,
   campaignFilters,
   emailBody,
+  subject,
+  senderName,
+  senderEmail,
   replyTo
 }: Props) {
   const [testModalOpen, setTestModalOpen] = useState(false);
@@ -405,11 +409,11 @@ export default function ReviewScheduleTab({
         if (response && response.length > 0) {
           const template = response[0];
           setTemplateData({
-            senderName: template.email_from_name || "",
-            senderEmail:
-              template.email_from_address || "admin@collegeathletenetwork.org",
-            replyTo: template.reply_to_address || "",
-            subject: template.email_subject || "",
+            // Use props if provided (from edited values), otherwise use template values
+            senderName: senderName || template.email_from_name || "",
+            senderEmail: senderEmail || template.email_from_address || "admin@collegeathletenetwork.org",
+            replyTo: replyTo || template.reply_to_address || "",
+            subject: subject || template.email_subject || "",
             body: template.email_body || "",
             editorType:
               template.editor_type === "html" ? "html" : "text-editor",
@@ -428,7 +432,7 @@ export default function ReviewScheduleTab({
     };
 
     fetchTemplateData();
-  }, [templateId]);
+  }, [templateId, senderName, senderEmail, subject, replyTo]);
 
   useEffect(() => {
     if (testModalOpen) {
