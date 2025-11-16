@@ -53,10 +53,10 @@ export default function SchedulePage() {
                     The College Athlete Network
                   </h1>
                   <h1 className="text-2xl font-bold tracking-tight">
-                    Campaign Scheduler
+                    Scheduled Campaigns
                   </h1>
                   <p className="text-blue-100 mt-1">
-                    View and manage your scheduled email campaigns
+                    View and manage your scheduled engagements
                   </p>
                 </div>
               </div>

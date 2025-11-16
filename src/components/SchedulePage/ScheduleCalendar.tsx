@@ -97,7 +97,7 @@ export default function ScheduleCalendar({
               fontSize: "1.125rem",
             }}
           >
-            Calendar View
+            Scheduled Campaigns
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <IconButton
@@ -133,7 +133,7 @@ export default function ScheduleCalendar({
       </div>
 
       {/* Calendar Content */}
-      <div className="p-4">
+      <div className="p-3">
         <Box
           sx={{
             display: "flex",
@@ -145,8 +145,8 @@ export default function ScheduleCalendar({
               minWidth: { xs: "100%", md: "300px" },
             },
             "& .MuiPickersCalendarHeader-root": {
-              padding: "8px 4px 4px 4px",
-              minHeight: "48px",
+              padding: "4px 4px 2px 4px",
+              minHeight: "40px",
               "& .MuiPickersCalendarHeader-label": {
                 fontSize: "0.9375rem",
                 fontWeight: 600,
@@ -154,7 +154,7 @@ export default function ScheduleCalendar({
               },
             },
             "& .MuiDayCalendar-weekContainer": {
-              margin: "2px 0",
+              margin: "1px 0",
             },
             "& .MuiPickersDay-root": {
               fontSize: "0.8125rem",
@@ -250,8 +250,8 @@ export default function ScheduleCalendar({
         {/* Legend */}
         <Box 
           sx={{ 
-            mt: 2, 
-            pt: 2,
+            mt: 1.5, 
+            pt: 1.5,
             borderTop: "1px solid #e5e7eb",
             display: "flex", 
             alignItems: "center", 
