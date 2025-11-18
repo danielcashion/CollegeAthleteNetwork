@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { RefreshCw, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
+import DeleteScheduleModal from "./DeleteScheduleModal";
 
 type ScheduleTableProps = {
   schedules: any[];
@@ -14,29 +15,33 @@ export default function ScheduleTable({
   loading,
   onRefresh,
 }: ScheduleTableProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [scheduleToDelete, setScheduleToDelete] = useState<any | null>(null);
 
-  const handleDelete = async (scheduleId: string) => {
-    if (!confirm("Are you sure you want to delete this scheduled campaign?")) {
-      return;
-    }
+  const handleDeleteClick = (schedule: any) => {
+    setScheduleToDelete(schedule);
+    setDeleteModalOpen(true);
+  };
 
-    try {
-      setDeletingId(scheduleId);
-      const response = await fetch(`/api/campaign-schedules/${scheduleId}`, {
-        method: "DELETE",
-      });
+  const handleDeleteSuccess = () => {
+    onRefresh();
+  };
 
-      if (response.ok) {
-        onRefresh();
-      } else {
-        alert("Failed to delete schedule");
-      }
-    } catch (error) {
-      console.error("Error deleting schedule:", error);
-      alert("Error deleting schedule");
-    } finally {
-      setDeletingId(null);
+  // Format date with relative time
+  const formatDate = (date: dayjs.Dayjs) => {
+    const now = dayjs();
+    const diffDays = date.diff(now, "day");
+    
+    if (diffDays === 0) {
+      return { primary: "Today", secondary: date.format("MMM D, YYYY") };
+    } else if (diffDays === 1) {
+      return { primary: "Tomorrow", secondary: date.format("MMM D, YYYY") };
+    } else if (diffDays === -1) {
+      return { primary: "Yesterday", secondary: date.format("MMM D, YYYY") };
+    } else if (diffDays > 0 && diffDays <= 7) {
+      return { primary: `In ${diffDays} days`, secondary: date.format("MMM D, YYYY") };
+    } else {
+      return { primary: date.format("MMM D, YYYY"), secondary: date.format("dddd") };
     }
   };
 
@@ -88,6 +93,12 @@ export default function ScheduleTable({
         <p className="text-gray-500 mb-6 max-w-md mx-auto">
           No campaigns are currently scheduled. Create a campaign and schedule it to see it here.
         </p>
+        <a
+          href="/admin/campaigns"
+          className="inline-flex items-center space-x-2 px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
+        >
+          <span>Go to Campaigns</span>
+        </a>
       </div>
       ) : (
         <div className="relative">
@@ -118,14 +129,6 @@ export default function ScheduleTable({
                   const isPast = scheduledDate.isBefore(dayjs());
                   const status = isPast ? "Sent" : "Pending";
 
-                  const month = (scheduledDate.month() + 1)
-                    .toString()
-                    .padStart(2, "0");
-                  const day = scheduledDate
-                    .date()
-                    .toString()
-                    .padStart(2, "0");
-                  const year = scheduledDate.year();
                   const hours24 = scheduledDate.hour();
                   const hours12 = hours24 % 12 || 12;
                   const minutes = scheduledDate
@@ -148,7 +151,10 @@ export default function ScheduleTable({
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
                         <div>
-                          <div className="font-medium">{`${month}/${day}/${year}`}</div>
+                          <div className="font-medium">{formatDate(scheduledDate).primary}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {formatDate(scheduledDate).secondary}
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
@@ -169,9 +175,8 @@ export default function ScheduleTable({
                       </td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleDelete(schedule.id)}
-                          disabled={deletingId === schedule.id}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => handleDeleteClick(schedule)}
+                          className="p-2 hover:bg-red-50 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                           title="Delete schedule"
                         >
                           <Trash2 className="h-4 w-4 text-red-600" />
@@ -185,6 +190,17 @@ export default function ScheduleTable({
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteScheduleModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setScheduleToDelete(null);
+        }}
+        schedule={scheduleToDelete}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

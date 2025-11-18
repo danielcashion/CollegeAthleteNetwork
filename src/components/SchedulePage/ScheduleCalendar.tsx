@@ -2,8 +2,9 @@
 import React from "react";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import { Paper, Box, Typography, IconButton } from "@mui/material";
+import { Paper, Box, Typography, IconButton, Tooltip } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Calendar as CalendarIcon } from "lucide-react";
 import dayjs, { Dayjs } from "dayjs";
 
 type ScheduleCalendarProps = {
@@ -13,10 +14,11 @@ type ScheduleCalendarProps = {
 };
 
 // Custom day component that highlights scheduled dates
-function CustomDay(props: PickersDayProps<Dayjs> & { scheduledDates?: Set<string> }) {
-  const { scheduledDates, day, ...other } = props;
+function CustomDay(props: PickersDayProps<Dayjs> & { scheduledDates?: Set<string>; scheduledCounts?: Map<string, number> }) {
+  const { scheduledDates, scheduledCounts, day, ...other } = props;
   const dateStr = day.format("YYYY-MM-DD");
   const hasSchedule = scheduledDates?.has(dateStr);
+  const count = scheduledCounts?.get(dateStr) || 0;
 
   return (
     <Box
@@ -24,16 +26,23 @@ function CustomDay(props: PickersDayProps<Dayjs> & { scheduledDates?: Set<string
         position: "relative",
         "&::after": hasSchedule
           ? {
-              content: '""',
+              content: count > 1 ? `"${count}"` : '""',
               position: "absolute",
-              bottom: 4,
+              bottom: 2,
               left: "50%",
               transform: "translateX(-50%)",
-              width: 6,
-              height: 6,
+              width: count > 1 ? "18px" : 6,
+              height: count > 1 ? "18px" : 6,
               borderRadius: "50%",
               backgroundColor: props.selected ? "#fff" : "#ED3237",
+              color: props.selected ? "#ED3237" : "#fff",
+              fontSize: "9px",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               zIndex: 1,
+              border: props.selected ? "1px solid #ED3237" : "none",
             }
           : {},
       }}
@@ -52,10 +61,17 @@ export default function ScheduleCalendar({
   // Initialize to current month (today)
   const [viewMonth, setViewMonth] = React.useState(dayjs().startOf("month"));
 
-  // Get dates that have scheduled campaigns
-  const scheduledDates = new Set(
-    schedules.map((schedule) => dayjs(schedule.scheduled_at).format("YYYY-MM-DD"))
-  );
+  // Get dates that have scheduled campaigns and their counts
+  const scheduledDatesMap = React.useMemo(() => {
+    const map = new Map<string, number>();
+    schedules.forEach((schedule) => {
+      const dateStr = dayjs(schedule.scheduled_at).format("YYYY-MM-DD");
+      map.set(dateStr, (map.get(dateStr) || 0) + 1);
+    });
+    return map;
+  }, [schedules]);
+
+  const scheduledDates = new Set(scheduledDatesMap.keys());
 
   // Calculate the two months to display - use useMemo to ensure they update when viewMonth changes
   const firstMonth = React.useMemo(() => {
@@ -84,6 +100,10 @@ export default function ScheduleCalendar({
     setViewMonth(newMonth);
   };
 
+  const handleJumpToToday = () => {
+    setViewMonth(dayjs().startOf("month"));
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       {/* Header Section */}
@@ -100,34 +120,55 @@ export default function ScheduleCalendar({
             Scheduled Campaigns
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <IconButton
-              onClick={handlePreviousMonth}
-              size="small"
-              sx={{
-                color: "#1C315F",
-                "&:hover": {
-                  backgroundColor: "#e3f2fd",
-                },
-                transition: "all 0.2s ease",
-              }}
-              aria-label="Previous month"
-            >
-              <ChevronLeft fontSize="small" />
-            </IconButton>
-            <IconButton
-              onClick={handleNextMonth}
-              size="small"
-              sx={{
-                color: "#1C315F",
-                "&:hover": {
-                  backgroundColor: "#e3f2fd",
-                },
-                transition: "all 0.2s ease",
-              }}
-              aria-label="Next month"
-            >
-              <ChevronRight fontSize="small" />
-            </IconButton>
+            <Tooltip title="Jump to current month">
+              <IconButton
+                onClick={handleJumpToToday}
+                size="small"
+                sx={{
+                  color: "#1C315F",
+                  "&:hover": {
+                    backgroundColor: "#e3f2fd",
+                  },
+                  transition: "all 0.2s ease",
+                  mr: 0.5,
+                }}
+                aria-label="Jump to today"
+              >
+                <CalendarIcon className="w-4 h-4" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Previous month">
+              <IconButton
+                onClick={handlePreviousMonth}
+                size="small"
+                sx={{
+                  color: "#1C315F",
+                  "&:hover": {
+                    backgroundColor: "#e3f2fd",
+                  },
+                  transition: "all 0.2s ease",
+                }}
+                aria-label="Previous month"
+              >
+                <ChevronLeft fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Next month">
+              <IconButton
+                onClick={handleNextMonth}
+                size="small"
+                sx={{
+                  color: "#1C315F",
+                  "&:hover": {
+                    backgroundColor: "#e3f2fd",
+                  },
+                  transition: "all 0.2s ease",
+                }}
+                aria-label="Next month"
+              >
+                <ChevronRight fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </Box>
         </div>
       </div>
@@ -216,14 +257,15 @@ export default function ScheduleCalendar({
               views={['day']}
               openTo="day"
               reduceAnimations
-              slots={{
-                day: CustomDay,
-              }}
-              slotProps={{
-                day: {
-                  scheduledDates,
-                } as any,
-              }}
+                    slots={{
+                      day: CustomDay,
+                    }}
+                    slotProps={{
+                      day: {
+                        scheduledDates,
+                        scheduledCounts: scheduledDatesMap,
+                      } as any,
+                    }}
             />
           </Box>
           <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -235,14 +277,15 @@ export default function ScheduleCalendar({
               views={['day']}
               openTo="day"
               reduceAnimations
-              slots={{
-                day: CustomDay,
-              }}
-              slotProps={{
-                day: {
-                  scheduledDates,
-                } as any,
-              }}
+                    slots={{
+                      day: CustomDay,
+                    }}
+                    slotProps={{
+                      day: {
+                        scheduledDates,
+                        scheduledCounts: scheduledDatesMap,
+                      } as any,
+                    }}
             />
           </Box>
         </Box>

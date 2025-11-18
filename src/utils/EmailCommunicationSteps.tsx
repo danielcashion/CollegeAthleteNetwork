@@ -11,7 +11,7 @@ export const EmailCommunicationSteps: any = [
         <p>Your next opportunity could come from someone who wore the same jersey. Our University's Athlete Network is stronger than others because we have a great process using The College Athlete Network. Here's how to tap into it:</p>
         <h2>Step 1: Login & Create Your "Availability" on our network at <a style="color:#ED3237;" href="https://members.collegeathletenetwork.org">www.collegeathletenetwork.org</a> </h2>
         <p>First, tell us if you are looking. Then tell us what you're looking for—job interests, location, goals. It only takes a minute.</p>
-        <h2>Step 2: Your Department Tracks Progress</h2>
+        <h2>Step 2: Your Athletic Department Monitors your Progress</h2>
         <p>Your coaches and staff are making sure every athlete gets the same shot. When your checklist is done, we will engage with you to start matching you with our network opportunities.</p>
         <h2>Step 3: Coaches Activate the Network</h2>
         <p>Once checklists are complete, coaches give the green light—and your Availability goes live to our University's +5,000 athlete network.</p>
@@ -28,7 +28,7 @@ export const EmailCommunicationSteps: any = [
   },
   {
     step: 2,
-    title: "Student Athlete Alums Template",
+    title: "Student Athlete &amp;Alums Suggested Template",
     from: "<UniversityName>AthleteAlumNetwork@<yourschool>.edu",
     to: "<AllAthleteAlumni>@<yourschool>.edu",
     audience: "Student Athlete Alums",
