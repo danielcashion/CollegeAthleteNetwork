@@ -3,7 +3,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Home, LayoutDashboard, Mail, Send, Database } from "lucide-react";
+import { LogOut, Home, LayoutDashboard, Calendar, Mail, Send, Database } from "lucide-react";
 import Logo from "../../../../public/Logos/CANLogo-horizontal-white.png";
 import Image from "next/image";
 
@@ -18,6 +18,12 @@ const adminSidebarItems = [
     icon: Send,
     label: "Campaigns",
   },
+  {
+    href: "/admin/schedule",
+    icon: Calendar,
+    label: "Scheduled Campaigns",
+  },
+  
   {
     href: "/admin/email-templates",
     icon: Mail,

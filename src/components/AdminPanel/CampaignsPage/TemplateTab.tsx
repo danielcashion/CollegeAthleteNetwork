@@ -45,9 +45,12 @@ export default function TemplateTab({
   onBackAction,
   commType,
   setCommTypeAction,
+  senderName,
   setSenderNameAction,
+  senderEmail,
   setSenderEmailAction,
   setReplyToAction,
+  subject,
   setSubjectAction,
   setBodyAction,
   colorScheme,
@@ -60,6 +63,7 @@ export default function TemplateTab({
   onCampaignNameUpdate,
   templateId,
   setTemplateIdAction,
+  templateTask,
   setTemplateTaskAction,
 }: Props) {
   const [importTemplateModalOpen, setImportTemplateModalOpen] = useState(false);
@@ -69,6 +73,15 @@ export default function TemplateTab({
     useState<InternalEmailTemplate | null>(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+
+  // State for editing template preview
+  const [isEditingTemplatePreview, setIsEditingTemplatePreview] = useState(false);
+  const [editedTemplateTitle, setEditedTemplateTitle] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
+  const [editedFromAddress, setEditedFromAddress] = useState("");
+  const [editedFromName, setEditedFromName] = useState("");
+  const [editedSubject, setEditedSubject] = useState("");
+  const [editedTaskName, setEditedTaskName] = useState("");
 
   // Fetch template data if templateId exists
   useEffect(() => {
@@ -173,6 +186,42 @@ export default function TemplateTab({
     } else {
       toast.error("No email content to preview");
     }
+  };
+
+  const startEditingTemplatePreview = () => {
+    if (selectedTemplate) {
+      setEditedTemplateTitle(selectedTemplate.template_title || "");
+      setEditedDescription(selectedTemplate.template_description || "");
+      setEditedFromAddress(senderEmail || selectedTemplate.email_from_address || "");
+      setEditedFromName(senderName || selectedTemplate.email_from_name || "");
+      setEditedSubject(subject || selectedTemplate.email_subject || "");
+      setEditedTaskName(templateTask || selectedTemplate.template_task || "");
+      setIsEditingTemplatePreview(true);
+    }
+  };
+
+  const cancelEditingTemplatePreview = () => {
+    if (selectedTemplate) {
+      setEditedTemplateTitle(selectedTemplate.template_title || "");
+      setEditedDescription(selectedTemplate.template_description || "");
+      setEditedFromAddress(senderEmail || selectedTemplate.email_from_address || "");
+      setEditedFromName(senderName || selectedTemplate.email_from_name || "");
+      setEditedSubject(subject || selectedTemplate.email_subject || "");
+      setEditedTaskName(templateTask || selectedTemplate.template_task || "");
+    }
+    setIsEditingTemplatePreview(false);
+  };
+
+  const saveTemplatePreviewEdits = () => {
+    // Update campaign state with edited values (these will be used for the campaign, not the template)
+    setSenderNameAction(editedFromName);
+    setSenderEmailAction(editedFromAddress);
+    setSubjectAction(editedSubject);
+    setTemplateTaskAction(editedTaskName);
+    
+    // Show success message
+    toast.success("Template preview values updated for this campaign");
+    setIsEditingTemplatePreview(false);
   };
 
   return (
@@ -430,9 +479,41 @@ export default function TemplateTab({
 
         {/* Template Preview Section */}
         <div className="bg-white p-6 rounded-lg shadow mb-4">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            Template Preview
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">
+              Template Preview
+            </h3>
+            {selectedTemplate && !isEditingTemplatePreview && (
+              <button
+                onClick={startEditingTemplatePreview}
+                className="text-gray-500 hover:text-gray-700 p-1 transition-colors"
+                title="Edit template preview"
+                aria-label="Edit template preview fields"
+              >
+                <FiEdit2 size={18} />
+              </button>
+            )}
+            {isEditingTemplatePreview && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={saveTemplatePreviewEdits}
+                  className="text-green-600 hover:text-green-800 p-1 transition-colors"
+                  title="Save changes"
+                  aria-label="Save template preview edits"
+                >
+                  <FiCheck size={18} />
+                </button>
+                <button
+                  onClick={cancelEditingTemplatePreview}
+                  className="text-red-600 hover:text-red-800 p-1 transition-colors"
+                  title="Cancel editing"
+                  aria-label="Cancel template preview edits"
+                >
+                  <FiX size={18} />
+                </button>
+              </div>
+            )}
+          </div>
 
           {loadingTemplate ? (
             <div className="flex justify-center items-center py-12">
@@ -443,59 +524,119 @@ export default function TemplateTab({
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">
                       Template Title:
                     </p>
-                    <StyledTooltip
-                      title={`Template ID: ${selectedTemplate.campaign_template_id}`}
-                      placement="top"
-                      arrow
-                    >
-                      <p className="text-base text-gray-800 cursor-help">
-                        {selectedTemplate.template_title}
-                      </p>
-                    </StyledTooltip>
+                    {isEditingTemplatePreview ? (
+                      <input
+                        type="text"
+                        value={editedTemplateTitle}
+                        onChange={(e) => setEditedTemplateTitle(e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-base text-gray-800"
+                        placeholder="Template Title"
+                      />
+                    ) : (
+                      <StyledTooltip
+                        title={`Template ID: ${selectedTemplate.campaign_template_id}`}
+                        placement="top"
+                        arrow
+                      >
+                        <p className="text-base text-gray-800 cursor-help">
+                          {editedTemplateTitle || selectedTemplate.template_title}
+                        </p>
+                      </StyledTooltip>
+                    )}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">
                       From Address:
                     </p>
-                    <p className="text-base text-gray-800 break-words">
-                      {selectedTemplate.email_from_address}
-                    </p>
+                    {isEditingTemplatePreview ? (
+                      <input
+                        type="email"
+                        value={editedFromAddress}
+                        onChange={(e) => setEditedFromAddress(e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-base text-gray-800 break-words"
+                        placeholder="From Address"
+                      />
+                    ) : (
+                      <p className="text-base text-gray-800 break-words">
+                        {senderEmail || editedFromAddress || selectedTemplate.email_from_address}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">
                       Subject:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.email_subject}
-                    </p>
+                    {isEditingTemplatePreview ? (
+                      <input
+                        type="text"
+                        value={editedSubject}
+                        onChange={(e) => setEditedSubject(e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-base text-gray-800"
+                        placeholder="Subject"
+                      />
+                    ) : (
+                      <p className="text-base text-gray-800">
+                        {subject || editedSubject || selectedTemplate.email_subject}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">
                       From Name:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.email_from_name}
-                    </p>
+                    {isEditingTemplatePreview ? (
+                      <input
+                        type="text"
+                        value={editedFromName}
+                        onChange={(e) => setEditedFromName(e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-base text-gray-800"
+                        placeholder="From Name"
+                      />
+                    ) : (
+                      <p className="text-base text-gray-800">
+                        {senderName || editedFromName || selectedTemplate.email_from_name}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">
                       Description:
                     </p>
-                    <p className="text-base text-gray-800">
-                      {selectedTemplate.template_description}
-                    </p>
+                    {isEditingTemplatePreview ? (
+                      <textarea
+                        value={editedDescription}
+                        onChange={(e) => setEditedDescription(e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-base text-gray-800 resize-none"
+                        placeholder="Description"
+                        rows={3}
+                      />
+                    ) : (
+                      <p className="text-base text-gray-800">
+                        {editedDescription || selectedTemplate.template_description}
+                      </p>
+                    )}
                   </div>
                   {selectedTemplate.template_description && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-600">
+                      <p className="text-sm font-semibold text-gray-600 mb-1">
                         Task Name:
                       </p>
-                      <p className="text-sm text-gray-700">
-                        {selectedTemplate.template_task}
-                      </p>
+                      {isEditingTemplatePreview ? (
+                        <input
+                          type="text"
+                          value={editedTaskName}
+                          onChange={(e) => setEditedTaskName(e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-700"
+                          placeholder="Task Name"
+                        />
+                      ) : (
+                        <p className="text-sm text-gray-700">
+                          {templateTask || editedTaskName || selectedTemplate.template_task}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -645,14 +786,14 @@ export default function TemplateTab({
             </div>
 
             {/* Email Metadata */}
-            {selectedTemplate && (
+            {(selectedTemplate || senderName || senderEmail || subject) && (
               <div className="px-8 py-4 bg-gray-50 border-b border-gray-200">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="font-semibold text-gray-600">From: </span>
                     <span className="text-gray-800">
-                      {selectedTemplate.email_from_name} &lt;
-                      {selectedTemplate.email_from_address}&gt;
+                      {senderName || editedFromName || selectedTemplate?.email_from_name || ""} &lt;
+                      {senderEmail || editedFromAddress || selectedTemplate?.email_from_address || ""}&gt;
                     </span>
                   </div>
                   <div>
@@ -660,7 +801,7 @@ export default function TemplateTab({
                       Subject:{" "}
                     </span>
                     <span className="text-gray-800">
-                      {selectedTemplate.email_subject}
+                      {subject || editedSubject || selectedTemplate?.email_subject || ""}
                     </span>
                   </div>
                 </div>

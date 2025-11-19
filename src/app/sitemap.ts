@@ -1,11 +1,12 @@
 import { getUniqueUniversityMeta } from "@/services/getUniqueUniversityMeta";
 import { getUniversitySportsList } from "@/services/getUniversitySports";
+import { MetadataRoute } from "next";
 
-export default function sitemap() {
-  return generateSitemap();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return await generateSitemap();
 }
 
-async function generateSitemap() {
+async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const universities = await getUniqueUniversityMeta();
     const sportsList = await getUniversitySportsList();

@@ -63,6 +63,7 @@ type Props = {
   emailBody?: string;
   subject?: string;
   senderName?: string;
+  senderEmail?: string;
   replyTo?: string;
 };
 
@@ -83,6 +84,9 @@ export default function ReviewScheduleTab({
   onCampaignNameUpdate,
   campaignFilters,
   emailBody,
+  subject,
+  senderName,
+  senderEmail,
   replyTo
 }: Props) {
   const [testModalOpen, setTestModalOpen] = useState(false);
@@ -405,11 +409,11 @@ export default function ReviewScheduleTab({
         if (response && response.length > 0) {
           const template = response[0];
           setTemplateData({
-            senderName: template.email_from_name || "",
-            senderEmail:
-              template.email_from_address || "admin@collegeathletenetwork.org",
-            replyTo: template.reply_to_address || "",
-            subject: template.email_subject || "",
+            // Use props if provided (from edited values), otherwise use template values
+            senderName: senderName || template.email_from_name || "",
+            senderEmail: senderEmail || template.email_from_address || "admin@collegeathletenetwork.org",
+            replyTo: replyTo || template.reply_to_address || "",
+            subject: subject || template.email_subject || "",
             body: template.email_body || "",
             editorType:
               template.editor_type === "html" ? "html" : "text-editor",
@@ -428,7 +432,7 @@ export default function ReviewScheduleTab({
     };
 
     fetchTemplateData();
-  }, [templateId]);
+  }, [templateId, senderName, senderEmail, subject, replyTo]);
 
   useEffect(() => {
     if (testModalOpen) {
@@ -446,6 +450,11 @@ export default function ReviewScheduleTab({
   const sendTestEmail = async (testEmailAddress: string) => {
     if (!campaign || !campaignFilters || !templateId || !templateTask) {
       throw new Error("Missing required campaign or template data");
+    }
+
+    // Verify that templateData and replacedTemplateData are loaded
+    if (!templateData || !replacedTemplateData) {
+      throw new Error("Template data is still loading. Please wait and try again.");
     }
 
     // Process the email body to handle university logo (same as ScheduleTab)
@@ -604,16 +613,20 @@ export default function ReviewScheduleTab({
     
     console.log("replacedTemplateData:", replacedTemplateData);
 
+    // Use replacedTemplateData values, with props as fallback, then default values
+    const emailSubject = replacedTemplateData.subject || subject || "[No Subject]";
+    const emailSenderName = replacedTemplateData.senderName || senderName || "The College Athlete Network";
+    const emailSenderEmail = replacedTemplateData.senderEmail || senderEmail || "admin@collegeathletenetwork.org";
+    const emailReplyTo = replyTo || replacedTemplateData.replyTo || "admin@collegeathletenetwork.org";
+
     const sqsPayload = {
       campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
       correlation_id: testCorrelationId,
-      subject: `[TEST]; ${replacedTemplateData?.subject}`, // Add [TEST] prefix to subject
+      subject: `[TEST] ${emailSubject}`, // Add [TEST] prefix to subject
       template_key: templateId,
-      from_name: replacedTemplateData?.senderName || "The College Athlete Network",
-      from_address:
-        replacedTemplateData?.senderEmail || "admin@collegeathletenetwork.org",
-      reply_to_address:
-        replyTo || "admin@collegeathletenetwork.org",
+      from_name: emailSenderName,
+      from_address: emailSenderEmail,
+      reply_to_address: emailReplyTo,
         
       recipients: [testRecipient], // ONLY ONE RECIPIENT: THE TEST EMAIL
 
