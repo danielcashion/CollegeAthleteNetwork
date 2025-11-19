@@ -2,19 +2,18 @@
 import React from "react";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import { Paper, Box, Typography, IconButton, Tooltip } from "@mui/material";
+import { Box, Typography, IconButton, Tooltip } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Calendar as CalendarIcon } from "lucide-react";
 import dayjs, { Dayjs } from "dayjs";
 
 type ScheduleCalendarProps = {
-  selectedDate: Dayjs;
   onDateChange: (date: Dayjs | null) => void;
   schedules: any[];
 };
 
 // Custom day component that highlights scheduled dates
-function CustomDay(props: PickersDayProps<Dayjs> & { scheduledDates?: Set<string>; scheduledCounts?: Map<string, number> }) {
+function CustomDay(props: PickersDayProps & { scheduledDates?: Set<string>; scheduledCounts?: Map<string, number> }) {
   const { scheduledDates, scheduledCounts, day, ...other } = props;
   const dateStr = day.format("YYYY-MM-DD");
   const hasSchedule = scheduledDates?.has(dateStr);
@@ -53,7 +52,6 @@ function CustomDay(props: PickersDayProps<Dayjs> & { scheduledDates?: Set<string
 }
 
 export default function ScheduleCalendar({
-  selectedDate,
   onDateChange,
   schedules,
 }: ScheduleCalendarProps) {
@@ -82,12 +80,6 @@ export default function ScheduleCalendar({
     // Create a new dayjs instance to avoid mutation - add 1 month to viewMonth
     return dayjs(viewMonth).add(1, "month").startOf("month");
   }, [viewMonth]);
-  
-
-  // Handle month navigation - when user clicks arrows, update view month
-  const handleMonthChange = (newMonth: Dayjs) => {
-    setViewMonth(newMonth.startOf("month"));
-  };
 
   // Custom navigation handlers
   const handlePreviousMonth = () => {
@@ -193,6 +185,10 @@ export default function ScheduleCalendar({
                 fontWeight: 600,
                 color: "#1C315F",
               },
+              // Hide the default navigation arrows
+              "& .MuiIconButton-root": {
+                display: "none",
+              },
             },
             "& .MuiDayCalendar-weekContainer": {
               margin: "1px 0",
@@ -229,12 +225,6 @@ export default function ScheduleCalendar({
               textTransform: "uppercase",
               letterSpacing: "0.5px",
               padding: "4px 0",
-            },
-            // Hide the default navigation arrows
-            "& .MuiPickersCalendarHeader-root": {
-              "& .MuiIconButton-root": {
-                display: "none",
-              },
             },
           }}
         >

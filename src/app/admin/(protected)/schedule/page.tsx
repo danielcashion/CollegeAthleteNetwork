@@ -8,7 +8,6 @@ import ScheduleTable from "@/components/SchedulePage/ScheduleTable";
 import dayjs from "dayjs";
 
 export default function SchedulePage() {
-  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [schedules, setSchedules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,8 +38,8 @@ export default function SchedulePage() {
     }
   };
 
-  const handleDateChange = (newDate: any) => {
-    setSelectedDate(newDate);
+  const handleDateChange = (_newDate: any) => {
+    // Date change is handled by the calendar component internally
   };
 
   // Calculate summary statistics
@@ -160,7 +159,6 @@ export default function SchedulePage() {
           )}
 
           <ScheduleCalendar
-            selectedDate={selectedDate}
             onDateChange={handleDateChange}
             schedules={schedules}
           />

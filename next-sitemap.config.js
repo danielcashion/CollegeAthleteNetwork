@@ -1,3 +1,5 @@
+const { getDynamicSitemapPaths } = require('./scripts/getSitemapPaths.js');
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: 'https://www.collegeathletenetwork.org', 
@@ -6,6 +8,9 @@ module.exports = {
   changefreq: 'daily',
   priority: 0.7,
   exclude: ['/admin'], // Excluded pages
+  additionalPaths: async (config) => {
+    return await getDynamicSitemapPaths();
+  },
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },

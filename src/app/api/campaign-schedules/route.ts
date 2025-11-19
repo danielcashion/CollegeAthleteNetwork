@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // GET - Fetch all campaign schedules
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL;
     
