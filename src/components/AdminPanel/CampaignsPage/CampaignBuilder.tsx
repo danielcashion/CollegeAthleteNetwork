@@ -198,20 +198,28 @@ export default function CampaignBuilder({
   // Initialize form fields when editing a campaign
   useEffect(() => {
     if (editingCampaign) {
-      // Parse campaign filters if they exist
-      if (editingCampaign.campaign_filters) {
-        try {
-          const filters = JSON.parse(editingCampaign.campaign_filters);
-          setGender(filters.gender || null);
-          setSports(filters.sports || []);
-          setSelectedYears(filters.selectedYears || years);
-          setSelectedUniversities(filters.universities || []);
-        } catch (error) {
-          console.error("Error parsing campaign filters:", error);
-        }
-      }
-
-      // Parse university_names if it exists
+        // Parse campaign filters if they exist
+        if (editingCampaign.campaign_filters) {
+          try {
+            const filters = JSON.parse(editingCampaign.campaign_filters);
+            
+            // Handle gender - could be stored as 'gender' or 'gender_id'
+            if (filters.gender) {
+              setGender(filters.gender);
+            } else if (filters.gender_id && Array.isArray(filters.gender_id)) {
+              setGender(filters.gender_id.includes(1) ? "M" : filters.gender_id.includes(2) ? "F" : null);
+            }
+            
+            setSports(filters.sports || []);
+            
+            // FIX: Look for both field names for years
+            setSelectedYears(filters.selectedYears || filters.max_roster_year || years);
+            
+            setSelectedUniversities(filters.universities || []);
+          } catch (error) {
+            console.error("Error parsing campaign filters:", error);
+          }
+        }      // Parse university_names if it exists
       if (editingCampaign.university_names) {
         try {
           const universities = JSON.parse(editingCampaign.university_names);
@@ -473,7 +481,7 @@ export default function CampaignBuilder({
           campaign_template_id: templateId,
           university_colors_YN: colorScheme === "university" ? 1 : 0,
           include_logo_YN: includeUniversityLogo ? 1 : 0,
-          aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
+          aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "CollegeAthleteNetworkEventbridge",
           updated_datetime: new Date().toISOString(),
         };
         updateInternalCampaign(
@@ -518,7 +526,7 @@ export default function CampaignBuilder({
         ...campaignToUpdate,
         campaign_name: newCampaignName,
         university_names: JSON.stringify(selectedUniversities),
-        aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "",
+        aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET ||"CollegeAthleteNetworkEventbridge",
         updated_datetime: new Date().toISOString(),
         email_body: emailBody,
       };
@@ -840,8 +848,7 @@ export default function CampaignBuilder({
                 createdCampaign?.campaign_desc ??
                 undefined,
               campaign_type: commType === "event" ? "event" : "email",
-              aws_configuration_set:
-                process.env.AWS_SES_CONFIGURATION_SET || "",
+              aws_configuration_set: process.env.AWS_SES_CONFIGURATION_SET || "CollegeAthleteNetworkEventbridge",
               campaign_filters: JSON.stringify({
                 gender,
                 sports,
