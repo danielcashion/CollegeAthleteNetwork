@@ -22,33 +22,7 @@ const schema = z.object({
         email: z.email({ message: "Please enter a valid email address" }),
         university: z.string().optional(),
         segment: z.string().optional(),
-        vars: z
-          .object({
-            correlation_id: z.string().optional(),
-            university_name: z.string().optional(),
-            athlete_id: z.string().optional(),
-            athlete_name: z.string().optional(),
-            sport: z.string().optional(),
-            gender_id: z.string().optional(),
-            max_roster_year: z.string().optional(),
-            seeking_text: z.string().optional(),
-            seeking_color: z.string().optional(),
-            email_address: z.string().optional(),
-            step_1: z.string().optional(),
-            step_2: z.string().optional(),
-            step_3: z.string().optional(),
-            step_4: z.string().optional(),
-            step_5: z.string().optional(),
-            step_6: z.string().optional(),
-            step_7: z.string().optional(),
-            step_8: z.string().optional(),
-            step_9: z.string().optional(),
-            step_10: z.string().optional(),
-            checklist_steps: z.string().optional(),
-            checklist_color: z.string().optional(),
-          })
-          .passthrough()
-          .optional(), // passthrough allows additional custom variables
+        vars: z.any().optional(), // Accept any type of data (string, object, array, etc.)
       })
     )
     .min(1),
@@ -65,16 +39,22 @@ function chunk<T>(arr: T[], size = 10): T[][] {
 }
 
 // Function to replace template variables in a string
-function replaceTemplateVariables(template: string, vars: Record<string, any>): string {
+function replaceTemplateVariables(
+  template: string,
+  vars: Record<string, any>
+): string {
   let result = template;
-  
+
   // Replace variables in the format {{variable_name}}
   Object.entries(vars).forEach(([key, value]) => {
     const placeholder = `{{${key}}}`;
-    const stringValue = value?.toString() || '';
-    result = result.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), stringValue);
+    const stringValue = value?.toString() || "";
+    result = result.replace(
+      new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+      stringValue
+    );
   });
-  
+
   return result;
 }
 
@@ -124,21 +104,29 @@ export async function POST(req: NextRequest) {
         row_id: r.recipient_id,
         ...r.vars,
       };
-      
+
       // Replace template variables in from_name and from_address
-      const processedFromName = replaceTemplateVariables(from_name, recipientVars);
-      const processedFromAddress = replaceTemplateVariables(from_address, recipientVars);
+      const processedFromName = replaceTemplateVariables(
+        from_name,
+        recipientVars
+      );
+      const processedFromAddress = replaceTemplateVariables(
+        from_address,
+        recipientVars
+      );
       const processedSubject = replaceTemplateVariables(subject, recipientVars);
-      
+
       // Validate the processed email address
       if (!isValidEmail(processedFromAddress)) {
-        throw new Error(`Invalid email address after template replacement: ${processedFromAddress} for recipient ${r.recipient_id}`);
+        throw new Error(
+          `Invalid email address after template replacement: ${processedFromAddress} for recipient ${r.recipient_id}`
+        );
       }
-      
+
       const messageBody = JSON.stringify({
         event: "email.send",
         correlationId: correlation_id,
-        campaignId: campaign_id, 
+        campaignId: campaign_id,
         university_name: r.university ?? "",
         recipientId: r.recipient_id,
         email_to_address: r.email,

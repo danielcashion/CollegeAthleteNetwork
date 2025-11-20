@@ -622,7 +622,7 @@ export default function ReviewScheduleTab({
     const sqsPayload = {
       campaign_id: `test-${campaign.campaign_id}`, // Mark as test campaign
       correlation_id: testCorrelationId,
-      subject: `[TEST] ${emailSubject}`, // Add [TEST] prefix to subject
+      subject: `${emailSubject}`, 
       template_key: templateId,
       from_name: emailSenderName,
       from_address: emailSenderEmail,
