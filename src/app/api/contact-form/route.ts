@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
     email: string;
     university_name: string;
     message: string;
+    recaptchaToken?: string;
   };
 
   try {
@@ -40,7 +41,43 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { name, email, message, university_name } = formData;
+  const { name, email, message, university_name, recaptchaToken } = formData;
+
+  // Verify reCAPTCHA token
+  if (!recaptchaToken) {
+    return NextResponse.json(
+      { message: "reCAPTCHA verification required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const recaptchaResponse = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+      }
+    );
+
+    const recaptchaResult = await recaptchaResponse.json();
+
+    if (!recaptchaResult.success) {
+      return NextResponse.json(
+        { message: "reCAPTCHA verification failed" },
+        { status: 400 }
+      );
+    }
+  } catch (error) {
+    console.error("reCAPTCHA verification error:", error);
+    return NextResponse.json(
+      { message: "reCAPTCHA verification error" },
+      { status: 500 }
+    );
+  }
 
   if (
     typeof name !== "string" ||
