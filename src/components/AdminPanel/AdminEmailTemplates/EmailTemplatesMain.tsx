@@ -20,6 +20,9 @@ export default function EmailTemplatesMain() {
   const [templateToEdit, setTemplateToEdit] =
     useState<InternalEmailTemplate | null>(null);
   
+  // Tab state
+  const [selectedTab, setSelectedTab] = useState<string>("all");
+
   // Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InternalEmailTemplate | null>(null);
@@ -174,6 +177,23 @@ export default function EmailTemplatesMain() {
     setDuplicateError(null);
   };
 
+  // Get unique campaign types from templates
+  const campaignTypes = Array.from(
+    new Set(
+      templates
+        .map((t) => t.campaign_type)
+        .filter((type): type is string => type != null && type.trim() !== "")
+    )
+  ).sort();
+
+  // Filter templates based on selected tab
+  const filteredTemplates =
+    selectedTab === "all"
+      ? templates
+      : selectedTab === "uncategorized"
+      ? templates.filter((t) => !t.campaign_type || t.campaign_type.trim() === "")
+      : templates.filter((t) => t.campaign_type === selectedTab);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Enhanced Header Section */}
@@ -224,6 +244,63 @@ export default function EmailTemplatesMain() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Tabs */}
+            {templates.length > 0 && (
+              <div className="border-b border-gray-200 bg-gray-50">
+                <div className="flex space-x-1 px-6 pt-4 overflow-x-auto">
+                  {campaignTypes.map((type) => {
+                    const count = templates.filter(
+                      (t) => t.campaign_type === type
+                    ).length;
+                    return (
+                      <button
+                        key={type}
+                        onClick={() => setSelectedTab(type)}
+                        className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                          selectedTab === type
+                            ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                        }`}
+                      >
+                        {type} ({count})
+                      </button>
+                    );
+                  })}
+                  {templates.some(
+                    (t) => !t.campaign_type || t.campaign_type.trim() === ""
+                  ) && (
+                    <button
+                      onClick={() => setSelectedTab("uncategorized")}
+                      className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                        selectedTab === "uncategorized"
+                          ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      }`}
+                    >
+                      Uncategorized (
+                      {
+                        templates.filter(
+                          (t) =>
+                            !t.campaign_type || t.campaign_type.trim() === ""
+                        ).length
+                      }
+                      )
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setSelectedTab("all")}
+                    className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                      selectedTab === "all"
+                        ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    }`}
+                  >
+                    All ({templates.length})
+                  </button>
+                </div>
+              </div>
+            )}
+
             {templates.length === 0 ? (
               <div className="text-center py-20 px-8">
                 <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
@@ -242,6 +319,26 @@ export default function EmailTemplatesMain() {
                 >
                   <Plus className="w-5 h-5" />
                   <span>Create Your First Template</span>
+                </button>
+              </div>
+            ) : filteredTemplates.length === 0 ? (
+              <div className="text-center py-20 px-8">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#1C315F] to-[#243a66] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+                  <Mail className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  No Templates in This Category
+                </h3>
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  There are no templates in the selected category. Try selecting
+                  a different tab or create a new template.
+                </p>
+                <button
+                  onClick={handleCreate}
+                  className="inline-flex items-center space-x-2 px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span>Create New Template</span>
                 </button>
               </div>
             ) : (
@@ -270,7 +367,7 @@ export default function EmailTemplatesMain() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {templates.map((template) => (
+                    {filteredTemplates.map((template) => (
                       <tr
                         key={template.campaign_template_id}
                         className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
@@ -501,9 +598,12 @@ export default function EmailTemplatesMain() {
                   <Copy className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold">Duplicate Email Template</h3>
+                  <h3 className="text-lg font-bold">
+                    Duplicate Email Template
+                  </h3>
                   <p className="text-orange-100 text-sm">
-                    Create a copy of &quot;{templateToDuplicate.template_title}&quot;
+                    Create a copy of &quot;{templateToDuplicate.template_title}
+                    &quot;
                   </p>
                 </div>
               </div>
