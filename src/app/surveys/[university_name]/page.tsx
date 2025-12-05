@@ -16,16 +16,51 @@ export default async function SurveyPage({
   params: Promise<{ university_name: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { university_name } = await params;
+  const { university_name: rawUniversityName } = await params;
   const { survey_id } = (await searchParams) || undefined;
 
   if (!survey_id) {
     redirect("/");
   }
 
-  const data = university_name
-    ? await getUniversityMeta({ university_name })
-    : null;
+  // Decode URL-encoded university name (handles %20 for spaces, etc.)
+  const university_name = decodeURIComponent(rawUniversityName);
+
+  // Try to get university metadata, but handle cases where it doesn't exist
+  let data = null;
+  if (university_name) {
+    try {
+      data = await getUniversityMeta({ university_name });
+    } catch (error) {
+      console.error("Error fetching university metadata:", error);
+      // data will remain null, we'll use the URL university_name as fallback
+    }
+  }
+
+  // Format university name from URL
+  // Handles both slug format (university-of-california) and already-formatted names (Anonymous University)
+  const formatUniversityName = (name: string) => {
+    // If name already contains spaces, it's likely already formatted (or URL-decoded)
+    // Just capitalize each word properly
+    if (name.includes(" ")) {
+      return name
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ");
+    }
+    // If name uses hyphens (slug format), convert to spaces and capitalize
+    if (name.includes("-")) {
+      return name
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ");
+    }
+    // If it's a single word, just capitalize the first letter
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  };
+
+  // Use university_name from data if available, otherwise use formatted URL name
+  const displayUniversityName = data?.university_name || formatUniversityName(university_name);
 
   const surveyQuestion = survey_id
     ? await getSurveyQuestions({ survey_id: survey_id as string })
@@ -51,20 +86,20 @@ export default async function SurveyPage({
           width={100}
         /> */}
         <h1 className="text-5xl font-bold mb-2 text-center text-white">
-          {data.university_name}&apos;s Athlete Network Survey
+          {displayUniversityName}&apos;s Athlete Network Survey
         </h1>
         <h2 className="text-4xl font-bold mb-2 text-center text-white" role="heading" aria-level={2}>
           Survey Topic: Opportunities to Strengthen the Athlete Network at{" "}
-          {data.university_name}
+          {displayUniversityName}
         </h2>
         <h2 className="text-md font-bold mb-1 text-center text-white" role="heading" aria-level={3}>
           This survey is strictly anonymous and confidential. All reasponses will{" "}
           <strong>*not*</strong> be shared with anyone outside of the{" "}
-          {data.university_name} Athletic Department.
+          {displayUniversityName} Athletic Department.
         </h2>
         <h2 className="text-md font-bold text-center text-white" role="heading" aria-level={3}>
           Please also note that while we are actively seeking to provide our
-          services to {data.university_name}, we currently have{" "}
+          services to {displayUniversityName}, we currently have{" "}
           <strong>no affiliation</strong> with the university.
         </h2>
 
@@ -80,7 +115,7 @@ export default async function SurveyPage({
         {surveyQuestion?.length && (
           <SurveyForm
             questions={surveyQuestion}
-            university_name={data.university_name ?? ""}
+            university_name={displayUniversityName}
             survey_id={survey_id}
           />
         )}
