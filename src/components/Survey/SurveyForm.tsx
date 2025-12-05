@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { FaCheck } from "react-icons/fa6";
+import { escapeHtml } from "@/helpers/escapeHtml";
 import { ImSpinner8 } from "react-icons/im";
 
 export default function SurveyForm({
@@ -258,12 +259,15 @@ export default function SurveyForm({
                     {index + 1}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium text-gray-800">
-                      {question.question?.replace(
-                        "{university_name}",
-                        university_name
-                      )}
-                    </h3>
+                    <h3 
+                      className="text-lg font-medium text-gray-800"
+                      dangerouslySetInnerHTML={{
+                        __html: question.question?.replace(
+                          "{university_name}",
+                          escapeHtml(university_name)
+                        ) || ""
+                      }}
+                    />
                     {responses && responses[index].answer !== null && (
                       <div className="flex items-center mt-1 text-emerald-600 text-sm font-medium">
                         <CheckCircle2 className="w-4 h-4 mr-1" />

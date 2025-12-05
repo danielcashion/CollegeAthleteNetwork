@@ -186,6 +186,7 @@ export default function CampaignsList({
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string>("all");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [campaignToDelete, setCampaignToDelete] = useState<CampaignData | null>(
     null
@@ -372,7 +373,23 @@ export default function CampaignsList({
     }
   };
 
+  // Get unique campaign types from campaigns
+  const campaignTypes = Array.from(
+    new Set(
+      campaigns
+        .map((c) => c.campaign_type)
+        .filter((type): type is string => type != null && type.trim() !== "")
+    )
+  ).sort();
+
   const filteredCampaigns = campaigns.filter((campaign) => {
+    // Tab filter
+    const matchesTab = 
+      selectedTab === "all" ||
+      (selectedTab === "uncategorized" 
+        ? (!campaign.campaign_type || campaign.campaign_type.trim() === "")
+        : campaign.campaign_type === selectedTab);
+
     // Search term filter
     const matchesSearchTerm =
       campaign.campaign_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -400,7 +417,7 @@ export default function CampaignsList({
       return false;
     })();
 
-    return matchesSearchTerm && matchesUniversityFilter;
+    return matchesTab && matchesSearchTerm && matchesUniversityFilter;
   });
 
   const sortedCampaigns = sortColumn
@@ -648,6 +665,63 @@ export default function CampaignsList({
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Tabs */}
+            {campaigns.length > 0 && (
+              <div className="border-b border-gray-200 bg-gray-50">
+                <div className="flex space-x-1 px-6 pt-4 overflow-x-auto">
+                  {campaignTypes.map((type) => {
+                    const count = campaigns.filter(
+                      (c) => c.campaign_type === type
+                    ).length;
+                    return (
+                      <button
+                        key={type}
+                        onClick={() => setSelectedTab(type)}
+                        className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                          selectedTab === type
+                            ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                        }`}
+                      >
+                        {type} ({count})
+                      </button>
+                    );
+                  })}
+                  {campaigns.some(
+                    (c) => !c.campaign_type || c.campaign_type.trim() === ""
+                  ) && (
+                    <button
+                      onClick={() => setSelectedTab("uncategorized")}
+                      className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                        selectedTab === "uncategorized"
+                          ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      }`}
+                    >
+                      Uncategorized (
+                      {
+                        campaigns.filter(
+                          (c) =>
+                            !c.campaign_type || c.campaign_type.trim() === ""
+                        ).length
+                      }
+                      )
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setSelectedTab("all")}
+                    className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-all duration-200 whitespace-nowrap ${
+                      selectedTab === "all"
+                        ? "bg-white text-[#1C315F] border-t-2 border-x-2 border-[#1C315F] shadow-sm"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    }`}
+                  >
+                    All ({campaigns.length})
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Refresh Button Section */}
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
               <div className="flex justify-between items-center">
@@ -695,11 +769,15 @@ export default function CampaignsList({
                   <Mail className="w-10 h-10 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  No Campaigns Found
+                  {selectedTab !== "all"
+                    ? "No Campaigns in This Category"
+                    : "No Campaigns Found"}
                 </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
                   {searchTerm
                     ? `No campaigns match your search for "${searchTerm}". Try adjusting your search terms.`
+                    : selectedTab !== "all"
+                    ? "There are no campaigns in the selected category. Try selecting a different tab or create a new campaign."
                     : "Get started by creating your first email campaign to engage your audience effectively."}
                 </p>
                 {!searchTerm && (
@@ -713,7 +791,7 @@ export default function CampaignsList({
                     className="inline-flex items-center space-x-2 px-6 py-3 bg-[#1C315F] text-white rounded-xl hover:bg-[#243a66] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
                   >
                     <Plus className="w-5 h-5" />
-                    <span>Create Your First Campaign</span>
+                    <span>Create New Campaign</span>
                   </button>
                 )}
               </div>
