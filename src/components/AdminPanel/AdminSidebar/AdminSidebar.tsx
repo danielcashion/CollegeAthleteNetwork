@@ -27,7 +27,7 @@ const adminSidebarItems = [
   {
     href: "/admin/email-templates",
     icon: Mail,
-    label: "Templates",
+    label: "Campaign Templates",
   },
   {
     href: "/admin/database-tasks",
