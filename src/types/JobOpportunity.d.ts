@@ -4,6 +4,7 @@ export interface JobOpportunity {
   external_link_url: string;
   company_name: string;
   job_title: string;
+  job_description?: string;
   job_type: string;
   is_active_YN: number;
   created_datetime: string;

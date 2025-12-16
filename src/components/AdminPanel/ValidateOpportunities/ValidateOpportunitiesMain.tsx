@@ -2,8 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { getJobOpportunities } from "@/services/universityApi";
 import { JobOpportunity } from "@/types/JobOpportunity";
-import { ShieldCheck, Loader2, RefreshCw, ExternalLink, X } from "lucide-react";
+import { ShieldCheck, Loader2, RefreshCw, ExternalLink, X, Eye } from "lucide-react";
 import { SkeletonTable } from "@/components/common/Skeleton";
+import StyledTooltip from "@/components/common/StyledTooltip";
 
 export default function ValidateOpportunitiesMain() {
   const [opportunities, setOpportunities] = useState<JobOpportunity[]>([]);
@@ -89,12 +90,12 @@ export default function ValidateOpportunitiesMain() {
     setTimeout(() => {
       if (iframeRef.current) {
         try {
-          const iframe = iframeRef.current;
           // For cross-origin content, we can't access the document
           // But we can check if the iframe element itself loaded
           // If contentWindow exists but we can't access it, that's normal for cross-origin
           // The real test is if the user can see content - if not, they'll see the error message
-        } catch (e) {
+          // No need to access iframe properties here as cross-origin restrictions prevent it
+        } catch {
           // Cross-origin restrictions are expected and normal
           // Don't treat as error - the iframe may still be displaying content
         }
@@ -212,7 +213,7 @@ export default function ValidateOpportunitiesMain() {
               <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">{opportunities.length}</span>{" "}
-                  opportunity{opportunities.length !== 1 ? "ies" : ""} found
+                  opportunit{opportunities.length !== 1 ? "ies" : "y"} found
                 </div>
               </div>
             </div>
@@ -252,6 +253,9 @@ export default function ValidateOpportunitiesMain() {
                         Job Title
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Job Description
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
                         Created Date
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">
@@ -282,6 +286,77 @@ export default function ValidateOpportunitiesMain() {
                           <div className="text-sm text-gray-900">
                             {opportunity.job_title}
                           </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          {opportunity.job_description ? (
+                            <StyledTooltip
+                              title={
+                                <div className="max-w-lg">
+                                  {/* Header */}
+                                  <div className="bg-gradient-to-r from-[#1C315F] to-[#243a66] -m-4 mb-0 p-4 rounded-t-lg">
+                                    <div className="flex items-center space-x-2 mb-1">
+                                      <Eye className="w-4 h-4 text-white" />
+                                      <h3 className="text-sm font-bold text-white uppercase tracking-wide pt-1.5">
+                                        Job Description
+                                      </h3>
+                                    </div>
+                                    <p
+                                      className="text-xs text-blue-100 font-medium truncate"
+                                      style={{ paddingLeft: "5pt" }}
+                                    >
+                                      {opportunity.job_title}
+                                    </p>
+                                  </div>
+                                  {/* Content */}
+                                  <div 
+                                    className="max-h-96 overflow-y-auto px-4 py-4"
+                                    style={{
+                                      scrollbarWidth: 'thin',
+                                      scrollbarColor: '#1C315F #f1f1f1',
+                                    }}
+                                  >
+                                    <div
+                                      className="prose prose-sm prose-headings:text-gray-900 prose-headings:font-semibold prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:text-gray-700 prose-a:text-[#1C315F] prose-a:no-underline hover:prose-a:underline"
+                                      dangerouslySetInnerHTML={{
+                                        __html: opportunity.job_description,
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              }
+                              arrow
+                              placement="right"
+                              enterDelay={300}
+                              leaveDelay={200}
+                              maxWidth={650}
+                              interactive
+                              slotProps={{
+                                tooltip: {
+                                  sx: {
+                                    padding: 0,
+                                    bgcolor: "#fff",
+                                    border: "2px solid #1C315F",
+                                    boxShadow: "0 10px 40px rgba(28, 49, 95, 0.25)",
+                                    borderRadius: "16px",
+                                    overflow: "hidden",
+                                    maxHeight: "500px",
+                                  },
+                                },
+                                arrow: {
+                                  sx: {
+                                    color: "#1C315F",
+                                  },
+                                },
+                              }}
+                            >
+                              <button className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-[#1C315F] bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-200 shadow-sm hover:shadow-md">
+                                <Eye className="w-4 h-4" />
+                                <span>View</span>
+                              </button>
+                            </StyledTooltip>
+                          ) : (
+                            <span className="text-sm text-gray-400 italic">No description</span>
+                          )}
                         </td>
                         <td className="px-6 py-5">
                           <div className="text-sm text-gray-600">
@@ -447,7 +522,7 @@ export default function ValidateOpportunitiesMain() {
               {!iframeError && (
                 <p className="text-xs text-gray-500 italic">
                   Note: Some job sites block iframe embedding. If the page appears
-                  blank, use "Open in New Tab" above.
+                  blank, use &ldquo;Open in New Tab&rdquo; above.
                 </p>
               )}
             </div>
