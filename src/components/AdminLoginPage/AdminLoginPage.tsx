@@ -137,7 +137,7 @@ export default function AdminLoginPage() {
                 />
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
-              <p className="text-gray-600">Please sign in to your admin account</p>
+              <p className="text-gray-600">Please sign in to your Admin account</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

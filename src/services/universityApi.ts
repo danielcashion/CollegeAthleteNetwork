@@ -114,3 +114,15 @@ export const getTeamsByUniversityName = async (university_name: string) => {
     throw error;
   }
 };
+
+export const getJobOpportunities = async () => {
+  try {
+    const response = await axios.get(
+      "https://api.tourneymaster.org/publicprod/v_job_opportunities_live_check"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching job opportunities:", error);
+    throw error;
+  }
+};
