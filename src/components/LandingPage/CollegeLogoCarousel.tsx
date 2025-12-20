@@ -11,9 +11,6 @@ const CollegeLogosCarousel = () => {
       src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Cornell.png",
     },
     {
-      src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Princeton.png",
-    },
-    {
       src: "https://collegeathletenetwork.s3.us-east-1.amazonaws.com/Logos/UNC.png",
     },
     {
