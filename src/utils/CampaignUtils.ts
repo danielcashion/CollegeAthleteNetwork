@@ -148,7 +148,7 @@ export function cleanCampaignTemplateEmailFields<T extends Record<string, any>>(
 export function getSampleEmailData(session?: any): EmailRecipientData {
   return {
     athlete_name: session?.member_name || "John Doe",
-    max_roster_year: 2025,
+    max_roster_year: 2026,
     sport: session?.sport || "Football",
     gender_id: 1,
     email_address: session?.email || "johndoe@gmail.com",
