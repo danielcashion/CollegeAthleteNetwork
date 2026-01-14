@@ -182,7 +182,7 @@ const AppFooter: React.FC = () => {
               </Box>
             </FooterInfo>
             <CopyRightText variant="body1">
-              The College Athlete Network, LLC &copy; 2025
+              The College Athlete Network, LLC &copy; {new Date().getFullYear()}
             </CopyRightText>
           </MuiBoxRoot>
         </FooterContainer>
