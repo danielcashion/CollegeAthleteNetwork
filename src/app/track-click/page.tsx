@@ -12,6 +12,8 @@ export default function TrackClickPage() {
     const university_name = searchParams.get("university_name");
     const destination = searchParams.get("destination");
     const file_name = searchParams.get("file_name") || null; // Optional, can be null
+    const video_id = searchParams.get("video_id") || null; // Optional, can be null
+
     const row_id = searchParams.get("row_id");
     const campaign_id = searchParams.get("campaign_id") || null; // Optional, can be null
     const survey_id = searchParams.get("survey_id") || null; // Optional, can be null
@@ -41,6 +43,11 @@ export default function TrackClickPage() {
       return;
     }
 
+    if (destination === "video-viewer" && !university_name) {
+      router.push("/");
+      return;
+    }
+
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
       method: "POST",
       headers: {
@@ -51,6 +58,7 @@ export default function TrackClickPage() {
         university_name: university_name,
         destination: destination || null,
         file_name: file_name || null,
+        video_id: video_id || null,
         campaign_id: campaign_id || null,
         created_by: created_by,
         created_datetime: created_datetime,
@@ -65,6 +73,10 @@ export default function TrackClickPage() {
         router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
       } else if (destination === "media-viewer") {
         router.push(`/media-viewer/${university_name}?file=${file_name}`);
+
+      } else if (destination === "video-viewer") {
+        router.push(`/video-viewer/${university_name}?video_id=${video_id}`);
+
       } else if (destination === "login" && email_address) {
         // include the email address value so the members site can pre-fill the login form
         const encoded = encodeURIComponent(email_address);

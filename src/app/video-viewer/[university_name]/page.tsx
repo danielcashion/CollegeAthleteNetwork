@@ -36,11 +36,11 @@ export default function VideoViewerPage() {
       <div className="bg-gray-50 flex flex-col items-center pb-4">
         <div className="w-full bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pt-16 pb-5 text-center shadow-md">
           <h1 className="text-3xl mt-2 sm:text-4xl font-extrabold tracking-tight">
-            {`Custom Video Viewer for The ${displayedUniversityName} Athlete Network`}
+            {`Video Library for The ${displayedUniversityName} Athlete Network`}
           </h1>
 
           <p className="text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
-            Introducing the unique value The College Athlete Network brings to
+            Introducing the sophistication and engagement The College Athlete Network brings to
             the {displayedUniversityName} Athletic Department & the{" "}
             {displayedUniversityName} Athlete Network.
           </p>
@@ -59,7 +59,7 @@ export default function VideoViewerPage() {
             />
           </div>
           <div className="mt-3 text-center text-[#1c315f]/80 text-sm">
-            A short overview of how we enable engagement for the {displayedUniversityName} Athlete Nnetwork.
+            Dedicated engagement for the {displayedUniversityName} Athlete Network.
           </div>
           <div className="mt-2 text-center">
             <a
