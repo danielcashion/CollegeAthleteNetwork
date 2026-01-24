@@ -26,7 +26,7 @@ export const navbarItems: NavItem[] = [
   },
 
   {
-    name: "Athlete Network Engagement & Activation",
+    name: "Solutions",
     type: "noLink",
     subItems: [
       {
@@ -37,6 +37,16 @@ export const navbarItems: NavItem[] = [
       {
         name: "Network Communications",
         link: "/communications",
+        type: "link",
+      },
+            {
+        name: "Elevated Fundraising",
+        link: "/fundraising",
+        type: "link",
+      },
+                        {
+        name: "Alumni Engagement Infrastructure",
+        link: "/infrastructure",
         type: "link",
       },
     ],
