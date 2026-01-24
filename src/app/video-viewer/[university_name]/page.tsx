@@ -83,12 +83,13 @@ export default function VideoViewerPage() {
           >
             Get in Touch
           </Link>
-          <Link
-            href="https/members.collegeathletenetwork.org/login"
+            <a
+            href="https://members.collegeathletenetwork.org/login"
             className="bg-[#1C315F] text-[#FFFFFF] font-semibold px-6 py-2 rounded-full shadow hover:bg-[#ED3237] transition"
-          >
+            rel="noreferrer"
+            >
             Login Now
-          </Link>
+            </a>
         </div>
       </div>
     </>
