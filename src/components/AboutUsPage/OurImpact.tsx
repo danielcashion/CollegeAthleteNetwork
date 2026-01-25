@@ -19,13 +19,13 @@ const OurImpact = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={131900} suffix="+" />
+              <CountUp end={150750} suffix="+" />
             </h3>
             <p className="text-2xl">Athletes Connected</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-5xl font-bold text-blue-600 mb-2">
-              <CountUp end={11} />
+              <CountUp end={12} />
             </h3>
             <p className="text-2xl">Universities Athletic Programs Currently Covered</p>
           </div>
