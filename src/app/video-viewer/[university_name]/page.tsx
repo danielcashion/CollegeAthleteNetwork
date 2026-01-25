@@ -35,13 +35,16 @@ export default function VideoViewerPage() {
 
       <div className="bg-gray-50 flex flex-col items-center pb-4">
         <div className="w-full bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pt-16 pb-5 text-center shadow-md">
-          <h1 className="text-3xl mt-2 sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-3xl mt-2 sm:text-4xl font-extrabold tracking-wider">
             {`The ${displayedUniversityName} Athlete Network Video Library`}
           </h1>
 
           <p className="text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
-            Delivering the simplicity, engagement, and convenience of The College Athlete Network to
-            the {displayedUniversityName} Athlete Network.
+            Delivering the sophistication, engagement, and convenience of
+          </p>
+                    <p className="text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
+            The College Athlete Network to
+            the <strong>{displayedUniversityName} Athlete Network</strong>.
           </p>
         </div>
 
@@ -72,8 +75,8 @@ export default function VideoViewerPage() {
           </div>
         </div>
 
-        <div className="mt-5 text-[#1c315f] font-semibold">
-          Ready to engage with the {displayedUniversityName} Athlete Network?
+        <div className="mt-5 text-[#1c315f] text-xl font-semibold">
+          Ready to engage with your <strong>{displayedUniversityName} Athlete Network</strong>?
         </div>
         <div className="mt-3 mb-2 flex flex-row flex-wrap items-center justify-center gap-4">
             <a
