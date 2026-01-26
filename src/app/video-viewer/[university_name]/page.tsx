@@ -2,7 +2,6 @@
 
 import { useParams, useSearchParams } from "next/navigation";
 import Head from "next/head";
-import Link from "next/link";
 
 const defaultVideoId = "PPH7AQRz_Jc";
 
