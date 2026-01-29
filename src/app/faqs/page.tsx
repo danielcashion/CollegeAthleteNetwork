@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { FaUserGraduate, FaUsers, FaBullhorn } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ type FAQ = {
 type Persona = {
   id: string;
   label: string;
-  icon: JSX.Element;
+  icon: ReactNode;
   faqs: FAQ[];
 };
 
