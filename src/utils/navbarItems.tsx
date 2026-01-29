@@ -71,6 +71,11 @@ export const navbarItems: NavItem[] = [
         link: "/join-us",
         type: "link",
       },
+            {
+        name: "FAQs",
+        link: "/faqs",
+        type: "link",
+      },
     ],
   },
 
