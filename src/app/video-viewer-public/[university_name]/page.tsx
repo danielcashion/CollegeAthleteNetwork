@@ -37,7 +37,7 @@ export default function VideoViewerPage() {
           </h1>
 
           <p className="text-base sm:text-2xl mt-3 max-w-3xl mx-auto font-bold text-white/80">
-            Delivering the sophistication, engagement, and data fuel of
+            Delivering the Sophistication, Engagement, and Data Fuel of
           </p>
           <p className="text-base sm:text-2xl mt-2 max-w-3xl mx-auto font-bold text-white/80">
             The College Athlete Network to{" "}
