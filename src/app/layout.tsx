@@ -11,6 +11,7 @@ import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsC
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
+import FloatingActionButton from "@/components/FloatingActionButton";
 
 export const openSans = Open_Sans({
   subsets: ["latin"],
@@ -94,6 +95,7 @@ export default function RootLayout({
           <footer id="site-footer" aria-label="Site footer" role="contentinfo">
             <Footer />
           </footer>
+          <FloatingActionButton />
           <CanVideoModal />
           <ConditionalLogUserIP />
           <Analytics />
