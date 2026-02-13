@@ -19,14 +19,16 @@ export default function UniversityFinancialsData({
   const [sortKey, setSortKey] = useState<SortKey>("team_name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [scalerValues, setScalerValues] = useState<NetworkSizeScaler>({
-    networkSizePercentage: 150,
-    jobPlacementPercentage: 20,
-    avgFte: 135000,
-    standardHeadHunterFeePercentage: 30,
+    networkSizePercentage: 100,
+    jobPlacementPercentage: 10,
+    avgFte: 85000,
+    standardHeadHunterFeePercentage: 25,
     companyWillingToPayPercentage: 50,
     participationRate: 75,
     hiresPerYear: 3,
   });
+
+  const networkMultiplier = 1.5;
 
   //   Calculative Consts
   const resultingHeadHunterFee: number =
@@ -47,10 +49,10 @@ export default function UniversityFinancialsData({
 
   const handleResetFilters = () => {
     setScalerValues({
-      networkSizePercentage: 150,
-      jobPlacementPercentage: 20,
-      avgFte: 135000,
-      standardHeadHunterFeePercentage: 30,
+      networkSizePercentage: 100,
+      jobPlacementPercentage: 10,
+      avgFte: 85000,
+      standardHeadHunterFeePercentage: 25,
       companyWillingToPayPercentage: 50,
       participationRate: 75,
       hiresPerYear: 3,
@@ -156,13 +158,13 @@ export default function UniversityFinancialsData({
     );
   };
 
-  const percentTurnover = 0.2; // 20% turnover per year
+  const percentTurnover = 0.2; // 10% turnover per year
 
   // Calculate totals for numerical columns
   const totals = sortedTeams.reduce(
     (acc, team) => {
       const networkSize: number =
-        team?.num_athletes * (scalerValues.networkSizePercentage / 100);
+        team?.num_athletes * networkMultiplier * (scalerValues.networkSizePercentage / 100);
 
       const jobPlacementsPeryear: number =
         networkSize *
@@ -330,7 +332,7 @@ export default function UniversityFinancialsData({
             {/* Mobile Cards */}
             {sortedTeams.map((team) => {
               const networkSize: number =
-                team?.num_athletes * (scalerValues.networkSizePercentage / 100);
+                team?.num_athletes * networkMultiplier * (scalerValues.networkSizePercentage / 100);
 
               const jobPlacementsPeryear: number =
                 networkSize *
@@ -685,6 +687,7 @@ export default function UniversityFinancialsData({
                 {sortedTeams.map((team, idx) => {
                   const networkSize: number =
                     team?.num_athletes *
+                    networkMultiplier *
                     (scalerValues.networkSizePercentage / 100);
 
                   const jobPlacementsPeryear: number =
