@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
 const sesClient = new SESClient({
@@ -14,6 +15,14 @@ const defaultRecipient = "daniel.cashion.nyc@gmail.com";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
+  const verification = await checkBotId();
+  if (verification.isBot) {
+    return NextResponse.json(
+      { message: "Access denied. Please try again." },
+      { status: 403 }
+    );
+  }
+
   try {
     const { to, subject, body, isHtml, fromName, fromAddress } = await request.json();
 
