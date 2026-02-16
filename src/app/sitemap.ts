@@ -13,6 +13,12 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
 
     const baseUrl = "https://www.collegeathletenetwork.org";
 
+    const personaPages = [
+      "personas/athletic-department-administration",
+      "personas/alumni-students",
+      "personas/development-officers",
+    ];
+
     const staticPages = [
       "about-us",
       "athlete-checklist",
@@ -21,6 +27,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       "corporate-partners",
       "data-transparency",
       "join-us",
+      ...personaPages,
       "privacy-policy",
       "sample-data",
       "terms-of-service",
@@ -33,12 +40,21 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 1,
       },
 
-      // Static pages
-      ...staticPages.map((path) => ({
+      // Persona pages (higher priority conversion pages)
+      ...personaPages.map((path) => ({
         url: `${baseUrl}/${path}`,
         changeFrequency: "monthly",
-        priority: 0.7,
+        priority: 0.8,
       })),
+
+      // Other static pages
+      ...staticPages
+        .filter((path) => !personaPages.includes(path))
+        .map((path) => ({
+          url: `${baseUrl}/${path}`,
+          changeFrequency: "monthly",
+          priority: 0.7,
+        })),
 
       // Dynamic university pages
       ...universities.map((university: any) => ({

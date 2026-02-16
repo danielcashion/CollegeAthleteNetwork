@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React, { useState, useRef } from "react";
 import {
   TextField,
@@ -21,7 +22,11 @@ const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
 const ContactForm = () => {
+  const searchParams = useSearchParams();
+  const source = searchParams.get("source") || undefined;
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -60,6 +65,7 @@ const ContactForm = () => {
   // Check if form is valid for submission
   const isFormValid = () => {
     return (
+      RECAPTCHA_SITE_KEY &&
       formData.name.trim() !== "" &&
       formData.email.trim() !== "" &&
       validateEmail(formData.email) &&
@@ -80,6 +86,12 @@ const ContactForm = () => {
       return;
     }
 
+    if (!RECAPTCHA_SITE_KEY) {
+      setLoading(false);
+      setError("Contact form is not configured. Please try again later or email us directly.");
+      return;
+    }
+
     if (!recaptchaToken) {
       setLoading(false);
       setError("Please complete the reCAPTCHA verification");
@@ -95,6 +107,7 @@ const ContactForm = () => {
         body: JSON.stringify({
           ...formData,
           recaptchaToken,
+          source,
         }),
       });
 
@@ -120,14 +133,14 @@ const ContactForm = () => {
         <div className="flex flex-col sm:flex-row gap-6 w-full">
           <Link
             href={"mailto:admin@collegeathletenetwork.org"}
-            className="w-full rounded-lg border border-[#1C315F] bg-[#1C315F] text-white px-8 py-6 flex flex-col items-center gap-4 hover:bg-white hover:text-[#1c315f] transitions duration-200"
+            className="w-full rounded-lg border border-[#1C315F] bg-[#1C315F] text-white px-8 py-6 flex flex-col items-center gap-4 hover:bg-white hover:text-[#1c315f] transition duration-200"
           >
             <Mail sx={{ fontSize: 60 }} />
             <p className="text-lg">admin@collegeathletenetwork.org</p>
           </Link>
           <Link
             href={"tel:+12123777020"}
-            className="w-full rounded-lg border border-[#1C315F] bg-[#1C315F] text-white px-8 py-6 flex flex-col items-center gap-4 hover:bg-white hover:text-[#1c315f] transitions duration-200"
+            className="w-full rounded-lg border border-[#1C315F] bg-[#1C315F] text-white px-8 py-6 flex flex-col items-center gap-4 hover:bg-white hover:text-[#1c315f] transition duration-200"
           >
             <Phone sx={{ fontSize: 60 }} />
             <p className="text-lg">+1 212 377 7020</p>
@@ -366,19 +379,35 @@ const ContactForm = () => {
               </Box>
 
               {/* reCAPTCHA */}
-              <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                  onChange={handleRecaptchaChange}
-                  onExpired={() => setRecaptchaToken(null)}
-                  onErrored={() => {
-                    setRecaptchaToken(null);
-                    setError("reCAPTCHA verification failed. Please try again.");
-                  }}
-                  size="normal"
-                  theme="light"
-                />
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 3 }}>
+                {RECAPTCHA_SITE_KEY ? (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={RECAPTCHA_SITE_KEY}
+                    onChange={handleRecaptchaChange}
+                    onExpired={() => setRecaptchaToken(null)}
+                    onErrored={() => {
+                      setRecaptchaToken(null);
+                      setError("reCAPTCHA verification failed. Please try again.");
+                    }}
+                    size="normal"
+                    theme="light"
+                  />
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "#64748b",
+                      textAlign: "center",
+                      padding: 2,
+                      backgroundColor: "#f8fafc",
+                      borderRadius: 2,
+                      border: "1px dashed #cbd5e1",
+                    }}
+                  >
+                    reCAPTCHA is not configured. Add NEXT_PUBLIC_RECAPTCHA_SITE_KEY to your .env.local to enable the contact form.
+                  </Typography>
+                )}
               </Box>
 
               {/* Submit Button */}

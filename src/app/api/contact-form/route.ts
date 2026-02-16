@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     university_name: string;
     message: string;
     recaptchaToken?: string;
+    source?: string;
   };
 
   try {
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { name, email, message, university_name, recaptchaToken } = formData;
+  const { name, email, message, university_name, recaptchaToken, source } = formData;
 
   // Verify reCAPTCHA token
   if (!recaptchaToken) {
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
       },
       Body: {
         Text: {
-          Data: `Name: ${name}\nEmail: ${email}\nUniversity: ${university_name}\nMessage: ${message}`,
+          Data: `Name: ${name}\nEmail: ${email}\nUniversity: ${university_name}\nSource: ${source || "(none)"}\nMessage: ${message}`,
           Charset: "UTF-8",
         },
       },

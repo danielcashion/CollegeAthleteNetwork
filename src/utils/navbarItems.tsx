@@ -51,7 +51,35 @@ export const navbarItems: NavItem[] = [
       },
     ],
   },
-  { name: "Corporate Partners", link: "/corporate-partners", type: "link" },
+
+  {
+    name: "Groups We Serve",
+    type: "noLink",
+    subItems: [
+      {
+        name: "Athletic Department Administration",
+        link: "/personas/athletic-department-administration",
+        type: "link",
+      },
+      {
+        name: "Alumni & Students",
+        link: "/personas/alumni-students",
+        type: "link",
+      },
+
+      {
+        name: "Development Officers",
+        link: "/personas/development-officers",
+        type: "link",
+      },
+      {
+        name: "Corporate HR/Recruiting",
+        link: "/corporate-partners",
+        type: "link",
+      },
+    ],
+  },
+
   {
     name: "About",
     type: "noLink",
