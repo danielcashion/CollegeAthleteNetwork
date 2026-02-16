@@ -326,7 +326,7 @@ export default function AlumniStudentsPage() {
         <section id="the-problem" className="py-16 bg-gray-100 scroll-mt-24">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-[#1C315F] text-center mb-6" role="heading" aria-level={2}>
-              What Does Your University's Athlete Network Look Like?
+              What Does Your University&apos;s Athlete Network Look Like?
             </h2>
             <p className="text-lg text-[#1C315F]/90 text-center max-w-2xl mx-auto mb-10">
               Most athlete/alumni networks are distribution lists and sporadic events. That creates near-zero visibility and missed connections—outcomes depend on luck.
