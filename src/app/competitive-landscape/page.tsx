@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Competitive Landscape | Athlete Career Networks",
   description:
-    "A strategic analysis comparing Handshake, Athlete Network, and The College Athlete Network. Why athlete professional networks require specialized infrastructure—and why CAN delivers.",
+    "Handshake and others are generic job bulletin boards—no warm intro. CAN pioneered Availabilities & Opportunities: the Match.com for hiring within your network. Why athlete professional networks require specialized infrastructure.",
   keywords:
     "competitive analysis, athlete career network, Handshake, Athlete Network, college athlete network, alumni engagement, athlete recruiting",
   alternates: {
@@ -65,7 +65,7 @@ export default function CompetitiveLandscapePage() {
               2. The Current Landscape of Career Platforms
             </h2>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              Universities today face a patchwork of solutions. Career services deploy job boards and employer networks. Athletic departments deploy engagement platforms and alumni communication tools. Neither constructs a true athlete professional network—a roster-based graph that maps athletes to alumni, employers, and career outcomes.
+              Universities today face a patchwork of solutions. Career services deploy generic job bulletin boards—Handshake and others—where postings are not specific to a user&apos;s university and applications are cold. No one likes these: they lack the warmth and specificity of an in-network introduction. Athletic departments deploy engagement platforms and alumni communication tools. Neither constructs a true athlete professional network—a roster-based graph that maps athletes to alumni, employers, and career outcomes, and that enables warm intros and hiring within the network.
             </p>
             <p className="text-lg text-[#1C315F]/90">
               The gap matters. Athletes change jobs every 3.1 years on average in the first 15 years post-graduation. For a network of 3,000 athletes, that means roughly 1,200 updates annually. No career office or athletic department has the bandwidth to maintain that data. The platforms that could help either don&apos;t provide the data or require the institution to supply it. The College Athlete Network is the exception: we provide the data. We maintain it. The institution gets the network.
@@ -88,8 +88,11 @@ export default function CompetitiveLandscapePage() {
             <p className="text-lg text-[#1C315F]/90 mb-4">
               <strong>Data model:</strong> Students self-report resume data, major, graduation year, skills, and job preferences. The platform provides job listings, employer events, and recruiting workflows. Data is self-reported and structurally flat—there is no institutional roster, no sport identity, and weak alumni persistence.
             </p>
+            <p className="text-lg text-[#1C315F]/90 mb-4">
+              <strong>Strategic positioning:</strong> Handshake is a generic job bulletin board. Postings are not specific to a user&apos;s university or network. Students apply cold—no warm intro from a fellow alum or teammate. Employers get volume; students get noise. No one likes generic bulletin boards because they lack the specificity and trust of an in-network introduction.
+            </p>
             <p className="text-lg text-[#1C315F]/90">
-              <strong>Strategic positioning:</strong> Handshake is a career-center job board. It excels at volume recruiting and employer access. It does not map athlete rosters, sport affiliation, or athlete-alumni career trajectories. For athletic departments seeking a dedicated athlete network, Handshake is the wrong tool.
+              For athletic departments seeking a dedicated athlete network with warm intros and university-specific matching, Handshake is the wrong tool.
             </p>
           </div>
         </section>
@@ -109,8 +112,11 @@ export default function CompetitiveLandscapePage() {
             <p className="text-lg text-[#1C315F]/90 mb-4">
               <strong>Features:</strong> Branded landing pages, career resources, mentorship programs, event management, e-learning, messaging, and analytics. The platform connects current and alumni athletes in communities and facilitates peer-to-peer networking.
             </p>
-            <p className="text-lg text-[#1C315F]/90">
+            <p className="text-lg text-[#1C315F]/90 mb-4">
               <strong>Data model:</strong> Athlete participation, school affiliation, and community membership are required from users. The platform provides engagement content, mentoring workflows, and career resources. It is primarily <strong>communication infrastructure</strong>—not a data-provided network. The institution or users supply the data; UNITE organizes the experience.
+            </p>
+            <p className="text-lg text-[#1C315F]/90">
+              <strong>Recruiting model:</strong> Career resources and employer access are typically generic—not a university-specific matching system that produces warm intros from within the athlete network.
             </p>
           </div>
         </section>
@@ -123,6 +129,12 @@ export default function CompetitiveLandscapePage() {
             </h2>
             <p className="text-lg text-[#1C315F]/90 mb-4">
               The College Athlete Network builds cross-sport athlete professional networks inside universities. We source current and historic public athlete rosters, map athletes to third-party datasets (including LinkedIn), and refresh employer, title, and location data every 60 days. The result is an institutional athlete network graph that the university owns—without maintaining it.
+            </p>
+            <p className="text-lg text-[#1C315F]/90 mb-4">
+              <strong>Availabilities &amp; Opportunities—pioneered by CAN:</strong> The College Athlete Network pioneered the matching of students and alumni posting &quot;Availabilities&quot; (what they&apos;re looking for—jobs, internships, mentorship, advice) with alumni posting &quot;Opportunities&quot; (what they&apos;re offering—roles, mentorship, intros). We are the Match.com for activating your network to hire within your network. Unlike generic job bulletin boards, every match is university-specific and network-native.
+            </p>
+            <p className="text-lg text-[#1C315F]/90 mb-4">
+              <strong>Warm intros, not cold applications:</strong> CAN provides users the warm intro. Alumni at target employers can be identified; pathways through mutual connections are visible. Students don&apos;t apply into a void—they connect through a fellow athlete who can vouch for them. That is the difference between a bulletin board and a network.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
               <strong>Target audience:</strong> Athletes, athlete alumni, athletic department leadership, development officers, and corporate employers seeking athlete talent. CAN is built exclusively for the athlete network.
@@ -140,13 +152,13 @@ export default function CompetitiveLandscapePage() {
               6. Structural Differences in Network Design
             </h2>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              <strong>Handshake network structure:</strong> Student profile → employer job posting → job application. The graph is applicant-centric. There is no roster, no sport, no alumni-athlete identity.
+              <strong>Handshake network structure:</strong> Student profile → employer job posting → job application. A generic bulletin board. Postings are not university-specific. Applications are cold. No warm intro. The graph is applicant-centric—there is no roster, no sport, no alumni-athlete identity.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              <strong>Athlete Network structure:</strong> Athlete community → communication hub → engagement programs. The graph is community-centric. It organizes people for engagement but does not map them to employers, career outcomes, or a searchable professional network.
+              <strong>Athlete Network structure:</strong> Athlete community → communication hub → engagement programs. The graph is community-centric. It organizes people for engagement but does not map them to employers, career outcomes, or a searchable professional network. Career resources are typically generic, not network-native matching.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              <strong>College Athlete Network structure:</strong> Athlete roster → sport → university → athlete alumni → companies → career outcomes. The graph is roster-based and institution-owned. Every node is mapped: who played what sport, where they work, what they do. The roster-based network graph is fundamentally stronger because it reflects institutional reality—not self-reported profiles or ad hoc communities.
+              <strong>College Athlete Network structure:</strong> Athlete roster → sport → university → athlete alumni → companies → career outcomes. Plus: <strong>Availabilities</strong> (students/alumni post what they need) ↔ <strong>Opportunities</strong> (alumni post what they offer). CAN pioneered this matching model—the Match.com for hiring within your network. The graph is roster-based, institution-owned, and university-specific. Every match produces a warm intro path. The roster-based network graph is fundamentally stronger because it reflects institutional reality and enables in-network hiring—not cold applications to generic job boards.
             </p>
           </div>
         </section>
@@ -191,6 +203,12 @@ export default function CompetitiveLandscapePage() {
                     <td className="p-4">User-maintained profiles</td>
                     <td className="p-4">Institution or user-supplied</td>
                     <td className="p-4">Platform-maintained, refreshed every 60 days</td>
+                  </tr>
+                  <tr className="border-b border-[#CCCBCB] bg-gray-50">
+                    <td className="p-4 font-semibold">Matching / intro type</td>
+                    <td className="p-4">Generic bulletin board, cold applications</td>
+                    <td className="p-4">Generic career resources</td>
+                    <td className="p-4">Availabilities ↔ Opportunities, warm intros, university-specific</td>
                   </tr>
                 </tbody>
               </table>
@@ -248,6 +266,7 @@ export default function CompetitiveLandscapePage() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-lg text-[#1C315F]/90 mb-6">
               <li><strong>Roster-based identity:</strong> Athletes are defined by sport, team, and class year—not just major and graduation. General platforms don&apos;t map this.</li>
+              <li><strong>Warm intros vs. bulletin boards:</strong> Generic job boards are not university-specific. Students apply cold. No one likes them. Athlete networks need university-specific matching—Availabilities and Opportunities—that produces warm intros from within the network.</li>
               <li><strong>Alumni-athlete affinity:</strong> Former athletes have stronger bonds with their program than general alumni. They hire, mentor, and give at higher rates when the network is athlete-specific.</li>
               <li><strong>Employer demand:</strong> Employers seek athletes for discipline, leadership, teamwork, and coachability. A dedicated athlete talent pool is higher-quality than a general applicant pool.</li>
               <li><strong>Data maintenance:</strong> Athlete career data changes constantly. No institution can maintain it. Only a specialized platform with productionized data curation can.</li>
@@ -266,6 +285,8 @@ export default function CompetitiveLandscapePage() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-lg text-[#1C315F]/90 mb-6">
               <li><strong>We provide the data.</strong> Rosters, LinkedIn mapping, employer and title updates every 60 days. No babysitting. No spreadsheets.</li>
+              <li><strong>Availabilities &amp; Opportunities—we pioneered it.</strong> Students and alumni post Availabilities (what they need); alumni post Opportunities (what they offer). We are the Match.com for activating your network to hire within your network. Not a generic bulletin board—university-specific matching.</li>
+              <li><strong>Warm intros, not cold applications.</strong> We provide users the warm intro. Generic job boards don&apos;t. Alumni at target employers are visible; pathways through mutual connections are clear. Students connect through fellow athletes who can vouch for them.</li>
               <li><strong>Institutional ownership.</strong> The network stays with the university—not with a coach, a spreadsheet, or a departing staff member.</li>
               <li><strong>Cross-sport connectivity.</strong> Athletes connect with peers and alumni across all sports. One unified network.</li>
               <li><strong>Fundraising narrative.</strong> Development officers get measurable outcomes—jobs, internships, mentorship—and a new reason to give that avoids gift fatigue.</li>
@@ -310,8 +331,14 @@ export default function CompetitiveLandscapePage() {
                     <td className="p-4 bg-[#ED3237]/5">Roster → sport → alumni → employers → outcomes</td>
                   </tr>
                   <tr className="border-b border-[#CCCBCB] bg-gray-50">
+                    <td className="p-4 font-semibold">Matching model</td>
+                    <td className="p-4">Generic job bulletin board, cold applications</td>
+                    <td className="p-4">Career resources, generic employer access</td>
+                    <td className="p-4 bg-[#ED3237]/5">Availabilities ↔ Opportunities (pioneered by CAN), warm intros, hire within network</td>
+                  </tr>
+                  <tr className="border-b border-[#CCCBCB]">
                     <td className="p-4 font-semibold">Recruiting workflows</td>
-                    <td className="p-4">Volume job matching</td>
+                    <td className="p-4">Volume job matching, not university-specific</td>
                     <td className="p-4">Career resources, employer access</td>
                     <td className="p-4 bg-[#ED3237]/5">Athlete talent pool, warm intros, employer mapping</td>
                   </tr>
@@ -352,10 +379,13 @@ export default function CompetitiveLandscapePage() {
               13. Strategic Conclusion
             </h2>
             <p className="text-xl mb-6 text-white/95">
-              Handshake is a career-center job board. Athlete Network is an engagement platform. The College Athlete Network is <strong>athlete professional network infrastructure</strong>—the only solution built around the roster-based athlete network graph, with data provided and maintained by the platform.
+              Handshake and similar platforms are generic job bulletin boards—not university-specific, no warm intro. Athlete Network is an engagement platform. The College Athlete Network is <strong>athlete professional network infrastructure</strong>—the only solution built around the roster-based athlete network graph, with data provided and maintained by the platform.
+            </p>
+            <p className="text-xl mb-6 text-white/95">
+              CAN pioneered Availabilities and Opportunities—the Match.com for activating your network to hire within your network. We provide users the warm intro. The others do not. No one likes generic bulletin boards. Everyone values a warm intro from within their network.
             </p>
             <p className="text-xl mb-8 text-white/95">
-              For universities serious about athlete career outcomes, alumni engagement, and fundraising sustainability, CAN is the materially superior choice. We don&apos;t ask you to build the network. We deliver it.
+              For universities serious about athlete career outcomes, alumni engagement, and fundraising sustainability, CAN is the materially superior choice. We don&apos;t ask you to build the network. We deliver it—and we deliver the warm intro.
             </p>
             <Link
               href="/contact-us?source=competitive-landscape"
