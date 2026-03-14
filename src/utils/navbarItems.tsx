@@ -90,6 +90,11 @@ export const navbarItems: NavItem[] = [
         type: "link",
       },
       {
+        name: "Competitive Landscape",
+        link: "/competitive-landscape",
+        type: "link",
+      },
+      {
         name: "Contact Us",
         link: "/contact-us",
         type: "link",

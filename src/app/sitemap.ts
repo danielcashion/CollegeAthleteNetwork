@@ -21,6 +21,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticPages = [
       "about-us",
+      "competitive-landscape",
       "athlete-checklist",
       "communications",
       "contact-us",
