@@ -167,7 +167,7 @@ export default function DailyVisitorsChart({
           labels: {
             font: {
               size: 14,
-              weight: "600" as const,
+              weight: "bold" as const,
             },
             color: "#1C315F",
           },
@@ -240,7 +240,7 @@ export default function DailyVisitorsChart({
             color: "#1C315F",
             font: {
               size: 14,
-              weight: "600" as const,
+              weight: "bold" as const,
             },
           },
         },
@@ -263,18 +263,37 @@ export default function DailyVisitorsChart({
   }
 
   return (
-    <div ref={containerRef} className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-      {/* Info Banner */}
-      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-[#1C315F]">
-          <span className="font-semibold">💡 Interactive Chart:</span> Click on any bar to add/remove that date from the table filter below. Selected dates are shown in blue, unselected in gray.
-        </p>
-      </div>
+    <div ref={containerRef} className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 relative overflow-hidden animate-fadeIn">
+      {/* Accent Border */}
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#1C315F] to-[#ED3237]"></div>
       
-      <div className="h-96">
-        {isMounted && chartData && (
-          <Chart ref={chartRef} type="bar" data={chartData} options={options} />
-        )}
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-[#1C315F] to-transparent"></div>
+      
+      {/* Content */}
+      <div className="relative">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-[#1C315F] to-[#ED3237] rounded-full"></div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-[#1C315F] to-[#ED3237] bg-clip-text text-transparent">
+              📊 Daily Trends
+            </h2>
+          </div>
+        </div>
+
+        {/* Info Banner */}
+        <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg shadow-sm">
+          <p className="text-sm text-[#1C315F]">
+            <span className="font-semibold">💡 Interactive Chart:</span> Click on any bar to add/remove that date from the table filter below. Selected dates are shown in blue, unselected in gray.
+          </p>
+        </div>
+        
+        <div className="h-96">
+          {isMounted && chartData && (
+            <Chart ref={chartRef} type="bar" data={chartData} options={options} />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -164,18 +164,26 @@ export default function LocationPivotTable({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
-        <h2 className="text-xl font-bold text-[#1C315F]">
-          Visits by Location
-        </h2>
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 relative overflow-hidden animate-fadeIn">
+      {/* Accent Border */}
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#1C315F] to-[#ED3237]"></div>
+      
+      {/* Content */}
+      <div className="relative">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-[#1C315F] to-[#ED3237] rounded-full"></div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-[#1C315F] to-[#ED3237] bg-clip-text text-transparent">
+              🗺️ Geographic Distribution
+            </h2>
+          </div>
         
         <div className="flex items-center gap-3 w-full sm:w-auto flex-wrap">
           {/* Download CSV Button */}
           <button
             onClick={downloadCSV}
             disabled={filteredData.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-[#ED3237] text-white rounded-lg hover:bg-[#1C315F] transition font-medium shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ED3237] to-red-600 text-white rounded-lg hover:from-[#1C315F] hover:to-blue-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
             title="Download filtered data as CSV"
           >
             <Download size={18} />
@@ -187,7 +195,7 @@ export default function LocationPivotTable({
           <div className="relative flex-1 sm:flex-none">
             <button
               onClick={() => setShowDatePicker(!showDatePicker)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#1C315F] text-white rounded-lg hover:bg-[#ED3237] transition font-medium shadow-md w-full sm:w-auto justify-center"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#1C315F] to-blue-600 text-white rounded-lg hover:from-[#ED3237] hover:to-red-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg w-full sm:w-auto justify-center transform hover:scale-105"
             >
               <Calendar size={18} />
               <span>
@@ -304,9 +312,9 @@ export default function LocationPivotTable({
           </div>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-inner">
           <table className="w-full border-collapse">
-            <thead>
+            <thead className="sticky top-0 z-10 shadow-md">
               <tr className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white">
                 <th className="text-left px-4 py-3 font-semibold">Location</th>
                 <th className="text-right px-4 py-3 font-semibold">Visits</th>
@@ -330,7 +338,7 @@ export default function LocationPivotTable({
                   <React.Fragment key={stateData.state}>
                     {/* State Row */}
                     <tr
-                      className={`border-b border-gray-200 hover:bg-blue-50 cursor-pointer transition ${
+                      className={`border-b border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-200 ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
                       onClick={() => toggleState(stateData.state)}
@@ -367,10 +375,10 @@ export default function LocationPivotTable({
                           1
                         );
                         return (
-                          <tr
-                            key={`${stateData.state}-${city}`}
-                            className="border-b border-gray-100 bg-gray-50 hover:bg-blue-50 transition"
-                          >
+                        <tr
+                          key={`${stateData.state}-${city}`}
+                          className="border-b border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-200"
+                        >
                             <td className="px-4 py-2 pl-12 text-gray-700">
                               <span className="text-sm">└ {city}</span>
                             </td>
@@ -393,6 +401,7 @@ export default function LocationPivotTable({
 
       <div className="mt-4 text-xs text-gray-500 text-center">
         Click on a state to expand/collapse city details
+      </div>
       </div>
     </div>
   );

@@ -171,20 +171,20 @@ export default function WebsiteTrafficPage() {
 
         {/* Stats Cards */}
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-fadeIn">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#1C315F] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 font-medium">
                     Total Visits
                   </p>
-                  <p className="text-3xl font-bold text-[#1C315F] mt-1">
+                  <p className="text-4xl font-extrabold bg-gradient-to-r from-[#1C315F] to-[#ED3237] bg-clip-text text-transparent mt-1 tabular-nums">
                     {totalVisits.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-[#1C315F]/10 p-3 rounded-full">
+                <div className="bg-gradient-to-br from-[#1C315F] to-blue-600 p-4 rounded-xl shadow-lg">
                   <svg
-                    className="w-8 h-8 text-[#1C315F]"
+                    className="w-8 h-8 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -200,35 +200,35 @@ export default function WebsiteTrafficPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#ED3237] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 font-medium">
                     Days Tracked
                   </p>
-                  <p className="text-3xl font-bold text-[#1C315F] mt-1">
+                  <p className="text-4xl font-extrabold bg-gradient-to-r from-[#ED3237] to-red-600 bg-clip-text text-transparent mt-1 tabular-nums">
                     {uniqueDates}
                   </p>
                 </div>
-                <div className="bg-[#ED3237]/10 p-3 rounded-full">
-                  <Calendar className="w-8 h-8 text-[#ED3237]" />
+                <div className="bg-gradient-to-br from-[#ED3237] to-red-600 p-4 rounded-xl shadow-lg">
+                  <Calendar className="w-8 h-8 text-white" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 font-medium">
                     Unique Locations
                   </p>
-                  <p className="text-3xl font-bold text-[#1C315F] mt-1">
+                  <p className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-1 tabular-nums">
                     {uniqueLocations.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-[#1C315F]/10 p-3 rounded-full">
+                <div className="bg-gradient-to-br from-purple-600 to-pink-600 p-4 rounded-xl shadow-lg">
                   <svg
-                    className="w-8 h-8 text-[#1C315F]"
+                    className="w-8 h-8 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -252,17 +252,38 @@ export default function WebsiteTrafficPage() {
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading State with Skeleton */}
         {loading && (
-          <div className="flex items-center justify-center h-96 bg-white rounded-lg shadow-md border border-gray-200">
-            <div className="text-center">
-              <RefreshCw
-                size={48}
-                className="animate-spin text-[#1C315F] mx-auto mb-4"
-              />
-              <p className="text-lg text-gray-600 font-medium">
-                Loading traffic data...
-              </p>
+          <div className="space-y-6 animate-fadeIn">
+            {/* Loading Progress Bar */}
+            <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-[#1C315F] via-[#ED3237] to-[#1C315F] animate-pulse"></div>
+            </div>
+            
+            {/* Skeleton Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-lg shadow-md p-6 border border-gray-200 animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+                  <div className="h-10 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Skeleton Chart */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 animate-pulse">
+              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+              <div className="h-96 bg-gradient-to-t from-gray-100 to-gray-50 rounded-lg"></div>
+            </div>
+            
+            {/* Skeleton Table */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 animate-pulse">
+              <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="h-12 bg-gray-100 rounded"></div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -298,28 +319,28 @@ export default function WebsiteTrafficPage() {
         {!loading && !error && trafficData.length > 0 && (
           <>
             {/* Exclude High Visit Dates Checkbox */}
-            <div className="mb-4 bg-white rounded-lg shadow-md p-4 border border-gray-200">
-              <label className="flex items-center gap-3 cursor-pointer">
+            <div className="mb-4 bg-gradient-to-r from-white via-blue-50 to-purple-50 rounded-xl shadow-lg p-5 border-2 border-gray-200 backdrop-blur-sm animate-fadeIn">
+              <label className="flex items-center gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={excludeHighVisitDates}
                   onChange={(e) => setExcludeHighVisitDates(e.target.checked)}
-                  className="w-5 h-5 text-[#1C315F] border-gray-300 rounded focus:ring-[#ED3237] cursor-pointer"
+                  className="w-6 h-6 text-[#1C315F] border-2 border-gray-300 rounded focus:ring-2 focus:ring-[#ED3237] cursor-pointer transition-all"
                 />
                 <div className="flex-1">
-                  <span className="text-[#1C315F] font-semibold">
+                  <span className="text-[#1C315F] font-bold text-lg group-hover:text-[#ED3237] transition-colors">
                     Exclude dates with &gt;5,000 visits
                   </span>
                   {highVisitDates.length > 0 && (
-                    <span className="ml-2 text-sm text-gray-600">
-                      ({highVisitDates.length} {highVisitDates.length === 1 ? 'date' : 'dates'} affected)
+                    <span className="ml-2 text-sm font-semibold text-gray-600 bg-white px-2 py-1 rounded-full border border-gray-200">
+                      {highVisitDates.length} {highVisitDates.length === 1 ? 'date' : 'dates'} affected
                     </span>
                   )}
                 </div>
               </label>
               {excludeHighVisitDates && highVisitDates.length > 0 && (
-                <div className="mt-2 text-sm text-gray-600 pl-8">
-                  Excluded dates: {highVisitDates.map(date => {
+                <div className="mt-3 text-sm text-gray-700 pl-9 font-medium bg-white/70 p-3 rounded-lg border border-gray-200 animate-fadeIn">
+                  <span className="font-semibold text-[#ED3237]">Excluded:</span> {highVisitDates.map(date => {
                     const d = new Date(date);
                     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
                   }).join(", ")}
