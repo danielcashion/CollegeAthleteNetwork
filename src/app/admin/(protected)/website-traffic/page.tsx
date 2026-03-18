@@ -207,7 +207,7 @@ export default function WebsiteTrafficPage() {
                     Days Tracked
                   </p>
                   <p className="text-4xl font-extrabold bg-gradient-to-r from-[#ED3237] to-red-600 bg-clip-text text-transparent mt-1 tabular-nums">
-                    {uniqueDates}
+                    {uniqueDates-1}
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-[#ED3237] to-red-600 p-4 rounded-xl shadow-lg">
