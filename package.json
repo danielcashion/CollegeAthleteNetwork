@@ -23,6 +23,7 @@
     "@vercel/analytics": "^1.5.0",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
+    "botid": "^1.5.10",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.18",
     "framer-motion": "^11.18.1",

@@ -3,7 +3,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Home, LayoutDashboard, Calendar, Mail, Send, Database, ShieldCheck } from "lucide-react";
+import { LogOut, Home, LayoutDashboard, Calendar, Mail, Send, Database, ShieldCheck, TrafficCone } from "lucide-react";
 import Logo from "../../../../public/Logos/CANLogo-horizontal-white.png";
 import Image from "next/image";
 
@@ -38,6 +38,11 @@ const adminSidebarItems = [
     href: "/admin/validate-opportunities",
     icon: ShieldCheck,
     label: "Validate Opportunities",
+  },
+  {
+    href: "/admin/website-traffic",
+    icon: TrafficCone,
+    label: "Website Traffic",
   },
 ];
 

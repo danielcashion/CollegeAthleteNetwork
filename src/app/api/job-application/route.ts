@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
 const sesClient = new SESClient({
@@ -14,6 +15,14 @@ const from_address =
   process.env.EMAIL_FROM || "admin@collegeathletenetwork.org";
 
 export async function POST(request: NextRequest) {
+  const verification = await checkBotId();
+  if (verification.isBot) {
+    return NextResponse.json(
+      { message: "Access denied. Please try again." },
+      { status: 403 }
+    );
+  }
+
   if (!to_address || !from_address) {
     console.error("Missing EMAIL_TO or EMAIL_FROM environment variables");
     return NextResponse.json(

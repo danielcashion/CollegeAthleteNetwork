@@ -30,7 +30,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The College Athlete Network",
+  metadataBase: new URL("https://www.collegeathletenetwork.org"),
+  title: {
+    default: "The College Athlete Network",
+    template: "%s | The College Athlete Network",
+  },
   description:
     "Generating your school&apos;s network for athletes and employers",
   keywords:

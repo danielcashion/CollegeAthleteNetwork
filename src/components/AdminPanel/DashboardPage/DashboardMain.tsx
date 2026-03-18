@@ -16,7 +16,7 @@ import {
   RefreshCw
 } from "lucide-react";
 
-// Mock data interfaces - replace with your actual API types
+
 interface DashboardMetrics {
   totalCampaigns: number;
   activeCampaigns: number;

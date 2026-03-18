@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
 const sesClient = new SESClient({
@@ -15,6 +16,14 @@ const to_address = "daniel.cashion.nyc@gmail.com" // process.env.EMAIL_TO;
 const from_address = "admin@collegeathletenetwork.org" //process.env.EMAIL_FROM;
 
 export async function POST(request: NextRequest) {
+  const verification = await checkBotId();
+  if (verification.isBot) {
+    return NextResponse.json(
+      { message: "Access denied. Please try again." },
+      { status: 403 }
+    );
+  }
+
   if (!to_address || !from_address) {
     console.error("Missing EMAIL_TO or EMAIL_FROM environment variables");
     return NextResponse.json(
@@ -29,6 +38,7 @@ export async function POST(request: NextRequest) {
     university_name: string;
     message: string;
     recaptchaToken?: string;
+    source?: string;
   };
 
   try {
@@ -41,7 +51,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { name, email, message, university_name, recaptchaToken } = formData;
+  const { name, email, message, university_name, recaptchaToken, source } = formData;
 
   // Verify reCAPTCHA token
   if (!recaptchaToken) {
@@ -107,7 +117,7 @@ export async function POST(request: NextRequest) {
       },
       Body: {
         Text: {
-          Data: `Name: ${name}\nEmail: ${email}\nUniversity: ${university_name}\nMessage: ${message}`,
+          Data: `Name: ${name}\nEmail: ${email}\nUniversity: ${university_name}\nSource: ${source || "(none)"}\nMessage: ${message}`,
           Charset: "UTF-8",
         },
       },
