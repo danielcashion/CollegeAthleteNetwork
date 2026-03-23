@@ -23,6 +23,19 @@ declare namespace NodeJS {
     NEXTAUTH_SECRET?: string;
     NEXTAUTH_URL?: string;
     
+    // Visitor intelligence (FingerprintJS + direct Aurora ingestion)
+    IPAPI_ACCESS_KEY?: string;
+    MYSQL_HOST?: string;
+    MYSQL_USER?: string;
+    MYSQL_PASSWORD?: string;
+    MYSQL_DATABASE?: string;
+    MYSQL_PORT?: string;
+    MYSQL_POOL_SIZE?: string;
+    MYSQL_SSL?: string;
+    /** PEM file path for custom CA (optional; otherwise Amazon RDS bundle is used when TLS is on). */
+    MYSQL_SSL_CA_PATH?: string;
+    MYSQL_SSL_REJECT_UNAUTHORIZED?: string;
+
     // External Services
     NEXT_PUBLIC_IPAPI_KEY?: string;
     NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN?: string;
