@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from "next/app";
 import ConditionalLogUserIP from "@/components/UserAudit/ConditionalLogUserIP";
+import ConditionalVisitorEventsTracker from "@/components/VisitorIntelligence/ConditionalVisitorEventsTracker";
 import CanVideoModal from "@/components/Modals/CanVideoModal";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
@@ -102,6 +103,7 @@ export default function RootLayout({
           <FloatingActionButton />
           <CanVideoModal />
           <ConditionalLogUserIP />
+          <ConditionalVisitorEventsTracker />
           <Analytics />
           <ToasterProvider />
           <GoogleAnalyticsClient />
