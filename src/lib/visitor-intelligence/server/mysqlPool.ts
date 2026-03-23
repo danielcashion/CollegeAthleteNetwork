@@ -48,16 +48,24 @@ function resolveMysqlSslOptions(): SslOptions | undefined {
   } satisfies SslOptions;
 }
 
+/** True when the value is a full URL Node can parse (e.g. `mysql://...`), not a bare hostname. */
+function isFullConnectionUrl(value: string): boolean {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value.trim());
+}
+
 /**
- * Aurora MySQL connection pool (Next.js route). Uses `DATABASE_URL` when set,
- * otherwise `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_PORT`.
+ * Aurora MySQL connection pool (Next.js route). Uses `DATABASE_URL` when it is a full URL
+ * (`mysql://user:pass@host:port/db`), otherwise `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`.
+ *
+ * If `DATABASE_URL` is mistakenly set to a hostname only (common on Vercel), it is treated as `MYSQL_HOST`
+ * and combined with the other `MYSQL_*` variables instead of calling `new URL()` (which would throw).
  */
 export function getMysqlPool(): mysql.Pool {
   if (pool) return pool;
 
-  const databaseUrl = process.env.DATABASE_URL;
-  if (databaseUrl) {
-    const u = new URL(databaseUrl);
+  const rawDatabaseUrl = process.env.DATABASE_URL?.trim();
+  if (rawDatabaseUrl && isFullConnectionUrl(rawDatabaseUrl)) {
+    const u = new URL(rawDatabaseUrl);
     const user = decodeURIComponent(u.username);
     const password = decodeURIComponent(u.password);
     if (!user) {
@@ -86,10 +94,12 @@ export function getMysqlPool(): mysql.Pool {
     return pool;
   }
 
-  const host = process.env.MYSQL_HOST;
-  const user = process.env.MYSQL_USER;
+  const host =
+    process.env.MYSQL_HOST?.trim() ??
+    (rawDatabaseUrl && !isFullConnectionUrl(rawDatabaseUrl) ? rawDatabaseUrl : undefined);
+  const user = process.env.MYSQL_USER?.trim();
   const password = process.env.MYSQL_PASSWORD;
-  const database = process.env.MYSQL_DATABASE;
+  const database = process.env.MYSQL_DATABASE?.trim();
   if (!host || !user || !database) {
     throw new Error(
       "Database not configured: set DATABASE_URL or MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE",
