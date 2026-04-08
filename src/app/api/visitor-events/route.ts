@@ -48,7 +48,15 @@ export async function POST(request: NextRequest) {
     await ingestVisitorPageview(ingestPayload);
     return new NextResponse(null, { status: 204 });
   } catch (err) {
-    console.error("visitor-events: ingest failed", err);
+    const e = err as NodeJS.ErrnoException & { errno?: number; sqlMessage?: string; sqlState?: string };
+    console.error("visitor-events: ingest failed", {
+      name: e?.name,
+      message: e?.message,
+      code: e?.code,
+      errno: e?.errno,
+      sqlState: e?.sqlState,
+      sqlMessage: e?.sqlMessage,
+    });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

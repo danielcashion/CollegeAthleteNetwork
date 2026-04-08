@@ -45,7 +45,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
                 width={600}
                 height={500}
                 priority
-                className="w-full max-w-[300px] sm:max-w-[400px] max-h-[300px] object-contain m-auto"
+                className="w-full max-w-[300px] sm:max-w-[400px] max-h-[300px] object-contain m-auto grayscale-[100%]"
               />
             </div>
             <div className="order-1 lg:order-2 space-y-6">

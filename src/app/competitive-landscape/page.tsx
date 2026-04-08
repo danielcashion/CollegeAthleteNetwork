@@ -60,14 +60,14 @@ export default function CompetitiveLandscapePage() {
                 1
               </span>
               <h2 className="text-2xl md:text-3xl font-bold text-[#1C315F] leading-tight pt-1.5 border-l-4 border-[#ED3237] pl-4" id="introduction">
-                Introduction: The Athlete Career Network Opportunity
+                Introduction: A University&apos;s Athlete Network Opportunity
               </h2>
             </div>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              Student-athletes represent a uniquely valuable talent pool: disciplined, coachable, and trained in leadership and teamwork. Yet the infrastructure to connect athletes with career opportunities—and to sustain that connection after graduation—remains fragmented. Most universities rely on general career platforms, engagement tools, or manual spreadsheets. None are designed around the athlete network graph.
+              Student-athletes represent a uniquely valuable talent pool: disciplined, coachable, and trained in leadership and teamwork. Yet the infrastructure to connect athletes with career opportunities—and to sustain that connection after graduation—remains fragmented. Most universities rely on general career platforms, one-way engagement tools (e.g., distribution lists and campaigns), or manual spreadsheets. None are designed around the athlete network graph.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              This analysis compares three approaches: Handshake (the dominant career-center job board), Athlete Network and UNITE (athletic department engagement platforms), and The College Athlete Network (athlete professional network infrastructure). The conclusion is clear: athlete career outcomes require a specialized network architecture that only CAN provides.
+              This analysis compares three approaches: Handshake (a well-known career-center job board), AthleteNetwork.com (athlete focused bring your own data platform), and The College Athlete Network (CAN). The conclusion is clear: athlete career outcomes require a specialized network approach that only CAN provides.
             </p>
           </div>
         </section>
@@ -104,7 +104,7 @@ export default function CompetitiveLandscapePage() {
               </h2>
             </div>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              Handshake is the largest career network for higher education. It powers career offices at <strong>1,400+ universities</strong> and connects students with <strong>750,000+ employers</strong>. Approximately 20 million students and alumni use the platform. Schools joining Handshake see on average a 3x increase in employer network size and diversity.
+              Handshake is the career network built board for higher education. It powers career offices at <strong>1,400+ universities</strong> and connects students with many employers. Many schools report being on the system, but few students or alums actually use it.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
               <strong>Target audience:</strong> Career centers, employers, and the general student population. Handshake is built for broad job-matching—not athlete-specific identity or alumni-athlete networks.

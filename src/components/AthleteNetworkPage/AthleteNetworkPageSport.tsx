@@ -43,10 +43,10 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
               <Image
                 src={sportData.network_gif_url || "/placeholder.svg"}
                 alt={`${sportData.university_name} athlete network`}
-                width={600}
-                height={500}
+                width={300}
+                height={250}
                 priority
-                className="w-full max-w-[400px] sm:max-w-[600px] max-h-[600px] object-contain m-auto"
+                className="w-full max-w-[400px] sm:max-w-[600px] max-h-[600px] object-contain m-auto grayscale-[100%]"
               />
             </div>
             <div className="order-1 lg:order-2 space-y-6">
