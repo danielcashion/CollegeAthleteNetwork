@@ -39,7 +39,7 @@ export default function FloatingActionButton() {
         {isOpen && (
           <div className="flex flex-col gap-3 animate-fadeIn">
             {/* View Intro Video */}
-            <button
+            {/* <button
               onClick={openVideoModal}
               className="flex items-center gap-3 bg-white text-[#1C315F] px-5 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 group"
             >
@@ -49,7 +49,7 @@ export default function FloatingActionButton() {
               <div className="bg-[#ED3237] text-white p-2 rounded-full group-hover:bg-[#1C315F] transition-colors">
                 <FaPlay size={16} />
               </div>
-            </button>
+            </button> */}
 
             {/* Get In Touch */}
             <Link
