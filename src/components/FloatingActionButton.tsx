@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaQuestion, FaTimes, FaEnvelope, FaPlay } from "react-icons/fa";
+import { FaQuestion, FaTimes, FaEnvelope } from "react-icons/fa";
 
 export default function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,10 +12,10 @@ export default function FloatingActionButton() {
     setIsOpen(!isOpen);
   };
 
-  const openVideoModal = () => {
-    setIsVideoModalOpen(true);
-    setIsOpen(false); // Close the FAB menu when opening video
-  };
+  // const openVideoModal = () => {
+  //   setIsVideoModalOpen(true);
+  //   setIsOpen(false); // Close the FAB menu when opening video
+  // };
 
   const closeVideoModal = () => {
     setIsVideoModalOpen(false);
