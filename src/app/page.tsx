@@ -1,7 +1,6 @@
-import Image from "next/image";
 import "../styles/customStyles.css";
 import Carousel from "@/components/LandingPage/Carousel";
-import AthleteImage from "../../public/images/college-athletes-7.jpg"
+import HeroVideo from "@/components/HeroVideo";
 
 import {
   FaDatabase,
@@ -50,11 +49,7 @@ export default function Home() {
             </p>
           </div>
           <div className="w-full lg:w-[40%]">
-            <Image
-              src={AthleteImage}
-              alt="College Athletes"
-              className="rounded-lg w-full object-cover"
-            />
+            <HeroVideo />
           </div>
         </section>
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaQuestion, FaTimes, FaEnvelope, FaPlay } from "react-icons/fa";
+import { FaQuestion, FaTimes, FaEnvelope } from "react-icons/fa";
 
 export default function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,10 +12,10 @@ export default function FloatingActionButton() {
     setIsOpen(!isOpen);
   };
 
-  const openVideoModal = () => {
-    setIsVideoModalOpen(true);
-    setIsOpen(false); // Close the FAB menu when opening video
-  };
+  // const openVideoModal = () => {
+  //   setIsVideoModalOpen(true);
+  //   setIsOpen(false); // Close the FAB menu when opening video
+  // };
 
   const closeVideoModal = () => {
     setIsVideoModalOpen(false);
@@ -39,7 +39,7 @@ export default function FloatingActionButton() {
         {isOpen && (
           <div className="flex flex-col gap-3 animate-fadeIn">
             {/* View Intro Video */}
-            <button
+            {/* <button
               onClick={openVideoModal}
               className="flex items-center gap-3 bg-white text-[#1C315F] px-5 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 group"
             >
@@ -49,7 +49,7 @@ export default function FloatingActionButton() {
               <div className="bg-[#ED3237] text-white p-2 rounded-full group-hover:bg-[#1C315F] transition-colors">
                 <FaPlay size={16} />
               </div>
-            </button>
+            </button> */}
 
             {/* Get In Touch */}
             <Link
