@@ -58,7 +58,7 @@ export default function TrackClickPage() {
         university_name: university_name,
         destination: destination || null,
         file_name: file_name || video_id || null,
-        // video_id: video_id || null,
+        video_id: video_id || null,
         campaign_id: campaign_id || null,
         created_by: created_by,
         created_datetime: created_datetime,
