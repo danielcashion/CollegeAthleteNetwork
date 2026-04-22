@@ -34,7 +34,7 @@ export default function VideoViewerPage() {
 
       <div className="bg-gray-50 flex flex-col items-center pb-3">
         <div className="w-full bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pt-12 pb-6 text-center shadow-md px-4 sm:px-6">
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wider">
+          <h1 className="text-2xl sm:text-4xl mt-4 font-extrabold tracking-wider">
             {`The ${displayedUniversityName} Athlete Network Video Library`}
           </h1>
 
