@@ -1,110 +1,36 @@
-"use client";
+import TrackClickClient, { type TrackClickQuery } from "./TrackClickClient";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { CgSpinner } from "react-icons/cg";
+function queryValue(
+  sp: Record<string, string | string[] | undefined>,
+  key: string
+): string | null {
+  const raw = sp[key];
+  if (raw === undefined) return null;
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  if (v === undefined || v === "") return null;
+  return v;
+}
 
-export default function TrackClickPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+function toTrackClickQuery(
+  sp: Record<string, string | string[] | undefined>
+): TrackClickQuery {
+  return {
+    university_name: queryValue(sp, "university_name"),
+    destination: queryValue(sp, "destination"),
+    file_name: queryValue(sp, "file_name"),
+    video_id: queryValue(sp, "video_id"),
+    row_id: queryValue(sp, "row_id"),
+    campaign_id: queryValue(sp, "campaign_id"),
+    survey_id: queryValue(sp, "survey_id"),
+    email_address: queryValue(sp, "email_address"),
+  };
+}
 
-  useEffect(() => {
-    const university_name = searchParams.get("university_name");
-    const destination = searchParams.get("destination");
-    const file_name = searchParams.get("file_name") || null; // Optional, can be null
-    const video_id = searchParams.get("video_id") || null; // Optional, can be null
-
-    const row_id = searchParams.get("row_id");
-    const campaign_id = searchParams.get("campaign_id") || null; // Optional, can be null
-    const survey_id = searchParams.get("survey_id") || null; // Optional, can be null
-    const email_address = searchParams.get("email_address") || null; // Optional, can be null
-
-    const created_by = "admin";
-    const created_datetime = new Date().toISOString();
-
-    // If essential params are missing, move to home
-    if (!university_name || !row_id || !destination) {
-      router.push("/");
-      return;
-    }
-
-    if (destination === "surveys" && !survey_id) {
-      router.push("/");
-      return;
-    }
-
-    if (destination === "university-financials" && !university_name) {
-      router.push("/");
-      return;
-    }
-
-    if (destination === "media-viewer" && !file_name) {
-      router.push("/");
-      return;
-    }
-
-    if (destination === "video-viewer" && !university_name) {
-      router.push("/");
-      return;
-    }
-
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/track_click`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        row_id,
-        university_name: university_name,
-        destination: destination || null,
-        file_name: file_name || video_id || null,
-        video_id: video_id || null,
-        campaign_id: campaign_id || null,
-        created_by: created_by,
-        created_datetime: created_datetime,
-      }),
-    }).catch((err) => {
-      console.error("Failed to log click:", err);
-    });
-
-    // Routing
-    setTimeout(() => {
-      if (destination === "surveys") {
-        router.push(`/surveys/${university_name}?survey_id=${survey_id}`);
-      } else if (destination === "media-viewer") {
-        router.push(`/media-viewer/${university_name}?file=${file_name}`);
-
-      } else if (destination === "video-viewer") {
-        router.push(`/video-viewer/${university_name}?video_id=${video_id}`);
-
-      } else if (destination === "login" && email_address) {
-        // include the email address value so the members site can pre-fill the login form
-        const encoded = encodeURIComponent(email_address);
-        router.push(
-          `https://members.collegeathletenetwork.org/login?email_address=${encoded}`
-        );
-     } else if (destination === "login" && !email_address) {
-        // no email to pre-fill, just go to login page
-        router.push(
-          `https://members.collegeathletenetwork.org/login`
-        );
-      } else if (destination === "university-financials") {
-        router.push(`/university-financials/${university_name}`);
-      } else {
-        router.push("/");
-      }
-    }, 300);
-  }, [searchParams, router]);
-
-  return (
-    <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] min-h-screen text-white pb-12 pt-24 flex flex-col justify-center items-center px-[10%] sm:px-[20%]">
-      <CgSpinner size={80} className="animate-spin" />
-      <h1 className="text-3xl font-semibold mb-2 mt-4">
-        Loading things now...
-      </h1>
-      <p className="text-lg">
-        Just give us a moment while we get everything ready for you
-      </p>
-    </div>
-  );
+export default async function TrackClickPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = await searchParams;
+  return <TrackClickClient {...toTrackClickQuery(sp)} />;
 }
