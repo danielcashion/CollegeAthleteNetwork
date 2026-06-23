@@ -1,12 +1,19 @@
 import type { NextConfig } from "next";
+import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["collegeathletenetwork.s3.us-east-1.amazonaws.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "collegeathletenetwork.s3.us-east-1.amazonaws.com",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
+    qualities: [40, 75],
   },
   compress: true,
   poweredByHeader: false,
 };
 
-export default nextConfig;
+export default withBotId(nextConfig);
