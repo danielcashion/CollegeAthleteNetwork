@@ -1,3 +1,12 @@
+// AUTH STACK: intentionally on next-auth v4 (not Auth.js v5).
+// Decision (2026-06): v5 was evaluated during the Next.js 16 upgrade and deferred.
+// v5's benefits here are mostly ergonomic (universal `auth()`, simpler config) and do
+// not justify the cost given (1) v5 is still beta, (2) it would require an Edge/Node
+// config split because our Credentials `authorize` uses bcrypt + mysql2 (not Edge-safe),
+// and (3) our needs are limited to one credentials provider with JWT sessions.
+// v4 runs on Next 16 via `legacy-peer-deps=true` in .npmrc (peer range is advisory).
+// Revisit when Auth.js v5 is stable or when we need a feature v4 lacks; on migration,
+// remove the .npmrc workaround.
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
