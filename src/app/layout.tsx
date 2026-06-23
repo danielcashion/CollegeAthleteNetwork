@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     template: "%s | The College Athlete Network",
   },
   description:
-    "Generating your school&apos;s network for athletes and employers",
+    "Generating your school's network for athletes and employers",
   keywords:
     "college athletes, athlete recruitment, athlete network, college sports, college recruitment, college athlete network, college athlete recruitment",
   openGraph: {
@@ -47,6 +47,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://www.collegeathletenetwork.org",
+    siteName: "The College Athlete Network",
+    images: [
+      {
+        url: "/Logos/CANLogo1200X1200Color.png",
+        width: 1200,
+        height: 1200,
+        alt: "The College Athlete Network",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The College Athlete Network",
+    description:
+      "We power the athletes, alumns, and professional opportunities network for college Athletic Programs.",
+    images: ["/Logos/CANLogo1200X1200Color.png"],
   },
   icons: {
     icon: "/favicon.ico",
