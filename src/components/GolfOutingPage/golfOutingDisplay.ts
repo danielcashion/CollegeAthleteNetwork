@@ -59,6 +59,10 @@ export function packageAccent(name?: string | null): string {
 
 export const MEMBERS_SITE = "https://members.collegeathletenetwork.org";
 
+export function attendeesPerTicket(typeName?: string | null): number {
+  return /four/i.test(typeName || "") ? 4 : 1;
+}
+
 export function membersGolfCheckoutUrl(
   slug: string,
   path: "sponsor" | "register",
@@ -70,6 +74,17 @@ export function membersGolfCheckoutUrl(
   });
   const dest = `/golf/${slug}/${path}${params.toString() ? `?${params}` : ""}`;
   return `${MEMBERS_SITE}/login?returnUrl=${encodeURIComponent(dest)}`;
+}
+
+export function auctionPhotoUrls(raw?: string[] | string | null): string[] {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : raw ? [raw] : [];
+  } catch {
+    return raw ? [raw] : [];
+  }
 }
 
 export function venueLine(outing: {
