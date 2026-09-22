@@ -23,6 +23,7 @@ export type GolfOutingPublic = {
   registration_opens_at?: string | null;
   registration_closes_at?: string | null;
   currency?: string;
+  is_active_YN?: number;
   remaining_spots?: number | null;
   auction_enabled?: number;
   sponsorships_enabled?: number;
@@ -37,7 +38,10 @@ export type GolfTicketPublic = {
   unit_price_cents: number;
   fmv_cents?: number;
   inventory?: number | null;
+  requires_golfer_info?: number;
   ticket_type_status: string;
+  sort_order?: number;
+  is_active_YN?: number;
 };
 
 export type GolfPackagePublic = {
@@ -51,6 +55,8 @@ export type GolfPackagePublic = {
   includes_teebox_signage: number;
   includes_public_logo: number;
   sponsorship_status: string;
+  sort_order?: number;
+  is_active_YN?: number;
 };
 
 export type GolfSponsorPublic = {
@@ -74,6 +80,7 @@ export type GolfAuctionPublic = {
   min_increment_cents?: number;
   closes_at: string;
   item_status: string;
+  is_active_YN?: number;
   high_bid_cents?: number | null;
 };
 
@@ -104,6 +111,7 @@ export async function listPublicGolfOutings(filters?: {
 }): Promise<GolfOutingPublic[]> {
   const rows = await publicGet<GolfOutingPublic>("v_golf_outings_public");
   return rows.filter((row) => {
+    if (row.is_active_YN === 0) return false;
     if (!["PUBLISHED", "SOLD_OUT", "REGISTRATION_CLOSED", "COMPLETED"].includes(row.event_status)) {
       return false;
     }
@@ -126,13 +134,19 @@ export async function getPublicGolfOutingBySlug(slug: string): Promise<GolfOutin
 }
 
 export async function listPublicTickets(event_id: string): Promise<GolfTicketPublic[]> {
-  const rows = await publicGet<GolfTicketPublic>("golf_ticket_types", { event_id });
-  return rows.filter((row) => row.ticket_type_status === "ACTIVE");
+  const fromView = await publicGet<GolfTicketPublic>("v_golf_tickets_public", { event_id });
+  const rows = fromView.length > 0 ? fromView : await publicGet<GolfTicketPublic>("golf_ticket_types", { event_id });
+  return rows
+    .filter((row) => row.event_id === event_id && row.ticket_type_status === "ACTIVE")
+    .sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100));
 }
 
 export async function listPublicPackages(event_id: string): Promise<GolfPackagePublic[]> {
-  const rows = await publicGet<GolfPackagePublic>("golf_sponsorship_types", { event_id });
-  return rows.filter((row) => row.sponsorship_status === "ACTIVE");
+  const fromView = await publicGet<GolfPackagePublic>("v_golf_packages_public", { event_id });
+  const rows = fromView.length > 0 ? fromView : await publicGet<GolfPackagePublic>("golf_sponsorship_types", { event_id });
+  return rows
+    .filter((row) => row.event_id === event_id && row.sponsorship_status === "ACTIVE")
+    .sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100));
 }
 
 export async function listPublicSponsors(event_id: string): Promise<GolfSponsorPublic[]> {

@@ -25,7 +25,6 @@ export const navbarItems: NavItem[] = [
     ],
   },
 
-  { name: "Golf Outings", link: "/golf-outings", type: "link" },
   {
     name: "Solutions",
     type: "noLink",
@@ -40,14 +39,19 @@ export const navbarItems: NavItem[] = [
         link: "/communications",
         type: "link",
       },
-            {
+      {
         name: "Elevated Fundraising",
         link: "/fundraising",
         type: "link",
       },
-                        {
+      {
         name: "Alumni Engagement Infrastructure",
         link: "/infrastructure",
+        type: "link",
+      },
+      {
+        name: "Golf Outings",
+        link: "/golf-outings",
         type: "link",
       },
     ],
