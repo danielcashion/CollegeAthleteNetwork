@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   formatCents,
+  isValidEmail,
   membersGolfCheckoutUrl,
   packageAccent,
 } from "./golfOutingDisplay";
@@ -40,9 +41,14 @@ export default function GolfSponsorForm({
   const [logo, setLogo] = useState("");
   const [players, setPlayers] = useState<Player[]>(emptyPlayers);
   const selected = sorted.find((pkg) => pkg.sponsorship_type_id === Number(packageId));
+  const contactEmailValid = isValidEmail(email);
+  const foursomeValid =
+    !selected?.includes_foursome ||
+    players.every((player) => player.first_name.trim() && player.last_name.trim() && isValidEmail(player.email));
+  const canContinue = Boolean(name.trim() && contactEmailValid && foursomeValid);
 
   function continueCheckout() {
-    if (!name.trim() || !email.trim()) return;
+    if (!canContinue) return;
     window.location.href = membersGolfCheckoutUrl(event.public_url_slug, "sponsor", {
       package: packageId,
       name: name.trim(),
@@ -136,10 +142,16 @@ export default function GolfSponsorForm({
             Contact email
             <input
               type="email"
-              className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+              autoComplete="email"
+              className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
+                email.trim() && !contactEmailValid ? "border-[#ED3237]" : "border-[#1C315F]/20"
+              }`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {email.trim() && !contactEmailValid && (
+              <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
+            )}
           </label>
           {!!selected?.includes_public_logo && (
             <label className="block text-sm font-semibold text-[#1C315F]">
@@ -177,16 +189,27 @@ export default function GolfSponsorForm({
                       )
                     }
                   />
-                  <input
-                    className="rounded-lg border border-[#1C315F]/20 p-2.5"
-                    placeholder="Email"
-                    value={player.email}
-                    onChange={(e) =>
-                      setPlayers((prev) =>
-                        prev.map((row, i) => (i === index ? { ...row, email: e.target.value } : row))
-                      )
-                    }
-                  />
+                  <div>
+                    <input
+                      type="email"
+                      autoComplete="email"
+                      className={`w-full rounded-lg border p-2.5 ${
+                        player.email.trim() && !isValidEmail(player.email)
+                          ? "border-[#ED3237]"
+                          : "border-[#1C315F]/20"
+                      }`}
+                      placeholder="Email"
+                      value={player.email}
+                      onChange={(e) =>
+                        setPlayers((prev) =>
+                          prev.map((row, i) => (i === index ? { ...row, email: e.target.value } : row))
+                        )
+                      }
+                    />
+                    {player.email.trim() && !isValidEmail(player.email) && (
+                      <p className="mt-1 text-xs text-[#ED3237]">Enter a valid email.</p>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -198,7 +221,7 @@ export default function GolfSponsorForm({
           </div>
           <button
             type="button"
-            disabled={!name.trim() || !email.trim()}
+            disabled={!canContinue}
             onClick={continueCheckout}
             className="w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
           >
