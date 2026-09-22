@@ -157,7 +157,7 @@ const Navbar: React.FC = () => {
                   </button>
                   <div
                     className={`w-full pl-4 space-y-2 overflow-hidden transition-max-height duration-300 ease-in-out ${
-                      openSubMenus[item.name] ? "max-h-40" : "max-h-0"
+                      openSubMenus[item.name] ? "max-h-80" : "max-h-0"
                     }`}
                   >
                     {item.subItems.map((sub) => (
