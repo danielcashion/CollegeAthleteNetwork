@@ -107,7 +107,7 @@ export default function GolfRegisterForm({
         : `This registers ${slots} ${slots === 1 ? "person" : "people"}.`;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+    <div className="grid gap-8 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
       <div className="space-y-4">
         <div>
           <h2 className="text-2xl font-bold text-[#1C315F]">Choose a ticket</h2>
@@ -124,16 +124,16 @@ export default function GolfRegisterForm({
               key={row.ticket_type_id}
               type="button"
               onClick={() => selectTicket(row.ticket_type_id)}
-              className={`w-full rounded-2xl border bg-white p-6 text-left shadow-md transition duration-200 ${
+              className={`w-full rounded-2xl border bg-white p-4 text-left shadow-md transition duration-200 ${
                 selectedTicket
                   ? "border-[#1C315F] ring-2 ring-[#1C315F] ring-offset-2"
                   : "border-transparent hover:-translate-y-0.5 hover:shadow-lg"
               }`}
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xl font-bold text-[#1C315F]">{row.type_name}</p>
-                  <p className="mt-1 text-3xl font-bold text-[#ED3237]">{formatCents(row.unit_price_cents)}</p>
+                  <p className="text-lg font-bold text-[#1C315F]">{row.type_name}</p>
+                  <p className="mt-1 text-2xl font-bold text-[#ED3237]">{formatCents(row.unit_price_cents)}</p>
                 </div>
                 <span
                   className={`mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
@@ -195,7 +195,7 @@ export default function GolfRegisterForm({
               <p className="mb-3 text-sm font-semibold text-[#1C315F]">
                 {index === 0 ? "Person 1 · primary contact" : `Person ${index + 1}`}
               </p>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,0.9fr)]">
                 <label className="block text-sm font-semibold text-[#1C315F]">
                   First name
                   <input

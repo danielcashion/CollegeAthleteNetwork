@@ -2,10 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import GolfAuctionPreview from "@/components/GolfOutingPage/GolfAuctionPreview";
+import GolfSponsorCarousel from "@/components/GolfOutingPage/GolfSponsorCarousel";
 import {
   formatCents,
   formatOutingDate,
   outingStatusLabel,
+  packageAccent,
   venueLine,
 } from "@/components/GolfOutingPage/golfOutingDisplay";
 import {
@@ -72,43 +74,55 @@ export default async function GolfOutingPublicPage({
           >
             ← All Golf Outings
           </Link>
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-            {event.university_name}
-          </p>
-          <h1 className="mb-4 max-w-4xl text-4xl font-bold md:text-5xl">{event.event_name}</h1>
-          <p className="text-lg md:text-xl">
-            {formatOutingDate(event.event_date, event.tz)}
-            {event.play_format ? ` · ${event.play_format}` : ""}
-            {event.event_format ? ` · ${event.event_format.toLowerCase()}` : ""}
-          </p>
-          <p className="mt-2 text-white/90">{venueLine(event)}</p>
-          {event.venue_address && (
-            <p className="text-sm text-white/70">
-              {event.venue_address}
-              {event.venue_city ? `, ${event.venue_city}` : ""}
-              {event.venue_state ? ` ${event.venue_state}` : ""}
-            </p>
-          )}
-          <div className="mt-8 flex flex-wrap gap-3">
-            {registrationOpen ? (
-              <Link
-                href={`/golf-outing/${slug}?tab=registration`}
-                className="rounded-full bg-white px-6 py-3 text-lg font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
-              >
-                Register to play
-              </Link>
-            ) : (
-              <span className="rounded-full bg-white/20 px-6 py-3 font-semibold">
-                {outingStatusLabel(event.event_status)}
-              </span>
-            )}
-            {event.sponsorships_enabled !== 0 && (
-              <Link
-                href={`/golf-outing/${slug}/sponsor`}
-                className="rounded-full border border-white px-6 py-3 text-lg font-semibold transition duration-200 hover:bg-white hover:text-[#ED3237]"
-              >
-                Become a sponsor
-              </Link>
+          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+            <div>
+              <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
+                {event.university_name}
+              </p>
+              <h1 className="mb-4 text-4xl font-bold md:text-5xl">{event.event_name}</h1>
+              <p className="text-lg md:text-xl">
+                {formatOutingDate(event.event_date, event.tz)}
+                {event.play_format ? ` · ${event.play_format}` : ""}
+                {event.event_format ? ` · ${event.event_format.toLowerCase()}` : ""}
+              </p>
+              <p className="mt-2 text-white/90">{venueLine(event)}</p>
+              {event.venue_address && (
+                <p className="text-sm text-white/70">
+                  {event.venue_address}
+                  {event.venue_city ? `, ${event.venue_city}` : ""}
+                  {event.venue_state ? ` ${event.venue_state}` : ""}
+                </p>
+              )}
+              <div className="mt-8 flex flex-wrap gap-3">
+                {registrationOpen ? (
+                  <Link
+                    href={`/golf-outing/${slug}?tab=registration`}
+                    className="rounded-full bg-white px-6 py-3 text-lg font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
+                  >
+                    Register For The Event
+                  </Link>
+                ) : (
+                  <span className="rounded-full bg-white/20 px-6 py-3 font-semibold">
+                    {outingStatusLabel(event.event_status)}
+                  </span>
+                )}
+                {event.sponsorships_enabled !== 0 && (
+                  <Link
+                    href={`/golf-outing/${slug}/sponsor`}
+                    className="rounded-full border border-white px-6 py-3 text-lg font-semibold transition duration-200 hover:bg-white hover:text-[#ED3237]"
+                  >
+                    Become a sponsor
+                  </Link>
+                )}
+              </div>
+            </div>
+            {sponsors.length > 0 && (
+              <div className="rounded-2xl border border-white/25 bg-white/95 p-4 text-[#1C315F] shadow-lg">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#1C315F]/60">
+                  Current sponsors
+                </p>
+                <GolfSponsorCarousel sponsors={sponsors} />
+              </div>
             )}
           </div>
         </div>
@@ -116,27 +130,30 @@ export default async function GolfOutingPublicPage({
 
       <div className="container mx-auto px-4">
         <nav
-          className="relative z-10 -mt-7 flex flex-wrap gap-1 rounded-2xl bg-white p-2 shadow-md"
+          className="relative z-10 -mt-7 flex flex-wrap items-center gap-2 rounded-2xl bg-white p-2 shadow-md"
           aria-label="Outing sections"
         >
-          {tabs.map((item) => {
-            const href = item.id === "overview" ? `/golf-outing/${slug}` : `/golf-outing/${slug}?tab=${item.id}`;
-            const active = tab === item.id;
-            return (
-              <Link
-                key={item.id}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${
-                  active
-                    ? "bg-[#1C315F] text-white shadow-sm"
-                    : "text-[#1c315f]/70 hover:bg-[#f3f4f2] hover:text-[#1C315F]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          <div className="flex shrink-0 flex-wrap gap-1">
+            {tabs.map((item) => {
+              const href = item.id === "overview" ? `/golf-outing/${slug}` : `/golf-outing/${slug}?tab=${item.id}`;
+              const active = tab === item.id;
+              return (
+                <Link
+                  key={item.id}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${
+                    active
+                      ? "bg-[#1C315F] text-white shadow-sm"
+                      : "text-[#1c315f]/70 hover:bg-[#f3f4f2] hover:text-[#1C315F]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+          {sponsors.length > 0 && <GolfSponsorCarousel sponsors={sponsors} />}
         </nav>
       </div>
 
@@ -166,97 +183,88 @@ export default async function GolfOutingPublicPage({
                 <div className="prose max-w-3xl text-[#1c315f]" dangerouslySetInnerHTML={{ __html: event.description_html }} />
               </div>
             )}
+          </>
+        )}
 
-            {packages.length > 0 && (
-              <div>
-                <h2 className="mb-6 text-3xl font-bold">Sponsorship packages</h2>
-                <div className="grid gap-6 md:grid-cols-3">
-                  {packages.map((pkg) => (
-                    <div key={pkg.sponsorship_type_id} className="flex flex-col rounded-2xl bg-white p-6 shadow-md">
-                      <h3 className="text-xl font-bold">{pkg.sponsorship_name}</h3>
-                      <p className="mt-2 text-3xl font-bold text-[#ED3237]">
-                        {formatCents(pkg.unit_price_cents)}
-                      </p>
-                      <p className="mt-1 text-sm text-[#1c315f]/70">{pkg.inventory} available</p>
-                      <ul className="mt-4 flex-1 space-y-2 text-sm">
-                        {pkg.includes_foursome ? <li>Includes a foursome</li> : null}
-                        {pkg.includes_teebox_signage ? <li>Tee-box signage</li> : null}
-                        {pkg.includes_public_logo ? <li>Logo on this page</li> : null}
-                      </ul>
-                      {event.sponsorships_enabled !== 0 && (
+        {tab === "registration" && (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-3xl font-bold">Registration</h2>
+              <p className="mb-6 text-[#1c315f]/70">
+                Choose a ticket to play in the outing. Checkout continues on the members site.
+              </p>
+              {tickets.length === 0 ? (
+                <p className="rounded-2xl bg-white p-8 text-[#1c315f]/70 shadow-md">
+                  Registration options have not been published yet.
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:max-w-4xl">
+                  {tickets.map((ticket) => (
+                    <div key={ticket.ticket_type_id} className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
+                      <h3 className="text-lg font-bold">{ticket.type_name}</h3>
+                      <p className="mt-2 text-2xl font-bold text-[#ED3237]">{formatCents(ticket.unit_price_cents)}</p>
+                      {ticket.inventory != null && (
+                        <p className="mt-1 text-sm text-[#1c315f]/70">{ticket.inventory} available</p>
+                      )}
+                      {ticket.description_html && (
+                        <div
+                          className="prose mt-3 max-w-none text-sm text-[#1c315f]/70"
+                          dangerouslySetInnerHTML={{ __html: ticket.description_html }}
+                        />
+                      )}
+                      {registrationOpen && (
                         <Link
-                          href={`/golf-outing/${slug}/sponsor?package=${pkg.sponsorship_type_id}`}
-                          className="mt-6 rounded-full bg-[#1C315F] px-4 py-2 text-center font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
+                          href={`/golf-outing/${slug}/register?ticket=${ticket.ticket_type_id}`}
+                          className="mt-5 rounded-full bg-[#1C315F] px-4 py-2 text-center text-sm font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
                         >
-                          Select package
+                          Select ticket
                         </Link>
                       )}
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
-            {sponsors.length > 0 && (
-              <div className="rounded-2xl bg-white p-8 shadow-md">
-                <h2 className="mb-6 text-3xl font-bold">Sponsors</h2>
-                <div className="flex flex-wrap items-center gap-8">
-                  {sponsors.map((sponsor) =>
-                    sponsor.logo_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={sponsor.sponsor_id}
-                        src={sponsor.logo_url}
-                        alt={sponsor.sponsor_name}
-                        className="h-16 object-contain"
-                      />
-                    ) : (
-                      <span key={sponsor.sponsor_id} className="font-semibold">
-                        {sponsor.sponsor_name}
-                      </span>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {tab === "registration" && (
-          <div>
-            <h2 className="mb-2 text-3xl font-bold">Registration</h2>
-            <p className="mb-8 text-[#1c315f]/70">
-              Choose a ticket to play in the outing. Checkout continues on the members site.
-            </p>
-            {tickets.length === 0 ? (
-              <p className="rounded-2xl bg-white p-8 text-[#1c315f]/70 shadow-md">
-                Registration options have not been published yet.
-              </p>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2">
-                {tickets.map((ticket) => (
-                  <div key={ticket.ticket_type_id} className="flex flex-col rounded-2xl bg-white p-6 shadow-md">
-                    <h3 className="text-xl font-bold">{ticket.type_name}</h3>
-                    <p className="mt-2 text-3xl font-bold text-[#ED3237]">{formatCents(ticket.unit_price_cents)}</p>
-                    {ticket.inventory != null && (
-                      <p className="mt-1 text-sm text-[#1c315f]/70">{ticket.inventory} available</p>
-                    )}
-                    {ticket.description_html && (
+            {(packages.length > 0 || event.sponsorships_enabled !== 0) && (
+              <div>
+                <h2 className="mb-2 text-3xl font-bold">Sponsorship</h2>
+                <p className="mb-6 text-[#1c315f]/70">
+                  Support the outing with a package. Current sponsor logos appear next to the event name above.
+                </p>
+                {packages.length === 0 ? (
+                  <p className="rounded-2xl bg-white p-8 text-[#1c315f]/70 shadow-md">
+                    Sponsorship packages have not been published yet.
+                    {event.contact_email ? ` Contact ${event.contact_email} for details.` : ""}
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:max-w-4xl">
+                    {packages.map((pkg) => (
                       <div
-                        className="prose mt-3 max-w-none text-sm text-[#1c315f]/70"
-                        dangerouslySetInnerHTML={{ __html: ticket.description_html }}
-                      />
-                    )}
-                    {registrationOpen && (
-                      <Link
-                        href={`/golf-outing/${slug}/register?ticket=${ticket.ticket_type_id}`}
-                        className="mt-6 rounded-full bg-[#1C315F] px-4 py-2 text-center font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
+                        key={pkg.sponsorship_type_id}
+                        className="flex flex-col rounded-2xl bg-white p-5 shadow-md"
+                        style={{ borderLeftWidth: 4, borderLeftColor: packageAccent(pkg.sponsorship_name) }}
                       >
-                        Select ticket
-                      </Link>
-                    )}
+                        <h3 className="text-lg font-bold">{pkg.sponsorship_name}</h3>
+                        <p className="mt-2 text-2xl font-bold text-[#ED3237]">{formatCents(pkg.unit_price_cents)}</p>
+                        <p className="mt-1 text-sm text-[#1c315f]/70">{pkg.inventory} available</p>
+                        <ul className="mt-4 flex-1 space-y-1 text-sm">
+                          {pkg.includes_foursome ? <li>Includes a foursome</li> : null}
+                          {pkg.includes_teebox_signage ? <li>Tee-box signage</li> : null}
+                          {pkg.includes_public_logo ? <li>Logo on this page</li> : null}
+                        </ul>
+                        {event.sponsorships_enabled !== 0 && (
+                          <Link
+                            href={`/golf-outing/${slug}/sponsor?package=${pkg.sponsorship_type_id}`}
+                            className="mt-5 rounded-full bg-[#1C315F] px-4 py-2 text-center text-sm font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
+                          >
+                            Select package
+                          </Link>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
