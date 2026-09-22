@@ -109,7 +109,7 @@ export default function GolfRegisterForm({
               purchaser_email: email,
               purchaser_name: name,
             }}
-            onSuccess={async () => toast.success("Registration paid")}
+            onSuccess={async () => { toast.success("Registration paid"); }}
             onError={() => toast.error("Payment failed")}
           />
         </PayPalProvider>

@@ -104,7 +104,7 @@ export default function GolfSponsorForm({
               purchaser_email: email,
               purchaser_name: name,
             }}
-            onSuccess={async () => toast.success("Sponsorship paid")}
+            onSuccess={async () => { toast.success("Sponsorship paid"); }}
             onError={() => toast.error("Payment failed")}
           />
         </PayPalProvider>
