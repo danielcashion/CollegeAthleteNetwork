@@ -86,6 +86,33 @@ async function getDynamicSitemapPaths() {
         });
       }
     });
+
+    result.push({
+      loc: '/golf-outings',
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date().toISOString(),
+    });
+
+    try {
+      const golfRes = await fetch(`${apiUrl}/publicprod/v_golf_outings_public`);
+      if (golfRes.ok) {
+        const golfData = await golfRes.json();
+        const outings = Array.isArray(golfData) ? golfData : golfData?.resource || [];
+        outings.forEach((outing) => {
+          if (outing.public_url_slug) {
+            result.push({
+              loc: `/golf-outing/${outing.public_url_slug}`,
+              changefreq: 'weekly',
+              priority: 0.6,
+              lastmod: new Date().toISOString(),
+            });
+          }
+        });
+      }
+    } catch (golfError) {
+      console.error('Error adding golf outing sitemap paths:', golfError);
+    }
   } catch (error) {
     console.error('Error generating additional paths for sitemap:', error);
   }
