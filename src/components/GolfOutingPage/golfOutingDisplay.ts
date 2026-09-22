@@ -63,6 +63,10 @@ export function attendeesPerTicket(typeName?: string | null): number {
   return /four/i.test(typeName || "") ? 4 : 1;
 }
 
+export function isValidEmail(email?: string | null): boolean {
+  return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test((email || "").trim());
+}
+
 export function membersGolfCheckoutUrl(
   slug: string,
   path: "sponsor" | "register",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { attendeesPerTicket, formatCents, membersGolfCheckoutUrl } from "./golfOutingDisplay";
+import { attendeesPerTicket, formatCents, isValidEmail, membersGolfCheckoutUrl } from "./golfOutingDisplay";
 import type { GolfOutingPublic, GolfTicketPublic } from "@/services/getGolfOutingPublic";
 
 type Attendee = { first_name: string; last_name: string; email: string; phone: string };
@@ -41,7 +41,7 @@ export default function GolfRegisterForm({
   const roster = ensureAttendees(attendees, slots);
   const totalCents = (ticket?.unit_price_cents || 0) * quantity;
   const allComplete = roster.every(
-    (person) => person.first_name.trim() && person.last_name.trim() && person.email.trim()
+    (person) => person.first_name.trim() && person.last_name.trim() && isValidEmail(person.email)
   );
   const primary = roster[0];
 
@@ -216,10 +216,18 @@ export default function GolfRegisterForm({
                   Email
                   <input
                     type="email"
-                    className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                    autoComplete="email"
+                    className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
+                      person.email.trim() && !isValidEmail(person.email)
+                        ? "border-[#ED3237]"
+                        : "border-[#1C315F]/20"
+                    }`}
                     value={person.email}
                     onChange={(e) => updateAttendee(index, "email", e.target.value)}
                   />
+                  {person.email.trim() && !isValidEmail(person.email) && (
+                    <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
+                  )}
                 </label>
                 <label className="block text-sm font-semibold text-[#1C315F]">
                   Phone
