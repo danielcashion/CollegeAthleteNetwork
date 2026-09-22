@@ -1,5 +1,6 @@
 import { getUniqueUniversityMeta } from "@/services/getUniqueUniversityMeta";
 import { getUniversitySportsList } from "@/services/getUniversitySports";
+import { listPublicGolfOutings } from "@/services/getGolfOutingPublic";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -10,6 +11,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const universities = await getUniqueUniversityMeta();
     const sportsList = await getUniversitySportsList();
+    const golfOutings = await listPublicGolfOutings().catch(() => []);
 
     const baseUrl = "https://www.collegeathletenetwork.org";
 
@@ -32,6 +34,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       "privacy-policy",
       "sample-data",
       "terms-of-service",
+      "golf-outings",
     ];
 
     const sitemapEntries = [
@@ -56,6 +59,12 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: "monthly",
           priority: 0.7,
         })),
+
+      ...golfOutings.map((outing) => ({
+        url: `${baseUrl}/golf-outing/${outing.public_url_slug}`,
+        changeFrequency: "weekly",
+        priority: 0.6,
+      })),
 
       // Dynamic university pages
       ...universities.map((university: any) => ({

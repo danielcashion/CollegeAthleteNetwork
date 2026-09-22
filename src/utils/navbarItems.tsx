@@ -25,6 +25,7 @@ export const navbarItems: NavItem[] = [
     ],
   },
 
+  { name: "Golf Outings", link: "/golf-outings", type: "link" },
   {
     name: "Solutions",
     type: "noLink",
