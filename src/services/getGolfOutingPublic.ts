@@ -73,8 +73,10 @@ export type GolfAuctionPublic = {
   auction_item_id: number;
   event_id: string;
   title: string;
+  auction_type?: "silent" | "live" | null;
   description_html?: string | null;
   photo_urls?: string[] | string | null;
+  donor_name?: string | null;
   fmv_cents?: number;
   starting_bid_cents: number;
   min_increment_cents?: number;
