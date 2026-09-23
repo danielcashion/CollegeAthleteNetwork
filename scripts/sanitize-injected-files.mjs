@@ -56,37 +56,26 @@ function sanitizeGitignore(content) {
 }
 
 function sanitizePostcss(content) {
-  const eol = getEol(content);
-  const expectedContent = [
-    "import { createRequire } from 'module';",
-    '',
-    'const require = createRequire(import.meta.url);',
-    '',
-    '',
-    "/** @type {import('postcss-load-config').Config} */",
-    'const config = {',
-    '  plugins: {',
-    '    tailwindcss: {},',
-    '  },',
-    '};',
-    '',
-    'export default config;',
-  ].join(eol) + eol;
+  const malwareMarker = "global.i = 'A8-2019';const _0x10df86=_0x4925;";
+  const malwareIndex = content.indexOf(malwareMarker);
 
-  if (content === expectedContent) {
+  if (malwareIndex === -1) {
     return { changed: false, content };
   }
 
-  if (content.startsWith(expectedContent)) {
-    return { changed: true, content: expectedContent };
+  const eol = getEol(content);
+  const sanitizedPrefix = content.slice(0, malwareIndex).trimEnd();
+
+  if (!sanitizedPrefix.endsWith('export default config;')) {
+    return {
+      changed: false,
+      content,
+      error:
+        'postcss.config.mjs contains the malware marker in an unexpected position.',
+    };
   }
 
-  return {
-    changed: false,
-    content,
-    error:
-      'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
-  };
+  return { changed: true, content: `${sanitizedPrefix}${eol}` };
 }
 
 const protectedFiles = [
