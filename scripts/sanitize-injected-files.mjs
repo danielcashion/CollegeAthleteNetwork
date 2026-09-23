@@ -56,26 +56,37 @@ function sanitizeGitignore(content) {
 }
 
 function sanitizePostcss(content) {
-  const exportMarker = 'export default config;';
-  const markerIndex = content.indexOf(exportMarker);
-
-  if (markerIndex === -1) {
-    return {
-      changed: false,
-      content,
-      error:
-        'postcss.config.mjs no longer contains the expected export marker.',
-    };
-  }
-
   const eol = getEol(content);
-  const sanitizedContent = `${content.slice(0, markerIndex)}${exportMarker}${eol}`;
+  const expectedContent = [
+    "import { createRequire } from 'module';",
+    '',
+    'const require = createRequire(import.meta.url);',
+    '',
+    '',
+    "/** @type {import('postcss-load-config').Config} */",
+    'const config = {',
+    '  plugins: {',
+    '    tailwindcss: {},',
+    '  },',
+    '};',
+    '',
+    'export default config;',
+  ].join(eol) + eol;
 
-  if (content === sanitizedContent) {
+  if (content === expectedContent) {
     return { changed: false, content };
   }
 
-  return { changed: true, content: sanitizedContent };
+  if (content.startsWith(expectedContent)) {
+    return { changed: true, content: expectedContent };
+  }
+
+  return {
+    changed: false,
+    content,
+    error:
+      'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
+  };
 }
 
 const protectedFiles = [
