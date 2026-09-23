@@ -1,0 +1,55 @@
+name: Sanitize protected files
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sanitize-on-push:
+    if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Sanitize protected files
+        run: npm run sanitize:protected-files
+
+      - name: Commit sanitized files
+        run: |
+          if git diff --quiet -- .gitignore postcss.config.mjs; then
+            echo "No sanitization changes were required."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .gitignore postcss.config.mjs
+          git commit -m "chore: sanitize protected files"
+          git push
+
+  verify-on-pull-request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Verify protected files are clean
+        run: npm run sanitize:protected-files:check
