@@ -60,7 +60,12 @@ function sanitizePostcss(content) {
   const markerIndex = content.indexOf(exportMarker);
 
   if (markerIndex === -1) {
-    return { changed: false, content };
+    return {
+      changed: false,
+      content,
+      error:
+        'postcss.config.mjs no longer contains the expected export marker.',
+    };
   }
 
   const eol = getEol(content);
@@ -85,11 +90,19 @@ const protectedFiles = [
 ];
 
 const changedFiles = [];
+const erroredFiles = [];
 
 for (const protectedFile of protectedFiles) {
   const absolutePath = path.join(repoRoot, protectedFile.relativePath);
   const originalContent = await readFile(absolutePath, 'utf8');
   const sanitizedResult = protectedFile.sanitize(originalContent);
+
+  if (sanitizedResult.error) {
+    erroredFiles.push(
+      `${protectedFile.relativePath}: ${sanitizedResult.error}`,
+    );
+    continue;
+  }
 
   if (!sanitizedResult.changed) {
     continue;
@@ -100,6 +113,11 @@ for (const protectedFile of protectedFiles) {
   if (!checkOnly) {
     await writeFile(absolutePath, sanitizedResult.content, 'utf8');
   }
+}
+
+if (erroredFiles.length > 0) {
+  console.error(erroredFiles.join('\n'));
+  process.exit(1);
 }
 
 if (changedFiles.length === 0) {

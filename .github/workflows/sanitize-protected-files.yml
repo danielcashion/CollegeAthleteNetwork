@@ -18,10 +18,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Sanitize protected files
-        run: npm run sanitize:protected-files
+        run: node scripts/sanitize-injected-files.mjs
 
       - name: Commit sanitized files
         run: |
@@ -49,7 +48,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Verify protected files are clean
-        run: npm run sanitize:protected-files:check
+        run: node scripts/sanitize-injected-files.mjs --check
