@@ -61,14 +61,14 @@ export default function GolfSponsorCarousel({ sponsors }: { sponsors: GolfSponso
                 <div
                   key={`${sponsor.sponsor_id}-${index}`}
                   title={sponsor.sponsor_name}
-                  className="flex h-[96px] w-[176px] shrink-0 items-center justify-center rounded-xl bg-white px-5 shadow-[0_8px_18px_rgba(28,49,95,0.08)] ring-1 ring-[#1C315F]/8 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(28,49,95,0.14)] hover:ring-[#C9A227]/50"
+                  className="flex h-[96px] w-[176px] shrink-0 items-center justify-center rounded-xl bg-white p-3 shadow-[0_8px_18px_rgba(28,49,95,0.08)] ring-1 ring-[#1C315F]/8 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(28,49,95,0.14)] hover:ring-[#C9A227]/50"
                 >
                   {sponsor.logo_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={sponsor.logo_url}
                       alt={sponsor.sponsor_name}
-                      className="max-h-14 w-auto max-w-[140px] object-contain"
+                      className="h-full w-full object-contain"
                     />
                   ) : (
                     <span className="text-center text-sm font-bold leading-snug text-[#1C315F]">

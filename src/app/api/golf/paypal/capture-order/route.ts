@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { getPayPalConfig } from "@/libs/paypal";
 import { sendGolfPaymentReceipt } from "@/libs/sendGolfReceipt";
@@ -97,6 +98,18 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error("golf public financials row failed", err);
+  }
+
+  const slug = String((event as { public_url_slug?: string }).public_url_slug || golfData.outing_slug || "").trim();
+  try {
+    revalidateTag(`golf-outing-${pending.event_id}`);
+    if (slug) {
+      revalidateTag(`golf-outing-slug-${slug}`);
+      revalidatePath(`/golf-outing/${slug}`);
+      revalidatePath(`/golf-outing/${slug}/sponsor`);
+    }
+  } catch (err) {
+    console.error("golf outing revalidate failed", err);
   }
 
   return NextResponse.json({ success: true, result, captureId: capture?.id });

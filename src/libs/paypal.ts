@@ -26,9 +26,12 @@ export const PAYPAL_SANDBOX_CONFIG = {
   "disable-funding": "paylater,credit",
 };
 
+export function getPayPalEnv(): "live" | "sandbox" {
+  const explicit = (process.env.NEXT_PUBLIC_PAYPAL_ENV || process.env.PAYPAL_ENV || "").toLowerCase();
+  if (explicit === "live" || explicit === "sandbox") return explicit;
+  return process.env.NODE_ENV === "production" ? "live" : "sandbox";
+}
+
 export const getPayPalConfig = () => {
-  if (process.env.NODE_ENV === "production") {
-    return PAYPAL_LIVE_CONFIG;
-  }
-  return PAYPAL_SANDBOX_CONFIG;
+  return getPayPalEnv() === "live" ? PAYPAL_LIVE_CONFIG : PAYPAL_SANDBOX_CONFIG;
 };
