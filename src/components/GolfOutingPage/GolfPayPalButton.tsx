@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
-export function paypalFundingMethod(source?: string | null): "paypal" | "venmo" | "card" {
-  const key = (source || "").toLowerCase();
+export function paypalFundingMethod(source?: unknown): "paypal" | "venmo" | "card" {
+  const key = (typeof source === "string" ? source : "").toLowerCase();
   if (key === "venmo") return "venmo";
   if (key === "card" || key === "credit" || key === "debit") return "card";
   return "paypal";
