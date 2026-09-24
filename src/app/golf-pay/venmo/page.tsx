@@ -11,6 +11,7 @@ export default async function GolfVenmoPayPage({
     amount?: string;
     name?: string;
     event?: string;
+    slug?: string;
   }>;
 }) {
   const query = await searchParams;

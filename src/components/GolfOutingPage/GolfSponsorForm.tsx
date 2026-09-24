@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import GolfPaymentReceipt from "@/components/checkout/GolfPaymentReceipt";
 import PublicCheckout from "@/components/checkout/PublicCheckout";
 import type { GolfOutingPublic, GolfPackagePublic } from "@/services/getGolfOutingPublic";
 import {
@@ -50,6 +51,7 @@ export default function GolfSponsorForm({
   const [teamTouched, setTeamTouched] = useState(false);
   const [holding, setHolding] = useState(false);
   const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
+  const [paid, setPaid] = useState(false);
   const selected = available.find((pkg) => pkg.sponsorship_type_id === Number(packageId));
   const contactEmailValid = isValidEmail(email);
   const foursomeValid =
@@ -172,154 +174,174 @@ export default function GolfSponsorForm({
         })}
       </div>
 
-      <div className="h-fit rounded-2xl bg-white p-6 shadow-xl md:p-8">
-        <h2 className="text-2xl font-bold text-[#1C315F]">Sponsor details</h2>
-        <p className="mt-1 text-sm text-[#1C315F]/70">
-          Checkout as a guest with PayPal, a debit or credit card, or Venmo.
-        </p>
-        <div className="mt-6 space-y-4">
-          <label className="block text-sm font-semibold text-[#1C315F]">
-            Organization or name
-            <input
-              className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setPending(null);
-              }}
-            />
-          </label>
-          <label className="block text-sm font-semibold text-[#1C315F]">
-            Contact email
-            <input
-              type="email"
-              autoComplete="email"
-              className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
-                email.trim() && !contactEmailValid ? "border-[#ED3237]" : "border-[#1C315F]/20"
-              }`}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setPending(null);
-              }}
-            />
-            {email.trim() && !contactEmailValid && (
-              <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
-            )}
-          </label>
-          {!!selected?.includes_public_logo && (
-            <label className="block text-sm font-semibold text-[#1C315F]">
-              Logo URL
-              <input
-                className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
-                placeholder="https://"
-                value={logo}
-                onChange={(e) => setLogo(e.target.value)}
-              />
-            </label>
-          )}
-          {!!selected?.includes_foursome && (
-            <div className="space-y-3 rounded-xl border border-[#1C315F]/15 p-4">
-              <p className="font-semibold text-[#1C315F]">Included foursome</p>
-              <label className="block text-sm font-semibold text-[#1C315F]">
-                Team name
-                <input
-                  className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-2.5 font-normal outline-none focus:border-[#1C315F]"
-                  value={resolvedTeamName}
-                  maxLength={120}
-                  onChange={(e) => {
-                    setTeamName(e.target.value.slice(0, 120));
-                    setTeamTouched(true);
-                    setPending(null);
-                  }}
-                />
-              </label>
-              {players.map((player, index) => (
-                <div key={index} className="grid gap-2 sm:grid-cols-3">
-                  <input
-                    className="rounded-lg border border-[#1C315F]/20 p-2.5"
-                    placeholder="First"
-                    value={player.first_name}
-                    onChange={(e) =>
-                      setPlayers((prev) =>
-                        prev.map((row, i) => (i === index ? { ...row, first_name: e.target.value } : row))
-                      )
-                    }
-                  />
-                  <input
-                    className="rounded-lg border border-[#1C315F]/20 p-2.5"
-                    placeholder="Last"
-                    value={player.last_name}
-                    onChange={(e) =>
-                      setPlayers((prev) =>
-                        prev.map((row, i) => (i === index ? { ...row, last_name: e.target.value } : row))
-                      )
-                    }
-                  />
-                  <div>
+      <div className={`h-fit ${paid ? "" : "rounded-2xl bg-white p-6 shadow-xl md:p-8"}`}>
+        {paid && pending ? (
+          <GolfPaymentReceipt
+            title="Sponsorship confirmed"
+            eventName={event.event_name}
+            universityName={event.university_name}
+            orderId={pending.order_id}
+            amountCents={pending.total_cents}
+            email={email.trim()}
+            note={
+              selected?.includes_teebox_signage
+                ? "Your hole will be assigned by the outing committee."
+                : undefined
+            }
+            outingHref={`/golf-outing/${event.public_url_slug}`}
+          />
+        ) : (
+          <>
+            <h2 className="text-2xl font-bold text-[#1C315F]">{pending ? "Checkout" : "Sponsor details"}</h2>
+            <p className="mt-1 text-sm text-[#1C315F]/70">
+              {pending
+                ? "Pay with PayPal, Venmo, or a debit or credit card."
+                : "Checkout as a guest with PayPal, Venmo, or a debit or credit card."}
+            </p>
+            <div className="mt-6 space-y-4">
+              {!pending ? (
+                <>
+                  <label className="block text-sm font-semibold text-[#1C315F]">
+                    Organization or name
+                    <input
+                      className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </label>
+                  <label className="block text-sm font-semibold text-[#1C315F]">
+                    Contact email
                     <input
                       type="email"
                       autoComplete="email"
-                      className={`w-full rounded-lg border p-2.5 ${
-                        player.email.trim() && !isValidEmail(player.email)
-                          ? "border-[#ED3237]"
-                          : "border-[#1C315F]/20"
+                      className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
+                        email.trim() && !contactEmailValid ? "border-[#ED3237]" : "border-[#1C315F]/20"
                       }`}
-                      placeholder="Email"
-                      value={player.email}
-                      onChange={(e) =>
-                        setPlayers((prev) =>
-                          prev.map((row, i) => (i === index ? { ...row, email: e.target.value } : row))
-                        )
-                      }
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
-                    {player.email.trim() && !isValidEmail(player.email) && (
-                      <p className="mt-1 text-xs text-[#ED3237]">Enter a valid email.</p>
+                    {email.trim() && !contactEmailValid && (
+                      <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
                     )}
-                  </div>
-                </div>
-              ))}
+                  </label>
+                  {!!selected?.includes_public_logo && (
+                    <label className="block text-sm font-semibold text-[#1C315F]">
+                      Logo URL
+                      <input
+                        className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                        placeholder="https://"
+                        value={logo}
+                        onChange={(e) => setLogo(e.target.value)}
+                      />
+                    </label>
+                  )}
+                  {!!selected?.includes_foursome && (
+                    <div className="space-y-3 rounded-xl border border-[#1C315F]/15 p-4">
+                      <p className="font-semibold text-[#1C315F]">Included foursome</p>
+                      <label className="block text-sm font-semibold text-[#1C315F]">
+                        Team name
+                        <input
+                          className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-2.5 font-normal outline-none focus:border-[#1C315F]"
+                          value={resolvedTeamName}
+                          maxLength={120}
+                          onChange={(e) => {
+                            setTeamName(e.target.value.slice(0, 120));
+                            setTeamTouched(true);
+                          }}
+                        />
+                      </label>
+                      {players.map((player, index) => (
+                        <div key={index} className="grid gap-2 sm:grid-cols-3">
+                          <input
+                            className="rounded-lg border border-[#1C315F]/20 p-2.5"
+                            placeholder="First"
+                            value={player.first_name}
+                            onChange={(e) =>
+                              setPlayers((prev) =>
+                                prev.map((row, i) => (i === index ? { ...row, first_name: e.target.value } : row))
+                              )
+                            }
+                          />
+                          <input
+                            className="rounded-lg border border-[#1C315F]/20 p-2.5"
+                            placeholder="Last"
+                            value={player.last_name}
+                            onChange={(e) =>
+                              setPlayers((prev) =>
+                                prev.map((row, i) => (i === index ? { ...row, last_name: e.target.value } : row))
+                              )
+                            }
+                          />
+                          <div>
+                            <input
+                              type="email"
+                              autoComplete="email"
+                              className={`w-full rounded-lg border p-2.5 ${
+                                player.email.trim() && !isValidEmail(player.email)
+                                  ? "border-[#ED3237]"
+                                  : "border-[#1C315F]/20"
+                              }`}
+                              placeholder="Email"
+                              value={player.email}
+                              onChange={(e) =>
+                                setPlayers((prev) =>
+                                  prev.map((row, i) => (i === index ? { ...row, email: e.target.value } : row))
+                                )
+                              }
+                            />
+                            {player.email.trim() && !isValidEmail(player.email) && (
+                              <p className="mt-1 text-xs text-[#ED3237]">Enter a valid email.</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : null}
+              <div className="rounded-xl bg-[#f9faf8] p-4 text-[#1C315F]">
+                <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Selected</p>
+                <p className="mt-1 text-lg font-bold">{selected?.sponsorship_name}</p>
+                <p className="text-2xl font-bold text-[#ED3237]">{formatCents(selected?.unit_price_cents)}</p>
+              </div>
+              {!pending ? (
+                <button
+                  type="button"
+                  disabled={!canContinue || holding}
+                  onClick={continueCheckout}
+                  className="w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {holding ? "Reserving..." : "Continue to checkout"}
+                </button>
+              ) : (
+                <PublicCheckout
+                  amount={pending.total_cents}
+                  purchaserEmail={email.trim()}
+                  purchaserName={name.trim()}
+                  successTitle="Sponsorship confirmed"
+                  successNote={
+                    selected?.includes_teebox_signage
+                      ? "Your hole will be assigned by the outing committee."
+                      : undefined
+                  }
+                  golfData={{
+                    order_id: pending.order_id,
+                    event_id: event.event_id,
+                    event_name: event.event_name,
+                    university_name: event.university_name,
+                    outing_slug: event.public_url_slug,
+                    category: "SPONSORSHIP",
+                    amount: pending.total_cents,
+                  }}
+                  onSuccess={async () => {
+                    setPaid(true);
+                    toast.success("Sponsorship paid");
+                  }}
+                />
+              )}
             </div>
-          )}
-          <div className="rounded-xl bg-[#f9faf8] p-4 text-[#1C315F]">
-            <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Selected</p>
-            <p className="mt-1 text-lg font-bold">{selected?.sponsorship_name}</p>
-            <p className="text-2xl font-bold text-[#ED3237]">{formatCents(selected?.unit_price_cents)}</p>
-          </div>
-          {!pending ? (
-            <button
-              type="button"
-              disabled={!canContinue || holding}
-              onClick={continueCheckout}
-              className="w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {holding ? "Reserving..." : "Continue to checkout"}
-            </button>
-          ) : (
-            <PublicCheckout
-              amount={pending.total_cents}
-              purchaserEmail={email.trim()}
-              purchaserName={name.trim()}
-              successTitle="Sponsorship paid"
-              successNote={
-                selected?.includes_teebox_signage
-                  ? "Your hole will be assigned by the outing committee."
-                  : undefined
-              }
-              golfData={{
-                order_id: pending.order_id,
-                event_id: event.event_id,
-                event_name: event.event_name,
-                university_name: event.university_name,
-                category: "SPONSORSHIP",
-                amount: pending.total_cents,
-              }}
-              onSuccess={async () => {
-                toast.success("Sponsorship paid");
-              }}
-            />
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

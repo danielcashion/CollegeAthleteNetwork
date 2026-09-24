@@ -48,7 +48,15 @@ export async function POST(request: NextRequest) {
   const accessToken = await getAccessToken();
   const config = getPayPalConfig();
   const origin = siteOrigin(request);
-  const returnUrl = `${origin}/golf-pay/venmo?order_id=${order.order_id}&email=${encodeURIComponent(order.purchaser_email)}`;
+  const returnParams = new URLSearchParams({
+    order_id: String(order.order_id),
+    email: order.purchaser_email,
+    amount: String(order.total_cents),
+  });
+  if (order.purchaser_name) returnParams.set("name", order.purchaser_name);
+  if (golfData.event_name) returnParams.set("event", String(golfData.event_name));
+  if (golfData.outing_slug) returnParams.set("slug", String(golfData.outing_slug));
+  const returnUrl = `${origin}/golf-pay/venmo?${returnParams.toString()}`;
   const payload: Record<string, unknown> = {
     intent: "CAPTURE",
     purchase_units: [

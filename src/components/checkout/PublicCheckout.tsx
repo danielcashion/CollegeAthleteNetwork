@@ -4,9 +4,7 @@ import { useState } from "react";
 import GolfPayPalButton from "@/components/GolfOutingPage/GolfPayPalButton";
 import { formatCents } from "@/components/GolfOutingPage/golfOutingDisplay";
 import PayPalProvider from "@/providers/PaypalProvider";
-import VenmoCheckout from "./VenmoCheckout";
-
-type Method = "choose" | "paypal" | "card" | "venmo";
+import GolfPaymentReceipt from "./GolfPaymentReceipt";
 
 export default function PublicCheckout({
   amount,
@@ -31,7 +29,6 @@ export default function PublicCheckout({
 }) {
   const [paid, setPaid] = useState(false);
   const [error, setError] = useState("");
-  const [method, setMethod] = useState<Method>("choose");
 
   const checkoutData = {
     ...golfData,
@@ -39,6 +36,7 @@ export default function PublicCheckout({
     purchaser_email: purchaserEmail,
     purchaser_name: purchaserName,
   };
+  const outingHref = typeof golfData.outing_slug === "string" ? `/golf-outing/${golfData.outing_slug}` : undefined;
 
   async function handleSuccess() {
     setPaid(true);
@@ -47,87 +45,39 @@ export default function PublicCheckout({
 
   if (paid) {
     return (
-      <div className="rounded-xl border border-[#1C315F]/15 bg-[#f9faf8] p-4 text-[#1C315F]">
-        <p className="text-lg font-bold">{successTitle}</p>
-        <p className="mt-1 text-sm">
-          Order {String(golfData.order_id)} · {formatCents(amount)}
-        </p>
-        <p className="mt-2 text-sm">A receipt will be sent to {purchaserEmail}.</p>
-        {successNote ? <p className="mt-2 text-sm">{successNote}</p> : null}
-      </div>
+      <GolfPaymentReceipt
+        title={successTitle}
+        eventName={typeof golfData.event_name === "string" ? golfData.event_name : undefined}
+        universityName={typeof golfData.university_name === "string" ? golfData.university_name : undefined}
+        orderId={golfData.order_id as string | number | undefined}
+        amountCents={amount}
+        email={purchaserEmail}
+        note={successNote}
+        outingHref={outingHref}
+      />
     );
   }
 
   return (
-    <div className="space-y-3">
-      <p className="text-sm font-semibold text-[#1C315F]">Pay {formatCents(amount)}</p>
-      {error ? <p className="text-sm text-[#ED3237]">{error}</p> : null}
-
-      {method === "choose" ? (
-        <div className="grid gap-3">
-          <button
-            type="button"
-            onClick={() => setMethod("paypal")}
-            className="w-full rounded-2xl border border-[#1C315F]/15 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <p className="font-bold text-[#1C315F]">PayPal</p>
-            <p className="mt-1 text-sm text-[#1C315F]/70">Pay with your PayPal balance or linked bank.</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => setMethod("card")}
-            className="w-full rounded-2xl border border-[#1C315F]/15 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <p className="font-bold text-[#1C315F]">Debit or credit card</p>
-            <p className="mt-1 text-sm text-[#1C315F]/70">Processed securely through PayPal. No Stripe.</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => setMethod("venmo")}
-            className="w-full rounded-2xl border border-[#1C315F]/15 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <p className="font-bold text-[#1C315F]">Venmo</p>
-            <p className="mt-1 text-sm text-[#1C315F]/70">Scan a QR code or log in with Venmo.</p>
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <button
-            type="button"
-            className="text-sm font-semibold text-[#1C315F] underline"
-            onClick={() => {
-              setMethod("choose");
-              setError("");
-            }}
-          >
-            ← Payment methods
-          </button>
-          <PayPalProvider>
-            {method === "venmo" ? (
-              <VenmoCheckout
-                amount={amount}
-                purchaserEmail={purchaserEmail}
-                purchaserName={purchaserName}
-                golfData={golfData}
-                createPath={createPath}
-                capturePath={capturePath}
-                onSuccess={handleSuccess}
-                onError={(err) => setError(err instanceof Error ? err.message : "Payment failed")}
-              />
-            ) : (
-              <GolfPayPalButton
-                amount={amount}
-                createPath={createPath}
-                capturePath={capturePath}
-                fundingSource={method}
-                golfData={checkoutData}
-                onSuccess={handleSuccess}
-                onError={(err) => setError(err instanceof Error ? err.message : "Payment failed")}
-              />
-            )}
-          </PayPalProvider>
-        </div>
-      )}
+    <div className="space-y-4">
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Secure checkout</p>
+        <p className="mt-1 text-lg font-bold text-[#1C315F]">Pay {formatCents(amount)}</p>
+        <p className="mt-1 text-sm text-[#1C315F]/70">
+          PayPal, Venmo, or a debit or credit card. Venmo on desktop opens a QR code to scan with the Venmo app.
+        </p>
+      </div>
+      {error ? <p className="rounded-xl bg-[#ED3237]/8 px-3 py-2 text-sm text-[#ED3237]">{error}</p> : null}
+      <PayPalProvider>
+        <GolfPayPalButton
+          amount={amount}
+          createPath={createPath}
+          capturePath={capturePath}
+          golfData={checkoutData}
+          onSuccess={handleSuccess}
+          onError={(err) => setError(err instanceof Error ? err.message : "Payment failed")}
+        />
+      </PayPalProvider>
     </div>
   );
 }

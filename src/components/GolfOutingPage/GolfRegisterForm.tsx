@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import GolfPaymentReceipt from "@/components/checkout/GolfPaymentReceipt";
 import PublicCheckout from "@/components/checkout/PublicCheckout";
 import type { GolfOutingPublic, GolfTicketPublic } from "@/services/getGolfOutingPublic";
 import {
@@ -45,6 +46,7 @@ export default function GolfRegisterForm({
   const [teamTouched, setTeamTouched] = useState<boolean[]>([]);
   const [holding, setHolding] = useState(false);
   const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
+  const [paid, setPaid] = useState(false);
   const ticket = active.find((row) => row.ticket_type_id === Number(ticketId));
   const perTicket = attendeesPerTicket(ticket?.type_name);
   const slots = perTicket * quantity;
@@ -202,12 +204,28 @@ export default function GolfRegisterForm({
         })}
       </div>
 
-      <div className="h-fit rounded-2xl bg-white p-6 shadow-xl md:p-8">
-        <h2 className="text-2xl font-bold text-[#1C315F]">Who is attending?</h2>
+      <div className={`h-fit ${paid ? "" : "rounded-2xl bg-white p-6 shadow-xl md:p-8"}`}>
+        {paid && pending ? (
+          <GolfPaymentReceipt
+            title="Registration confirmed"
+            eventName={event.event_name}
+            universityName={event.university_name}
+            orderId={pending.order_id}
+            amountCents={pending.total_cents}
+            email={primary.email.trim()}
+            outingHref={`/golf-outing/${event.public_url_slug}`}
+          />
+        ) : (
+          <>
+        <h2 className="text-2xl font-bold text-[#1C315F]">{pending ? "Checkout" : "Who is attending?"}</h2>
         <p className="mt-1 text-sm text-[#1C315F]/70">
-          Add a ticket quantity, then enter first name, last name, email, and phone for each person.
+          {pending
+            ? "Pay with PayPal, Venmo, or a debit or credit card."
+            : "Add a ticket quantity, then enter first name, last name, email, and phone for each person."}
         </p>
 
+        {!pending ? (
+        <>
         <div className="mt-6 rounded-xl border border-[#1C315F]/15 p-4">
           <p className="text-sm font-semibold text-[#1C315F]">How many {ticket?.type_name} tickets?</p>
           <div className="mt-3 flex items-center gap-3">
@@ -369,6 +387,8 @@ export default function GolfRegisterForm({
                 </div>
               ))}
         </div>
+        </>
+        ) : null}
 
         <div className="mt-6 rounded-xl bg-[#f9faf8] p-4 text-[#1C315F]">
           <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Selected</p>
@@ -398,14 +418,18 @@ export default function GolfRegisterForm({
                 event_id: event.event_id,
                 event_name: event.event_name,
                 university_name: event.university_name,
+                outing_slug: event.public_url_slug,
                 category: "REGISTRATION",
                 amount: pending.total_cents,
               }}
               onSuccess={async () => {
+                setPaid(true);
                 toast.success("Registration paid");
               }}
             />
           </div>
+        )}
+          </>
         )}
       </div>
     </div>
