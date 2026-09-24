@@ -1,30 +1,37 @@
 import Link from "next/link";
-import { listPublicGolfOutings } from "@/services/getGolfOutingPublic";
-import {
-  formatOutingDate,
-  outingStatusLabel,
-  venueLine,
-} from "@/components/GolfOutingPage/golfOutingDisplay";
+import { Flag, Handshake, Megaphone, Users } from "lucide-react";
+import GolfBudgetWorkbook from "@/components/GolfOutingPage/GolfBudgetWorkbook";
 
 export const metadata = {
-  title: "Golf Outings",
-  description: "Find published college athletic department golf outings and register or sponsor.",
+  title: "Golf Outings for Athletic Departments",
+  description:
+    "Golf outings raise money, gather alumni and sponsors, and show an athletic department as a convener — not only a fundraiser.",
 };
 
-export default async function GolfOutingsDirectory({
-  searchParams,
-}: {
-  searchParams: Promise<{ university?: string; q?: string; from?: string; to?: string }>;
-}) {
-  const params = await searchParams;
-  const outings = await listPublicGolfOutings({
-    university_name: params.university,
-    q: params.q,
-    date_from: params.from,
-    date_to: params.to,
-  }).catch(() => []);
-  const hasFilters = Boolean(params.university || params.q || params.from || params.to);
+const pillars = [
+  {
+    icon: Flag,
+    title: "A real source of funds",
+    copy: "Registration, sponsorships, auctions, and dinner guests turn one afternoon into operating support the department can plan around — if the budget is honest about costs.",
+  },
+  {
+    icon: Users,
+    title: "People in the same place",
+    copy: "Alumni, parents, coaches, local companies, and current student-athletes share a fairway instead of another email ask. Relationships that start on the course show up again as mentors, jobs, and gifts.",
+  },
+  {
+    icon: Megaphone,
+    title: "Better optics for the department",
+    copy: "A well-run outing says the athletic department brings people together. Sponsors see their logos. Guests see a program that hosts, not only solicits. That story travels farther than a pledge form.",
+  },
+  {
+    icon: Handshake,
+    title: "A day that compounds",
+    copy: "The round is the invitation. The follow-through is a public event page, receipts, a silent auction, and a sponsor wall that keeps the department visible after the last putt.",
+  },
+];
 
+export default function GolfOutingsMarketingPage() {
   return (
     <div className="min-h-screen bg-[#f9faf8]">
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-20 pt-28 text-white">
@@ -32,161 +39,107 @@ export default async function GolfOutingsDirectory({
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
             Athletic department events
           </p>
-          <h1 className="mx-auto mb-4 max-w-[860px] text-4xl font-bold md:text-5xl">Golf Outings</h1>
-          <p className="mx-auto max-w-3xl text-lg md:text-xl">
-            Search published outings from college athletic departments. View details, sponsorship
-            packages, and auction items — then register or bid through the members network.
+          <h1 className="mx-auto mb-4 max-w-4xl text-4xl font-bold md:text-5xl">
+            A golf outing is how a department funds the year — and who it gathers
+          </h1>
+          <p className="mx-auto max-w-3xl text-lg md:text-xl text-white/90">
+            The money matters. So does the picture: alumni, sponsors, and the local community
+            standing with the program. We help athletic departments host that day with a private
+            event page, registration, sponsorships, and a silent auction.
           </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/contact-us"
+              className="rounded-full bg-white px-6 py-3 text-lg font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
+            >
+              Talk to our team
+            </Link>
+            <a
+              href="#budget-model"
+              className="rounded-full border border-white px-6 py-3 text-lg font-semibold text-white transition duration-200 hover:bg-white hover:text-[#ED3237]"
+            >
+              Open the budget model
+            </a>
+          </div>
         </div>
       </section>
 
-      <section className="container mx-auto -mt-10 px-4 pb-20">
-        <form
-          method="get"
-          className="mb-10 rounded-2xl bg-white p-6 shadow-xl md:p-8"
-        >
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            <label className="block text-left text-sm font-semibold text-[#1c315f]">
-              University
-              <input
-                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base font-normal text-[#1c315f] outline-none ring-[#1C315F] placeholder:text-gray-400 focus:border-[#1C315F] focus:ring-2"
-                name="university"
-                placeholder="Yale"
-                defaultValue={params.university || ""}
-              />
-            </label>
-            <label className="block text-left text-sm font-semibold text-[#1c315f]">
-              Outing or venue
-              <input
-                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base font-normal text-[#1c315f] outline-none ring-[#1C315F] placeholder:text-gray-400 focus:border-[#1C315F] focus:ring-2"
-                name="q"
-                placeholder="Siwanoy, scramble…"
-                defaultValue={params.q || ""}
-              />
-            </label>
-            <label className="block text-left text-sm font-semibold text-[#1c315f]">
-              From
-              <input
-                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base font-normal text-[#1c315f] outline-none ring-[#1C315F] focus:border-[#1C315F] focus:ring-2"
-                type="date"
-                name="from"
-                defaultValue={params.from || ""}
-              />
-            </label>
-            <label className="block text-left text-sm font-semibold text-[#1c315f]">
-              To
-              <input
-                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base font-normal text-[#1c315f] outline-none ring-[#1C315F] focus:border-[#1C315F] focus:ring-2"
-                type="date"
-                name="to"
-                defaultValue={params.to || ""}
-              />
-            </label>
-          </div>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-            {hasFilters && (
-              <Link
-                href="/golf-outings"
-                className="rounded-full border border-[#1C315F] px-6 py-3 text-center font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
-              >
-                Clear filters
-              </Link>
-            )}
-            <button
-              type="submit"
-              className="rounded-full bg-[#1C315F] px-8 py-3 font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
-            >
-              Search outings
-            </button>
-          </div>
-        </form>
+      <section className="container mx-auto px-4 py-16 md:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-[#1C315F] md:text-4xl">More than a fundraiser</h2>
+          <p className="mt-4 text-lg text-[#1C315F]/75">
+            Athletic departments already know a golf outing can close a budget gap. The departments
+            that get more from the day treat it as a public gathering — proof the program can convene
+            people who care about the athletes.
+          </p>
+        </div>
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          {pillars.map((pillar) => (
+            <article key={pillar.title} className="rounded-2xl bg-white p-6 shadow-md">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1C315F] text-white">
+                <pillar.icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-xl font-bold text-[#1C315F]">{pillar.title}</h3>
+              <p className="mt-2 text-[#1C315F]/75">{pillar.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {outings.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#1C315F]/20 bg-white px-8 py-16 text-center shadow-sm">
-            <h2 className="mb-3 text-2xl font-bold text-[#1c315f]">No matching outings</h2>
-            <p className="mx-auto max-w-xl text-[#1c315f]/80">
-              No published golf outings match that search. Try another university, clear the dates,
-              or browse all published events.
+      <section className="bg-white py-16 md:py-20">
+        <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]">The optics</p>
+            <h2 className="mt-2 text-3xl font-bold text-[#1C315F] md:text-4xl">
+              Show the department as a host, not only an ask
+            </h2>
+            <p className="mt-4 text-lg text-[#1C315F]/75">
+              Donors already hear from the annual fund. A golf outing changes the frame: the
+              department is organizing a day people want to attend. Sponsors get a visible place on
+              the course and the event page. Guests leave with a story they can retell.
             </p>
-            {hasFilters && (
-              <Link
-                href="/golf-outings"
-                className="mt-6 inline-block rounded-full bg-[#1C315F] px-6 py-3 font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
-              >
-                View all outings
-              </Link>
-            )}
+            <p className="mt-4 text-lg text-[#1C315F]/75">
+              That is why we do not list every outing in a public directory. Each event has a private
+              link from the slug the athletic department creates. They share it with golfers,
+              sponsors, and bidders — not with the open web.
+            </p>
           </div>
-        ) : (
-          <>
-            <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-2xl font-bold text-[#1c315f]" role="heading" aria-level={2}>
-                {outings.length} published outing{outings.length === 1 ? "" : "s"}
-              </h2>
-            </div>
-            <div className="grid gap-8 md:grid-cols-2">
-              {outings.map((outing) => (
-                <Link
-                  key={outing.event_id}
-                  href={`/golf-outing/${outing.public_url_slug}`}
-                  className="group overflow-hidden rounded-2xl bg-white shadow-md transition duration-200 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="relative h-44 bg-gradient-to-br from-[#1C315F] to-[#ED3237]">
-                    {outing.hero_image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={outing.hero_image_url}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full items-end p-6">
-                        <p className="text-sm font-semibold uppercase tracking-widest text-white/80">
-                          {outing.university_name}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6 text-[#1c315f]">
-                    <div className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-[#1C315F]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
-                        {outing.university_name}
-                      </span>
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          outing.event_status === "PUBLISHED"
-                            ? "bg-emerald-50 text-emerald-800"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {outingStatusLabel(outing.event_status)}
-                      </span>
-                    </div>
-                    <h3 className="mb-2 text-2xl font-bold group-hover:text-[#ED3237]">
-                      {outing.event_name}
-                    </h3>
-                    <p className="text-[#1c315f]/80">
-                      {formatOutingDate(outing.event_date, outing.tz)}
-                    </p>
-                    <p className="mt-1 text-sm text-[#1c315f]/70">{venueLine(outing)}</p>
-                    <div className="mt-5 flex items-center justify-between">
-                      {outing.remaining_spots != null ? (
-                        <p className="text-sm font-medium">
-                          {outing.remaining_spots} spots remaining
-                        </p>
-                      ) : (
-                        <span />
-                      )}
-                      <span className="text-sm font-semibold text-[#ED3237]">
-                        View outing →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
+          <div className="rounded-2xl bg-[#0B1B3A] p-8 text-white shadow-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#E8D48B]">What we host</p>
+            <ul className="mt-5 space-y-4 text-white/85">
+              <li>
+                <span className="font-semibold text-white">Registration and sponsorships</span>
+                <p className="mt-1 text-sm">Tickets, packages, foursomes, and hole signage in one checkout.</p>
+              </li>
+              <li>
+                <span className="font-semibold text-white">Silent auction on the event page</span>
+                <p className="mt-1 text-sm">Bids stay on the public outing page. No detour to another site.</p>
+              </li>
+              <li>
+                <span className="font-semibold text-white">Receipts and sponsor recognition</span>
+                <p className="mt-1 text-sm">Payment confirmation by email and logos on the outing page.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <GolfBudgetWorkbook />
+
+      <section className="bg-[#1C315F] py-16 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold md:text-4xl">Plan the day like it will be remembered</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+            Start with the budget model, then talk with us about a private outing page your
+            department can send to golfers and sponsors.
+          </p>
+          <Link
+            href="/contact-us"
+            className="mt-8 inline-block rounded-full bg-white px-8 py-3 text-lg font-semibold text-[#1C315F] transition hover:bg-[#ED3237] hover:text-white"
+          >
+            Request a conversation
+          </Link>
+        </div>
       </section>
     </div>
   );

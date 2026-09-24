@@ -1,8 +1,9 @@
-import type { GolfAuctionPublic } from "@/services/getGolfOutingPublic";
-import { auctionPhotoUrls, formatCents } from "./golfOutingDisplay";
+"use client";
 
-const MEMBERS_AUCTION = (slug: string) =>
-  `https://members.collegeathletenetwork.org/golf/${slug}/auction`;
+import { useEffect, useState } from "react";
+import type { GolfAuctionPublic } from "@/services/getGolfOutingPublic";
+import GolfAuctionItemModal from "./GolfAuctionItemModal";
+import { auctionPhotoUrls, formatCents, obfuscateBidderName } from "./golfOutingDisplay";
 
 function auctionTypeOf(item: GolfAuctionPublic): "silent" | "live" {
   return item.auction_type === "live" ? "live" : "silent";
@@ -10,34 +11,75 @@ function auctionTypeOf(item: GolfAuctionPublic): "silent" | "live" {
 
 export default function GolfAuctionPreview({
   items,
-  slug,
+  eventId,
+  eventName,
+  timezone,
 }: {
   items: GolfAuctionPublic[];
-  slug: string;
+  eventId: string;
+  eventName?: string;
+  timezone?: string | null;
 }) {
-  if (items.length === 0) {
+  const [local, setLocal] = useState(items);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  useEffect(() => {
+    setLocal(items);
+  }, [items]);
+
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/golf/auction?event_id=${encodeURIComponent(eventId)}`, {
+          cache: "no-store",
+        });
+        const data = await response.json();
+        if (response.ok && Array.isArray(data.items)) setLocal(data.items);
+      } catch {
+        // keep last snapshot
+      }
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [eventId]);
+
+  if (local.length === 0) {
     return <p className="text-[#1c315f]/70">Auction items will appear here when they are published.</p>;
   }
 
-  const silent = items.filter((item) => auctionTypeOf(item) === "silent");
-  const live = items.filter((item) => auctionTypeOf(item) === "live");
+  const silent = local.filter((item) => auctionTypeOf(item) === "silent");
+  const live = local.filter((item) => auctionTypeOf(item) === "live");
+  const selected = local.find((item) => item.auction_item_id === selectedId) || null;
 
   return (
     <div className="space-y-12">
       <AuctionGroup
         title="Silent auction"
-        description="Bid online before the outing. High bids update on the members site."
+        description="Bid here on the public outing page. The current high bid updates as new bids come in."
         empty="No silent auction items have been published yet."
         items={silent}
-        slug={slug}
+        onOpen={setSelectedId}
       />
       <AuctionGroup
         title="Live auction"
         description="Items called from the floor on event day."
         empty="No live auction items have been published yet."
         items={live}
-        slug={slug}
+        onOpen={setSelectedId}
       />
+      {selected ? (
+        <GolfAuctionItemModal
+          item={selected}
+          eventId={eventId}
+          eventName={eventName}
+          timezone={timezone}
+          onClose={() => setSelectedId(null)}
+          onItemUpdate={(updated) =>
+            setLocal((current) =>
+              current.map((item) => (item.auction_item_id === updated.auction_item_id ? updated : item))
+            )
+          }
+        />
+      ) : null}
     </div>
   );
 }
@@ -47,13 +89,13 @@ function AuctionGroup({
   description,
   empty,
   items,
-  slug,
+  onOpen,
 }: {
   title: string;
   description: string;
   empty: string;
   items: GolfAuctionPublic[];
-  slug: string;
+  onOpen: (id: number) => void;
 }) {
   return (
     <section>
@@ -64,7 +106,7 @@ function AuctionGroup({
       ) : (
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           {items.map((item) => (
-            <AuctionItemCard key={item.auction_item_id} item={item} slug={slug} />
+            <AuctionItemCard key={item.auction_item_id} item={item} onOpen={() => onOpen(item.auction_item_id)} />
           ))}
         </div>
       )}
@@ -72,14 +114,16 @@ function AuctionGroup({
   );
 }
 
-function AuctionItemCard({ item, slug }: { item: GolfAuctionPublic; slug: string }) {
+function AuctionItemCard({ item, onOpen }: { item: GolfAuctionPublic; onOpen: () => void }) {
   const photos = auctionPhotoUrls(item.photo_urls);
   const currentBid = item.high_bid_cents || item.starting_bid_cents;
+  const silent = auctionTypeOf(item) === "silent";
+  const canBid = silent && item.item_status === "LIVE";
 
   return (
     <article className="overflow-hidden rounded-2xl bg-white shadow-md">
       {photos[0] ? (
-        <div className="grid grid-cols-3 gap-1 bg-gray-100">
+        <button type="button" onClick={onOpen} className="grid w-full grid-cols-3 gap-1 bg-gray-100">
           {photos.slice(0, 3).map((url) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -89,11 +133,11 @@ function AuctionItemCard({ item, slug }: { item: GolfAuctionPublic; slug: string
               className={`h-40 w-full object-cover ${photos.length === 1 ? "col-span-3" : photos.length === 2 ? "col-span-1 first:col-span-2" : ""}`}
             />
           ))}
-        </div>
+        </button>
       ) : null}
       <div className="p-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-[#1c315f]/60">
-          {item.item_status === "ENDED" ? "Auction ended" : auctionTypeOf(item) === "live" ? "Live auction" : "Silent auction"}
+          {item.item_status === "ENDED" ? "Auction ended" : silent ? "Silent auction" : "Live auction"}
         </p>
         <h3 className="mt-1 text-xl font-bold text-[#1c315f]">{item.title}</h3>
         <p className="mt-1 text-sm text-[#1c315f]/70">
@@ -105,7 +149,7 @@ function AuctionItemCard({ item, slug }: { item: GolfAuctionPublic; slug: string
         </p>
         {item.description_html ? (
           <div
-            className="prose mt-4 max-w-none text-sm text-[#1c315f]/80"
+            className="prose mt-4 line-clamp-3 max-w-none text-sm text-[#1c315f]/80"
             dangerouslySetInnerHTML={{ __html: item.description_html }}
           />
         ) : null}
@@ -114,19 +158,17 @@ function AuctionItemCard({ item, slug }: { item: GolfAuctionPublic; slug: string
             <p className="text-3xl font-bold text-[#ED3237]">{formatCents(currentBid)}</p>
             <p className="text-sm text-[#1c315f]/60">
               {item.high_bid_cents ? "Current high bid" : "Starting bid"}
-              {item.min_increment_cents
-                ? ` · ${formatCents(item.min_increment_cents)} increments`
-                : ""}
+              {item.high_bidder_name ? ` · ${obfuscateBidderName(item.high_bidder_name)}` : ""}
+              {item.min_increment_cents ? ` · ${formatCents(item.min_increment_cents)} increments` : ""}
             </p>
           </div>
-          {item.item_status !== "ENDED" && (
-            <a
-              href={MEMBERS_AUCTION(slug)}
-              className="rounded-full bg-[#1C315F] px-5 py-2 font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
-            >
-              Bid on the members site
-            </a>
-          )}
+          <button
+            type="button"
+            onClick={onOpen}
+            className="rounded-full bg-[#1C315F] px-5 py-2 font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
+          >
+            {canBid ? "Bid Now" : "View item"}
+          </button>
         </div>
       </div>
     </article>
