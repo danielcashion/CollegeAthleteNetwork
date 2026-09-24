@@ -38,7 +38,12 @@ export async function getAccessToken() {
 }
 
 export async function assertPublishedOuting(event_id: string) {
-  const PUBLIC_API = `${process.env.NEXT_PUBLIC_API_URL}/publicprod`;
+  const PUBLIC_API = `${(
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.PUBLIC_API ||
+    "https://api.tourneymaster.org"
+  ).replace(/\/$/, "")}/publicprod`;
   const res = await fetch(`${PUBLIC_API}/v_golf_outings_public?event_id=${encodeURIComponent(event_id)}`, {
     cache: "no-store",
   });

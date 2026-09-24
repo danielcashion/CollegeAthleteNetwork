@@ -22,7 +22,7 @@ export default async function GolfOutingsDirectory({
     q: params.q,
     date_from: params.from,
     date_to: params.to,
-  });
+  }).catch(() => []);
   const hasFilters = Boolean(params.university || params.q || params.from || params.to);
 
   return (

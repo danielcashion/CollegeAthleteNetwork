@@ -1,13 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import PublicCheckout from "@/components/checkout/PublicCheckout";
+import type { GolfOutingPublic, GolfPackagePublic } from "@/services/getGolfOutingPublic";
 import {
+  defaultFoursomeTeamName,
   formatCents,
   isValidEmail,
-  membersGolfCheckoutUrl,
   packageAccent,
+  sortSponsorshipPackages,
 } from "./golfOutingDisplay";
-import type { GolfOutingPublic, GolfPackagePublic } from "@/services/getGolfOutingPublic";
 
 type Player = { first_name: string; last_name: string; email: string };
 
@@ -27,42 +30,80 @@ export default function GolfSponsorForm({
   packages: GolfPackagePublic[];
   initialPackageId?: number;
 }) {
-  const sorted = useMemo(
-    () => [...packages].sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100)),
+  const available = useMemo(
+    () =>
+      sortSponsorshipPackages(
+        packages.filter((pkg) => (pkg.remaining_qty != null ? Number(pkg.remaining_qty) : Number(pkg.inventory ?? 0)) > 0)
+      ),
     [packages]
   );
   const [packageId, setPackageId] = useState(
-    initialPackageId && sorted.some((pkg) => pkg.sponsorship_type_id === initialPackageId)
+    initialPackageId && available.some((pkg) => pkg.sponsorship_type_id === initialPackageId)
       ? initialPackageId
-      : sorted[0]?.sponsorship_type_id || 0
+      : available[0]?.sponsorship_type_id || 0
   );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [logo, setLogo] = useState("");
   const [players, setPlayers] = useState<Player[]>(emptyPlayers);
-  const selected = sorted.find((pkg) => pkg.sponsorship_type_id === Number(packageId));
+  const [teamName, setTeamName] = useState("");
+  const [teamTouched, setTeamTouched] = useState(false);
+  const [holding, setHolding] = useState(false);
+  const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
+  const selected = available.find((pkg) => pkg.sponsorship_type_id === Number(packageId));
   const contactEmailValid = isValidEmail(email);
   const foursomeValid =
     !selected?.includes_foursome ||
     players.every((player) => player.first_name.trim() && player.last_name.trim() && isValidEmail(player.email));
   const canContinue = Boolean(name.trim() && contactEmailValid && foursomeValid);
+  const resolvedTeamName =
+    teamTouched && teamName.trim()
+      ? teamName.trim()
+      : defaultFoursomeTeamName(players[0]?.first_name, players[0]?.last_name);
 
-  function continueCheckout() {
-    if (!canContinue) return;
-    window.location.href = membersGolfCheckoutUrl(event.public_url_slug, "sponsor", {
-      package: packageId,
-      name: name.trim(),
-      email: email.trim(),
-      logo: logo.trim() || undefined,
-    });
+  async function continueCheckout() {
+    if (!canContinue || holding) return;
+    setHolding(true);
+    try {
+      const response = await fetch("/api/golf/sponsor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_id: event.event_id,
+          package_id: Number(packageId),
+          sponsor_name: name.trim(),
+          contact_email: email.trim(),
+          logo_url: logo.trim() || undefined,
+          public_display_YN: 1,
+          team_name: selected?.includes_foursome ? resolvedTeamName : undefined,
+          players: selected?.includes_foursome ? players : [],
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Could not reserve sponsorship");
+      }
+      setPending({
+        order_id: Number(data.order_id),
+        total_cents: Number(data.total_cents || selected?.unit_price_cents || 0),
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not reserve sponsorship");
+    } finally {
+      setHolding(false);
+    }
   }
 
-  if (sorted.length === 0) {
+  if (available.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-[#1C315F]/20 bg-[#f9faf8] p-8 text-center">
-        <h2 className="text-2xl font-bold text-[#1C315F]">Packages coming soon</h2>
+        <h2 className="text-2xl font-bold text-[#1C315F]">
+          {packages.length === 0 ? "Packages coming soon" : "Packages sold out"}
+        </h2>
         <p className="mt-2 text-[#1C315F]/70">
-          Sponsorship packages for this outing have not been published yet.
+          {packages.length === 0
+            ? "Sponsorship packages for this outing have not been published yet."
+            : "Every published sponsorship package is currently sold out."}
           {event.contact_email ? ` Contact ${event.contact_email} for details.` : ""}
         </p>
       </div>
@@ -78,14 +119,17 @@ export default function GolfSponsorForm({
             Support {event.university_name} and appear on the public outing page.
           </p>
         </div>
-        {sorted.map((pkg) => {
+        {available.map((pkg) => {
           const selectedPkg = Number(packageId) === pkg.sponsorship_type_id;
           const accent = packageAccent(pkg.sponsorship_name);
           return (
             <button
               key={pkg.sponsorship_type_id}
               type="button"
-              onClick={() => setPackageId(pkg.sponsorship_type_id)}
+              onClick={() => {
+                setPackageId(pkg.sponsorship_type_id);
+                setPending(null);
+              }}
               className={`w-full rounded-2xl border bg-white p-6 text-left shadow-md transition duration-200 ${
                 selectedPkg ? "ring-2 ring-offset-2" : "hover:-translate-y-0.5 hover:shadow-lg"
               }`}
@@ -110,8 +154,12 @@ export default function GolfSponsorForm({
               <ul className="mt-4 space-y-1.5 text-sm text-[#1C315F]/80">
                 {pkg.includes_foursome ? <li>Includes a foursome</li> : null}
                 {pkg.includes_teebox_signage ? <li>Tee-box signage</li> : null}
+                {pkg.includes_longest_drive ? <li>Longest drive contest</li> : null}
+                {pkg.includes_closest_to_pin ? <li>Closest to the pin contest</li> : null}
                 {pkg.includes_public_logo ? <li>Logo on the public outing page</li> : null}
-                {pkg.inventory != null ? <li>{pkg.inventory} available</li> : null}
+                {pkg.remaining_qty != null || pkg.inventory != null ? (
+                  <li>{pkg.remaining_qty ?? pkg.inventory} available</li>
+                ) : null}
               </ul>
               {pkg.description_html && (
                 <div
@@ -127,7 +175,7 @@ export default function GolfSponsorForm({
       <div className="h-fit rounded-2xl bg-white p-6 shadow-xl md:p-8">
         <h2 className="text-2xl font-bold text-[#1C315F]">Sponsor details</h2>
         <p className="mt-1 text-sm text-[#1C315F]/70">
-          Checkout is completed on the members site so your payment is tied to your account.
+          Checkout as a guest with PayPal, a debit or credit card, or Venmo.
         </p>
         <div className="mt-6 space-y-4">
           <label className="block text-sm font-semibold text-[#1C315F]">
@@ -135,7 +183,10 @@ export default function GolfSponsorForm({
             <input
               className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setPending(null);
+              }}
             />
           </label>
           <label className="block text-sm font-semibold text-[#1C315F]">
@@ -147,7 +198,10 @@ export default function GolfSponsorForm({
                 email.trim() && !contactEmailValid ? "border-[#ED3237]" : "border-[#1C315F]/20"
               }`}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setPending(null);
+              }}
             />
             {email.trim() && !contactEmailValid && (
               <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
@@ -167,6 +221,19 @@ export default function GolfSponsorForm({
           {!!selected?.includes_foursome && (
             <div className="space-y-3 rounded-xl border border-[#1C315F]/15 p-4">
               <p className="font-semibold text-[#1C315F]">Included foursome</p>
+              <label className="block text-sm font-semibold text-[#1C315F]">
+                Team name
+                <input
+                  className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-2.5 font-normal outline-none focus:border-[#1C315F]"
+                  value={resolvedTeamName}
+                  maxLength={120}
+                  onChange={(e) => {
+                    setTeamName(e.target.value.slice(0, 120));
+                    setTeamTouched(true);
+                    setPending(null);
+                  }}
+                />
+              </label>
               {players.map((player, index) => (
                 <div key={index} className="grid gap-2 sm:grid-cols-3">
                   <input
@@ -219,17 +286,39 @@ export default function GolfSponsorForm({
             <p className="mt-1 text-lg font-bold">{selected?.sponsorship_name}</p>
             <p className="text-2xl font-bold text-[#ED3237]">{formatCents(selected?.unit_price_cents)}</p>
           </div>
-          <button
-            type="button"
-            disabled={!canContinue}
-            onClick={continueCheckout}
-            className="w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Continue to checkout
-          </button>
-          <p className="text-center text-xs text-[#1C315F]/60">
-            You will sign in on members.collegeathletenetwork.org to complete payment.
-          </p>
+          {!pending ? (
+            <button
+              type="button"
+              disabled={!canContinue || holding}
+              onClick={continueCheckout}
+              className="w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {holding ? "Reserving..." : "Continue to checkout"}
+            </button>
+          ) : (
+            <PublicCheckout
+              amount={pending.total_cents}
+              purchaserEmail={email.trim()}
+              purchaserName={name.trim()}
+              successTitle="Sponsorship paid"
+              successNote={
+                selected?.includes_teebox_signage
+                  ? "Your hole will be assigned by the outing committee."
+                  : undefined
+              }
+              golfData={{
+                order_id: pending.order_id,
+                event_id: event.event_id,
+                event_name: event.event_name,
+                university_name: event.university_name,
+                category: "SPONSORSHIP",
+                amount: pending.total_cents,
+              }}
+              onSuccess={async () => {
+                toast.success("Sponsorship paid");
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
