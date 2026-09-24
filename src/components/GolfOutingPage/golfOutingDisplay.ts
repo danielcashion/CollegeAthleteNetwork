@@ -93,6 +93,49 @@ export function isValidEmail(email?: string | null): boolean {
   return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test((email || "").trim());
 }
 
+export function nextAuctionBidCents(item: {
+  high_bid_cents?: number | null;
+  starting_bid_cents?: number | null;
+  min_increment_cents?: number | null;
+}) {
+  const high = Number(item.high_bid_cents || 0);
+  const start = Number(item.starting_bid_cents || 0);
+  const increment = Number(item.min_increment_cents || 2500);
+  return high > 0 ? high + increment : start;
+}
+
+export function obfuscateBidderName(name?: string | null) {
+  const trimmed = String(name || "").trim();
+  if (!trimmed) return "";
+  if (trimmed.includes("*") || /^[^\s]+\s[A-Za-z]\.$/.test(trimmed)) return trimmed;
+  const parts = trimmed.split(/\s+/);
+  if (parts.length === 1) {
+    return `${parts[0].slice(0, 1)}${"*".repeat(Math.max(parts[0].length - 1, 1))}`;
+  }
+  return `${parts[0]} ${String(parts[parts.length - 1]).slice(0, 1).toUpperCase()}.`;
+}
+
+export function digitsOnly(value?: string | null) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+export function normalizeUsPhone(value?: string | null) {
+  const digits = digitsOnly(value);
+  if (digits.length === 11 && digits.startsWith("1")) return digits.slice(1);
+  return digits.slice(0, 10);
+}
+
+export function isValidUsPhone(value?: string | null) {
+  return normalizeUsPhone(value).length === 10;
+}
+
+export function formatUsPhone(value?: string | null) {
+  const digits = normalizeUsPhone(value);
+  if (digits.length < 4) return digits;
+  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 export function auctionPhotoUrls(raw?: string[] | string | null): string[] {
   if (!raw) return [];
   if (Array.isArray(raw)) return raw.filter(Boolean);

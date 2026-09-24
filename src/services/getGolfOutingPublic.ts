@@ -1,4 +1,4 @@
-import { sortSponsorshipPackages } from "@/components/GolfOutingPage/golfOutingDisplay";
+import { obfuscateBidderName, sortSponsorshipPackages } from "@/components/GolfOutingPage/golfOutingDisplay";
 
 function publicApiBase() {
   const raw =
@@ -106,6 +106,7 @@ export type GolfAuctionPublic = {
   item_status: string;
   is_active_YN?: number;
   high_bid_cents?: number | null;
+  high_bidder_name?: string | null;
 };
 
 function unwrap<T>(data: unknown): T[] {
@@ -117,12 +118,19 @@ function unwrap<T>(data: unknown): T[] {
   return [];
 }
 
-async function publicGet<T>(path: string, params?: Record<string, string | number | undefined>): Promise<T[]> {
+async function publicGet<T>(
+  path: string,
+  params?: Record<string, string | number | undefined>,
+  options?: { fresh?: boolean }
+): Promise<T[]> {
   const url = new URL(`${publicApiBase()}/${path}`);
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
   });
-  const res = await fetch(url.toString(), { next: { revalidate: 60 } });
+  const res = await fetch(url.toString(), {
+    cache: options?.fresh ? "no-store" : undefined,
+    next: options?.fresh ? undefined : { revalidate: 60 },
+  });
   if (!res.ok) return [];
   return unwrap<T>(await res.json());
 }
@@ -198,15 +206,19 @@ function publicAuctionDonorName(item: GolfAuctionPublic) {
   return item.donor_name || null;
 }
 
-export async function listPublicAuctionItems(event_id: string): Promise<GolfAuctionPublic[]> {
-  const fromView = await publicGet<GolfAuctionPublic>("v_golf_auction_public", { event_id });
+export async function listPublicAuctionItems(event_id: string, options?: { fresh?: boolean }): Promise<GolfAuctionPublic[]> {
+  const fromView = await publicGet<GolfAuctionPublic>("v_golf_auction_public", { event_id }, options);
   const rows =
     fromView.length > 0
       ? fromView.filter((row) => row.event_id === event_id)
-      : (await publicGet<GolfAuctionPublic>("golf_auction_items", { event_id })).filter(
+      : (await publicGet<GolfAuctionPublic>("golf_auction_items", { event_id }, options)).filter(
           (row) => row.event_id === event_id && ["LIVE", "ENDED"].includes(row.item_status)
         );
-  return rows.map((row) => ({ ...row, donor_name: publicAuctionDonorName(row) }));
+  return rows.map((row) => ({
+    ...row,
+    donor_name: publicAuctionDonorName(row),
+    high_bidder_name: obfuscateBidderName(row.high_bidder_name),
+  }));
 }
 
 function unwrapProcResult<T>(data: unknown): T {
@@ -262,6 +274,22 @@ export async function getPublicGolfOrder(order_id: number) {
     paypal_order_id?: string | null;
   }>("golf_orders", { order_id });
   return rows.find((row) => Number(row.order_id) === Number(order_id)) ?? null;
+}
+
+export async function getPublicGolfOrderItems(order_id: number) {
+  const url = new URL(`${publicApiBase()}/golf_order_items`);
+  url.searchParams.set("order_id", String(order_id));
+  const res = await fetch(url.toString(), { cache: "no-store" });
+  if (!res.ok) return [];
+  return unwrap<{
+    order_item_id: number;
+    order_id: number;
+    item_type: string;
+    description?: string | null;
+    quantity?: number | null;
+    unit_price_cents?: number | null;
+    line_total_cents?: number | null;
+  }>(await res.json()).filter((row) => Number(row.order_id) === Number(order_id));
 }
 
 export async function setPublicGolfPaypalOrderId(order_id: number, paypal_order_id: string) {

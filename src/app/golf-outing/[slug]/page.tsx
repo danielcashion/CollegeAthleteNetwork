@@ -72,88 +72,82 @@ export default async function GolfOutingPublicPage({
             href="/golf-outings"
             className="mb-6 inline-block text-sm font-semibold uppercase tracking-wide text-white/80 hover:text-white"
           >
-            ← All Golf Outings
+            ← Golf Outings
           </Link>
-          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-            <div>
-              <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-                {event.university_name}
+          <div className="max-w-3xl">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
+              {event.university_name}
+            </p>
+            <h1 className="mb-4 text-4xl font-bold md:text-5xl">{event.event_name}</h1>
+            <p className="text-lg md:text-xl">
+              {formatOutingDate(event.event_date, event.tz)}
+              {event.play_format ? ` · ${event.play_format}` : ""}
+              {event.event_format ? ` · ${event.event_format.toLowerCase()}` : ""}
+            </p>
+            <p className="mt-2 text-white/90">{venueLine(event)}</p>
+            {event.venue_address && (
+              <p className="text-sm text-white/70">
+                {event.venue_address}
+                {event.venue_city ? `, ${event.venue_city}` : ""}
+                {event.venue_state ? ` ${event.venue_state}` : ""}
               </p>
-              <h1 className="mb-4 text-4xl font-bold md:text-5xl">{event.event_name}</h1>
-              <p className="text-lg md:text-xl">
-                {formatOutingDate(event.event_date, event.tz)}
-                {event.play_format ? ` · ${event.play_format}` : ""}
-                {event.event_format ? ` · ${event.event_format.toLowerCase()}` : ""}
-              </p>
-              <p className="mt-2 text-white/90">{venueLine(event)}</p>
-              {event.venue_address && (
-                <p className="text-sm text-white/70">
-                  {event.venue_address}
-                  {event.venue_city ? `, ${event.venue_city}` : ""}
-                  {event.venue_state ? ` ${event.venue_state}` : ""}
-                </p>
-              )}
-              <div className="mt-8 flex flex-wrap gap-3">
-                {registrationOpen ? (
-                  <Link
-                    href={`/golf-outing/${slug}?tab=registration`}
-                    className="rounded-full bg-white px-6 py-3 text-lg font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
-                  >
-                    Register For The Event
-                  </Link>
-                ) : (
-                  <span className="rounded-full bg-white/20 px-6 py-3 font-semibold">
-                    {outingStatusLabel(event.event_status)}
-                  </span>
-                )}
-                {event.sponsorships_enabled !== 0 && (
-                  <Link
-                    href={`/golf-outing/${slug}/sponsor`}
-                    className="rounded-full border border-white px-6 py-3 text-lg font-semibold transition duration-200 hover:bg-white hover:text-[#ED3237]"
-                  >
-                    Become a sponsor
-                  </Link>
-                )}
-              </div>
-            </div>
-            {sponsors.length > 0 && (
-              <div className="rounded-2xl border border-white/25 bg-white/95 p-4 text-[#1C315F] shadow-lg">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#1C315F]/60">
-                  Current sponsors
-                </p>
-                <GolfSponsorCarousel sponsors={sponsors} />
-              </div>
             )}
+            <div className="mt-8 flex flex-wrap gap-3">
+              {registrationOpen ? (
+                <Link
+                  href={`/golf-outing/${slug}?tab=registration`}
+                  className="rounded-full bg-white px-6 py-3 text-lg font-semibold text-[#1C315F] transition duration-200 hover:bg-[#1C315F] hover:text-white"
+                >
+                  Register For The Event
+                </Link>
+              ) : (
+                <span className="rounded-full bg-white/20 px-6 py-3 font-semibold">
+                  {outingStatusLabel(event.event_status)}
+                </span>
+              )}
+              {event.sponsorships_enabled !== 0 && (
+                <Link
+                  href={`/golf-outing/${slug}/sponsor`}
+                  className="rounded-full border border-white px-6 py-3 text-lg font-semibold transition duration-200 hover:bg-white hover:text-[#ED3237]"
+                >
+                  Become a Sponsor
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto space-y-4 px-4">
+        {sponsors.length > 0 ? (
+          <div className="relative z-10 -mt-8">
+            <GolfSponsorCarousel sponsors={sponsors} />
+          </div>
+        ) : null}
         <nav
-          className="relative z-10 -mt-7 flex flex-wrap items-center gap-2 rounded-2xl bg-white p-2 shadow-md"
+          className={`relative z-10 flex flex-wrap items-center gap-1 rounded-2xl bg-white p-2 shadow-md ${
+            sponsors.length > 0 ? "" : "-mt-7"
+          }`}
           aria-label="Outing sections"
         >
-          <div className="flex shrink-0 flex-wrap gap-1">
-            {tabs.map((item) => {
-              const href = item.id === "overview" ? `/golf-outing/${slug}` : `/golf-outing/${slug}?tab=${item.id}`;
-              const active = tab === item.id;
-              return (
-                <Link
-                  key={item.id}
-                  href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${
-                    active
-                      ? "bg-[#1C315F] text-white shadow-sm"
-                      : "text-[#1c315f]/70 hover:bg-[#f3f4f2] hover:text-[#1C315F]"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-          {sponsors.length > 0 && <GolfSponsorCarousel sponsors={sponsors} />}
+          {tabs.map((item) => {
+            const href = item.id === "overview" ? `/golf-outing/${slug}` : `/golf-outing/${slug}?tab=${item.id}`;
+            const active = tab === item.id;
+            return (
+              <Link
+                key={item.id}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${
+                  active
+                    ? "bg-[#1C315F] text-white shadow-sm"
+                    : "text-[#1c315f]/70 hover:bg-[#f3f4f2] hover:text-[#1C315F]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
@@ -230,7 +224,7 @@ export default async function GolfOutingPublicPage({
               <div>
                 <h2 className="mb-2 text-3xl font-bold">Sponsorship</h2>
                 <p className="mb-6 text-[#1c315f]/70">
-                  Support the outing with a package. Current sponsor logos appear next to the event name above.
+                  Support the outing with a package. Current sponsor logos appear in the banner above.
                 </p>
                 {packages.length === 0 ? (
                   <p className="rounded-2xl bg-white p-8 text-[#1c315f]/70 shadow-md">
@@ -283,7 +277,12 @@ export default async function GolfOutingPublicPage({
         )}
 
         {tab === "auction" && (
-          <GolfAuctionPreview items={items} slug={slug} />
+          <GolfAuctionPreview
+            items={items}
+            eventId={event.event_id}
+            eventName={event.event_name}
+            timezone={event.tz}
+          />
         )}
       </section>
     </div>

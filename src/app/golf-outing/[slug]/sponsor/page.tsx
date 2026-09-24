@@ -26,7 +26,7 @@ export default async function PublicGolfSponsorPage({
             ← Back to outing
           </Link>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{event.university_name}</p>
-          <h1 className="mb-2 mt-2 text-4xl font-bold">Become a sponsor</h1>
+          <h1 className="mb-2 mt-2 text-4xl font-bold">Become a Sponsor</h1>
           <p className="text-lg">{event.event_name}</p>
           <p className="mt-1 text-white/80">
             {formatOutingDate(event.event_date, event.tz)} · {venueLine(event)}
