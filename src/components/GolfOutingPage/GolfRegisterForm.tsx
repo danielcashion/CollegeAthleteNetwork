@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { attendeesPerTicket, formatCents, isValidEmail, membersGolfCheckoutUrl } from "./golfOutingDisplay";
+import toast from "react-hot-toast";
+import PublicCheckout from "@/components/checkout/PublicCheckout";
 import type { GolfOutingPublic, GolfTicketPublic } from "@/services/getGolfOutingPublic";
+import {
+  attendeesPerTicket,
+  defaultFoursomeTeamName,
+  formatCents,
+  isValidEmail,
+} from "./golfOutingDisplay";
 
 type Attendee = { first_name: string; last_name: string; email: string; phone: string };
 
@@ -34,6 +41,10 @@ export default function GolfRegisterForm({
   );
   const [quantity, setQuantity] = useState(1);
   const [attendees, setAttendees] = useState<Attendee[]>([emptyAttendee()]);
+  const [teamNames, setTeamNames] = useState<string[]>([]);
+  const [teamTouched, setTeamTouched] = useState<boolean[]>([]);
+  const [holding, setHolding] = useState(false);
+  const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
   const ticket = active.find((row) => row.ticket_type_id === Number(ticketId));
   const perTicket = attendeesPerTicket(ticket?.type_name);
   const slots = perTicket * quantity;
@@ -44,18 +55,30 @@ export default function GolfRegisterForm({
     (person) => person.first_name.trim() && person.last_name.trim() && isValidEmail(person.email)
   );
   const primary = roster[0];
+  const foursomeCount = perTicket === 4 ? quantity : 0;
+  const resolvedTeamNames = Array.from({ length: foursomeCount }, (_, index) =>
+    teamTouched[index] && teamNames[index]?.trim()
+      ? teamNames[index].trim()
+      : defaultFoursomeTeamName(primary.first_name, primary.last_name, index, foursomeCount)
+  );
 
   function selectTicket(id: number) {
     setTicketId(id);
     setQuantity(1);
+    setPending(null);
     const nextTicket = active.find((row) => row.ticket_type_id === id);
     setAttendees((prev) => ensureAttendees(prev, attendeesPerTicket(nextTicket?.type_name)));
+    setTeamNames([]);
+    setTeamTouched([]);
   }
 
   function changeQuantity(next: number) {
     const value = Math.min(maxQuantity, Math.max(1, next));
     setQuantity(value);
+    setPending(null);
     setAttendees((prev) => ensureAttendees(prev, attendeesPerTicket(ticket?.type_name) * value));
+    setTeamNames((prev) => prev.slice(0, value));
+    setTeamTouched((prev) => prev.slice(0, value));
   }
 
   function updateAttendee(index: number, key: keyof Attendee, value: string) {
@@ -64,18 +87,40 @@ export default function GolfRegisterForm({
       next[index] = { ...next[index], [key]: value };
       return next;
     });
+    setPending(null);
   }
 
-  function continueCheckout() {
-    if (!allComplete) return;
-    window.location.href = membersGolfCheckoutUrl(event.public_url_slug, "register", {
-      ticket: ticketId,
-      qty: quantity,
-      name: `${primary.first_name.trim()} ${primary.last_name.trim()}`.trim(),
-      email: primary.email.trim(),
-      phone: primary.phone.trim() || undefined,
-      players: JSON.stringify(roster),
-    });
+  async function continueCheckout() {
+    if (!allComplete || holding) return;
+    setHolding(true);
+    try {
+      const response = await fetch("/api/golf/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_id: event.event_id,
+          ticket_type_id: Number(ticketId),
+          purchaser_name: `${primary.first_name.trim()} ${primary.last_name.trim()}`.trim(),
+          purchaser_email: primary.email.trim(),
+          purchaser_phone: primary.phone.trim() || undefined,
+          quantity,
+          team_names: resolvedTeamNames,
+          players: roster,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Could not reserve registration");
+      }
+      setPending({
+        order_id: Number(data.order_id),
+        total_cents: Number(data.total_cents || totalCents),
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not reserve registration");
+    } finally {
+      setHolding(false);
+    }
   }
 
   if (event.event_status !== "PUBLISHED") {
@@ -190,56 +235,139 @@ export default function GolfRegisterForm({
         </div>
 
         <div className="mt-6 space-y-4">
-          {roster.map((person, index) => (
-            <div key={index} className="rounded-xl border border-[#1C315F]/15 p-4">
-              <p className="mb-3 text-sm font-semibold text-[#1C315F]">
-                {index === 0 ? "Person 1 · primary contact" : `Person ${index + 1}`}
-              </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,0.9fr)]">
-                <label className="block text-sm font-semibold text-[#1C315F]">
-                  First name
-                  <input
-                    className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
-                    value={person.first_name}
-                    onChange={(e) => updateAttendee(index, "first_name", e.target.value)}
-                  />
-                </label>
-                <label className="block text-sm font-semibold text-[#1C315F]">
-                  Last name
-                  <input
-                    className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
-                    value={person.last_name}
-                    onChange={(e) => updateAttendee(index, "last_name", e.target.value)}
-                  />
-                </label>
-                <label className="block text-sm font-semibold text-[#1C315F]">
-                  Email
-                  <input
-                    type="email"
-                    autoComplete="email"
-                    className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
-                      person.email.trim() && !isValidEmail(person.email)
-                        ? "border-[#ED3237]"
-                        : "border-[#1C315F]/20"
-                    }`}
-                    value={person.email}
-                    onChange={(e) => updateAttendee(index, "email", e.target.value)}
-                  />
-                  {person.email.trim() && !isValidEmail(person.email) && (
-                    <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
-                  )}
-                </label>
-                <label className="block text-sm font-semibold text-[#1C315F]">
-                  Phone
-                  <input
-                    className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
-                    value={person.phone}
-                    onChange={(e) => updateAttendee(index, "phone", e.target.value)}
-                  />
-                </label>
-              </div>
-            </div>
-          ))}
+          {perTicket === 4
+            ? Array.from({ length: quantity }, (_, groupIndex) => (
+                <div key={groupIndex} className="space-y-3 rounded-xl border border-[#1C315F]/15 p-4">
+                  <p className="text-sm font-semibold text-[#1C315F]">
+                    {quantity > 1 ? `Foursome ${groupIndex + 1}` : "Foursome"}
+                  </p>
+                  <label className="block text-sm font-semibold text-[#1C315F]">
+                    Team name
+                    <input
+                      className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                      value={resolvedTeamNames[groupIndex] || ""}
+                      maxLength={120}
+                      onChange={(e) => {
+                        const value = e.target.value.slice(0, 120);
+                        setTeamNames((prev) => {
+                          const next = [...prev];
+                          next[groupIndex] = value;
+                          return next;
+                        });
+                        setTeamTouched((prev) => {
+                          const next = [...prev];
+                          next[groupIndex] = true;
+                          return next;
+                        });
+                        setPending(null);
+                      }}
+                    />
+                  </label>
+                  {roster.slice(groupIndex * 4, groupIndex * 4 + 4).map((person, offset) => {
+                    const index = groupIndex * 4 + offset;
+                    return (
+                      <div key={index} className="rounded-lg bg-[#f9faf8] p-3">
+                        <p className="mb-3 text-sm font-semibold text-[#1C315F]">
+                          {index === 0 ? "Person 1 · primary contact" : `Person ${index + 1}`}
+                        </p>
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,0.9fr)]">
+                          <label className="block text-sm font-semibold text-[#1C315F]">
+                            First name
+                            <input
+                              className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                              value={person.first_name}
+                              onChange={(e) => updateAttendee(index, "first_name", e.target.value)}
+                            />
+                          </label>
+                          <label className="block text-sm font-semibold text-[#1C315F]">
+                            Last name
+                            <input
+                              className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                              value={person.last_name}
+                              onChange={(e) => updateAttendee(index, "last_name", e.target.value)}
+                            />
+                          </label>
+                          <label className="block text-sm font-semibold text-[#1C315F]">
+                            Email
+                            <input
+                              type="email"
+                              autoComplete="email"
+                              className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
+                                person.email.trim() && !isValidEmail(person.email)
+                                  ? "border-[#ED3237]"
+                                  : "border-[#1C315F]/20"
+                              }`}
+                              value={person.email}
+                              onChange={(e) => updateAttendee(index, "email", e.target.value)}
+                            />
+                            {person.email.trim() && !isValidEmail(person.email) && (
+                              <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
+                            )}
+                          </label>
+                          <label className="block text-sm font-semibold text-[#1C315F]">
+                            Phone
+                            <input
+                              className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                              value={person.phone}
+                              onChange={(e) => updateAttendee(index, "phone", e.target.value)}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))
+            : roster.map((person, index) => (
+                <div key={index} className="rounded-xl border border-[#1C315F]/15 p-4">
+                  <p className="mb-3 text-sm font-semibold text-[#1C315F]">
+                    {index === 0 ? "Person 1 · primary contact" : `Person ${index + 1}`}
+                  </p>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,0.9fr)]">
+                    <label className="block text-sm font-semibold text-[#1C315F]">
+                      First name
+                      <input
+                        className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                        value={person.first_name}
+                        onChange={(e) => updateAttendee(index, "first_name", e.target.value)}
+                      />
+                    </label>
+                    <label className="block text-sm font-semibold text-[#1C315F]">
+                      Last name
+                      <input
+                        className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                        value={person.last_name}
+                        onChange={(e) => updateAttendee(index, "last_name", e.target.value)}
+                      />
+                    </label>
+                    <label className="block text-sm font-semibold text-[#1C315F]">
+                      Email
+                      <input
+                        type="email"
+                        autoComplete="email"
+                        className={`mt-1 w-full rounded-lg border p-3 font-normal outline-none focus:border-[#1C315F] ${
+                          person.email.trim() && !isValidEmail(person.email)
+                            ? "border-[#ED3237]"
+                            : "border-[#1C315F]/20"
+                        }`}
+                        value={person.email}
+                        onChange={(e) => updateAttendee(index, "email", e.target.value)}
+                      />
+                      {person.email.trim() && !isValidEmail(person.email) && (
+                        <p className="mt-1 text-xs font-normal text-[#ED3237]">Enter a valid email address.</p>
+                      )}
+                    </label>
+                    <label className="block text-sm font-semibold text-[#1C315F]">
+                      Phone
+                      <input
+                        className="mt-1 w-full rounded-lg border border-[#1C315F]/20 p-3 font-normal outline-none focus:border-[#1C315F]"
+                        value={person.phone}
+                        onChange={(e) => updateAttendee(index, "phone", e.target.value)}
+                      />
+                    </label>
+                  </div>
+                </div>
+              ))}
         </div>
 
         <div className="mt-6 rounded-xl bg-[#f9faf8] p-4 text-[#1C315F]">
@@ -249,17 +377,36 @@ export default function GolfRegisterForm({
           </p>
           <p className="text-2xl font-bold text-[#ED3237]">{formatCents(totalCents)}</p>
         </div>
-        <button
-          type="button"
-          disabled={!allComplete}
-          onClick={continueCheckout}
-          className="mt-4 w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Continue to checkout
-        </button>
-        <p className="mt-3 text-center text-xs text-[#1C315F]/60">
-          You will sign in on members.collegeathletenetwork.org to complete payment.
-        </p>
+        {!pending ? (
+          <button
+            type="button"
+            disabled={!allComplete || holding}
+            onClick={continueCheckout}
+            className="mt-4 w-full rounded-full bg-[#ED3237] px-4 py-3 font-semibold text-white transition duration-200 hover:bg-[#1C315F] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {holding ? "Reserving..." : "Continue to checkout"}
+          </button>
+        ) : (
+          <div className="mt-4">
+            <PublicCheckout
+              amount={pending.total_cents}
+              purchaserEmail={primary.email.trim()}
+              purchaserName={`${primary.first_name.trim()} ${primary.last_name.trim()}`.trim()}
+              successTitle="Registration paid"
+              golfData={{
+                order_id: pending.order_id,
+                event_id: event.event_id,
+                event_name: event.event_name,
+                university_name: event.university_name,
+                category: "REGISTRATION",
+                amount: pending.total_cents,
+              }}
+              onSuccess={async () => {
+                toast.success("Registration paid");
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -191,7 +191,7 @@ export default async function GolfOutingPublicPage({
             <div>
               <h2 className="mb-2 text-3xl font-bold">Registration</h2>
               <p className="mb-6 text-[#1c315f]/70">
-                Choose a ticket to play in the outing. Checkout continues on the members site.
+                Choose a ticket to play in the outing. Checkout as a guest with PayPal, a debit or credit card, or Venmo.
               </p>
               {tickets.length === 0 ? (
                 <p className="rounded-2xl bg-white p-8 text-[#1c315f]/70 shadow-md">
@@ -217,7 +217,7 @@ export default async function GolfOutingPublicPage({
                           href={`/golf-outing/${slug}/register?ticket=${ticket.ticket_type_id}`}
                           className="mt-5 rounded-full bg-[#1C315F] px-4 py-2 text-center text-sm font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
                         >
-                          Select ticket
+                          Select
                         </Link>
                       )}
                     </div>
@@ -239,30 +239,42 @@ export default async function GolfOutingPublicPage({
                   </p>
                 ) : (
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:max-w-4xl">
-                    {packages.map((pkg) => (
+                    {packages.map((pkg) => {
+                      const remaining = pkg.remaining_qty != null ? Number(pkg.remaining_qty) : Number(pkg.inventory ?? 0);
+                      const soldOut = remaining <= 0;
+                      return (
                       <div
                         key={pkg.sponsorship_type_id}
-                        className="flex flex-col rounded-2xl bg-white p-5 shadow-md"
+                        className={`flex flex-col rounded-2xl bg-white p-5 shadow-md ${soldOut ? "opacity-70" : ""}`}
                         style={{ borderLeftWidth: 4, borderLeftColor: packageAccent(pkg.sponsorship_name) }}
                       >
                         <h3 className="text-lg font-bold">{pkg.sponsorship_name}</h3>
                         <p className="mt-2 text-2xl font-bold text-[#ED3237]">{formatCents(pkg.unit_price_cents)}</p>
-                        <p className="mt-1 text-sm text-[#1c315f]/70">{pkg.inventory} available</p>
+                        <p className="mt-1 text-sm text-[#1c315f]/70">
+                          {soldOut ? "Sold out" : `${remaining} available`}
+                        </p>
                         <ul className="mt-4 flex-1 space-y-1 text-sm">
                           {pkg.includes_foursome ? <li>Includes a foursome</li> : null}
                           {pkg.includes_teebox_signage ? <li>Tee-box signage</li> : null}
+                          {pkg.includes_longest_drive ? <li>Longest drive contest</li> : null}
+                          {pkg.includes_closest_to_pin ? <li>Closest to the pin contest</li> : null}
                           {pkg.includes_public_logo ? <li>Logo on this page</li> : null}
                         </ul>
-                        {event.sponsorships_enabled !== 0 && (
+                        {event.sponsorships_enabled !== 0 && !soldOut ? (
                           <Link
                             href={`/golf-outing/${slug}/sponsor?package=${pkg.sponsorship_type_id}`}
                             className="mt-5 rounded-full bg-[#1C315F] px-4 py-2 text-center text-sm font-semibold text-white transition duration-200 hover:bg-[#ED3237]"
                           >
                             Select package
                           </Link>
-                        )}
+                        ) : soldOut ? (
+                          <p className="mt-5 rounded-full bg-gray-100 px-4 py-2 text-center text-sm font-semibold text-gray-500">
+                            Sold out
+                          </p>
+                        ) : null}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>

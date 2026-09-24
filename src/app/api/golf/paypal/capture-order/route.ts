@@ -38,17 +38,15 @@ export async function POST(request: NextRequest) {
   }
   const capture = captureData.purchase_units?.[0]?.payments?.captures?.[0];
 
-  if (!golfData.member_id) {
-    return NextResponse.json(
-      { error: "Sign in on the members site to complete payment. Golf stored procedures require a logged-in member_id." },
-      { status: 401 }
-    );
-  }
-  const result = await callPublicGolfProc("golf_fulfill_order", String(golfData.member_id), {
+  const memberId = String(pending.member_id || golfData.member_id || "").trim();
+  const paymentMethod = ["venmo", "card", "paypal"].includes(String(golfData.payment_method || ""))
+    ? String(golfData.payment_method)
+    : "paypal";
+  const result = await callPublicGolfProc("golf_fulfill_order", memberId, {
     order_id: Number(golfData.order_id),
     paypal_order_id: orderID,
     gateway_payment_id: capture?.id ?? null,
-    payment_method: golfData.payment_method || "paypal",
+    payment_method: paymentMethod,
     mark_comp: 0,
   });
 
@@ -65,7 +63,7 @@ export async function POST(request: NextRequest) {
         currency: "USD",
         total_amount: pending.total_cents,
         payment_type: "event",
-        payment_method: "paypal",
+        payment_method: paymentMethod,
         payment_status: "complete",
         transaction_id: capture?.id || orderID,
         donor_name: golfData.purchaser_name || pending.purchaser_name,

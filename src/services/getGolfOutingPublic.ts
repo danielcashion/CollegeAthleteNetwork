@@ -1,4 +1,13 @@
-const PUBLIC_API = () => `${process.env.NEXT_PUBLIC_API_URL}/publicprod`;
+import { sortSponsorshipPackages } from "@/components/GolfOutingPage/golfOutingDisplay";
+
+function publicApiBase() {
+  const raw =
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.PUBLIC_API ||
+    "https://api.tourneymaster.org";
+  return `${String(raw).replace(/\/$/, "")}/publicprod`;
+}
 
 export type GolfOutingPublic = {
   event_id: string;
@@ -19,12 +28,17 @@ export type GolfOutingPublic = {
   hero_image_url?: string | null;
   logo_url?: string | null;
   public_url_slug: string;
+  contact_name?: string | null;
   contact_email?: string | null;
   registration_opens_at?: string | null;
   registration_closes_at?: string | null;
   currency?: string;
   is_active_YN?: number;
   remaining_spots?: number | null;
+  hole_count?: number | null;
+  remaining_hole_slots?: number | null;
+  remaining_longest_drive?: number | null;
+  remaining_closest_to_pin?: number | null;
   auction_enabled?: number;
   sponsorships_enabled?: number;
   registration_type?: "INDIVIDUAL" | "TEAM" | "BOTH";
@@ -53,10 +67,17 @@ export type GolfPackagePublic = {
   inventory: number;
   includes_foursome: number;
   includes_teebox_signage: number;
+  includes_longest_drive?: number;
+  includes_closest_to_pin?: number;
   includes_public_logo: number;
   sponsorship_status: string;
   sort_order?: number;
   is_active_YN?: number;
+  remaining_package_qty?: number | null;
+  remaining_hole_slots?: number | null;
+  remaining_longest_drive?: number | null;
+  remaining_closest_to_pin?: number | null;
+  remaining_qty?: number | null;
 };
 
 export type GolfSponsorPublic = {
@@ -77,6 +98,7 @@ export type GolfAuctionPublic = {
   description_html?: string | null;
   photo_urls?: string[] | string | null;
   donor_name?: string | null;
+  is_anonymous_YN?: number;
   fmv_cents?: number;
   starting_bid_cents: number;
   min_increment_cents?: number;
@@ -96,7 +118,7 @@ function unwrap<T>(data: unknown): T[] {
 }
 
 async function publicGet<T>(path: string, params?: Record<string, string | number | undefined>): Promise<T[]> {
-  const url = new URL(`${PUBLIC_API()}/${path}`);
+  const url = new URL(`${publicApiBase()}/${path}`);
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
   });
@@ -146,9 +168,22 @@ export async function listPublicTickets(event_id: string): Promise<GolfTicketPub
 export async function listPublicPackages(event_id: string): Promise<GolfPackagePublic[]> {
   const fromView = await publicGet<GolfPackagePublic>("v_golf_packages_public", { event_id });
   const rows = fromView.length > 0 ? fromView : await publicGet<GolfPackagePublic>("golf_sponsorship_types", { event_id });
-  return rows
-    .filter((row) => row.event_id === event_id && row.sponsorship_status === "ACTIVE")
-    .sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100));
+  return sortSponsorshipPackages(
+    rows
+      .filter((row) => row.event_id === event_id && row.sponsorship_status === "ACTIVE")
+      .map((row) => ({
+        ...row,
+        remaining_qty:
+          row.remaining_qty != null
+            ? Number(row.remaining_qty)
+            : Number(row.remaining_package_qty ?? row.inventory ?? 0),
+      }))
+  );
+}
+
+export function packageIsSoldOut(pkg: Pick<GolfPackagePublic, "remaining_qty" | "inventory">) {
+  const remaining = pkg.remaining_qty != null ? Number(pkg.remaining_qty) : Number(pkg.inventory ?? 0);
+  return remaining <= 0;
 }
 
 export async function listPublicSponsors(event_id: string): Promise<GolfSponsorPublic[]> {
@@ -156,36 +191,63 @@ export async function listPublicSponsors(event_id: string): Promise<GolfSponsorP
   return rows.filter((row) => (row.payment_status === "PAID" || row.payment_status === "COMP") && row.public_display_YN);
 }
 
+function publicAuctionDonorName(item: GolfAuctionPublic) {
+  if (Number(item.is_anonymous_YN) === 1) {
+    return "Anonymous";
+  }
+  return item.donor_name || null;
+}
+
 export async function listPublicAuctionItems(event_id: string): Promise<GolfAuctionPublic[]> {
   const fromView = await publicGet<GolfAuctionPublic>("v_golf_auction_public", { event_id });
-  if (fromView.length > 0) return fromView.filter((row) => row.event_id === event_id);
-  const fallback = await publicGet<GolfAuctionPublic>("golf_auction_items", { event_id });
-  return fallback.filter((row) => row.event_id === event_id && ["LIVE", "ENDED"].includes(row.item_status));
+  const rows =
+    fromView.length > 0
+      ? fromView.filter((row) => row.event_id === event_id)
+      : (await publicGet<GolfAuctionPublic>("golf_auction_items", { event_id })).filter(
+          (row) => row.event_id === event_id && ["LIVE", "ENDED"].includes(row.item_status)
+        );
+  return rows.map((row) => ({ ...row, donor_name: publicAuctionDonorName(row) }));
+}
+
+function unwrapProcResult<T>(data: unknown): T {
+  let current: unknown = data;
+  while (Array.isArray(current)) {
+    if (current.length === 0) return data as T;
+    current = current[0];
+  }
+  return (current ?? data) as T;
 }
 
 export async function callPublicGolfProc<T = Record<string, unknown>>(
   name: string,
-  member_id: string,
+  member_id: string | null | undefined,
   query: Record<string, unknown>
 ): Promise<T> {
+  const url = new URL(`${publicApiBase()}/${name}`);
+  Object.entries(query).forEach(([key, value]) => {
+    if (value === undefined) return;
+    if (value !== null && typeof value === "object") {
+      url.searchParams.set(key, JSON.stringify(value));
+    } else {
+      url.searchParams.set(key, value == null ? "" : String(value));
+    }
+  });
   if (!member_id?.trim()) {
-    throw new Error("member_id is required");
+    url.searchParams.set("guest", "1");
   }
-  const res = await fetch(`${PUBLIC_API()}/${name}`, {
+  const res = await fetch(url.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       method: "POST",
-      member_id,
-      params: JSON.stringify({ query }),
+      member_id: member_id?.trim() || "",
     }),
   });
   const data = await res.json();
-  if (!res.ok) {
+  if (!res.ok || data?.success === false) {
     throw new Error(data?.error || data?.message || "Golf request failed");
   }
-  const rows = unwrap<T>(data);
-  return (rows[0] ?? data) as T;
+  return unwrapProcResult<T>(data);
 }
 
 export async function getPublicGolfOrder(order_id: number) {
@@ -196,7 +258,20 @@ export async function getPublicGolfOrder(order_id: number) {
     order_status: string;
     purchaser_email: string;
     purchaser_name: string;
+    member_id?: string | null;
     paypal_order_id?: string | null;
   }>("golf_orders", { order_id });
   return rows.find((row) => Number(row.order_id) === Number(order_id)) ?? null;
+}
+
+export async function setPublicGolfPaypalOrderId(order_id: number, paypal_order_id: string) {
+  await fetch(`${publicApiBase()}/golf_orders?order_id=${order_id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      paypal_order_id,
+      updated_by: "public-golf",
+      is_active_YN: 1,
+    }),
+  });
 }

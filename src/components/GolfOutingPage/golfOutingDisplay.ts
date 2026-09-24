@@ -57,27 +57,40 @@ export function packageAccent(name?: string | null): string {
   return "#1C315F";
 }
 
-export const MEMBERS_SITE = "https://members.collegeathletenetwork.org";
+export function sortSponsorshipPackages<T extends { sponsorship_name?: string | null; sort_order?: number | null }>(
+  packages: T[]
+): T[] {
+  const rank = (name?: string | null) => {
+    const key = (name || "").trim().toLowerCase();
+    if (key === "gold") return 0;
+    if (key === "silver") return 1;
+    if (key === "bronze") return 2;
+    return 50;
+  };
+  return [...packages].sort((a, b) => {
+    const byTier = rank(a.sponsorship_name) - rank(b.sponsorship_name);
+    if (byTier !== 0) return byTier;
+    return (a.sort_order ?? 100) - (b.sort_order ?? 100);
+  });
+}
 
 export function attendeesPerTicket(typeName?: string | null): number {
   return /four/i.test(typeName || "") ? 4 : 1;
 }
 
-export function isValidEmail(email?: string | null): boolean {
-  return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test((email || "").trim());
+export function defaultFoursomeTeamName(
+  firstName?: string | null,
+  lastName?: string | null,
+  index = 0,
+  total = 1
+) {
+  const person = [firstName, lastName].map((part) => String(part || "").trim()).filter(Boolean).join(" ");
+  const base = person ? `The ${person} Foursome` : "The Foursome";
+  return total > 1 ? `${base} #${index + 1}` : base;
 }
 
-export function membersGolfCheckoutUrl(
-  slug: string,
-  path: "sponsor" | "register",
-  query?: Record<string, string | number | undefined>
-): string {
-  const params = new URLSearchParams();
-  Object.entries(query || {}).forEach(([key, value]) => {
-    if (value !== undefined && value !== "") params.set(key, String(value));
-  });
-  const dest = `/golf/${slug}/${path}${params.toString() ? `?${params}` : ""}`;
-  return `${MEMBERS_SITE}/login?returnUrl=${encodeURIComponent(dest)}`;
+export function isValidEmail(email?: string | null): boolean {
+  return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test((email || "").trim());
 }
 
 export function auctionPhotoUrls(raw?: string[] | string | null): string[] {

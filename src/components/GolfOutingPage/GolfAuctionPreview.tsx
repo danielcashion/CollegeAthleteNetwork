@@ -97,7 +97,11 @@ function AuctionItemCard({ item, slug }: { item: GolfAuctionPublic; slug: string
         </p>
         <h3 className="mt-1 text-xl font-bold text-[#1c315f]">{item.title}</h3>
         <p className="mt-1 text-sm text-[#1c315f]/70">
-          {item.donor_name ? `Donated by ${item.donor_name}` : "Donor to be announced"}
+          {Number(item.is_anonymous_YN) === 1 || item.donor_name?.toLowerCase() === "anonymous"
+            ? "Donated by Anonymous"
+            : item.donor_name
+              ? `Donated by ${item.donor_name}`
+              : "Donor to be announced"}
         </p>
         {item.description_html ? (
           <div
