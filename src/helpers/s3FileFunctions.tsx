@@ -2,16 +2,21 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
+import { processGolfSponsorLogo } from "@/helpers/golfSponsorLogo";
 
 const S3_BUCKET = "collegeathletenetwork";
 
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
-  },
-});
+function getS3Client() {
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID?.trim();
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY?.trim();
+  if (!accessKeyId || !secretAccessKey) {
+    throw new Error("S3 is not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.");
+  }
+  return new S3Client({
+    region: process.env.AWS_REGION?.trim() || "us-east-1",
+    credentials: { accessKeyId, secretAccessKey },
+  });
+}
 
 async function getImageFormat(imageData: Buffer): Promise<string | null> {
   try {
@@ -74,7 +79,7 @@ export async function uploadImageFromUrl(
       ContentType: `image/${format}`,
     });
 
-    await s3Client.send(putObjectCmd);
+    await getS3Client().send(putObjectCmd);
 
     return `https://${S3_BUCKET}.s3.amazonaws.com/${s3Key}`;
   } catch (error) {
@@ -122,7 +127,7 @@ export async function generateUploadUrl(
   });
 
   try {
-    await s3Client.send(command);
+    await getS3Client().send(command);
     const fileUrl = `https://${bucketName}.s3.amazonaws.com/${key}`;
     return { fileUrl };
   } catch (error) {
@@ -155,7 +160,7 @@ export async function generateUploadUrlforAvailabilities(
   });
 
   try {
-    await s3Client.send(command);
+    await getS3Client().send(command);
     const fileUrl = `https://${bucketName}.s3.amazonaws.com/${key}`;
     return { fileUrl };
   } catch (error) {
@@ -188,7 +193,7 @@ export async function uploadDocument(
   });
 
   try {
-    await s3Client.send(command);
+    await getS3Client().send(command);
     const fileUrl = `https://${bucketName}.s3.amazonaws.com/${key}`;
     return { fileUrl };
   } catch (error) {
@@ -216,7 +221,7 @@ export async function uploadHtmlTemplateToS3(
       ContentType: "text/html",
     });
 
-    const result = await s3Client.send(command);
+    const result = await getS3Client().send(command);
     const statusCode = result.$metadata.httpStatusCode || 200;
     const url = `https://${bucket}.s3.amazonaws.com/${fullKey}`;
     return { success: statusCode === 200, statusCode, url };
@@ -224,4 +229,18 @@ export async function uploadHtmlTemplateToS3(
     console.error("Error uploading HTML to S3:", error);
     return { success: false, statusCode: 500, error: (error as Error).message };
   }
+}
+
+export async function uploadGolfSponsorLogo(fileBuffer: Buffer): Promise<string> {
+  const { png } = await processGolfSponsorLogo(fileBuffer);
+  const s3Key = `Golf/sponsors/${uuidv4()}.png`;
+  await getS3Client().send(
+    new PutObjectCommand({
+      Bucket: S3_BUCKET,
+      Key: s3Key,
+      Body: png,
+      ContentType: "image/png",
+    })
+  );
+  return `https://${S3_BUCKET}.s3.amazonaws.com/${s3Key}`;
 }

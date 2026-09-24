@@ -40,6 +40,10 @@ declare namespace NodeJS {
     NEXT_PUBLIC_IPAPI_KEY?: string;
     NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN?: string;
     
+    // Payments
+    NEXT_PUBLIC_PAYPAL_ENV?: "live" | "sandbox";
+    PAYPAL_ENV?: "live" | "sandbox";
+
     // Environment
     NODE_ENV?: "development" | "production" | "test";
   }
