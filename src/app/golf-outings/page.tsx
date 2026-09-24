@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Flag, Handshake, Megaphone, Users } from "lucide-react";
+import { CalendarDays, CreditCard, Flag, Gavel, Handshake, Megaphone, Ticket, Users } from "lucide-react";
+import GolfAdminCreatePreview from "@/components/GolfOutingPage/GolfAdminCreatePreview";
 import GolfBudgetWorkbook from "@/components/GolfOutingPage/GolfBudgetWorkbook";
 
 export const metadata = {
-  title: "Golf Outings for Athletic Departments",
+  title: "Golf Outing Software for Athletic Departments",
   description:
-    "Golf outings raise money, gather alumni and sponsors, and show an athletic department as a convener — not only a fundraiser.",
+    "The College Athlete Network provides the software athletic departments use to create, run, and settle golf outings — registration, sponsorships, auction, and payments in one product.",
 };
 
 const pillars = [
@@ -31,21 +32,54 @@ const pillars = [
   },
 ];
 
+const product = [
+  {
+    icon: CalendarDays,
+    title: "Create the outing in admin",
+    copy: "Athletic department staff name the event, set the date and venue, and get a private slug to share. No public directory.",
+  },
+  {
+    icon: Ticket,
+    title: "Registration and tickets",
+    copy: "Individual and foursome tickets, windows, and golfer details — collected before checkout.",
+  },
+  {
+    icon: Handshake,
+    title: "Sponsorship packages",
+    copy: "Gold, silver, bronze, hole signs, and contests. Inventory and logos stay in one cart.",
+  },
+  {
+    icon: Gavel,
+    title: "Silent auction",
+    copy: "Items, photos, and bids on the same event page. Guests do not leave your outing to bid.",
+  },
+  {
+    icon: CreditCard,
+    title: "Payments and receipts",
+    copy: "PayPal, Venmo, and cards. Confirmation emails go out when the payment clears.",
+  },
+  {
+    icon: Users,
+    title: "Event day",
+    copy: "Foursomes, pairing sheets, and check-in so the staff is not running the day from a spreadsheet.",
+  },
+];
+
 export default function GolfOutingsMarketingPage() {
   return (
     <div className="min-h-screen bg-[#f9faf8]">
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-20 pt-28 text-white">
         <div className="container mx-auto px-4 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-            Athletic department events
+            Software for university athletic departments
           </p>
           <h1 className="mx-auto mb-4 max-w-4xl text-4xl font-bold md:text-5xl">
-            A golf outing is how a department funds the year — and who it gathers
+            We provide the system that runs your golf outing
           </h1>
           <p className="mx-auto max-w-3xl text-lg md:text-xl text-white/90">
-            The money matters. So does the picture: alumni, sponsors, and the local community
-            standing with the program. We help athletic departments host that day with a private
-            event page, registration, sponsorships, and a silent auction.
+            The College Athlete Network is the product athletic department clients use to create the
+            event, take registration and sponsorships, run the silent auction, and collect payment —
+            then send guests a private page instead of a stack of forms.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
@@ -55,22 +89,78 @@ export default function GolfOutingsMarketingPage() {
               Talk to our team
             </Link>
             <a
-              href="#budget-model"
+              href="#product"
               className="rounded-full border border-white px-6 py-3 text-lg font-semibold text-white transition duration-200 hover:bg-white hover:text-[#ED3237]"
             >
-              Open the budget model
+              See the product
             </a>
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-16 md:py-20">
+      <section id="product" className="container mx-auto px-4 py-16 md:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]">
+              Athletic department admin
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-[#1C315F] md:text-4xl">
+              Staff create the outing. We run the rest of the stack.
+            </h2>
+            <p className="mt-4 text-lg text-[#1C315F]/75">
+              This is not a consulting playbook or a page of tips. It is integrated software we
+              provide to university athletic department clients: one admin console to set up the day,
+              and one guest page for golfers, sponsors, and bidders.
+            </p>
+            <ul className="mt-6 space-y-3 text-[#1C315F]/80">
+              <li className="flex gap-3">
+                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
+                Create the event, tickets, packages, and auction items in the members admin.
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
+                Publish a private slug you share — the outing is not listed in a public directory.
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
+                Guests register, sponsor, bid, and pay on your outing page. Receipts go out from us.
+              </li>
+            </ul>
+            <Link
+              href="/contact-us"
+              className="mt-8 inline-block rounded-full bg-[#1C315F] px-6 py-3 font-semibold text-white transition hover:bg-[#ED3237]"
+            >
+              Ask about department access
+            </Link>
+          </div>
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1C315F]/50">
+              Admin creating an outing
+            </p>
+            <GolfAdminCreatePreview />
+          </div>
+        </div>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {product.map((item) => (
+            <article key={item.title} className="rounded-2xl bg-white p-5 shadow-md">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1C315F] text-white">
+                <item.icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-[#1C315F]">{item.title}</h3>
+              <p className="mt-2 text-sm text-[#1C315F]/70">{item.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 pb-16 md:pb-20">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-[#1C315F] md:text-4xl">More than a fundraiser</h2>
+          <h2 className="text-3xl font-bold text-[#1C315F] md:text-4xl">Why departments host the day</h2>
           <p className="mt-4 text-lg text-[#1C315F]/75">
             Athletic departments already know a golf outing can close a budget gap. The departments
-            that get more from the day treat it as a public gathering — proof the program can convene
-            people who care about the athletes.
+            that get more from the day treat it as a public gathering — and they need software that
+            can carry registration, money, and recognition without a patchwork of tools.
           </p>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -99,25 +189,27 @@ export default function GolfOutingsMarketingPage() {
               the course and the event page. Guests leave with a story they can retell.
             </p>
             <p className="mt-4 text-lg text-[#1C315F]/75">
-              That is why we do not list every outing in a public directory. Each event has a private
-              link from the slug the athletic department creates. They share it with golfers,
-              sponsors, and bidders — not with the open web.
+              Our software keeps that story on a page the department controls. Each outing has a
+              private link from the slug staff create in admin. They share it with golfers, sponsors,
+              and bidders — not with the open web.
             </p>
           </div>
           <div className="rounded-2xl bg-[#0B1B3A] p-8 text-white shadow-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#E8D48B]">What we host</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#E8D48B]">
+              What the product covers
+            </p>
             <ul className="mt-5 space-y-4 text-white/85">
               <li>
-                <span className="font-semibold text-white">Registration and sponsorships</span>
-                <p className="mt-1 text-sm">Tickets, packages, foursomes, and hole signage in one checkout.</p>
+                <span className="font-semibold text-white">Admin setup</span>
+                <p className="mt-1 text-sm">Event details, tickets, packages, auction items, and publish.</p>
               </li>
               <li>
-                <span className="font-semibold text-white">Silent auction on the event page</span>
-                <p className="mt-1 text-sm">Bids stay on the public outing page. No detour to another site.</p>
+                <span className="font-semibold text-white">Guest checkout</span>
+                <p className="mt-1 text-sm">Registration, sponsorships, and bids on one outing page.</p>
               </li>
               <li>
-                <span className="font-semibold text-white">Receipts and sponsor recognition</span>
-                <p className="mt-1 text-sm">Payment confirmation by email and logos on the outing page.</p>
+                <span className="font-semibold text-white">Money and follow-through</span>
+                <p className="mt-1 text-sm">PayPal, Venmo, cards, receipts, and sponsor logos after payment.</p>
               </li>
             </ul>
           </div>
@@ -128,10 +220,10 @@ export default function GolfOutingsMarketingPage() {
 
       <section className="bg-[#1C315F] py-16 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">Plan the day like it will be remembered</h2>
+          <h2 className="text-3xl font-bold md:text-4xl">Give the department one system for the day</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-            Start with the budget model, then talk with us about a private outing page your
-            department can send to golfers and sponsors.
+            Start with the budget model, then talk with us about putting golf outing software in
+            your athletic department&apos;s admin.
           </p>
           <Link
             href="/contact-us"
