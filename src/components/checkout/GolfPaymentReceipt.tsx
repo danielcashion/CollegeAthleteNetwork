@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import { formatCents } from "@/components/GolfOutingPage/golfOutingDisplay";
 
 export default function GolfPaymentReceipt({
@@ -64,12 +65,15 @@ export default function GolfPaymentReceipt({
         </p>
         {note ? <p className="mt-2 text-center text-sm text-[#1C315F]/70">{note}</p> : null}
         {outingHref ? (
-          <Link
-            href={outingHref}
+          <button
+            type="button"
+            onClick={() => {
+              window.location.assign(outingHref);
+            }}
             className="mt-6 block w-full rounded-full bg-[#1C315F] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#ED3237]"
           >
             Back to the outing
-          </Link>
+          </button>
         ) : null}
       </div>
     </div>

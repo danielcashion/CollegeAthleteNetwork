@@ -1,15 +1,24 @@
-export function formatOutingDate(utcDateTime?: string | null, timezone?: string | null): string {
-  if (!utcDateTime) return "";
+export function outingCalendarDate(value?: string | Date | null): string | null {
+  if (value == null || value === "") return null;
+  const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return null;
+  return `${match[1]}-${match[2]}-${match[3]}`;
+}
+
+export function formatOutingDate(value?: string | null, _timezone?: string | null): string {
+  const ymd = outingCalendarDate(value);
+  if (!ymd) return value ? String(value).slice(0, 10) : "";
+  const [year, month, day] = ymd.split("-").map(Number);
   try {
     return new Intl.DateTimeFormat("en-US", {
-      timeZone: timezone || "America/New_York",
+      timeZone: "UTC",
       weekday: "short",
       month: "long",
       day: "numeric",
       year: "numeric",
-    }).format(new Date(utcDateTime));
+    }).format(new Date(Date.UTC(year, month - 1, day)));
   } catch {
-    return String(utcDateTime).slice(0, 10);
+    return ymd;
   }
 }
 

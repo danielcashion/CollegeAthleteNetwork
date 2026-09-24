@@ -13,6 +13,7 @@ import {
   packageAccent,
   sortSponsorshipPackages,
 } from "./golfOutingDisplay";
+import GolfSponsorLogoField from "./GolfSponsorLogoField";
 
 type Player = { first_name: string; last_name: string; email: string };
 
@@ -477,18 +478,11 @@ export default function GolfSponsorForm({
               </div>
 
               {!!modalPkg.includes_public_logo && (
-                <label className="block">
-                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#1C315F]/55">
-                    Logo URL
-                  </span>
-                  <input
-                    className={fieldClass}
-                    placeholder="https://"
-                    value={logo}
-                    onChange={(e) => setLogo(e.target.value)}
-                  />
-                  <p className="mt-1 text-xs text-[#1C315F]/50">Used on the public outing page when this package includes a logo.</p>
-                </label>
+                <GolfSponsorLogoField
+                  value={logo}
+                  eventId={event.event_id}
+                  onChange={setLogo}
+                />
               )}
 
               {!!modalPkg.includes_foursome && (

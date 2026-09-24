@@ -3,9 +3,7 @@ const STEPS = [
   { n: 2, label: "Registration", state: "locked" as const },
   { n: 3, label: "Sponsorships", state: "locked" as const },
   { n: 4, label: "Auction", state: "locked" as const },
-  { n: 5, label: "Payments", state: "locked" as const },
-  { n: 6, label: "Event day", state: "locked" as const },
-  { n: 7, label: "Review", state: "locked" as const },
+  { n: 5, label: "Review", state: "locked" as const },
 ];
 
 export default function GolfAdminCreatePreview() {
@@ -38,10 +36,10 @@ export default function GolfAdminCreatePreview() {
         </div>
 
         <div className="rounded-xl bg-white p-4 shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-[#1C315F]/45">Step 1 of 7</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-[#1C315F]/45">Step 1 of 5</p>
           <p className="mt-1 font-bold text-[#1C315F]">Details</p>
           <p className="text-xs text-[#1C315F]/55">Name, date, and venue</p>
-          <div className="mt-3 grid grid-cols-4 gap-1.5 sm:grid-cols-7">
+          <div className="mt-3 grid grid-cols-5 gap-1.5">
             {STEPS.map((step) => (
               <div
                 key={step.label}
