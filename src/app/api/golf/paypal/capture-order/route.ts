@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPayPalConfig } from "@/libs/paypal";
+import { sendGolfPaymentReceipt } from "@/libs/sendGolfReceipt";
 import { assertPublishedOuting, callPublicGolfProc, getAccessToken, getPublicGolfOrder } from "../../_public";
 
 export async function POST(request: NextRequest) {
@@ -49,6 +50,26 @@ export async function POST(request: NextRequest) {
     payment_method: paymentMethod,
     mark_comp: 0,
   });
+
+  const fulfilled = result && typeof result === "object" ? (result as { idempotent?: number }) : {};
+  if (!Number(fulfilled.idempotent)) {
+    try {
+      await sendGolfPaymentReceipt({
+        orderId: Number(golfData.order_id),
+        event,
+        purchaserName: golfData.purchaser_name || pending.purchaser_name,
+        purchaserEmail: golfData.purchaser_email || pending.purchaser_email,
+        totalCents: Number(pending.total_cents),
+        category: typeof golfData.category === "string" ? golfData.category : "golf",
+        paymentMethod,
+        transactionId: capture?.id || orderID,
+        fallbackDescription:
+          typeof golfData.event_name === "string" ? `${golfData.category || "Golf"} — ${golfData.event_name}` : event.event_name,
+      });
+    } catch (err) {
+      console.error("golf public receipt email failed", err);
+    }
+  }
 
   try {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/publicprod/payments`, {

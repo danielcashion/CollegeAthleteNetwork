@@ -64,7 +64,7 @@ export default function PublicCheckout({
         <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Secure checkout</p>
         <p className="mt-1 text-lg font-bold text-[#1C315F]">Pay {formatCents(amount)}</p>
         <p className="mt-1 text-sm text-[#1C315F]/70">
-          PayPal, Venmo, or a debit or credit card. Venmo on desktop opens a QR code to scan with the Venmo app.
+          Pay with PayPal, Venmo, or a card. On a computer, Venmo opens a QR code to scan with the Venmo app.
         </p>
       </div>
       {error ? <p className="rounded-xl bg-[#ED3237]/8 px-3 py-2 text-sm text-[#ED3237]">{error}</p> : null}

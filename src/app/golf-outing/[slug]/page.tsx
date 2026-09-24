@@ -111,7 +111,7 @@ export default async function GolfOutingPublicPage({
                     href={`/golf-outing/${slug}/sponsor`}
                     className="rounded-full border border-white px-6 py-3 text-lg font-semibold transition duration-200 hover:bg-white hover:text-[#ED3237]"
                   >
-                    Become a sponsor
+                    Become a Sponsor
                   </Link>
                 )}
               </div>
@@ -119,7 +119,7 @@ export default async function GolfOutingPublicPage({
             {sponsors.length > 0 && (
               <div className="rounded-2xl border border-white/25 bg-white/95 p-4 text-[#1C315F] shadow-lg">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#1C315F]/60">
-                  Current sponsors
+                  Event Sponsors
                 </p>
                 <GolfSponsorCarousel sponsors={sponsors} />
               </div>

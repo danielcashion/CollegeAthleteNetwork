@@ -9,7 +9,7 @@ export default function GolfSponsorCarousel({ sponsors }: { sponsors: GolfSponso
   const logos = shouldLoop ? [...visible, ...visible] : visible;
 
   return (
-    <div className="min-w-0 flex-1" aria-label="Current sponsors">
+    <div className="min-w-0 flex-1" aria-label="Event Sponsors">
       <style>{`
         @keyframes golf-sponsor-scroll {
           from { transform: translateX(0); }

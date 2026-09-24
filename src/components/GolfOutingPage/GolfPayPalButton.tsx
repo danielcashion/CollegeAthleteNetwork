@@ -67,7 +67,7 @@ export default function GolfPayPalButton({
               amount,
               currency: "USD",
               golfData,
-              fundingSource: forcedFunding,
+              fundingSource: fundingSource.current,
             }),
           });
           const data = await response.json();

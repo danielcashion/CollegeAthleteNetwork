@@ -264,6 +264,22 @@ export async function getPublicGolfOrder(order_id: number) {
   return rows.find((row) => Number(row.order_id) === Number(order_id)) ?? null;
 }
 
+export async function getPublicGolfOrderItems(order_id: number) {
+  const url = new URL(`${publicApiBase()}/golf_order_items`);
+  url.searchParams.set("order_id", String(order_id));
+  const res = await fetch(url.toString(), { cache: "no-store" });
+  if (!res.ok) return [];
+  return unwrap<{
+    order_item_id: number;
+    order_id: number;
+    item_type: string;
+    description?: string | null;
+    quantity?: number | null;
+    unit_price_cents?: number | null;
+    line_total_cents?: number | null;
+  }>(await res.json()).filter((row) => Number(row.order_id) === Number(order_id));
+}
+
 export async function setPublicGolfPaypalOrderId(order_id: number, paypal_order_id: string) {
   await fetch(`${publicApiBase()}/golf_orders?order_id=${order_id}`, {
     method: "PUT",

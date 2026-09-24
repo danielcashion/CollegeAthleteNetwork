@@ -24,6 +24,7 @@ export default function VenmoPayLanding({
     amount?: string;
     name?: string;
     event?: string;
+    university?: string;
     slug?: string;
   };
 }) {
@@ -113,6 +114,7 @@ export default function VenmoPayLanding({
           <GolfPaymentReceipt
             title="Payment confirmed"
             eventName={eventName}
+            universityName={query.university}
             orderId={orderId || order?.order_id}
             amountCents={amount}
             email={email}
