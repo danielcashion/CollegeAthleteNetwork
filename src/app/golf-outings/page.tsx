@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, CreditCard, Flag, Gavel, Handshake, Megaphone, Ticket, Users } from "lucide-react";
-import GolfAdminCreatePreview from "@/components/GolfOutingPage/GolfAdminCreatePreview";
+import GolfAdminScreenshotCarousel from "@/components/GolfOutingPage/GolfAdminScreenshotCarousel";
 import GolfBudgetWorkbook from "@/components/GolfOutingPage/GolfBudgetWorkbook";
 
 export const metadata = {
@@ -99,46 +99,26 @@ export default function GolfOutingsMarketingPage() {
       </section>
 
       <section id="product" className="container mx-auto px-4 py-16 md:py-20">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]">
-              Athletic department admin
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-[#1C315F] md:text-4xl">
-              Staff create the outing. We run the rest of the stack.
-            </h2>
-            <p className="mt-4 text-lg text-[#1C315F]/75">
-              This is not a consulting playbook or a page of tips. It is integrated software we
-              provide to university athletic department clients: one admin console to set up the day,
-              and one guest page for golfers, sponsors, and bidders.
-            </p>
-            <ul className="mt-6 space-y-3 text-[#1C315F]/80">
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
-                Create the event, tickets, packages, and auction items in the members admin.
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
-                Publish a private slug you share — the outing is not listed in a public directory.
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A227]" />
-                Guests register, sponsor, bid, and pay on your outing page. Receipts go out from us.
-              </li>
-            </ul>
-            <Link
-              href="/contact-us"
-              className="mt-8 inline-block rounded-full bg-[#1C315F] px-6 py-3 font-semibold text-white transition hover:bg-[#ED3237]"
-            >
-              Ask about department access
-            </Link>
-          </div>
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1C315F]/50">
-              Admin creating an outing
-            </p>
-            <GolfAdminCreatePreview />
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]">
+            Athletic department admin
+          </p>
+          <h2 className="mt-2 text-3xl font-bold text-[#1C315F] md:text-4xl">
+            This is the software staff use to host the day
+          </h2>
+          <p className="mt-4 text-lg text-[#1C315F]/75">
+            Not a playbook. The same members admin athletic departments use to create the outing and
+            run Event Day — foursomes, check-in, sponsor holes, and the guest page in one product.
+          </p>
+          <Link
+            href="/contact-us"
+            className="mt-6 inline-block rounded-full bg-[#1C315F] px-6 py-3 font-semibold text-white transition hover:bg-[#ED3237]"
+          >
+            Ask about department access
+          </Link>
+        </div>
+        <div className="mt-10">
+          <GolfAdminScreenshotCarousel />
         </div>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

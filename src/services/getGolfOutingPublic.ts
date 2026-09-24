@@ -136,9 +136,13 @@ async function publicGet<T>(
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
   });
+  const tags = [
+    params?.event_id ? `golf-outing-${params.event_id}` : null,
+    params?.public_url_slug ? `golf-outing-slug-${params.public_url_slug}` : null,
+  ].filter((tag): tag is string => Boolean(tag));
   const res = await fetch(url.toString(), {
     cache: options?.fresh ? "no-store" : undefined,
-    next: options?.fresh ? undefined : { revalidate: 60 },
+    next: options?.fresh ? undefined : { revalidate: 60, tags: tags.length ? tags : undefined },
   });
   if (!res.ok) return [];
   return unwrap<T>(await res.json());
@@ -206,7 +210,7 @@ export function packageIsSoldOut(pkg: Pick<GolfPackagePublic, "remaining_qty" | 
 }
 
 export async function listPublicSponsors(event_id: string): Promise<GolfSponsorPublic[]> {
-  const rows = await publicGet<GolfSponsorPublic>("golf_sponsors", { event_id });
+  const rows = await publicGet<GolfSponsorPublic>("golf_sponsors", { event_id }, { fresh: true });
   return rows.filter((row) => (row.payment_status === "PAID" || row.payment_status === "COMP") && row.public_display_YN);
 }
 
