@@ -1,4 +1,13 @@
-import { obfuscateBidderName, sortSponsorshipPackages } from "@/components/GolfOutingPage/golfOutingDisplay";
+import {
+  obfuscateBidderName,
+  outingCalendarDate,
+  sortSponsorshipPackages,
+} from "@/components/GolfOutingPage/golfOutingDisplay";
+
+function withCalendarEventDate<T extends { event_date?: string | null }>(row: T): T {
+  const date = outingCalendarDate(row.event_date);
+  return date ? { ...row, event_date: date } : row;
+}
 
 function publicApiBase() {
   const raw =
@@ -141,7 +150,7 @@ export async function listPublicGolfOutings(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<GolfOutingPublic[]> {
-  const rows = await publicGet<GolfOutingPublic>("v_golf_outings_public");
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public")).map(withCalendarEventDate);
   return rows.filter((row) => {
     if (row.is_active_YN === 0) return false;
     if (!["PUBLISHED", "SOLD_OUT", "REGISTRATION_CLOSED", "COMPLETED"].includes(row.event_status)) {
@@ -153,7 +162,7 @@ export async function listPublicGolfOutings(filters?: {
     if (filters?.q && !`${row.event_name} ${row.venue_name || ""}`.toLowerCase().includes(filters.q.toLowerCase())) {
       return false;
     }
-    const date = String(row.event_date).slice(0, 10);
+    const date = outingCalendarDate(row.event_date) || "";
     if (filters?.date_from && date < filters.date_from) return false;
     if (filters?.date_to && date > filters.date_to) return false;
     return true;
@@ -161,7 +170,9 @@ export async function listPublicGolfOutings(filters?: {
 }
 
 export async function getPublicGolfOutingBySlug(slug: string): Promise<GolfOutingPublic | null> {
-  const rows = await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug });
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug })).map(
+    withCalendarEventDate
+  );
   return rows.find((row) => row.public_url_slug === slug) ?? null;
 }
 
