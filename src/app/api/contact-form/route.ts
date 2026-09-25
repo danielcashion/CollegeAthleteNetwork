@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
     const recaptchaResult = await recaptchaResponse.json();
 
     if (!recaptchaResult.success) {
+      console.warn("reCAPTCHA verification failed", recaptchaResult["error-codes"]);
       return NextResponse.json(
         { message: "reCAPTCHA verification failed" },
         { status: 400 }
