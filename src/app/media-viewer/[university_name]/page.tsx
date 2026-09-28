@@ -1,5 +1,5 @@
 "use client";
-
+//   Sample URL:https://www.collegeathletenetwork.org/media-viewer/Villanova?file=Villanova.pptx
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Head from "next/head";
