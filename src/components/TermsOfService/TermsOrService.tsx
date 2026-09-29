@@ -1,283 +1,88 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
-import { FaAngleDown } from "react-icons/fa6";
+import LegalDocument from "@/components/Legal/LegalDocument";
+
+const termsToc = [
+  {
+    href: "#using-our-service",
+    label: "1. Using Our Service",
+    children: [
+      { href: "#eligibility", label: "1.1 Eligibility" },
+      { href: "#your-account", label: "1.2 Your Account" },
+      { href: "#license-to-use-the-service", label: "1.3 License to Use the Service" },
+      { href: "#rules-for-using-the-service", label: "1.4 Rules for Using the Service" },
+    ],
+  },
+  {
+    href: "#your-content",
+    label: "2. Your Content",
+    children: [
+      { href: "#what-is-user-content", label: "2.1 What is User Content?" },
+      { href: "#your-responsibilities", label: "2.2 Your Responsibilities" },
+      { href: "#our-rights-to-your-content", label: "2.3 Our Rights to Your Content" },
+      { href: "#dmca-copyright-policy", label: "2.4 DMCA Copyright Policy" },
+    ],
+  },
+  { href: "#privacy-and-data-security", label: "3. Privacy and Data Security" },
+  { href: "#mobile-apps", label: "4. Mobile Apps" },
+  { href: "#third-party-content-and-services", label: "5. Third-Party Content and Services" },
+  {
+    href: "#paid-services-and-payments",
+    label: "6. Paid Services and Payments",
+    children: [
+      { href: "#paid-features", label: "6.1 Paid Features" },
+      { href: "#payments-to-organizations", label: "6.2 Payments to Organizations" },
+      { href: "#payment-processing", label: "6.3 Payment Processing" },
+    ],
+  },
+  { href: "#background-screening", label: "7. Background Screening" },
+  { href: "#accessibility", label: "8. Accessibility" },
+  {
+    href: "#intellectual-property",
+    label: "9. Intellectual Property",
+    children: [
+      { href: "#our-content", label: "9.1 Our Content" },
+      { href: "#your-ideas", label: "9.2 Your Ideas" },
+      { href: "#our-data", label: "9.3 Our Data" },
+    ],
+  },
+  { href: "#no-warranty", label: "10. No Warranty" },
+  { href: "#limitation-of-liability", label: "11. Limitation of Liability" },
+  { href: "#indemnity", label: "12. Indemnity" },
+  {
+    href: "#dispute-resolution",
+    label: "13. Dispute Resolution",
+    children: [
+      { href: "#informal-resolution", label: "13.1 Informal Resolution" },
+      { href: "#arbitration", label: "13.2 Arbitration" },
+      { href: "#class-action-and-jury-trial-waiver", label: "13.3 Class Action and Jury Trial Waiver" },
+    ],
+  },
+  { href: "#governing-law", label: "14. Governing Law" },
+  {
+    href: "#general-terms",
+    label: "15. General Terms",
+    children: [
+      { href: "#assignment", label: "15.1 Assignment" },
+      { href: "#notifications", label: "15.2 Notifications" },
+      { href: "#entire-agreement", label: "15.3 Entire Agreement" },
+      { href: "#no-waiver", label: "15.4 No Waiver" },
+      { href: "#contact", label: "15.5 Contact" },
+    ],
+  },
+];
 
 const TermsOfService = () => {
-  const [showTable, setShowTable] = useState(false);
-
   return (
-    <>
-      {/* Skip to main content link for accessibility */}
-      <a href="#main-content" className="skip-link absolute left-2 top-2 bg-white text-[#1C315F] px-4 py-2 z-50 focus:translate-y-0 -translate-y-20 focus:outline-none focus:ring-2 focus:ring-[#ED3237]" style={{borderRadius: '6px'}}>
-        Skip to main content
-      </a>
-      <div className="min-h-screen bg-gray-50 flex flex-col" aria-label="Terms of Service Page" role="region">
-        <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]" role="banner">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4" id="main-content" tabIndex={-1}>
-            The College Athlete Network
-          </h1>
-          <h2 className="text-4xl md:text-4xl font-bold mb-4 font-variant-small-caps">
-            Our Terms of Service
-          </h2>
-        </div>
-
-        <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12" aria-label="Table of Contents">
-          <div className="bg-white border border-gray-200 rounded p-4 mb-6">
-          <div
-            className="cursor-pointer font-semibold text-gray-800 text-2xl flex items-center justify-between"
-            onClick={() => setShowTable(!showTable)}
-          >
-            Table of Contents
-            <span
-              className={`transform transition-transform ${
-                showTable ? "rotate-180" : ""
-              }`}
-            >
-              <FaAngleDown />
-            </span>
-          </div>
-
-          {showTable && (
-            <div className="mt-2 text-gray-700 space-y-1">
-              <div>
-                <Link
-                  href="#using-our-service"
-                  className="hover:underline block font-semibold"
-                >
-                  1. Using Our Service
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link href="#eligibility" className="hover:underline block">
-                    1.1 Eligibility
-                  </Link>
-                  <Link href="#your-account" className="hover:underline block">
-                    1.2 Your Account
-                  </Link>
-                  <Link
-                    href="#license-to-use-the-service"
-                    className="hover:underline block"
-                  >
-                    1.3 License to Use the Service
-                  </Link>
-                  <Link
-                    href="#rules-for-using-the-service"
-                    className="hover:underline block"
-                  >
-                    1.4 Rules for Using the Service
-                  </Link>
-                </div>
-              </div>
-
-              <div>
-                <Link
-                  href="#your-content"
-                  className="hover:underline block font-semibold"
-                >
-                  2. Your Content
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link
-                    href="#what-is-user-content"
-                    className="hover:underline block"
-                  >
-                    2.1 What is User Content?
-                  </Link>
-                  <Link
-                    href="#your-responsibilities"
-                    className="hover:underline block"
-                  >
-                    2.2 Your Responsibilities
-                  </Link>
-                  <Link
-                    href="#our-rights-to-your-content"
-                    className="hover:underline block"
-                  >
-                    2.3 Our Rights to Your Content
-                  </Link>
-                  <Link
-                    href="#dmca-copyright-policy"
-                    className="hover:underline block"
-                  >
-                    2.4 DMCA Copyright Policy
-                  </Link>
-                </div>
-              </div>
-
-              <Link
-                href="#privacy-and-data-security"
-                className="hover:underline block font-semibold"
-              >
-                3. Privacy and Data Security
-              </Link>
-
-              <Link
-                href="#mobile-apps"
-                className="hover:underline block font-semibold"
-              >
-                4. Mobile Apps
-              </Link>
-
-              <Link
-                href="#third-party-content-and-services"
-                className="hover:underline block font-semibold"
-              >
-                5. Third-Party Content and Services
-              </Link>
-
-              <div>
-                <Link
-                  href="#paid-services-and-payments"
-                  className="hover:underline block font-semibold"
-                >
-                  6. Paid Services and Payments
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link href="#paid-features" className="hover:underline block">
-                    6.1 Paid Features
-                  </Link>
-                  <Link
-                    href="#payments-to-organizations"
-                    className="hover:underline block"
-                  >
-                    6.2 Payments to Organizations
-                  </Link>
-                  <Link
-                    href="#payment-processing"
-                    className="hover:underline block"
-                  >
-                    6.3 Payment Processing
-                  </Link>
-                </div>
-              </div>
-
-              <Link
-                href="#background-screening"
-                className="hover:underline block font-semibold"
-              >
-                7. Background Screening
-              </Link>
-
-              <Link
-                href="#accessibility"
-                className="hover:underline block font-semibold"
-              >
-                8. Accessibility
-              </Link>
-
-              <div>
-                <Link
-                  href="#intellectual-property"
-                  className="hover:underline block font-semibold"
-                >
-                  9. Intellectual Property
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link href="#our-content" className="hover:underline block">
-                    9.1 Our Content
-                  </Link>
-                  <Link href="#your-ideas" className="hover:underline block">
-                    9.2 Your Ideas
-                  </Link>
-                  <Link href="#our-data" className="hover:underline block">
-                    9.3 Our Data
-                  </Link>
-                </div>
-              </div>
-
-              <Link
-                href="#no-warranty"
-                className="hover:underline block font-semibold"
-              >
-                10. No Warranty
-              </Link>
-
-              <Link
-                href="#limitation-of-liability"
-                className="hover:underline block font-semibold"
-              >
-                11. Limitation of Liability
-              </Link>
-
-              <Link
-                href="#indemnity"
-                className="hover:underline block font-semibold"
-              >
-                12. Indemnity
-              </Link>
-
-              <div>
-                <Link
-                  href="#dispute-resolution"
-                  className="hover:underline block font-semibold"
-                >
-                  13. Dispute Resolution
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link
-                    href="#informal-resolution"
-                    className="hover:underline block"
-                  >
-                    13.1 Informal Resolution
-                  </Link>
-                  <Link href="#arbitration" className="hover:underline block">
-                    13.2 Arbitration
-                  </Link>
-                  <Link
-                    href="#class-action-and-jury-trial-waiver"
-                    className="hover:underline block"
-                  >
-                    13.3 Class Action and Jury Trial Waiver
-                  </Link>
-                </div>
-              </div>
-
-              <Link
-                href="#governing-law"
-                className="hover:underline block font-semibold"
-              >
-                14. Governing Law
-              </Link>
-
-              <div>
-                <Link
-                  href="#general-terms"
-                  className="hover:underline block font-semibold"
-                >
-                  15. General Terms
-                </Link>
-                <div className="ml-6 space-y-1">
-                  <Link href="#assignment" className="hover:underline block">
-                    15.1 Assignment
-                  </Link>
-                  <Link href="#notifications" className="hover:underline block">
-                    15.2 Notifications
-                  </Link>
-                  <Link
-                    href="#entire-agreement"
-                    className="hover:underline block"
-                  >
-                    15.3 Entire Agreement
-                  </Link>
-                  <Link href="#no-waiver" className="hover:underline block">
-                    15.4 No Waiver
-                  </Link>
-                  <Link href="#contact" className="hover:underline block">
-                    15.5 Contact
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <div className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 terms-of-service" aria-label="Main content">
-        <article className="prose prose-lg max-w-none text-gray-600" aria-labelledby="main-content">
-          <p className="italic font-semibold mb-2" aria-label="Last Updated">
-            Last Updated: January 1st, 2025
-          </p>
-
+    <LegalDocument
+      title="Terms of Service"
+      summary="The terms that govern use of The College Athlete Network website, applications, and related services."
+      effectiveDate="January 1, 2025"
+      toc={termsToc}
+      related={[
+        { href: "/privacy-policy", label: "Privacy Policy" },
+        { href: "/accessibility", label: "Accessibility Statement" },
+      ]}
+    >
           <p className="mb-4 text-gray-600">
             Welcome to The College Athlete Network, LLC (“we,” “us,” or “The
             College Athlete Network”). These Terms and Conditions (“Terms”)
@@ -1018,10 +823,7 @@ const TermsOfService = () => {
             </Link>
             .
           </p>
-        </article>
-  </div>
-    </div>
-    </>
+    </LegalDocument>
   );
 };
 

@@ -1,11 +1,12 @@
+import type { Metadata } from "next";
 import TermsOfService from "@/components/TermsOfService/TermsOrService";
 
-const TermsPage = () => {
-  return (
-    <main id="main-content" tabIndex={-1} aria-label="Main content" role="main">
-      <TermsOfService />
-    </main>
-  );
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "Terms that govern use of The College Athlete Network website, applications, and related services.",
 };
 
-export default TermsPage;
+export default function TermsPage() {
+  return <TermsOfService />;
+}

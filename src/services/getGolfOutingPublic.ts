@@ -20,6 +20,7 @@ function publicApiBase() {
 
 export type GolfOutingPublic = {
   event_id: string;
+  product_type?: "GOLF" | "NETWORKING" | null;
   university_name: string;
   event_name: string;
   description_html?: string | null;
@@ -71,6 +72,7 @@ export type GolfPackagePublic = {
   sponsorship_type_id: number;
   event_id: string;
   sponsorship_name: string;
+  package_role?: "STANDARD" | "TITLE" | "COCKTAIL" | "ATHLETE" | null;
   description_html?: string | null;
   unit_price_cents: number;
   inventory: number;
@@ -94,6 +96,7 @@ export type GolfSponsorPublic = {
   event_id: string;
   package_id: number;
   sponsor_name: string;
+  quantity?: number | null;
   logo_url?: string | null;
   public_display_YN?: number;
   payment_status: string;
@@ -169,15 +172,21 @@ export async function listPublicGolfOutings(filters?: {
     const date = outingCalendarDate(row.event_date) || "";
     if (filters?.date_from && date < filters.date_from) return false;
     if (filters?.date_to && date > filters.date_to) return false;
+    if ((row.product_type || "GOLF") !== "GOLF") return false;
     return true;
   });
 }
 
-export async function getPublicGolfOutingBySlug(slug: string): Promise<GolfOutingPublic | null> {
+export async function getPublicGolfOutingBySlug(
+  slug: string,
+  productType: "GOLF" | "NETWORKING" = "GOLF"
+): Promise<GolfOutingPublic | null> {
   const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug })).map(
     withCalendarEventDate
   );
-  return rows.find((row) => row.public_url_slug === slug) ?? null;
+  return (
+    rows.find((row) => row.public_url_slug === slug && (row.product_type || "GOLF") === productType) ?? null
+  );
 }
 
 export async function listPublicTickets(event_id: string): Promise<GolfTicketPublic[]> {

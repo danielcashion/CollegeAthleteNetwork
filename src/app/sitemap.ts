@@ -30,8 +30,10 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       ...personaPages,
       "privacy-policy",
       "sample-data",
+      "support",
       "terms-of-service",
       "golf-outings",
+      "networking-events",
     ];
 
     const sitemapEntries = [

@@ -5,6 +5,7 @@ import { initBotId } from "botid/client/core";
 initBotId({
   protect: [
     { path: "/api/contact-form", method: "POST" },
+    { path: "/api/support", method: "POST" },
     { path: "/api/job-application", method: "POST" },
     { path: "/api/send-email", method: "POST" },
   ],

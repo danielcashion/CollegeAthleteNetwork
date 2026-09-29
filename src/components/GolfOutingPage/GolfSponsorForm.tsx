@@ -28,6 +28,7 @@ type CartItem = {
   team_name?: string;
   players: Player[];
   includes_teebox_signage?: number;
+  quantity: number;
 };
 
 const emptyPlayers = (): Player[] => [
@@ -88,6 +89,7 @@ export default function GolfSponsorForm({
   const [players, setPlayers] = useState<Player[]>(emptyPlayers);
   const [teamName, setTeamName] = useState("");
   const [teamTouched, setTeamTouched] = useState(false);
+  const [athleteQty, setAthleteQty] = useState(1);
   const [holding, setHolding] = useState(false);
   const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
   const [paid, setPaid] = useState(false);
@@ -120,10 +122,10 @@ export default function GolfSponsorForm({
 
   const cartCountByPackage = useMemo(() => {
     const counts = new Map<number, number>();
-    cart.forEach((item) => counts.set(item.package_id, (counts.get(item.package_id) || 0) + 1));
+    cart.forEach((item) => counts.set(item.package_id, (counts.get(item.package_id) || 0) + (item.quantity || 1)));
     return counts;
   }, [cart]);
-  const cartTotal = cart.reduce((sum, item) => sum + item.unit_price_cents, 0);
+  const cartTotal = cart.reduce((sum, item) => sum + item.unit_price_cents * (item.quantity || 1), 0);
   const contactEmailValid = isValidEmail(email);
   const foursomeValid =
     !modalPkg?.includes_foursome ||
@@ -136,6 +138,7 @@ export default function GolfSponsorForm({
   const purchaser = cart[0];
 
   function openModal(pkg: GolfPackagePublic) {
+    setAthleteQty(1);
     const inCart = cartCountByPackage.get(pkg.sponsorship_type_id) || 0;
     if (inCart >= remainingOf(pkg)) {
       toast.error(`${pkg.sponsorship_name} has no more available spots`);
@@ -158,6 +161,11 @@ export default function GolfSponsorForm({
       toast.error(`${modalPkg.sponsorship_name} has no more available spots`);
       return;
     }
+    const quantity = modalPkg.package_role === "ATHLETE" ? Math.max(1, athleteQty) : 1;
+    if (inCart + quantity > remainingOf(modalPkg)) {
+      toast.error("That quantity is no longer available.");
+      return;
+    }
     setCart((prev) => [
       ...prev,
       {
@@ -171,6 +179,7 @@ export default function GolfSponsorForm({
         team_name: modalPkg.includes_foursome ? resolvedTeamName : undefined,
         players: modalPkg.includes_foursome ? players : [],
         includes_teebox_signage: modalPkg.includes_teebox_signage,
+        quantity,
       },
     ]);
     setModalPkg(null);
@@ -200,6 +209,7 @@ export default function GolfSponsorForm({
             logo_url: item.logo_url,
             team_name: item.team_name,
             players: item.players,
+            quantity: item.quantity || 1,
             public_display_YN: 1,
           })),
         }),
@@ -325,10 +335,13 @@ export default function GolfSponsorForm({
               <li key={item.id} className="rounded-xl border border-[#1C315F]/10 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-bold text-[#1C315F]">{item.sponsorship_name}</p>
+                    <p className="font-bold text-[#1C315F]">
+                      {item.sponsorship_name}
+                      {(item.quantity || 1) > 1 ? ` × ${item.quantity}` : ""}
+                    </p>
                     <p className="text-sm text-[#1C315F]/70">{item.sponsor_name}</p>
                   </div>
-                  <p className="font-bold text-[#ED3237]">{formatCents(item.unit_price_cents)}</p>
+                  <p className="font-bold text-[#ED3237]">{formatCents(item.unit_price_cents * (item.quantity || 1))}</p>
                 </div>
                 {!pending ? (
                   <button
@@ -476,6 +489,25 @@ export default function GolfSponsorForm({
                   )}
                 </label>
               </div>
+
+              {modalPkg.package_role === "ATHLETE" && (
+                <label className="block">
+                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#1C315F]/55">
+                    Student athletes to sponsor
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={Math.max(1, remainingOf(modalPkg) - (cartCountByPackage.get(modalPkg.sponsorship_type_id) || 0))}
+                    className={fieldClass}
+                    value={athleteQty}
+                    onChange={(e) => setAthleteQty(Math.max(1, Number(e.target.value) || 1))}
+                  />
+                  <p className="mt-1 text-xs text-[#1C315F]/60">
+                    {formatCents(modalPkg.unit_price_cents)} each · {formatCents(modalPkg.unit_price_cents * athleteQty)} total
+                  </p>
+                </label>
+              )}
 
               {!!modalPkg.includes_public_logo && (
                 <GolfSponsorLogoField

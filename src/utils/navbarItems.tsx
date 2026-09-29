@@ -54,6 +54,11 @@ export const navbarItems: NavItem[] = [
         link: "/golf-outings",
         type: "link",
       },
+      {
+        name: "Networking Events",
+        link: "/networking-events",
+        type: "link",
+      },
     ],
   },
 
