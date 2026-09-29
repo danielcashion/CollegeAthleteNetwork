@@ -1,0 +1,21 @@
+{
+  "default_branch": "master",
+  "branches": [
+    "copilot/strip-malware-lines-from-files",
+    "development",
+    "master",
+    "origin"
+  ],
+  "parent": {
+    "copilot/strip-malware-lines-from-files": "master",
+    "development": "master",
+    "master": null,
+    "origin": "master"
+  },
+  "order": [
+    "master",
+    "copilot/strip-malware-lines-from-files",
+    "development",
+    "origin"
+  ]
+}

@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import PrivacyPolicyComponent from "./_components/privacyPolicyComponent";
 
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "How The College Athlete Network LLC collects, uses, and protects information.",
+};
+
 export default function PrivacyPolicyPage() {
-  return (
-    <main id="main-content" tabIndex={-1} aria-label="Main content" role="main">
-      <PrivacyPolicyComponent />
-    </main>
-  );
+  return <PrivacyPolicyComponent />;
 }

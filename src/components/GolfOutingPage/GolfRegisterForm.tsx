@@ -26,8 +26,10 @@ export default function GolfRegisterForm({
   event,
   tickets,
   initialTicketId,
+  singleSeat = false,
 }: {
   event: GolfOutingPublic;
+  singleSeat?: boolean;
   tickets: GolfTicketPublic[];
   initialTicketId?: number;
 }) {
@@ -48,7 +50,8 @@ export default function GolfRegisterForm({
   const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
   const [paid, setPaid] = useState(false);
   const ticket = active.find((row) => row.ticket_type_id === Number(ticketId));
-  const perTicket = attendeesPerTicket(ticket?.type_name);
+  const seatsFor = (name?: string | null) => (singleSeat ? 1 : attendeesPerTicket(name));
+  const perTicket = seatsFor(ticket?.type_name);
   const slots = perTicket * quantity;
   const maxQuantity = Math.min(ticket?.inventory && ticket.inventory > 0 ? ticket.inventory : 10, 10);
   const roster = ensureAttendees(attendees, slots);
@@ -69,7 +72,7 @@ export default function GolfRegisterForm({
     setQuantity(1);
     setPending(null);
     const nextTicket = active.find((row) => row.ticket_type_id === id);
-    setAttendees((prev) => ensureAttendees(prev, attendeesPerTicket(nextTicket?.type_name)));
+    setAttendees((prev) => ensureAttendees(prev, seatsFor(nextTicket?.type_name)));
     setTeamNames([]);
     setTeamTouched([]);
   }
@@ -78,7 +81,7 @@ export default function GolfRegisterForm({
     const value = Math.min(maxQuantity, Math.max(1, next));
     setQuantity(value);
     setPending(null);
-    setAttendees((prev) => ensureAttendees(prev, attendeesPerTicket(ticket?.type_name) * value));
+    setAttendees((prev) => ensureAttendees(prev, seatsFor(ticket?.type_name) * value));
     setTeamNames((prev) => prev.slice(0, value));
     setTeamTouched((prev) => prev.slice(0, value));
   }
@@ -106,6 +109,7 @@ export default function GolfRegisterForm({
           purchaser_email: primary.email.trim(),
           purchaser_phone: primary.phone.trim() || undefined,
           quantity,
+          group_size: singleSeat ? 1 : undefined,
           team_names: resolvedTeamNames,
           players: roster,
         }),

@@ -1,11 +1,6 @@
 "use client";
 
-const PrivacyListItem = styled(ListItem)({
-  paddingLeft: 0,
-});
-
 import {
-  Container,
   Typography,
   Box,
   List,
@@ -16,10 +11,10 @@ import {
 
 import React from "react";
 import { styled } from "@mui/system";
+import LegalDocument from "@/components/Legal/LegalDocument";
 
-const PrivacyContainer = styled(Container)({
-  marginTop: "2rem",
-  marginBottom: "2rem",
+const PrivacyListItem = styled(ListItem)({
+  paddingLeft: 0,
 });
 
 const SectionRoot = styled(Box)({
@@ -30,46 +25,41 @@ const Section = React.forwardRef<HTMLDivElement, BoxProps>(function Section(prop
   return <SectionRoot ref={ref} {...props} />;
 });
 
+const privacyToc = [
+  { href: "#summary-heading", label: "Summary" },
+  { href: "#definitions-heading", label: "Definitions" },
+  { href: "#info-collection-heading", label: "Information Collection and Use" },
+  { href: "#tracking-heading", label: "Tracking and cookies" },
+  { href: "#use-of-data-heading", label: "Use of Data" },
+  { href: "#gdpr-heading", label: "Legal basis under the GDPR" },
+  { href: "#retention-heading", label: "Retention of Data" },
+  { href: "#service-providers-heading", label: "Service Providers" },
+  { href: "#analytics-heading", label: "Analytics" },
+  { href: "#payments-heading", label: "Payments" },
+  { href: "#children-heading", label: "Children's Policy" },
+  { href: "#changes-heading", label: "Changes to this Privacy Policy" },
+  { href: "#transfer-heading", label: "Transfer of Data" },
+  { href: "#disclosure-heading", label: "Disclosure of Data" },
+  { href: "#dnt-heading", label: "Do Not Track" },
+  { href: "#security-heading", label: "Security of Data" },
+  { href: "#contact-heading", label: "Contact Us" },
+];
+
 export default function PrivacyPolicyComponent() {
   return (
-    <>
-      {/* Skip to main content link for accessibility */}
-      <a
-        href="#main-content"
-        className="skip-link absolute left-2 top-2 bg-white text-[#1C315F] px-4 py-2 z-50 focus:translate-y-0 -translate-y-20 focus:outline-none focus:ring-2 focus:ring-[#ED3237]"
-        style={{ borderRadius: "6px" }}
-      >
-        Skip to main content
-      </a>
-      <div className="mb-20" aria-label="Privacy Policy Page" role="region">
-        <div
-          className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] text-white pb-12 pt-32 flex flex-col items-center px-[5%] sm:px-[10%]"
-          role="banner"
-        >
-          <h1
-            className="text-5xl font-bold text-center mb-8 text-white tracking-wider small-caps w-full"
-            id="main-content"
-            tabIndex={-1}
-          >
-            Privacy Policy for <br />
-            The College Athlete Network
-          </h1>
-        </div>
-
-        <PrivacyContainer aria-labelledby="main-content">
-          <Typography
-            component="p"
-            variant="subtitle1"
-            sx={{ textAlign: "right", color: "#ED3237", mb: 4 }}
-            gutterBottom
-            aria-label="Effective date"
-          >
-            Effective date: June 1st, 2025
-          </Typography>
-
+    <LegalDocument
+      title="Privacy Policy"
+      summary="How The College Athlete Network LLC collects, uses, and protects information when you use www.collegeathletenetwork.org."
+      effectiveDate="June 1, 2025"
+      toc={privacyToc}
+      related={[
+        { href: "/terms-of-service", label: "Terms of Service" },
+        { href: "/accessibility", label: "Accessibility Statement" },
+      ]}
+    >
           <Typography
             variant="body1"
-            sx={{ textAlign: "justify", color: "#1C315F" }}
+            sx={{  color: "#1C315F" }}
             
           >
             <strong>The College Athlete Network LLC </strong> (“The Company,”
@@ -83,7 +73,7 @@ export default function PrivacyPolicyComponent() {
 
           <Typography
             variant="body1"
-            sx={{ textAlign: "justify", color: "#1C315F" }}
+            sx={{  color: "#1C315F" }}
             
           >
             To provide and improve our Service, we use publicly sourced data
@@ -94,42 +84,6 @@ export default function PrivacyPolicyComponent() {
             in this Privacy Policy, the terms used in this Privacy Policy have
             the same meanings as in our Terms and Conditions.
           </Typography>
-
-          <Section component="nav" aria-label="Table of Contents">
-            <Typography
-              component="h2"
-              variant="h4"
-              gutterBottom
-              style={{ color: "#1C315F" }}
-            >
-              Table of Contents
-            </Typography>
-            <List dense style={{ color: "#1C315F", fontSize: "18px" }}>
-              {[
-                "Definitions",
-                "Information Collection and Use",
-                "Use of Data",
-                "Legal Basis for Processing Personal Data under GDPR",
-                "Retention of Data",
-                "Transfer of Data",
-                "Disclosure of Data",
-                "Security of Data",
-                "Do Not Track Signals",
-                "Your GDPR Data Protection Rights",
-                "Service Providers",
-                "Analytics",
-                "Payments",
-                "Links to Other Sites",
-                "Children's Privacy",
-                "Changes to This Privacy Policy",
-                "Contact Us",
-              ].map((item) => (
-                <PrivacyListItem key={item} disableGutters sx={{ pl: 6 }}>
-                  <ListItemText primary={item} />
-                </PrivacyListItem>
-              ))}
-            </List>
-          </Section>
 
           <Section component="section" aria-labelledby="summary-heading">
             <Typography
@@ -143,7 +97,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               At <strong>The College Athlete Network LLC</strong>, we greatly
@@ -170,7 +124,7 @@ export default function PrivacyPolicyComponent() {
             </List>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               For details, read our full Privacy Policy below. Questions? Email
@@ -197,7 +151,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong> &quot;Service&quot;</strong> means the
@@ -206,7 +160,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong>&quot;Personal Data&quot;</strong> means data about a
@@ -216,7 +170,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong>&quot;Usage Data&quot;</strong> is data collected
@@ -226,7 +180,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong>&quot;Cookies&quot;</strong> are small files stored on
@@ -235,7 +189,7 @@ export default function PrivacyPolicyComponent() {
 
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong>
@@ -248,7 +202,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               <strong>&quot;Data Subject (or User)&quot;</strong> is any living
@@ -281,7 +235,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We collect several different types of information for various
@@ -298,7 +252,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               While using our Service, we may ask you to provide us with certain
@@ -325,7 +279,7 @@ export default function PrivacyPolicyComponent() {
             </List>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We maintain and source publicly available professional,
@@ -337,7 +291,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We do not require any university to provide roster data; however,
@@ -355,7 +309,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We may also collect information on how the Service is accessed and
@@ -367,7 +321,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               When you access the Service with a mobile device, this Usage Data
@@ -392,7 +346,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We use cookies and similar tracking technologies to track the
@@ -400,7 +354,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Cookies are files with a small amount of data which may include an
@@ -411,7 +365,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               You can instruct your browser to refuse all cookies or to indicate
@@ -428,14 +382,14 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Session Cookies. We use Session Cookies to operate our Service.
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Preference Cookies. We use Preference Cookies to remember your
@@ -443,7 +397,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Security Cookies. We use Security Cookies for security purposes.
@@ -463,7 +417,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The Company uses the collected data for various purposes:
@@ -494,12 +448,12 @@ export default function PrivacyPolicyComponent() {
               gutterBottom
               style={{ color: "#1C315F" }}
             >
-              LEGAL BASIS FOR PROCESSING PERSONAL DATA UNDER THE GENERAL DATA
-              PROTECTION REGULATION (GDPR)
+              Legal Basis for Processing Personal Data under the General Data
+              Protection Regulation (GDPR)
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               If you are from the European Economic Area (EEA), The Company’s
@@ -509,7 +463,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               As a resident of the European Economic Area (EEA), you have
@@ -521,7 +475,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We process Personal Data based on your consent (e.g., for account
@@ -533,7 +487,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               In certain circumstances, you have the following data protection
@@ -559,7 +513,7 @@ export default function PrivacyPolicyComponent() {
 
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Please note that we may ask you to verify your identity before
@@ -567,7 +521,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               You have the right to complain to a Data Protection Authority
@@ -590,7 +544,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The Company will retain your Personal Data only for as long as is
@@ -602,7 +556,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The Company will also retain Usage Data for internal analysis
@@ -629,7 +583,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We do not employ third party companies and individuals to
@@ -639,7 +593,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               No third parties will have access to our Personal Data or will be
@@ -660,7 +614,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We may use third-party Service Providers to monitor and analyze
@@ -676,7 +630,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Google Analytics is a web analytics service offered by Google that
@@ -710,7 +664,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We provide paid products and/or services within the Service. In
@@ -728,7 +682,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We do not and will not store or collect your payment card details.
@@ -755,7 +709,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Our Service is not directed to anyone under the age of 13, and we
@@ -783,7 +737,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We may and we do update our Privacy Policy from time to time. We
@@ -807,7 +761,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Your information, including Personal Data, may be transferred to —
@@ -817,7 +771,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               If you are located outside United States and choose to provide
@@ -826,7 +780,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Your consent to this Privacy Policy followed by your submission of
@@ -834,7 +788,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The Company will take all reasonably necessary steps to ensure
@@ -867,7 +821,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               If The Company is involved in a merger, acquisition or asset sale,
@@ -885,7 +839,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               Under certain circumstances, The Company may be required to
@@ -903,7 +857,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The Company may disclose your Personal Data in the good faith
@@ -936,12 +890,12 @@ export default function PrivacyPolicyComponent() {
               gutterBottom
               style={{ color: "#1C315F" }}
             >
-              OUR POLICY ON “DO NOT TRACK” SIGNALS UNDER THE CALIFORNIA ONLINE
-              PROTECTION ACT (CALOPPA)
+              Our Policy on “Do Not Track” Signals under the California Online
+              Protection Act (CalOPPA)
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               We do not support Do Not Track (“DNT”). Do Not Track is a
@@ -950,7 +904,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               You can enable or disable Do Not Track by visiting the Preferences
@@ -971,7 +925,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               The security of our data is important to us. But remember that no
@@ -997,7 +951,7 @@ export default function PrivacyPolicyComponent() {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ textAlign: "justify", color: "#1C315F" }}
+              sx={{  color: "#1C315F" }}
               
             >
               If you have any questions about this Privacy Policy, please
@@ -1005,9 +959,6 @@ export default function PrivacyPolicyComponent() {
               <strong>admin@collegeathletenetwork.org</strong>.
             </Typography>
           </Section>
-          {/* End of sections */}
-        </PrivacyContainer>
-      </div>
-    </>
+    </LegalDocument>
   );
 }
