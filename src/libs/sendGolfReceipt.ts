@@ -94,10 +94,26 @@ export async function sendGolfPaymentReceipt(input: {
       : lineItemHtml(input.fallbackDescription || "Golf outing payment", 1, input.totalCents);
 
   const ticketLinks = (input.tickets || [])
-    .map(
-      (ticket) =>
-        `<p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.5; color: #1C315F;"><strong>${escapeHtml(ticket.name)}</strong><br><a href="${escapeHtml(ticket.url)}" style="color: #1C315F;">${escapeHtml(ticket.url)}</a></p>`
-    )
+    .map((ticket) => {
+      const page = escapeHtml(ticket.url);
+      const id = escapeHtml(ticket.url.split("/t/")[1] || "");
+      const apple = `https://www.collegeathletenetwork.org/api/tickets/${id}/pkpass`;
+      const google = `https://www.collegeathletenetwork.org/api/tickets/${id}/google`;
+      return `<p style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.4; color: #1C315F;"><strong>${escapeHtml(ticket.name)}</strong></p>
+        <p style="margin: 0 0 10px 0;">
+          <a href="${page}" style="color: #1C315F; font-size: 14px;">View ticket</a>
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 18px 0;">
+          <tr>
+            <td style="padding: 0 8px 8px 0;">
+              <a href="${apple}" style="display: inline-block; background-color: #1C315F; color: #F6F1E7; text-decoration: none; font-size: 14px; font-weight: 700; padding: 12px 16px; border-radius: 999px;">Add to Apple Wallet</a>
+            </td>
+            <td style="padding: 0 0 8px 0;">
+              <a href="${google}" style="display: inline-block; background-color: #ffffff; color: #1C315F; text-decoration: none; font-size: 14px; font-weight: 700; padding: 11px 16px; border-radius: 999px; border: 1px solid #1C315F;">Add to Google Wallet</a>
+            </td>
+          </tr>
+        </table>`;
+    })
     .join("");
   const ticketLinksHtml = ticketLinks
     ? `<h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #1C315F;">Your tickets</h3>${ticketLinks}`

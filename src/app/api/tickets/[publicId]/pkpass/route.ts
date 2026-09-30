@@ -3,7 +3,7 @@ import { rateLimit } from "@/app/api/golf/_public";
 import { buildPkPass } from "@/lib/tickets/apple";
 import { callTicketProc } from "@/lib/tickets/gateway";
 import { appleConfigured } from "@/lib/tickets/fields";
-import { ULID_PATTERN } from "@/lib/tickets/token";
+import { ticketOrigin, ULID_PATTERN } from "@/lib/tickets/token";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,7 +25,9 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pub
   const id = publicId.trim().toUpperCase();
   if (!ULID_PATTERN.test(id)) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (limited(request)) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-  if (!appleConfigured()) return NextResponse.json({ error: "Apple Wallet is not available" }, { status: 503 });
+  if (!appleConfigured()) {
+    return NextResponse.redirect(new URL(`/t/${id}?wallet=apple-unavailable`, ticketOrigin()));
+  }
   try {
     const row = await issuedTicket(id);
     if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pub
     return new NextResponse(new Uint8Array(body), {
       headers: {
         "Content-Type": "application/vnd.apple.pkpass",
-        "Content-Disposition": `attachment; filename="${id}.pkpass"`,
+        "Content-Disposition": `inline; filename="${id}.pkpass"`,
         "Cache-Control": "private, no-store",
       },
     });
