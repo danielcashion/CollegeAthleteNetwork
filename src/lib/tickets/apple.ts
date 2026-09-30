@@ -46,32 +46,54 @@ async function sourceImage(url: string | null) {
   return readFile(join(process.cwd(), "public/Logos/CANLogo1200X1200Color.png"));
 }
 
-async function mark(input: Buffer, size: number) {
-  const fitted = () =>
-    sharp(input)
-      .resize(size, size, { fit: "contain", background: { r: 247, g: 243, b: 234, alpha: 0 } })
-      .png()
-      .toBuffer();
+async function trimmedMark(input: Buffer) {
   try {
-    return await sharp(input)
-      .trim({ background: "#F7F3EA", threshold: 28 })
-      .resize(size, size, { fit: "contain", background: { r: 247, g: 243, b: 234, alpha: 0 } })
-      .png()
-      .toBuffer();
+    return await sharp(input).trim({ background: "#FFFFFF", threshold: 32 }).png().toBuffer();
   } catch {
-    return fitted();
+    return input;
   }
+}
+
+async function logoMark(input: Buffer, height: number) {
+  const trimmed = await trimmedMark(input);
+  return sharp(trimmed)
+    .resize({ height, fit: "inside", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+}
+
+async function strip(input: Buffer, width: number, height: number) {
+  const trimmed = await trimmedMark(input);
+  const emblem = await sharp(trimmed)
+    .resize({ height: Math.round(height * 0.9), fit: "inside", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const meta = await sharp(emblem).metadata();
+  const emblemWidth = meta.width || 0;
+  const emblemHeight = meta.height || 0;
+  const left = Math.max(0, width - emblemWidth - Math.round(width * 0.05));
+  const top = Math.max(0, Math.round((height - emblemHeight) / 2));
+  return sharp({
+    create: { width, height, channels: 4, background: { r: 247, g: 243, b: 234, alpha: 0 } },
+  })
+    .composite([{ input: emblem, left, top }])
+    .png()
+    .toBuffer();
 }
 
 export async function buildPkPass(row: TicketRow) {
   const fields = passFields(row);
   const publicId = String(row.public_id || "");
   const image = await sourceImage(fields.logoUrl);
-  const [icon, icon2x, logo, logo2x] = await Promise.all([
-    mark(image, 29),
-    mark(image, 58),
-    mark(image, 50),
-    mark(image, 100),
+  const [icon, icon2x, logo, logo2x, logo3x, stripImage, strip2x, strip3x] = await Promise.all([
+    logoMark(image, 29),
+    logoMark(image, 58),
+    logoMark(image, 50),
+    logoMark(image, 100),
+    logoMark(image, 150),
+    strip(image, 375, 123),
+    strip(image, 750, 246),
+    strip(image, 1125, 369),
   ]);
   const signerKey = pem("APPLE_PASS_KEY_PEM");
   const pass = new PKPass(
@@ -80,6 +102,10 @@ export async function buildPkPass(row: TicketRow) {
       "icon@2x.png": icon2x,
       "logo.png": logo,
       "logo@2x.png": logo2x,
+      "logo@3x.png": logo3x,
+      "strip.png": stripImage,
+      "strip@2x.png": strip2x,
+      "strip@3x.png": strip3x,
     },
     {
       wwdr: pem("APPLE_WWDR_PEM"),
@@ -96,6 +122,7 @@ export async function buildPkPass(row: TicketRow) {
       passTypeIdentifier: process.env.APPLE_PASS_TYPE_ID,
       teamIdentifier: process.env.APPLE_TEAM_ID,
       logoText: fields.universityName,
+      suppressStripShine: true,
       backgroundColor: rgb("#F7F3EA"),
       foregroundColor: rgb("#1C315F"),
       labelColor: rgb("#8A734B"),
@@ -104,16 +131,13 @@ export async function buildPkPass(row: TicketRow) {
   pass.type = "eventTicket";
   if (fields.relevantDate) pass.setRelevantDate(new Date(fields.relevantDate));
   pass.headerFields.push({ key: "date", label: "DATE", value: fields.dateLabel });
-  pass.primaryFields.push({
+  pass.primaryFields.push({ key: "event", label: "EVENT", value: fields.eventName });
+  pass.secondaryFields.push({ key: "where", label: "VENUE", value: fields.venue });
+  pass.auxiliaryFields.push({
     key: "assignment",
     label: fields.assignmentKind === "TABLE" ? "TABLE" : "HOLE",
     value: fields.seatValue,
   });
-  pass.secondaryFields.push({ key: "event", label: "EVENT", value: fields.eventName });
-  pass.auxiliaryFields.push(
-    { key: "guest", label: "GUEST", value: fields.holderName },
-    { key: "where", label: "VENUE", value: fields.venue }
-  );
   pass.backFields.push(
     { key: "holder", label: "GUEST", value: fields.holderName },
     { key: "confirmation", label: "CONFIRMATION", value: fields.confirmationCode },

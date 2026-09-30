@@ -88,7 +88,7 @@ export function whenLabel(row: TicketRow) {
 export function dateLabel(row: TicketRow) {
   const day = calendarDay(row);
   if (!day) return "Date TBA";
-  return formatCalendarDay(day, { month: "short", day: "numeric" });
+  return formatCalendarDay(day, { month: "short", day: "numeric", year: "numeric" });
 }
 
 export function passFields(row: TicketRow): PassFields {
