@@ -92,7 +92,7 @@ function objectBody(row: TicketRow) {
     hexBackgroundColor: fields.background,
     seatInfo: {
       section: localized(fields.assignmentKind === "TABLE" ? "Table" : "Hole"),
-      seat: localized(fields.assignment),
+      seat: localized(fields.seatValue),
     },
     barcode: {
       type: "QR_CODE",

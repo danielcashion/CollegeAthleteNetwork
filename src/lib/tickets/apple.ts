@@ -7,7 +7,22 @@ import { passFields } from "./fields";
 import { ticketUrl } from "./token";
 
 function pem(name: string) {
-  return (process.env[name] || "").replace(/\\n/g, "\n").trim();
+  let text = process.env[name] || "";
+  text = text.replace(/^\uFEFF/, "").trim();
+  if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+    text = text.slice(1, -1);
+  }
+  while (text.includes("\\n") || text.includes("\\r")) {
+    text = text.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").replace(/\\r/g, "\n");
+  }
+  text = text.replace(/\r\n/g, "\n");
+  const match = text.match(/-----BEGIN ([A-Z0-9 ]+)-----([\s\S]*?)-----END \1-----/);
+  if (!match) {
+    throw new Error(`${name} is not a PEM block. Paste the file including the BEGIN and END lines.`);
+  }
+  const body = match[2].replace(/[^A-Za-z0-9+/=]/g, "");
+  const lines = body.match(/.{1,64}/g) || [];
+  return `-----BEGIN ${match[1]}-----\n${lines.join("\n")}\n-----END ${match[1]}-----\n`;
 }
 
 function rgb(hex: string) {
@@ -30,11 +45,21 @@ async function sourceImage(url: string | null) {
   return readFile(join(process.cwd(), "public/Logos/CANLogo1200X1200Color.png"));
 }
 
-async function fitted(input: Buffer, width: number, height: number) {
-  return sharp(input)
-    .resize(width, height, { fit: "contain", background: { r: 246, g: 241, b: 231, alpha: 1 } })
-    .png()
-    .toBuffer();
+async function mark(input: Buffer, size: number) {
+  const fitted = () =>
+    sharp(input)
+      .resize(size, size, { fit: "contain", background: { r: 247, g: 243, b: 234, alpha: 0 } })
+      .png()
+      .toBuffer();
+  try {
+    return await sharp(input)
+      .trim({ background: "#F7F3EA", threshold: 28 })
+      .resize(size, size, { fit: "contain", background: { r: 247, g: 243, b: 234, alpha: 0 } })
+      .png()
+      .toBuffer();
+  } catch {
+    return fitted();
+  }
 }
 
 export async function buildPkPass(row: TicketRow) {
@@ -42,11 +67,12 @@ export async function buildPkPass(row: TicketRow) {
   const publicId = String(row.public_id || "");
   const image = await sourceImage(fields.logoUrl);
   const [icon, icon2x, logo, logo2x] = await Promise.all([
-    fitted(image, 29, 29),
-    fitted(image, 58, 58),
-    fitted(image, 160, 50),
-    fitted(image, 320, 100),
+    mark(image, 29),
+    mark(image, 58),
+    mark(image, 50),
+    mark(image, 100),
   ]);
+  const signerKey = pem("APPLE_PASS_KEY_PEM");
   const pass = new PKPass(
     {
       "icon.png": icon,
@@ -57,8 +83,10 @@ export async function buildPkPass(row: TicketRow) {
     {
       wwdr: pem("APPLE_WWDR_PEM"),
       signerCert: pem("APPLE_PASS_CERT_PEM"),
-      signerKey: pem("APPLE_PASS_KEY_PEM"),
-      signerKeyPassphrase: process.env.APPLE_PASS_KEY_PASSPHRASE || undefined,
+      signerKey,
+      signerKeyPassphrase: signerKey.includes("ENCRYPTED")
+        ? process.env.APPLE_PASS_KEY_PASSPHRASE || undefined
+        : undefined,
     },
     {
       serialNumber: publicId,
@@ -67,23 +95,23 @@ export async function buildPkPass(row: TicketRow) {
       passTypeIdentifier: process.env.APPLE_PASS_TYPE_ID,
       teamIdentifier: process.env.APPLE_TEAM_ID,
       logoText: fields.universityName,
-      backgroundColor: rgb(fields.background),
-      foregroundColor: rgb(fields.foreground),
-      labelColor: rgb(fields.label),
+      backgroundColor: rgb("#F7F3EA"),
+      foregroundColor: rgb("#1C315F"),
+      labelColor: rgb("#8A734B"),
     }
   );
   pass.type = "eventTicket";
   if (fields.relevantDate) pass.setRelevantDate(new Date(fields.relevantDate));
-  pass.headerFields.push({ key: "university", label: "UNIVERSITY", value: fields.universityName });
-  pass.primaryFields.push({ key: "event", label: "EVENT", value: fields.eventName });
-  pass.secondaryFields.push({
+  pass.headerFields.push({ key: "date", label: "DATE", value: fields.dateLabel });
+  pass.primaryFields.push({
     key: "assignment",
     label: fields.assignmentKind === "TABLE" ? "TABLE" : "HOLE",
-    value: fields.assignment,
+    value: fields.seatValue,
   });
+  pass.secondaryFields.push({ key: "event", label: "EVENT", value: fields.eventName });
   pass.auxiliaryFields.push(
-    { key: "when", label: "WHEN", value: fields.whenLabel },
-    { key: "where", label: "WHERE", value: fields.venue }
+    { key: "guest", label: "GUEST", value: fields.holderName },
+    { key: "where", label: "VENUE", value: fields.venue }
   );
   pass.backFields.push(
     { key: "guest", label: "GUEST", value: fields.holderName },
