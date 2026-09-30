@@ -9,6 +9,8 @@ export type PassFields = {
   eventName: string;
   universityName: string;
   assignment: string;
+  seatValue: string;
+  dateLabel: string;
   assignmentKind: "HOLE" | "TABLE";
   whenLabel: string;
   relevantDate: string | null;
@@ -59,31 +61,34 @@ function venueLine(row: TicketRow) {
   return [row.venue_name, row.venue_city, row.venue_state].map((part) => String(part || "").trim()).filter(Boolean).join(", ");
 }
 
+function calendarDay(row: TicketRow) {
+  const raw = String(row.event_date || row.event_startdate || "").trim();
+  const match = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  return match ? match[1] : null;
+}
+
+function formatCalendarDay(day: string, options: Intl.DateTimeFormatOptions) {
+  const [year, month, date] = day.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", { ...options, timeZone: "UTC" }).format(
+    new Date(Date.UTC(year, month - 1, date, 12))
+  );
+}
+
 export function relevantDate(row: TicketRow) {
-  const raw = row.event_startdate || row.checkin_opens_at || row.event_date;
-  if (!raw) return null;
-  const date = new Date(raw);
-  if (Number.isNaN(date.getTime())) {
-    const day = String(raw).slice(0, 10);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
-    return `${day}T12:00:00`;
-  }
-  return date.toISOString();
+  const day = calendarDay(row);
+  return day ? `${day}T13:00:00Z` : null;
 }
 
 export function whenLabel(row: TicketRow) {
-  const raw = row.event_startdate || row.checkin_opens_at || row.event_date;
-  if (!raw) return "Date to be announced";
-  const date = new Date(raw);
-  if (Number.isNaN(date.getTime())) return String(raw).slice(0, 10);
-  const hasClock = Boolean(row.event_startdate || row.checkin_opens_at);
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    ...(hasClock ? { hour: "numeric", minute: "2-digit", timeZone: row.tz || "America/New_York" } : {}),
-  }).format(date);
+  const day = calendarDay(row);
+  if (!day) return "Date to be announced";
+  return formatCalendarDay(day, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
+export function dateLabel(row: TicketRow) {
+  const day = calendarDay(row);
+  if (!day) return "Date TBA";
+  return formatCalendarDay(day, { month: "short", day: "numeric" });
 }
 
 export function passFields(row: TicketRow): PassFields {
@@ -91,11 +96,14 @@ export function passFields(row: TicketRow): PassFields {
   const value = row.live_assignment_value ?? row.assignment_value;
   const colors = passColors(row.primary_hex);
   const holder = `${row.first_name || ""} ${row.last_name || ""}`.trim() || "Guest";
+  const seat = String(value || "").trim();
   return {
     holderName: holder,
     eventName: row.event_name || "Event",
     universityName: row.university_name || "The College Athlete Network",
     assignment: assignmentLabel(kind, value),
+    seatValue: seat || "To be assigned",
+    dateLabel: dateLabel(row),
     assignmentKind: kind,
     whenLabel: whenLabel(row),
     relevantDate: relevantDate(row),
