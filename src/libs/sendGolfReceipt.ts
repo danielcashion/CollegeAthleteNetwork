@@ -71,6 +71,7 @@ export async function sendGolfPaymentReceipt(input: {
   paymentMethod?: string | null;
   transactionId?: string | null;
   fallbackDescription?: string | null;
+  tickets?: { name: string; url: string }[];
 }) {
   const to = String(input.purchaserEmail || "").trim();
   if (!emailRegex.test(to)) {
@@ -92,6 +93,15 @@ export async function sendGolfPaymentReceipt(input: {
           .join("")
       : lineItemHtml(input.fallbackDescription || "Golf outing payment", 1, input.totalCents);
 
+  const ticketLinks = (input.tickets || [])
+    .map(
+      (ticket) =>
+        `<p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.5; color: #1C315F;"><strong>${escapeHtml(ticket.name)}</strong><br><a href="${escapeHtml(ticket.url)}" style="color: #1C315F;">${escapeHtml(ticket.url)}</a></p>`
+    )
+    .join("");
+  const ticketLinksHtml = ticketLinks
+    ? `<h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #1C315F;">Your tickets</h3>${ticketLinks}`
+    : "";
   const outingUrl = `https://www.collegeathletenetwork.org/golf-outing/${input.event.public_url_slug}`;
   const support = input.event.contact_email
     ? `Contact ${input.event.contact_name ? `${input.event.contact_name} at ` : ""}${input.event.contact_email} with questions about this outing.`
@@ -119,6 +129,7 @@ export async function sendGolfPaymentReceipt(input: {
     transaction_id: escapeHtml(input.transactionId || "—"),
     support_blurb: escapeHtml(support),
     outing_url: outingUrl,
+    ticket_links_html: ticketLinksHtml,
     year: String(new Date().getFullYear()),
   });
 
