@@ -115,7 +115,7 @@ export async function buildPkPass(row: TicketRow) {
     { key: "where", label: "VENUE", value: fields.venue }
   );
   pass.backFields.push(
-    { key: "guest", label: "GUEST", value: fields.holderName },
+    { key: "holder", label: "GUEST", value: fields.holderName },
     { key: "confirmation", label: "CONFIRMATION", value: fields.confirmationCode },
     { key: "payment", label: "PAYMENT", value: fields.paidLabel },
     { key: "support", label: "SUPPORT", value: fields.support },
