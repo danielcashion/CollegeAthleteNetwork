@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { rateLimit } from "@/app/api/golf/_public";
 import { TicketActions, TicketQr } from "@/components/tickets/TicketChrome";
 import { callTicketProc } from "@/lib/tickets/gateway";
-import { appleConfigured, googleConfigured, passFields } from "@/lib/tickets/fields";
+import { passFields } from "@/lib/tickets/fields";
 import { ULID_PATTERN, ticketUrl } from "@/lib/tickets/token";
 
 export const dynamic = "force-dynamic";
@@ -37,6 +37,8 @@ export default async function TicketPage({
   if (!ULID_PATTERN.test(id)) notFound();
 
   const headerList = await headers();
+  const agent = headerList.get("user-agent") || "";
+  const platform = /iPhone|iPad|iPod/i.test(agent) ? "ios" : /Android/i.test(agent) ? "android" : "other";
   const ip = headerList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   if (!rateLimit(`ticket:${ip}`, 30, 10 * 60 * 1000)) {
     return unavailable("Please wait a moment and open this ticket again.");
@@ -87,9 +89,12 @@ export default async function TicketPage({
           </div>
           <p className="mt-3 text-center font-mono text-xs tracking-[0.2em] text-[#1C315F]/70">{fields.confirmationCode}</p>
           {query.wallet === "google-unavailable" ? (
-            <p className="mt-4 text-center text-sm text-[#1C315F]/70">Google Wallet is not available for this ticket yet.</p>
+            <p className="mt-4 text-center text-sm text-[#1C315F]/70">Google Wallet is not connected for this site yet.</p>
           ) : null}
-          <TicketActions publicId={id} apple={appleConfigured()} google={googleConfigured()} />
+          {query.wallet === "apple-unavailable" ? (
+            <p className="mt-4 text-center text-sm text-[#1C315F]/70">Apple Wallet is not connected for this site yet.</p>
+          ) : null}
+          <TicketActions publicId={id} platform={platform} />
           <p className="mt-8 text-center text-xs text-[#1C315F]/50">Powered by The College Athlete Network</p>
         </div>
       </article>

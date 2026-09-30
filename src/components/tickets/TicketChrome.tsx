@@ -20,34 +20,31 @@ export function TicketQr({ value }: { value: string }) {
 
 export function TicketActions({
   publicId,
-  apple,
-  google,
+  platform,
 }: {
   publicId: string;
-  apple: boolean;
-  google: boolean;
+  platform: "ios" | "android" | "other";
 }) {
-  if (!apple && !google) return null;
-  return (
-    <div className="mt-6 flex flex-col gap-3">
-      {apple ? (
-        <a
-          href={`/api/tickets/${publicId}/pkpass`}
-          className="inline-flex items-center justify-center rounded-full bg-[#1C315F] px-5 py-3 text-sm font-semibold text-[#F6F1E7]"
-        >
-          Add to Apple Wallet
-        </a>
-      ) : null}
-      {google ? (
-        <a
-          href={`/api/tickets/${publicId}/google`}
-          className="inline-flex items-center justify-center rounded-full border border-[#1C315F] px-5 py-3 text-sm font-semibold text-[#1C315F]"
-        >
-          Add to Google Wallet
-        </a>
-      ) : null}
-    </div>
+  const apple = (
+    <a
+      key="apple"
+      href={`/api/tickets/${publicId}/pkpass`}
+      className="inline-flex items-center justify-center rounded-full bg-[#1C315F] px-5 py-3 text-sm font-semibold text-[#F6F1E7]"
+    >
+      Add to Apple Wallet
+    </a>
   );
+  const google = (
+    <a
+      key="google"
+      href={`/api/tickets/${publicId}/google`}
+      className="inline-flex items-center justify-center rounded-full border border-[#1C315F] px-5 py-3 text-sm font-semibold text-[#1C315F]"
+    >
+      Add to Google Wallet
+    </a>
+  );
+  const buttons = platform === "android" ? [google, apple] : [apple, google];
+  return <div className="mt-6 flex flex-col gap-3">{buttons}</div>;
 }
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
