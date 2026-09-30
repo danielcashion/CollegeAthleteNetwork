@@ -7,7 +7,22 @@ import { passFields } from "./fields";
 import { ticketUrl } from "./token";
 
 function pem(name: string) {
-  return (process.env[name] || "").replace(/\\n/g, "\n").trim();
+  let text = process.env[name] || "";
+  text = text.replace(/^\uFEFF/, "").trim();
+  if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+    text = text.slice(1, -1);
+  }
+  while (text.includes("\\n") || text.includes("\\r")) {
+    text = text.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").replace(/\\r/g, "\n");
+  }
+  text = text.replace(/\r\n/g, "\n");
+  const match = text.match(/-----BEGIN ([A-Z0-9 ]+)-----([\s\S]*?)-----END \1-----/);
+  if (!match) {
+    throw new Error(`${name} is not a PEM block. Paste the file including the BEGIN and END lines.`);
+  }
+  const body = match[2].replace(/[^A-Za-z0-9+/=]/g, "");
+  const lines = body.match(/.{1,64}/g) || [];
+  return `-----BEGIN ${match[1]}-----\n${lines.join("\n")}\n-----END ${match[1]}-----\n`;
 }
 
 function rgb(hex: string) {
@@ -47,6 +62,7 @@ export async function buildPkPass(row: TicketRow) {
     fitted(image, 160, 50),
     fitted(image, 320, 100),
   ]);
+  const signerKey = pem("APPLE_PASS_KEY_PEM");
   const pass = new PKPass(
     {
       "icon.png": icon,
@@ -57,8 +73,10 @@ export async function buildPkPass(row: TicketRow) {
     {
       wwdr: pem("APPLE_WWDR_PEM"),
       signerCert: pem("APPLE_PASS_CERT_PEM"),
-      signerKey: pem("APPLE_PASS_KEY_PEM"),
-      signerKeyPassphrase: process.env.APPLE_PASS_KEY_PASSPHRASE || undefined,
+      signerKey,
+      signerKeyPassphrase: signerKey.includes("ENCRYPTED")
+        ? process.env.APPLE_PASS_KEY_PASSPHRASE || undefined
+        : undefined,
     },
     {
       serialNumber: publicId,
