@@ -46,6 +46,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pub
     });
   } catch (error) {
     console.error("pkpass failed", error);
-    return NextResponse.json({ error: "Apple Wallet is not available" }, { status: 503 });
+    const message = error instanceof Error ? error.message : "Apple Wallet is not available";
+    return NextResponse.json({ error: message }, { status: 503 });
   }
 }

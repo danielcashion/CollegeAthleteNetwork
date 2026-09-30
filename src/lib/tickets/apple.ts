@@ -7,7 +7,8 @@ import { passFields } from "./fields";
 import { ticketUrl } from "./token";
 
 function pem(name: string) {
-  let text = process.env[name] || "";
+  const env = process.env as Record<string, string | undefined>;
+  let text = env[name] || "";
   text = text.replace(/^\uFEFF/, "").trim();
   if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
     text = text.slice(1, -1);

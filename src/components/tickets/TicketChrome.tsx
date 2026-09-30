@@ -27,16 +27,16 @@ export function TicketActions({
 }) {
   const apple = (
     <a key="apple" href={`/api/tickets/${publicId}/pkpass`} className="inline-flex">
-      <img src="/images/AddtoAppleWallet.png" alt="Add to Apple Wallet" className="h-11 w-auto" />
+      <img src="/images/AddtoAppleWallet.png" alt="Add to Apple Wallet" className="h-12 w-auto" />
     </a>
   );
   const google = (
     <a key="google" href={`/api/tickets/${publicId}/google`} className="inline-flex">
-      <img src="/images/AddToGoogleWallet.png" alt="Add to Google Wallet" className="h-11 w-auto" />
+      <img src="/images/AddToGoogleWallet.png" alt="Add to Google Wallet" className="h-12 w-auto" />
     </a>
   );
   const buttons = platform === "ios" ? [apple] : platform === "android" ? [google] : [apple, google];
-  return <div className="mt-6 flex flex-col gap-3">{buttons}</div>;
+  return <div className="mt-8 flex flex-col items-center gap-4">{buttons}</div>;
 }
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
