@@ -77,7 +77,7 @@ function sanitizePostcss(content) {
     return { changed: false, content };
   }
 
-  if (content.startsWith(expectedContent)) {
+  if (content.startsWith(expectedContent.slice(0, -eol.length))) {
     return { changed: true, content: expectedContent };
   }
 
