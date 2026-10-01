@@ -48,6 +48,12 @@ function paymentMethodLabel(method?: string | null) {
       return "Venmo";
     case "card":
       return "Debit or credit card";
+    case "applepay":
+      return "Apple Pay";
+    case "cash":
+      return "Cash";
+    case "check":
+      return "Check";
     default:
       return "PayPal";
   }
