@@ -39,6 +39,7 @@ export type TicketRow = {
   event_date?: string | null;
   tz?: string | null;
   venue_name?: string | null;
+  venue_address?: string | null;
   venue_city?: string | null;
   venue_state?: string | null;
   logo_url?: string | null;

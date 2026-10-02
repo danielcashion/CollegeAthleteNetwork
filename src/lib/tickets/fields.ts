@@ -15,6 +15,7 @@ export type PassFields = {
   whenLabel: string;
   relevantDate: string | null;
   venue: string;
+  venueAddress: string;
   paidLabel: string;
   confirmationCode: string;
   support: string;
@@ -59,6 +60,10 @@ export function passColors(primary?: string | null) {
 
 function venueLine(row: TicketRow) {
   return [row.venue_name, row.venue_city, row.venue_state].map((part) => String(part || "").trim()).filter(Boolean).join(", ");
+}
+
+export function venueAddress(row: TicketRow) {
+  return String(row.venue_address || "").trim();
 }
 
 function calendarDay(row: TicketRow) {
@@ -108,6 +113,7 @@ export function passFields(row: TicketRow): PassFields {
     whenLabel: whenLabel(row),
     relevantDate: relevantDate(row),
     venue: venueLine(row) || "Venue to be announced",
+    venueAddress: venueAddress(row),
     paidLabel: paidStatusLabel(row.paid_status),
     confirmationCode: row.confirmation_code || "",
     support: row.contact_email || "admin@collegeathletenetwork.org",
