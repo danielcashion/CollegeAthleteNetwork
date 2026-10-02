@@ -26,6 +26,22 @@ function pem(name: string) {
   return `-----BEGIN ${match[1]}-----\n${lines.join("\n")}\n-----END ${match[1]}-----\n`;
 }
 
+function escapeHtml(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function venueField(name: string, address: string) {
+  const field: { key: string; label: string; value: string; attributedValue?: string } = {
+    key: "where",
+    label: "VENUE",
+    value: name,
+  };
+  if (!address) return field;
+  const maps = `https://maps.apple.com/?address=${encodeURIComponent(address)}`;
+  field.attributedValue = `${escapeHtml(name)} <a href="${escapeHtml(maps)}">\u{1F5FA}</a>`;
+  return field;
+}
+
 function rgb(hex: string) {
   const value = hex.replace("#", "");
   const r = Number.parseInt(value.slice(0, 2), 16);
@@ -106,7 +122,7 @@ export async function buildPkPass(row: TicketRow) {
   if (fields.relevantDate) pass.setRelevantDate(new Date(fields.relevantDate));
   pass.headerFields.push({ key: "date", label: "DATE", value: fields.dateLabel });
   pass.primaryFields.push({ key: "event", label: "EVENT", value: fields.eventName });
-  pass.secondaryFields.push({ key: "where", label: "VENUE", value: fields.venue });
+  pass.secondaryFields.push(venueField(fields.venue, fields.venueAddress));
   pass.auxiliaryFields.push({
     key: "assignment",
     label: fields.assignmentKind === "TABLE" ? "TABLE" : "HOLE",
