@@ -54,8 +54,10 @@ declare global {
   }
 }
 
+const imported = ["Name", "Email", "Phone"];
+
 export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, guestName }: Props) {
-  const [message, setMessage] = useState("Checking Apple Pay on this phone.");
+  const [message, setMessage] = useState("");
   const [ready, setReady] = useState(false);
   const [paid, setPaid] = useState(false);
   const amount = amountLabel.replace(/[$,]/g, "");
@@ -79,7 +81,7 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
           return;
         }
         setReady(true);
-        setMessage("Apple Pay will ask for your name, email, and phone, then charge this amount.");
+        setMessage("");
       } catch {
         if (!cancelled) setMessage("Open this page in Safari on iPhone to pay with Apple Pay.");
       }
@@ -122,7 +124,7 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
         .then(() => {
           session.completePayment({ status: ApplePaySession.STATUS_SUCCESS });
           setPaid(true);
-          setMessage("Payment approved. You can close this page.");
+          setMessage("");
         })
         .catch(() => {
           session.completePayment({ status: ApplePaySession.STATUS_FAILURE });
@@ -134,24 +136,61 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] px-5 py-10 text-[#1C315F]">
-      <section className="mx-auto w-full max-w-md rounded-3xl bg-white px-6 py-8 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#1C315F]/60">Apple Pay</p>
-        <h1 className="mt-3 text-3xl font-semibold leading-tight">{eventName}</h1>
-        {guestName ? <p className="mt-2 text-lg">{guestName}</p> : null}
-        <p className="mt-4 text-4xl font-semibold">{amountLabel}</p>
-        <p className="mt-4 text-base leading-6">{message}</p>
-        {paid || !ready ? null : (
-          <button
-            type="button"
-            onClick={() => void pay()}
-            className="mt-6 w-full rounded-xl bg-black px-4 py-3.5 text-[17px] font-semibold text-white"
-          >
-            Pay with Apple Pay
-          </button>
-        )}
-      </section>
+    <div className="min-h-screen bg-[#F6F1E7] px-5 py-8 text-[#1C315F]">
+      <article className="mx-auto w-full max-w-md overflow-hidden rounded-[28px] border border-[#1C315F]/10 bg-white shadow-[0_24px_60px_rgba(28,49,95,0.12)]">
+        <header className="bg-[#1C315F] px-7 pb-7 pt-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C6A15B]">The College Athlete Network</p>
+          <h1 className="mt-4 text-[32px] font-semibold leading-[1.15] text-[#F6F1E7]">{eventName}</h1>
+          {guestName ? <p className="mt-2 text-base text-[#F6F1E7]/75">{guestName}</p> : null}
+        </header>
+        <div className="px-7 py-7">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1C315F]/45">Amount due</p>
+          <p className="mt-1 text-[44px] font-semibold leading-none tracking-tight">{amountLabel}</p>
+          {paid ? (
+            <p className="mt-6 text-base leading-6">
+              You&apos;re all set. You can close this page. The event has your payment, and your name, email, and phone came through from Apple Pay.
+            </p>
+          ) : (
+            <div className="mt-6 rounded-2xl bg-[#F6F1E7] px-4 py-4">
+              <p className="text-[15px] font-semibold">Nothing to type</p>
+              <p className="mt-1.5 text-sm leading-5 text-[#1C315F]/80">
+                We&apos;ll import your name, email, and phone from Apple Pay. They&apos;re already on this iPhone, so you can pay without filling out a form.
+              </p>
+              <ul className="mt-4 space-y-2">
+                {imported.map((label) => (
+                  <li key={label} className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{label}</span>
+                    <span className="text-[#1C315F]/55">From Apple Pay</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {ready && !paid ? (
+            <button
+              type="button"
+              onClick={() => void pay()}
+              className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-black text-[19px] font-medium tracking-tight text-white"
+            >
+              <AppleMark />
+              Pay
+            </button>
+          ) : null}
+          {message ? <p className="mt-4 text-center text-sm leading-5 text-[#1C315F]/70">{message}</p> : null}
+        </div>
+      </article>
     </div>
+  );
+}
+
+function AppleMark() {
+  return (
+    <svg viewBox="0 0 14 17" aria-hidden="true" className="h-[18px] w-[15px]">
+      <path
+        fill="currentColor"
+        d="M13.3 5.7c-.1.1-1.6.9-1.6 2.8 0 2.2 1.9 3 2 3-.1.2-.3 1-1 1.9-.6.8-1.3 1.7-2.3 1.7s-1.3-.5-2.4-.5-1.5.5-2.4.5-1.6-.8-2.3-1.7C2.2 12.1 1.4 10 1.4 8c0-2.9 1.9-4.4 3.7-4.4 1 0 1.8.6 2.4.6.6 0 1.6-.7 2.8-.6.5 0 1.8.2 2.6 1.4-.1.1-1.6.9-1.6 2.7zM10.2 2.6c.5-.6.8-1.4.7-2.2-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.2-1.1z"
+      />
+    </svg>
   );
 }
 
