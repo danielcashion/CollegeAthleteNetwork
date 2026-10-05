@@ -313,7 +313,6 @@ export async function reserveCharge(organizer: Organizer, event: DoorEvent, gues
       const ticket = tickets.find((item) => item.ticket_type_status !== "ARCHIVED" && Number(item.unit_price_cents) > 0);
       amountCents = Number(ticket?.unit_price_cents || 0);
       if (!amountCents) throw new HttpError("No open balance", 400);
-      const [firstName, ...rest] = guest.name.split(" ");
       const created = await apiSend<GolfOrder>("post", "/golf_orders", {
         event_id: event.golfEventId,
         purchaser_name: guest.name,

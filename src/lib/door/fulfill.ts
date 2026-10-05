@@ -1,7 +1,6 @@
 import { DoorEvent } from "./events";
 import { Guest } from "./registrants";
-import { capturePayPalOrder, paymentMethod } from "./paypal";
-import { PayToken } from "./session";
+import { paymentMethod } from "./paypal";
 import { apiSend, callProc, publicApiBase } from "./upstream";
 
 export async function recordCapturedPayment(input: {
@@ -69,26 +68,6 @@ export async function recordCapturedPayment(input: {
   }
 
   return { success: true, captureId: input.captureId };
-}
-
-export async function fulfillPayment(token: PayToken, orderID: string, methodInput?: string | null) {
-  if (token.paypalOrderId !== orderID) {
-    throw new Error("PayPal order does not match this checkout");
-  }
-  const captured = await capturePayPalOrder(orderID);
-  return recordCapturedPayment({
-    kind: token.kind,
-    golfOrderId: token.golfOrderId,
-    registrantId: token.registrantId,
-    memberId: token.memberId,
-    amountCents: token.amountCents,
-    orderID,
-    captureId: captured.captureId,
-    method: paymentMethod(methodInput),
-    purchaserName: token.purchaserName,
-    purchaserEmail: token.purchaserEmail,
-    eventName: token.eventName,
-  });
 }
 
 export function chargeDescription(event: DoorEvent, guest: Guest) {
