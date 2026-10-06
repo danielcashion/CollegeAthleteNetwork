@@ -1,7 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { getPayPalConfig } from "@/libs/paypal";
-import { sendGolfPaymentReceipt } from "@/libs/sendGolfReceipt";
+import { deliverOrderTickets } from "@/lib/tickets/deliver";
 import { assertPublishedOuting, callPublicGolfProc, getAccessToken, getPublicGolfOrder } from "../../_public";
 
 export async function POST(request: NextRequest) {
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
   const fulfilled = result && typeof result === "object" ? (result as { idempotent?: number }) : {};
   if (!Number(fulfilled.idempotent)) {
     try {
-      await sendGolfPaymentReceipt({
+      await deliverOrderTickets({
         orderId: Number(golfData.order_id),
         event,
         purchaserName: golfData.purchaser_name || pending.purchaser_name,
@@ -66,9 +66,10 @@ export async function POST(request: NextRequest) {
         transactionId: capture?.id || orderID,
         fallbackDescription:
           typeof golfData.event_name === "string" ? `${golfData.category || "Golf"} — ${golfData.event_name}` : event.event_name,
+        memberId,
       });
     } catch (err) {
-      console.error("golf public receipt email failed", err);
+      console.error("ticket deliver failed", err);
     }
   }
 

@@ -2,17 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
 import { NextWebVitalsMetric } from "next/app";
-import ConditionalLogUserIP from "@/components/UserAudit/ConditionalLogUserIP";
-import ConditionalVisitorEventsTracker from "@/components/VisitorIntelligence/ConditionalVisitorEventsTracker";
-import CanVideoModal from "@/components/Modals/CanVideoModal";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
-import ErrorBoundary from "@/components/common/ErrorBoundary";
-import FloatingActionButton from "@/components/FloatingActionButton";
+import { SiteFrame } from "@/components/tickets/TicketChrome";
 
 export const openSans = Open_Sans({
   subsets: ["latin"],
@@ -89,21 +83,7 @@ export default function RootLayout({
               Skip to Footer
             </a>
           </nav>
-          <nav id="site-navigation" aria-label="Site navigation" tabIndex={-1}>
-            <Navbar />
-          </nav>
-          <main id="main-content" aria-label="Main content" role="main">
-            <ErrorBoundary>
-              {children}
-            </ErrorBoundary>
-          </main>
-          <footer id="site-footer" aria-label="Site footer" role="contentinfo">
-            <Footer />
-          </footer>
-          <FloatingActionButton />
-          <CanVideoModal />
-          <ConditionalLogUserIP />
-          <ConditionalVisitorEventsTracker />
+          <SiteFrame>{children}</SiteFrame>
           <Analytics />
           <ToasterProvider />
           <GoogleAnalyticsClient />
