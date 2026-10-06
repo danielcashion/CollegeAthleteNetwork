@@ -1,5 +1,6 @@
 import { getUniqueUniversityMeta } from "@/services/getUniqueUniversityMeta";
 import { getUniversitySportsList } from "@/services/getUniversitySports";
+import { listPublishedPublicEvents } from "@/services/getGolfOutingPublic";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -10,6 +11,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const universities = await getUniqueUniversityMeta();
     const sportsList = await getUniversitySportsList();
+    const publishedEvents = await listPublishedPublicEvents().catch(() => []);
     const baseUrl = "https://www.collegeathletenetwork.org";
 
     const personaPages = [
@@ -80,6 +82,12 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
           };
         })
         .filter(Boolean),
+
+      ...publishedEvents.map((event) => ({
+        url: `${baseUrl}/${event.product_type === "NETWORKING" ? "networking-event" : "golf-outing"}/${event.public_url_slug}`,
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      })),
     ];
 
     return sitemapEntries;

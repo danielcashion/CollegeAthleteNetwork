@@ -100,14 +100,14 @@ async function getDynamicSitemapPaths() {
         const golfData = await golfRes.json();
         const outings = Array.isArray(golfData) ? golfData : golfData?.resource || [];
         outings.forEach((outing) => {
-          if (outing.public_url_slug) {
-            result.push({
-              loc: `/golf-outing/${outing.public_url_slug}`,
-              changefreq: 'weekly',
-              priority: 0.6,
-              lastmod: new Date().toISOString(),
-            });
-          }
+          if (!outing.public_url_slug || outing.event_status !== 'PUBLISHED' || outing.is_active_YN === 0) return;
+          const section = outing.product_type === 'NETWORKING' ? 'networking-event' : 'golf-outing';
+          result.push({
+            loc: `/${section}/${outing.public_url_slug}`,
+            changefreq: 'weekly',
+            priority: 0.6,
+            lastmod: new Date().toISOString(),
+          });
         });
       }
     } catch (golfError) {

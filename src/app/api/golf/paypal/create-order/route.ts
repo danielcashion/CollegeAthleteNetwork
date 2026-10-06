@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
   if (!event) {
     return NextResponse.json({ error: "Outing is not available for checkout" }, { status: 400 });
   }
-  if (golfData.category === "REGISTRATION" && event.event_status !== "PUBLISHED") {
-    return NextResponse.json({ error: "Registration is not open" }, { status: 400 });
+  if (event.event_status !== "PUBLISHED") {
+    return NextResponse.json({ error: "This event is not published" }, { status: 400 });
   }
 
   const accessToken = await getAccessToken();

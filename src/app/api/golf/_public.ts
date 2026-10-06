@@ -50,7 +50,12 @@ export async function assertPublishedOuting(event_id: string) {
   if (!res.ok) return null;
   const data = await res.json();
   const rows = Array.isArray(data) ? data : data?.resource || (data ? [data] : []);
-  return rows.find((row: { event_id: string }) => row.event_id === event_id) || null;
+  return (
+    rows.find(
+      (row: { event_id?: string; event_status?: string; is_active_YN?: number }) =>
+        row.event_id === event_id && row.is_active_YN !== 0 && row.event_status === "PUBLISHED"
+    ) || null
+  );
 }
 
 export { callPublicGolfProc, getPublicGolfOrder, getPublicGolfOutingBySlug };

@@ -21,7 +21,7 @@ function remainingOf(pkg: GolfPackagePublic) {
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const event = await assertPublishedOuting(body.event_id);
-  if (!event || !["PUBLISHED", "SOLD_OUT", "REGISTRATION_CLOSED"].includes(event.event_status)) {
+  if (!event || event.event_status !== "PUBLISHED") {
     return NextResponse.json({ error: "Sponsorships are not available" }, { status: 400 });
   }
 
