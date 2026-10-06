@@ -4,6 +4,8 @@ import GolfRegisterForm from "@/components/GolfOutingPage/GolfRegisterForm";
 import { formatOutingDate, venueLine } from "@/components/GolfOutingPage/golfOutingDisplay";
 import { getPublicGolfOutingBySlug, listPublicTickets } from "@/services/getGolfOutingPublic";
 
+export const dynamic = "force-dynamic";
+
 export default async function NetworkingRegisterPage({
   params,
   searchParams,

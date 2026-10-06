@@ -151,18 +151,28 @@ async function publicGet<T>(
   return unwrap<T>(await res.json());
 }
 
+export function isPublishedOuting(row: { event_status?: string | null; is_active_YN?: number | null }) {
+  return row.is_active_YN !== 0 && row.event_status === "PUBLISHED";
+}
+
+export async function listPublishedPublicEvents(): Promise<GolfOutingPublic[]> {
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", undefined, { fresh: true })).map(
+    withCalendarEventDate
+  );
+  return rows.filter((row) => isPublishedOuting(row) && Boolean(row.public_url_slug));
+}
+
 export async function listPublicGolfOutings(filters?: {
   university_name?: string;
   q?: string;
   date_from?: string;
   date_to?: string;
 }): Promise<GolfOutingPublic[]> {
-  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public")).map(withCalendarEventDate);
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", undefined, { fresh: true })).map(
+    withCalendarEventDate
+  );
   return rows.filter((row) => {
-    if (row.is_active_YN === 0) return false;
-    if (!["PUBLISHED", "SOLD_OUT", "REGISTRATION_CLOSED", "COMPLETED"].includes(row.event_status)) {
-      return false;
-    }
+    if (!isPublishedOuting(row)) return false;
     if (filters?.university_name && row.university_name.toLowerCase() !== filters.university_name.toLowerCase()) {
       return false;
     }
@@ -181,11 +191,16 @@ export async function getPublicGolfOutingBySlug(
   slug: string,
   productType: "GOLF" | "NETWORKING" = "GOLF"
 ): Promise<GolfOutingPublic | null> {
-  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug })).map(
-    withCalendarEventDate
-  );
+  const rows = (
+    await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug }, { fresh: true })
+  ).map(withCalendarEventDate);
   return (
-    rows.find((row) => row.public_url_slug === slug && (row.product_type || "GOLF") === productType) ?? null
+    rows.find(
+      (row) =>
+        row.public_url_slug === slug &&
+        (row.product_type || "GOLF") === productType &&
+        isPublishedOuting(row)
+    ) ?? null
   );
 }
 
