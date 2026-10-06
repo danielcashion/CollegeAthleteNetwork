@@ -309,6 +309,7 @@ export async function getPublicGolfOrder(order_id: number) {
     order_status: string;
     purchaser_email: string;
     purchaser_name: string;
+    purchaser_phone?: string | null;
     member_id?: string | null;
     paypal_order_id?: string | null;
   }>("golf_orders", { order_id });

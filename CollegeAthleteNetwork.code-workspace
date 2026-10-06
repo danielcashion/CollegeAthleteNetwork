@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../CollegeAthleteNetworkMembers/CollegeAthleteNetworkMembers"
+		},
+		{
+			"path": "../../CollegeAthleteNetworkEvents/CollegeAthleteNetworkEvents"
+		}
+	],
+	"settings": {}
+}

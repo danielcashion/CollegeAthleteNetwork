@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
         amount: { currency_code: currency, value: (amount / 100).toFixed(2) },
         description: `${golfData.category || "GOLF"} ${golfData.event_name || event.event_name}`.trim(),
         custom_id: `golf_${golfData.order_id}_${Date.now()}`,
+        invoice_id: String(golfData.order_id),
       },
     ],
     application_context: {

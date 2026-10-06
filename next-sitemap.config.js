@@ -7,13 +7,13 @@ module.exports = {
   sitemapSize: 10000, // Adjust if needed
   changefreq: 'daily',
   priority: 0.7,
-  exclude: ['/admin'], // Excluded pages
+  exclude: ['/admin', '/admin/*', '/t/*', '/api/*'],
   additionalPaths: async (config) => {
     return await getDynamicSitemapPaths();
   },
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: '/' },
+      { userAgent: '*', allow: '/', disallow: ['/t/', '/api/tickets'] },
       { userAgent: 'Googlebot', allow: '/' },
       { userAgent: 'Bingbot', allow: '/' },
     ],
