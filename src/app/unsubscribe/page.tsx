@@ -3,7 +3,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CgSpinner } from "react-icons/cg";
-// Sample URL structure:
+// Add the following headers to all emails for google unsubscribe functionality
+// 
+// ses.send_email(
+//  List-Unsubscribe: <https://www.collegeathletenetwork.org/api/unsubscribe?row_id={row_id}>
+//  List-Unsubscribe-Post: List-Unsubscribe=One-Click
+//// Sample URL structure:
 // www.collegeathletenetwork.org/unsubscribe?id=bdcebdd7-2522-11f0-b73f-06f633821df3
 
 export default function UnsubscribePage() {
