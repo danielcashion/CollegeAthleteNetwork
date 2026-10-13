@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chargeDoorCard, cardFromBody, prepareCharge, recordDoorVenmo, startDoorApplePay, startDoorApplePayAmount, startDoorVenmo, syncDoorApplePay, syncDoorVenmo } from "@/lib/door/doorCharge";
+import { chargeDoorCard, cardFromBody, prepareCharge, recordDoorVenmo, startDoorApplePay, startDoorApplePayAmount, startDoorVenmo, syncDoorVenmo, waitForDoorApplePay } from "@/lib/door/doorCharge";
 import { openDoor } from "@/lib/door/door";
 import { jsonError } from "@/lib/door/http";
 import { HttpError } from "@/lib/door/session";
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       if (method === "applepay") {
         const paypalOrderId = String(body.paypalOrderId || "");
         if (!paypalOrderId) throw new HttpError("This Apple Pay payment has not started", 400);
-        return NextResponse.json(await syncDoorApplePay(organizer, event, target, paypalOrderId));
+        return NextResponse.json(await waitForDoorApplePay(paypalOrderId));
       }
       if (action === "received") return NextResponse.json(await recordDoorVenmo(organizer, event, target));
       const paypalOrderId = String(body.paypalOrderId || "");
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (method === "applepay" && !body.registrantId && !String(body.email || "").trim()) {
-      return NextResponse.json(await startDoorApplePayAmount(event, Math.round(Number(body.amountCents))));
+      return NextResponse.json(await startDoorApplePayAmount(event, Math.round(Number(body.amountCents)), organizer.member_id));
     }
 
     const target = await prepareCharge(organizer, event, {
