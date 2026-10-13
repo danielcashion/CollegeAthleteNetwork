@@ -14,6 +14,11 @@ declare namespace NodeJS {
     AWS_SECRET_ACCESS_KEY?: string;
     AWS_SQS_EMAIL_QUEUE_URL?: string;
     AWS_SES_CONFIGURATION_SET?: string;
+    /** Region where the End User Messaging RCS agent was created. Defaults to AWS_REGION. */
+    AWS_SMS_REGION?: string;
+    /** RCS agent id or full origination ARN. Defaults to the College Athlete Network agent. */
+    AWS_RCS_AGENT_ID?: string;
+    AWS_SMS_ORIGINATION_IDENTITY?: string;
     
     // Email Configuration
     EMAIL_TO?: string;
