@@ -23,7 +23,10 @@ export function getPayPalConfig() {
   };
 }
 
+let cachedToken: { token: string; expiresAt: number } | null = null;
+
 export async function getAccessToken() {
+  if (cachedToken && cachedToken.expiresAt > Date.now()) return cachedToken.token;
   const config = getPayPalConfig();
   if (!config["client-id"] || !config.secret) {
     throw new Error("PayPal credentials are not configured");
@@ -37,8 +40,17 @@ export async function getAccessToken() {
     },
     body: "grant_type=client_credentials",
   });
-  if (!response.ok) throw new Error("PayPal authentication failed");
-  return (await response.json()).access_token as string;
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data?.message || data?.error_description;
+    throw new Error(typeof message === "string" && message ? message : "PayPal authentication failed");
+  }
+  const expiresIn = Number(data.expires_in || 0);
+  cachedToken = {
+    token: data.access_token as string,
+    expiresAt: Date.now() + Math.max(60, expiresIn - 120) * 1000,
+  };
+  return cachedToken.token;
 }
 
 export async function createPayPalOrder(input: {
@@ -119,7 +131,12 @@ type PayPalOrder = {
       phone_number?: { national_number?: string };
     };
   };
-  purchase_units?: { payments?: { captures?: { id?: string }[] } }[];
+  purchase_units?: {
+    custom_id?: string;
+    invoice_id?: string;
+    amount?: { value?: string };
+    payments?: { captures?: { id?: string }[] };
+  }[];
 };
 
 export type CardInput = {
@@ -200,14 +217,19 @@ export function venmoPayLink(amountCents: number, note: string) {
 export async function readPayPalOrder(orderID: string) {
   const order = await paypal<PayPalOrder>(`/v2/checkout/orders/${orderID}`);
   const apple = order.payment_source?.apple_pay;
+  const unit = order.purchase_units?.[0];
   const fullName = String(apple?.name || "").trim().split(/\s+/).filter(Boolean);
+  const amount = Number(unit?.amount?.value);
   return {
     status: order.status || "",
-    captureId: order.purchase_units?.[0]?.payments?.captures?.[0]?.id,
+    captureId: unit?.payments?.captures?.[0]?.id,
     email: apple?.email_address || order.payer?.email_address || "",
     firstName: order.payer?.name?.given_name || fullName[0] || "",
     lastName: order.payer?.name?.surname || fullName.slice(1).join(" ") || "",
     phone: apple?.phone_number?.national_number || order.payer?.phone?.phone_number?.national_number || "",
+    customId: unit?.custom_id || "",
+    invoiceId: unit?.invoice_id || "",
+    amountCents: Number.isFinite(amount) ? Math.round(amount * 100) : 0,
   };
 }
 

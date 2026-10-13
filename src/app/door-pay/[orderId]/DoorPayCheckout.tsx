@@ -127,10 +127,16 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
           token: event.payment.token,
           billingContact: event.payment.billingContact,
         })
-        .then(() => {
+        .then(async () => {
           session.completePayment({ status: ApplePaySession.STATUS_SUCCESS });
-          setPaid(true);
-          setMessage("");
+          setMessage("Recording your payment.");
+          try {
+            await tellTheEvent(orderId);
+            setPaid(true);
+            setMessage("");
+          } catch (error: unknown) {
+            setMessage(error instanceof Error ? error.message : "The event could not record this payment.");
+          }
         })
         .catch((error: unknown) => {
           session.completePayment({ status: ApplePaySession.STATUS_FAILURE });
@@ -190,11 +196,29 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
 }
 
 function applePayFailure(error: unknown) {
+  if (error instanceof Error && error.message) return error.message;
   const record = error as { message?: string; details?: { issue?: string; description?: string }[] };
   const detail = record?.details?.find((item) => item.description || item.issue);
   const reason = detail?.description || detail?.issue || record?.message;
   if (reason) return `Apple Pay could not be completed. ${reason}`;
   return "Apple Pay could not be completed. Ask the staff member to show the code again.";
+}
+
+async function tellTheEvent(orderId: string) {
+  let message = "The event could not record this payment. Ask the staff member to show the code again.";
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const response = await fetch(`/api/door-pay/${orderId}/complete`, { method: "POST" });
+      const payload = (await response.json().catch(() => ({}))) as { error?: string; paid?: boolean };
+      if (response.ok && payload.paid) return;
+      if (typeof payload.error === "string" && payload.error) message = payload.error;
+      if (response.status >= 400 && response.status < 500 && response.status !== 409) break;
+    } catch {
+      message = "The event could not record this payment. Ask the staff member to show the code again.";
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)));
+  }
+  throw new Error(message);
 }
 
 function AppleMark() {
