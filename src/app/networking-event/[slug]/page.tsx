@@ -18,6 +18,8 @@ import {
   type GolfSponsorPublic,
 } from "@/services/getGolfOutingPublic";
 
+export const dynamic = "force-dynamic";
+
 function packageLines(pkg: GolfPackagePublic): string[] {
   const lines = [
     pkg.package_role === "TITLE" ? "Named in the event headline" : "",

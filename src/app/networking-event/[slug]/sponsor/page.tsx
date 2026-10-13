@@ -3,6 +3,8 @@ import GolfSponsorForm from "@/components/GolfOutingPage/GolfSponsorForm";
 import { formatOutingDate, venueLine } from "@/components/GolfOutingPage/golfOutingDisplay";
 import { getPublicGolfOutingBySlug, listPublicPackages } from "@/services/getGolfOutingPublic";
 
+export const dynamic = "force-dynamic";
+
 export default async function NetworkingSponsorPage({
   params,
   searchParams,
