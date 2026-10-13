@@ -126,9 +126,9 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
           setPaid(true);
           setMessage("");
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           session.completePayment({ status: ApplePaySession.STATUS_FAILURE });
-          setMessage("Apple Pay could not be completed. Ask the staff member to show the code again.");
+          setMessage(applePayFailure(error));
         });
     };
     session.oncancel = () => setMessage("Apple Pay was cancelled. You can try again.");
@@ -181,6 +181,14 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
       </article>
     </div>
   );
+}
+
+function applePayFailure(error: unknown) {
+  const record = error as { message?: string; details?: { issue?: string; description?: string }[] };
+  const detail = record?.details?.find((item) => item.description || item.issue);
+  const reason = detail?.description || detail?.issue || record?.message;
+  if (reason) return `Apple Pay could not be completed. ${reason}`;
+  return "Apple Pay could not be completed. Ask the staff member to show the code again.";
 }
 
 function AppleMark() {
