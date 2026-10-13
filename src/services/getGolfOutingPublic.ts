@@ -204,6 +204,13 @@ export async function getPublicGolfOutingBySlug(
   );
 }
 
+export async function getGolfOutingById(eventId: string): Promise<GolfOutingPublic | null> {
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", { event_id: eventId }, { fresh: true })).map(
+    withCalendarEventDate
+  );
+  return rows.find((row) => row.event_id === eventId) ?? rows[0] ?? null;
+}
+
 export async function listPublicTickets(event_id: string): Promise<GolfTicketPublic[]> {
   const fromView = await publicGet<GolfTicketPublic>("v_golf_tickets_public", { event_id });
   const rows = fromView.length > 0 ? fromView : await publicGet<GolfTicketPublic>("golf_ticket_types", { event_id });

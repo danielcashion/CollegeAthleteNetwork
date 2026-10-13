@@ -3,7 +3,7 @@ import { sendGolfPaymentReceipt } from "@/libs/sendGolfReceipt";
 import { callTicketProc, type TicketRow } from "./gateway";
 import { googleConfigured, walletGapMessage } from "./fields";
 import { patchGoogleObject } from "./google";
-import { normalizePhone, sendSms, twilioConfigured } from "./sms";
+import { normalizePhone, sendSms, smsConfigured } from "./sms";
 import { isDeliverableEmail, ticketUrl } from "./token";
 
 export async function issueTicketsForOrder(orderId: number, memberId?: string) {
@@ -17,7 +17,7 @@ async function mark(action: string, publicIds: string[], extra?: Record<string, 
 }
 
 async function textTickets(tickets: TicketRow[]) {
-  if (!twilioConfigured()) return;
+  if (!smsConfigured()) return;
   const pending = tickets.filter((ticket) => ticket.public_id && !ticket.sms_sent_at);
   if (!pending.length) return;
   const university = pending[0].university_name || "The College Athlete Network";
@@ -115,7 +115,7 @@ export async function resendTicket(row: TicketRow) {
   const university = row.university_name || "The College Athlete Network";
   const eventName = row.event_name || "your event";
   const phone = normalizePhone(row.phone) || normalizePhone(row.purchaser_phone);
-  if (twilioConfigured() && phone) {
+  if (smsConfigured() && phone) {
     const result = await sendSms(phone, `${university} — ${eventName}. Your ticket: ${url}`);
     if (result.sent || result.reason === "opt-out") {
       await mark("sms_sent", [String(row.public_id)]);
