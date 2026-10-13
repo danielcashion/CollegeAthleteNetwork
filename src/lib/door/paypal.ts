@@ -94,6 +94,17 @@ export async function createPayPalOrder(input: {
   return (await response.json()) as PayPalOrder;
 }
 
+function paypalFailure(data: { message?: string; details?: { issue?: string; description?: string }[]; debug_id?: string }, status: number) {
+  const detail = data?.details?.[0];
+  const issue = detail?.issue || "";
+  const description = detail?.description || data?.message || "";
+  const summary = [issue, description].filter(Boolean).join(": ") || `PayPal request failed (${status})`;
+  console.error("PayPal request failed", status, issue, description, data?.debug_id || "");
+  const error = new Error(summary);
+  (error as Error & { issue?: string }).issue = issue;
+  return error;
+}
+
 export async function capturePayPalOrder(orderID: string) {
   const accessToken = await getAccessToken();
   const config = getPayPalConfig();
@@ -103,10 +114,18 @@ export async function capturePayPalOrder(orderID: string) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
+    body: "{}",
   });
-  if (!response.ok) throw new Error("Failed to capture PayPal order");
-  const captureData = await response.json();
-  if (captureData.status !== "COMPLETED") throw new Error("Payment not completed");
+  const captureData = await response.json().catch(() => ({}));
+  const issue = captureData?.details?.[0]?.issue || "";
+  if (!response.ok) {
+    if (issue === "ORDER_ALREADY_CAPTURED") {
+      const again = await readPayPalOrder(orderID);
+      return { captureId: again.captureId || orderID, raw: captureData };
+    }
+    throw paypalFailure(captureData, response.status);
+  }
+  if (captureData.status !== "COMPLETED") throw paypalFailure(captureData, response.status);
   const capture = captureData.purchase_units?.[0]?.payments?.captures?.[0];
   return { captureId: (capture?.id as string | undefined) || orderID, raw: captureData };
 }

@@ -2,7 +2,7 @@ import { DoorEvent, doorOrganizer, loadEventById } from "./events";
 import { chargeDescription, recordCapturedPayment } from "./fulfill";
 import { HttpError, Organizer } from "./session";
 import { CardInput, chargeCard, createPayPalOrder, getPayPalConfig, readPayPalOrder, capturePayPalOrder, venmoPayLink } from "./paypal";
-import { createWalkupCharge, Guest, reserveCharge } from "./registrants";
+import { claimWalkupOrder, createWalkupCharge, Guest, reserveCharge, reserveWalkupOrder } from "./registrants";
 import { apiGet, apiSend } from "./upstream";
 
 export type ChargeTarget = {
@@ -73,13 +73,25 @@ function doorMarker(event: DoorEvent, memberId: string, kind: "golf" | "event" |
 
 export async function startDoorApplePayAmount(event: DoorEvent, amountCents: number, memberId: string) {
   if (!Number.isInteger(amountCents) || amountCents <= 0) throw new HttpError("Enter an amount greater than zero", 400);
+  const organizer = doorOrganizer(memberId || "DOOR", event);
+  if (!event.managedGolf || !event.golfEventId) {
+    const created = await createPayPalOrder({
+      amountCents,
+      invoiceId: `${event.id}-${Date.now()}`.slice(0, 127),
+      description: event.title.slice(0, 120),
+      customId: doorMarker(event, organizer.member_id, "walkup", "", amountCents),
+    });
+    return applePayCheckout(created.id, event.title, "", amountCents, null);
+  }
+  const orderId = await reserveWalkupOrder(organizer, event, amountCents);
   const created = await createPayPalOrder({
     amountCents,
-    invoiceId: event.id.slice(0, 127),
+    invoiceId: `${event.golfEventId}-${orderId}`.slice(0, 127),
     description: event.title.slice(0, 120),
-    customId: doorMarker(event, memberId || "DOOR", "walkup", "", amountCents),
+    customId: doorMarker(event, organizer.member_id, "walkup", String(orderId), amountCents),
   });
-  return applePayCheckout(created.id, event.title, "", amountCents, null);
+  await rememberOrder({ guest: { id: "", name: "", email: "", kind: "golf" }, amountCents, golfOrderId: orderId, kind: "golf" }, created.id);
+  return applePayCheckout(created.id, event.title, "", amountCents, orderId);
 }
 
 export async function startDoorApplePay(organizer: Organizer, event: DoorEvent, target: ChargeTarget) {
@@ -231,51 +243,60 @@ function parseDoorMarker(customId: string, invoiceId: string) {
 
 async function readApprovedOrder(paypalOrderId: string) {
   let current = await readPayPalOrder(paypalOrderId);
-  if (current.status !== "APPROVED" && current.status !== "COMPLETED") {
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+  for (let attempt = 0; attempt < 4 && current.status !== "APPROVED" && current.status !== "COMPLETED"; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     current = await readPayPalOrder(paypalOrderId);
   }
   if (current.status !== "APPROVED" && current.status !== "COMPLETED") {
+    console.error("door apple pay not approved", paypalOrderId, current.status || "UNKNOWN");
     throw new HttpError("Apple Pay has not finished", 409);
   }
   return current;
 }
 
 async function captureApprovedOrder(paypalOrderId: string, status: string, captureId?: string) {
-  if (status === "COMPLETED" && captureId) return captureId;
+  if (status === "COMPLETED") return captureId || paypalOrderId;
   try {
     return (await capturePayPalOrder(paypalOrderId)).captureId;
-  } catch {
+  } catch (error) {
     const again = await readPayPalOrder(paypalOrderId);
-    if (again.status === "COMPLETED" && again.captureId) return again.captureId;
-    throw new HttpError("Apple Pay could not be recorded", 502);
+    if (again.status === "COMPLETED") return again.captureId || paypalOrderId;
+    const message = error instanceof Error ? error.message : "Apple Pay could not be recorded";
+    console.error("door apple pay capture failed", paypalOrderId, again.status, message);
+    throw new HttpError(message || "Apple Pay could not be recorded", 502);
   }
 }
 
-async function finishPendingOrder(order: GolfOrderRow, paypalOrderId: string, captureId: string) {
+async function finishPendingOrder(
+  order: GolfOrderRow,
+  paypalOrderId: string,
+  captureId: string,
+  payer: { firstName: string; lastName: string; email: string; phone: string }
+) {
   const loaded = await loadEventById(String(order.event_id));
   const organizer = doorOrganizer(order.member_id || "DOOR", loaded.event);
   const players = await apiGet<GolfPlayerRow>("/golf_players", { event_id: order.event_id }).catch(() => [] as GolfPlayerRow[]);
-  const player = players.find((row) => Number(row.order_id) === Number(order.order_id) && row.player_id);
-  const name = player ? `${player.first_name || ""} ${player.last_name || ""}`.trim() : order.purchaser_name || "Guest";
-  await paidPayload(
-    organizer,
-    loaded.event,
-    {
-      guest: {
-        id: player?.player_id ? String(player.player_id) : "",
-        name,
-        email: player?.email || order.purchaser_email || "",
-        kind: "golf",
-      },
-      amountCents: Number(order.total_cents || 0),
-      golfOrderId: Number(order.order_id),
-      kind: "golf",
-    },
-    paypalOrderId,
-    captureId,
-    "applepay"
-  );
+  const linked = players.find((row) => Number(row.order_id) === Number(order.order_id) && row.player_id);
+  const target = linked
+    ? {
+        guest: {
+          id: String(linked.player_id),
+          name: `${linked.first_name || ""} ${linked.last_name || ""}`.trim() || order.purchaser_name || "Guest",
+          email: linked.email || order.purchaser_email || "",
+          kind: "golf" as const,
+        },
+        amountCents: Number(order.total_cents || 0),
+        golfOrderId: Number(order.order_id),
+        kind: "golf" as const,
+      }
+    : await claimWalkupOrder(organizer, loaded.event, Number(order.order_id), {
+        firstName: payer.firstName,
+        lastName: payer.lastName,
+        email: payer.email,
+        phone: payer.phone,
+        amountCents: Number(order.total_cents || 0),
+      });
+  await paidPayload(organizer, loaded.event, target, paypalOrderId, captureId, "applepay");
 }
 
 const completing = new Map<string, Promise<PaidApple>>();
@@ -291,7 +312,7 @@ async function finishDoorApplePay(paypalOrderId: string): Promise<PaidApple> {
   const captureId = await captureApprovedOrder(paypalOrderId, current.status, current.captureId);
 
   if (pending) {
-    await finishPendingOrder(pending, paypalOrderId, captureId);
+    await finishPendingOrder(pending, paypalOrderId, captureId, current);
   } else if (marker) {
     const loaded = await loadEventById(marker.eventId);
     const organizer = doorOrganizer(marker.memberId || "DOOR", loaded.event);
