@@ -3,33 +3,10 @@ import { openDoor } from "@/lib/door/door";
 import { jsonError } from "@/lib/door/http";
 import { saveReceiptEmail, saveReceiptPhone } from "@/lib/door/registrants";
 import { HttpError } from "@/lib/door/session";
-import { normalizePhone, sendSms } from "@/lib/tickets/sms";
+import { normalizePhone, sendReceiptMessage } from "@/lib/tickets/sms";
+import { receiptPageUrl } from "@/lib/receipts/token";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function methodLabel(value: unknown) {
-  const method = String(value || "").toLowerCase();
-  if (method === "applepay") return "Apple Pay";
-  if (method === "card") return "card";
-  if (method === "venmo") return "Venmo";
-  if (method === "cash") return "cash";
-  if (method === "check") return "check";
-  return "payment";
-}
-
-function receiptText(body: { name?: unknown; amountCents?: unknown; method?: unknown; orderId?: unknown }, eventName: string) {
-  const cents = Math.round(Number(body.amountCents));
-  const amount = Number.isInteger(cents) && cents > 0 ? `$${(cents / 100).toFixed(2)}` : "";
-  const name = String(body.name || "").trim();
-  const lines = [
-    "Receipt from The College Athlete Network",
-    eventName,
-    [name, amount].filter(Boolean).join(" — "),
-    `Paid by ${methodLabel(body.method)}`,
-    `Order #${body.orderId}`,
-  ];
-  return lines.filter(Boolean).join("\n");
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +20,14 @@ export async function POST(request: NextRequest) {
       const phone = normalizePhone(String(body.phone || ""));
       if (!phone) throw new HttpError("Enter a valid mobile number", 400);
       await saveReceiptPhone(event, { orderId, playerId, phone });
-      const result = await sendSms(phone, receiptText(body, event.title));
+      const result = await sendReceiptMessage(phone, {
+        eventName: event.title,
+        purchaserName: typeof body.name === "string" ? body.name : "",
+        amountCents: Math.round(Number(body.amountCents)),
+        method: typeof body.method === "string" ? body.method : "",
+        orderId,
+        receiptUrl: await receiptPageUrl(orderId, typeof body.method === "string" ? body.method : ""),
+      });
       if (result.sent) return NextResponse.json({ ok: true });
       if (result.reason === "unconfigured") throw new HttpError("Text receipts are not available right now", 503);
       if (result.reason === "opt-out") throw new HttpError("This number has opted out of text messages", 400);
