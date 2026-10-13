@@ -227,6 +227,73 @@ export async function createWalkupCharge(
   return { guest: { ...guest, name, email }, amountCents: input.amountCents, golfOrderId: null, kind: "event" as const };
 }
 
+const RECEIPT_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const HOLE_COUNT = 18;
+const FOURSOME = 4;
+
+async function golfReceiptPlayerIds(event: DoorEvent, orderId: number, playerId?: string) {
+  if (!event.golfEventId) return [] as number[];
+  const players = await apiGet<GolfPlayer>("/golf_players", { event_id: event.golfEventId });
+  const ids = new Set<number>();
+  const explicit = Number(playerId);
+  if (Number.isInteger(explicit) && explicit > 0) ids.add(explicit);
+  for (const player of players) {
+    const id = Number(player.player_id);
+    if (Number.isInteger(id) && id > 0 && Number(player.order_id) === orderId) ids.add(id);
+  }
+  return [...ids];
+}
+
+export async function saveReceiptEmail(
+  event: DoorEvent,
+  input: { orderId: number; playerId?: string; email: string }
+) {
+  const email = input.email.trim();
+  if (!RECEIPT_EMAIL.test(email) || email.length > 190) throw new HttpError("Enter a valid email address", 400);
+  if (!event.managedGolf || !event.golfEventId) return;
+  if (!Number.isInteger(input.orderId) || input.orderId <= 0) throw new HttpError("This payment does not have a receipt yet", 400);
+
+  await apiSend("put", "/golf_orders", { purchaser_email: email }, { order_id: input.orderId });
+  const ids = await golfReceiptPlayerIds(event, input.orderId, input.playerId);
+  if (!ids.length) throw new HttpError("This payment does not have a player yet", 400);
+  await Promise.all(ids.map((playerId) => apiSend("put", "/golf_players", { email }, { player_id: playerId })));
+}
+
+export async function saveReceiptPhone(
+  event: DoorEvent,
+  input: { orderId: number; playerId?: string; phone: string }
+) {
+  const phone = input.phone.trim();
+  if (!phone || phone.length > 40) throw new HttpError("Enter a valid mobile number", 400);
+  if (!event.managedGolf || !event.golfEventId) return;
+  if (!Number.isInteger(input.orderId) || input.orderId <= 0) throw new HttpError("This payment does not have a receipt yet", 400);
+
+  await apiSend("put", "/golf_orders", { purchaser_phone: phone }, { order_id: input.orderId });
+  const ids = await golfReceiptPlayerIds(event, input.orderId, input.playerId);
+  if (!ids.length) throw new HttpError("This payment does not have a player yet", 400);
+  await Promise.all(ids.map((playerId) => apiSend("put", "/golf_players", { phone }, { player_id: playerId })));
+}
+
+function holeNumber(value: GolfPlayer["starting_hole"]) {
+  const hole = Number(String(value ?? "").trim());
+  return Number.isInteger(hole) && hole >= 1 && hole <= HOLE_COUNT ? hole : null;
+}
+
+export async function assignStartingHole(organizer: Organizer, event: DoorEvent, playerId: string, hole: number) {
+  if (!event.managedGolf || !event.golfEventId) throw new HttpError("Starting holes are for golf outings", 400);
+  if (!Number.isInteger(hole) || hole < 1 || hole > HOLE_COUNT) throw new HttpError("Choose a starting hole", 400);
+  const id = Number(playerId);
+  if (!Number.isInteger(id) || id <= 0) throw new HttpError("Player not found", 404);
+  const players = await apiGet<GolfPlayer>("/golf_players", { event_id: event.golfEventId });
+  const player = players.find((row) => Number(row.player_id) === id && active(row.is_active_YN));
+  if (!player) throw new HttpError("Player not found", 404);
+  const occupants = players.filter((row) => active(row.is_active_YN) && Number(row.player_id) !== id && holeNumber(row.starting_hole) === hole);
+  if (occupants.length >= FOURSOME) throw new HttpError(`Hole ${hole} already has four players`, 409);
+  await apiSend("put", "/golf_players", { starting_hole: String(hole) }, { player_id: id });
+  const guests = await listGuests(organizer, event);
+  return guests.find((guest) => guest.id === String(id)) || null;
+}
+
 export async function addGuest(organizer: Organizer, event: DoorEvent, input: { firstName: string; lastName: string; email: string; phone?: string }) {
   if (event.managedGolf) throw new HttpError("Golf guests come from outing registration", 400);
   if (!input.firstName?.trim() || !input.lastName?.trim() || !input.email?.trim()) {
