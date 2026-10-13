@@ -96,13 +96,13 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
     const applePay = window.paypal?.Applepay?.();
     if (!ApplePaySession || !applePay) return;
     const config = await applePay.config();
-    const total = { label: eventName, amount, type: "final" };
+    const total = { label: "The College Athlete Network Foundation", amount, type: "final" };
     const session = new ApplePaySession(4, {
       countryCode: config.countryCode,
       currencyCode: "USD",
       merchantCapabilities: config.merchantCapabilities,
       supportedNetworks: config.supportedNetworks,
-      requiredBillingContactFields: ["name", "email", "phone"],
+      requiredBillingContactFields: ["name", "email", "phone", "postalAddress"],
       total,
     });
     session.onpaymentmethodselected = () => {
@@ -110,9 +110,15 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
     };
     session.onvalidatemerchant = (event) => {
       void applePay
-        .validateMerchant({ validationUrl: event.validationURL, displayName: "The College Athlete Network" })
-        .then((payload) => session.completeMerchantValidation(payload.merchantSession || payload))
-        .catch(() => session.abort());
+        .validateMerchant({ validationUrl: event.validationURL, displayName: "The College Athlete Network Foundation" })
+        .then((payload) => {
+          if (!payload.merchantSession) throw new Error("PayPal did not return an Apple Pay merchant session");
+          session.completeMerchantValidation(payload.merchantSession);
+        })
+        .catch((error: unknown) => {
+          session.abort();
+          setMessage(applePayFailure(error));
+        });
     };
     session.onpaymentauthorized = (event) => {
       void applePay
