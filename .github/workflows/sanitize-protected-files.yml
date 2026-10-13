@@ -31,7 +31,11 @@ jobs:
       - name: Commit sanitized files
         run: |
           git add -- .gitignore postcss.config.mjs package.json
-          git add -u -- api.js branch_structure.json
+          for path in api.js branch_structure.json; do
+            if git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
+              git add -u -- "$path"
+            fi
+          done
           if git diff --cached --quiet; then
             echo "No sanitization changes were required."
             exit 0
