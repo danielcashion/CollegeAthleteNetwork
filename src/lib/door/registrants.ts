@@ -95,6 +95,10 @@ export async function listGuests(organizer: Organizer, event: DoorEvent): Promis
           amountDueCents: settled ? 0 : balance(order),
           orderId: player.order_id ?? null,
           startingHole: player.starting_hole == null || String(player.starting_hole).trim() === "" ? null : String(player.starting_hole).trim(),
+          assignmentLabel:
+            event.productType === "NETWORKING" && player.starting_hole != null && String(player.starting_hole).trim() !== ""
+              ? `Table ${String(player.starting_hole).trim()}`
+              : null,
           teamId: player.team_id == null ? null : String(player.team_id),
         };
       })

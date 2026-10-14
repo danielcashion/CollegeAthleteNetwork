@@ -92,6 +92,11 @@ export default async function NetworkingEventPublicPage({
             {headline ? <p className="mb-3 text-xl font-semibold">{headline}</p> : null}
             <p className="text-lg md:text-xl">{formatOutingDate(event.event_date, event.tz)}</p>
             <p className="mt-2 text-white/90">{venueLine(event)}</p>
+            {event.remaining_spots != null ? (
+              <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-white/80">
+                {event.remaining_spots} {event.remaining_spots === 1 ? "spot" : "spots"} remaining
+              </p>
+            ) : null}
             <div className="mt-8 flex flex-wrap gap-3">
               {registrationOpen ? (
                 <Link
@@ -186,6 +191,12 @@ export default async function NetworkingEventPublicPage({
                     <div key={ticket.ticket_type_id} className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
                       <h3 className="text-lg font-bold">{ticket.type_name}</h3>
                       <p className="mt-2 text-2xl font-bold text-[#ED3237]">{formatCents(ticket.unit_price_cents)}</p>
+                      <p className="mt-1 text-sm text-[#1c315f]/70">
+                        {ticket.ticket_kind === "TABLE"
+                          ? `${ticket.seats_per_unit || 10} seats per table`
+                          : "1 attendee"}
+                        {ticket.inventory != null ? ` · ${ticket.inventory} left` : ""}
+                      </p>
                       {ticket.description_html ? (
                         <div
                           className="prose mt-3 max-w-none text-sm text-[#1c315f]/70"

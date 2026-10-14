@@ -131,8 +131,8 @@ const FAQ_ITEMS = [
 ];
 
 const PROOF_METRICS = [
-  { value: "165,000+", label: "Athletes In Network", sub: "" },
-  { value: "2,500+", label: "Employers Represented", sub: "" },
+  { value: "195,000+", label: "Athletes In Network", sub: "" },
+  { value: "3,500+", label: "Employers Represented", sub: "" },
   { value: "3x", label: "year-over-year engagement growth", sub: "" },
   { value: ">50%", label: "Alumni Monetary Participation", sub: "" },
 ];

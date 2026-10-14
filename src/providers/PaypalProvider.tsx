@@ -23,7 +23,7 @@ export default function PayPalProvider({ children }: { children: ReactNode }) {
         currency: "USD",
         intent: "capture",
         components: "buttons,funding-eligibility",
-        "enable-funding": "venmo,card",
+        "enable-funding": "venmo,card,applepay",
         "disable-funding": "paylater,credit",
         ...(getPayPalEnv() === "sandbox" ? { buyerCountry: "US" } : {}),
       }}
