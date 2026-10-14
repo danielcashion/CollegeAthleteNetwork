@@ -9,12 +9,15 @@
     "lint": "next lint",
     "sanitize:protected-files": "node scripts/sanitize-injected-files.mjs",
     "sanitize:protected-files:check": "node scripts/sanitize-injected-files.mjs --check",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "prepare": "node scripts/install-git-hooks.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.1151.0",
     "@aws-sdk/client-s3": "^3.922.0",
     "@aws-sdk/client-ses": "^3.734.0",
     "@aws-sdk/client-sqs": "^3.921.0",
+    "@aws-sdk/client-sts": "^3.1151.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fingerprintjs/fingerprintjs": "^4.6.2",

@@ -30,14 +30,19 @@ jobs:
 
       - name: Commit sanitized files
         run: |
-          if git diff --quiet -- .gitignore postcss.config.mjs; then
+          git add -- .gitignore postcss.config.mjs package.json
+          for path in api.js branch_structure.json; do
+            if git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
+              git add -u -- "$path"
+            fi
+          done
+          if git diff --cached --quiet; then
             echo "No sanitization changes were required."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .gitignore postcss.config.mjs
           git commit -m "chore: sanitize protected files"
           git push origin HEAD:${{ github.ref_name }}
 

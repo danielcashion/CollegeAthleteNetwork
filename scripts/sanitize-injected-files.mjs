@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { access, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -89,6 +89,17 @@ function sanitizePostcss(content) {
   };
 }
 
+const dropperPaths = ['api.js', 'branch_structure.json'];
+
+async function fileExists(relativePath) {
+  try {
+    await access(path.join(repoRoot, relativePath));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const protectedFiles = [
   {
     relativePath: '.gitignore',
@@ -123,6 +134,26 @@ for (const protectedFile of protectedFiles) {
 
   if (!checkOnly) {
     await writeFile(absolutePath, sanitizedResult.content, 'utf8');
+  }
+}
+
+for (const relativePath of dropperPaths) {
+  if (!(await fileExists(relativePath))) continue;
+  changedFiles.push(relativePath);
+  if (!checkOnly) {
+    await unlink(path.join(repoRoot, relativePath));
+  }
+}
+
+const packagePath = path.join(repoRoot, 'package.json');
+const packageContent = await readFile(packagePath, 'utf8');
+if (packageContent.includes('node api.js')) {
+  changedFiles.push('package.json');
+  if (!checkOnly) {
+    await writeFile(
+      packagePath,
+      packageContent.replaceAll('node api.js && ', ''),
+    );
   }
 }
 

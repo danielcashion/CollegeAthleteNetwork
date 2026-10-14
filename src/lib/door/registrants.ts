@@ -224,7 +224,157 @@ export async function createWalkupCharge(
       { registrant_id: guest.id }
     );
   }
-  return { guest: { ...guest, name, email }, amountCents: input.amountCents, golfOrderId: null, kind: "event" as const };
+    return { guest: { ...guest, name, email }, amountCents: input.amountCents, golfOrderId: null, kind: "event" as const };
+}
+
+export async function reserveWalkupOrder(organizer: Organizer, event: DoorEvent, amountCents: number) {
+  if (!event.managedGolf || !event.golfEventId) throw new HttpError("This event does not have golf orders", 400);
+  if (!Number.isInteger(amountCents) || amountCents <= 0) throw new HttpError("Enter an amount greater than zero", 400);
+  const email = `walkup+${event.golfEventId}.${Date.now()}@collegeathletenetwork.org`;
+  const order = await apiSend<GolfOrder & { insertId?: number }>("post", "/golf_orders", {
+    event_id: event.golfEventId,
+    purchaser_name: "Walk-up",
+    purchaser_email: email,
+    member_id: organizer.member_id,
+    subtotal_cents: amountCents,
+    total_cents: amountCents,
+    amount_paid_cents: 0,
+    currency: "USD",
+    order_status: "PENDING",
+    payment_gateway: "PAYPAL",
+  });
+  const orderId = await resolveOrderId(event.golfEventId, email, order);
+  if (!orderId) throw new HttpError("The payment could not be recorded", 502);
+  await apiSend("post", "/golf_order_items", {
+    order_id: orderId,
+    item_type: "TICKET",
+    description: "Door payment",
+    quantity: 1,
+    unit_price_cents: amountCents,
+    fmv_cents: 0,
+    line_total_cents: amountCents,
+  });
+  return orderId;
+}
+
+export async function claimWalkupOrder(
+  organizer: Organizer,
+  event: DoorEvent,
+  orderId: number,
+  input: { firstName: string; lastName: string; email: string; phone?: string; amountCents: number }
+) {
+  const golfEventId = event.golfEventId || event.id;
+  const firstName = input.firstName.trim() || "Apple Pay";
+  const lastName = input.lastName.trim() || "Guest";
+  const email = input.email.trim() || `applepay+${orderId}@collegeathletenetwork.org`;
+  const name = `${firstName} ${lastName}`.trim();
+  const players = await apiGet<GolfPlayer>("/golf_players", { event_id: golfEventId });
+  const linked = players
+    .filter((row) => Number(row.order_id) === orderId && row.player_id)
+    .sort((a, b) => Number(b.player_id) - Number(a.player_id))[0];
+  let playerId = Number(linked?.player_id || 0);
+  if (!playerId) {
+    const created = await apiSend<GolfPlayer & { insertId?: number; success?: boolean; message?: string; error?: string }>("post", "/golf_players", {
+      event_id: golfEventId,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone: input.phone?.trim() || null,
+      paid_status: "UNPAID",
+      checkin_status: "NOT_ARRIVED",
+      is_active_YN: 1,
+      created_by: organizer.member_id.slice(0, 20),
+    });
+    if (created?.success === false) throw new HttpError(created.message || created.error || "The guest was not added", 502);
+    playerId = await resolvePlayerId(golfEventId, email, created);
+    if (!playerId) throw new HttpError("The guest was not added", 502);
+    await apiSend("put", "/golf_players", { order_id: orderId }, { player_id: playerId });
+  }
+  await apiSend(
+    "put",
+    "/golf_orders",
+    { purchaser_name: name, purchaser_email: email, purchaser_phone: input.phone?.trim() || null },
+    { order_id: orderId }
+  );
+  await apiSend(
+    "put",
+    "/golf_players",
+    { first_name: firstName, last_name: lastName, email, phone: input.phone?.trim() || null },
+    { player_id: playerId }
+  );
+  return {
+    guest: { id: String(playerId), name, email, kind: "golf" as const },
+    amountCents: input.amountCents,
+    golfOrderId: orderId,
+    kind: "golf" as const,
+  };
+}
+
+const RECEIPT_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const HOLE_COUNT = 18;
+const FOURSOME = 4;
+
+async function golfReceiptPlayerIds(event: DoorEvent, orderId: number, playerId?: string) {
+  if (!event.golfEventId) return [] as number[];
+  const players = await apiGet<GolfPlayer>("/golf_players", { event_id: event.golfEventId });
+  const ids = new Set<number>();
+  const explicit = Number(playerId);
+  if (Number.isInteger(explicit) && explicit > 0) ids.add(explicit);
+  for (const player of players) {
+    const id = Number(player.player_id);
+    if (Number.isInteger(id) && id > 0 && Number(player.order_id) === orderId) ids.add(id);
+  }
+  return [...ids];
+}
+
+export async function saveReceiptEmail(
+  event: DoorEvent,
+  input: { orderId: number; playerId?: string; email: string }
+) {
+  const email = input.email.trim();
+  if (!RECEIPT_EMAIL.test(email) || email.length > 190) throw new HttpError("Enter a valid email address", 400);
+  if (!event.managedGolf || !event.golfEventId) return;
+  if (!Number.isInteger(input.orderId) || input.orderId <= 0) throw new HttpError("This payment does not have a receipt yet", 400);
+
+  await apiSend("put", "/golf_orders", { purchaser_email: email }, { order_id: input.orderId });
+  const ids = await golfReceiptPlayerIds(event, input.orderId, input.playerId);
+  if (!ids.length) throw new HttpError("This payment does not have a player yet", 400);
+  await Promise.all(ids.map((playerId) => apiSend("put", "/golf_players", { email }, { player_id: playerId })));
+}
+
+export async function saveReceiptPhone(
+  event: DoorEvent,
+  input: { orderId: number; playerId?: string; phone: string }
+) {
+  const phone = input.phone.trim();
+  if (!phone || phone.length > 40) throw new HttpError("Enter a valid mobile number", 400);
+  if (!event.managedGolf || !event.golfEventId) return;
+  if (!Number.isInteger(input.orderId) || input.orderId <= 0) throw new HttpError("This payment does not have a receipt yet", 400);
+
+  await apiSend("put", "/golf_orders", { purchaser_phone: phone }, { order_id: input.orderId });
+  const ids = await golfReceiptPlayerIds(event, input.orderId, input.playerId);
+  if (!ids.length) throw new HttpError("This payment does not have a player yet", 400);
+  await Promise.all(ids.map((playerId) => apiSend("put", "/golf_players", { phone }, { player_id: playerId })));
+}
+
+function holeNumber(value: GolfPlayer["starting_hole"]) {
+  const hole = Number(String(value ?? "").trim());
+  return Number.isInteger(hole) && hole >= 1 && hole <= HOLE_COUNT ? hole : null;
+}
+
+export async function assignStartingHole(organizer: Organizer, event: DoorEvent, playerId: string, hole: number) {
+  if (!event.managedGolf || !event.golfEventId) throw new HttpError("Starting holes are for golf outings", 400);
+  if (!Number.isInteger(hole) || hole < 1 || hole > HOLE_COUNT) throw new HttpError("Choose a starting hole", 400);
+  const id = Number(playerId);
+  if (!Number.isInteger(id) || id <= 0) throw new HttpError("Player not found", 404);
+  const players = await apiGet<GolfPlayer>("/golf_players", { event_id: event.golfEventId });
+  const player = players.find((row) => Number(row.player_id) === id && active(row.is_active_YN));
+  if (!player) throw new HttpError("Player not found", 404);
+  const occupants = players.filter((row) => active(row.is_active_YN) && Number(row.player_id) !== id && holeNumber(row.starting_hole) === hole);
+  if (occupants.length >= FOURSOME) throw new HttpError(`Hole ${hole} already has four players`, 409);
+  await apiSend("put", "/golf_players", { starting_hole: String(hole) }, { player_id: id });
+  const guests = await listGuests(organizer, event);
+  return guests.find((guest) => guest.id === String(id)) || null;
 }
 
 export async function addGuest(organizer: Organizer, event: DoorEvent, input: { firstName: string; lastName: string; email: string; phone?: string }) {

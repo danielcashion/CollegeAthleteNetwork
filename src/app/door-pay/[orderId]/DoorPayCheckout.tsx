@@ -96,13 +96,13 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
     const applePay = window.paypal?.Applepay?.();
     if (!ApplePaySession || !applePay) return;
     const config = await applePay.config();
-    const total = { label: eventName, amount, type: "final" };
+    const total = { label: "The College Athlete Network Foundation", amount, type: "final" };
     const session = new ApplePaySession(4, {
       countryCode: config.countryCode,
       currencyCode: "USD",
       merchantCapabilities: config.merchantCapabilities,
       supportedNetworks: config.supportedNetworks,
-      requiredBillingContactFields: ["name", "email", "phone"],
+      requiredBillingContactFields: ["name", "email", "phone", "postalAddress"],
       total,
     });
     session.onpaymentmethodselected = () => {
@@ -110,9 +110,15 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
     };
     session.onvalidatemerchant = (event) => {
       void applePay
-        .validateMerchant({ validationUrl: event.validationURL, displayName: "The College Athlete Network" })
-        .then((payload) => session.completeMerchantValidation(payload.merchantSession || payload))
-        .catch(() => session.abort());
+        .validateMerchant({ validationUrl: event.validationURL, displayName: "The College Athlete Network Foundation" })
+        .then((payload) => {
+          if (!payload.merchantSession) throw new Error("PayPal did not return an Apple Pay merchant session");
+          session.completeMerchantValidation(payload.merchantSession);
+        })
+        .catch((error: unknown) => {
+          session.abort();
+          setMessage(applePayFailure(error));
+        });
     };
     session.onpaymentauthorized = (event) => {
       void applePay
@@ -121,14 +127,20 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
           token: event.payment.token,
           billingContact: event.payment.billingContact,
         })
-        .then(() => {
+        .then(async () => {
           session.completePayment({ status: ApplePaySession.STATUS_SUCCESS });
-          setPaid(true);
-          setMessage("");
+          setMessage("Recording your payment.");
+          try {
+            await tellTheEvent(orderId);
+            setPaid(true);
+            setMessage("");
+          } catch (error: unknown) {
+            setMessage(error instanceof Error ? error.message : "The event could not record this payment.");
+          }
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           session.completePayment({ status: ApplePaySession.STATUS_FAILURE });
-          setMessage("Apple Pay could not be completed. Ask the staff member to show the code again.");
+          setMessage(applePayFailure(error));
         });
     };
     session.oncancel = () => setMessage("Apple Pay was cancelled. You can try again.");
@@ -181,6 +193,32 @@ export function DoorPayCheckout({ clientId, orderId, amountLabel, eventName, gue
       </article>
     </div>
   );
+}
+
+function applePayFailure(error: unknown) {
+  if (error instanceof Error && error.message) return error.message;
+  const record = error as { message?: string; details?: { issue?: string; description?: string }[] };
+  const detail = record?.details?.find((item) => item.description || item.issue);
+  const reason = detail?.description || detail?.issue || record?.message;
+  if (reason) return `Apple Pay could not be completed. ${reason}`;
+  return "Apple Pay could not be completed. Ask the staff member to show the code again.";
+}
+
+async function tellTheEvent(orderId: string) {
+  let message = "The event could not record this payment. Ask the staff member to show the code again.";
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const response = await fetch(`/api/door-pay/${orderId}/complete`, { method: "POST" });
+      const payload = (await response.json().catch(() => ({}))) as { error?: string; paid?: boolean };
+      if (response.ok && payload.paid) return;
+      if (typeof payload.error === "string" && payload.error) message = payload.error;
+      if (response.status >= 400 && response.status < 500 && response.status !== 409) break;
+    } catch {
+      message = "The event could not record this payment. Ask the staff member to show the code again.";
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)));
+  }
+  throw new Error(message);
 }
 
 function AppleMark() {

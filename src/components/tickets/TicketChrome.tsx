@@ -41,7 +41,7 @@ export function TicketActions({
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
   const path = usePathname() || "";
-  const bare = path === "/t" || path.startsWith("/t/") || path.startsWith("/door-pay");
+  const bare = path === "/t" || path.startsWith("/t/") || path.startsWith("/door-pay") || path.startsWith("/receipt");
   if (bare) return <main id="main-content">{children}</main>;
   return (
     <>

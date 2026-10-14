@@ -23,7 +23,10 @@ export function getPayPalConfig() {
   };
 }
 
+let cachedToken: { token: string; expiresAt: number } | null = null;
+
 export async function getAccessToken() {
+  if (cachedToken && cachedToken.expiresAt > Date.now()) return cachedToken.token;
   const config = getPayPalConfig();
   if (!config["client-id"] || !config.secret) {
     throw new Error("PayPal credentials are not configured");
@@ -37,8 +40,17 @@ export async function getAccessToken() {
     },
     body: "grant_type=client_credentials",
   });
-  if (!response.ok) throw new Error("PayPal authentication failed");
-  return (await response.json()).access_token as string;
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data?.message || data?.error_description;
+    throw new Error(typeof message === "string" && message ? message : "PayPal authentication failed");
+  }
+  const expiresIn = Number(data.expires_in || 0);
+  cachedToken = {
+    token: data.access_token as string,
+    expiresAt: Date.now() + Math.max(60, expiresIn - 120) * 1000,
+  };
+  return cachedToken.token;
 }
 
 export async function createPayPalOrder(input: {
@@ -82,6 +94,17 @@ export async function createPayPalOrder(input: {
   return (await response.json()) as PayPalOrder;
 }
 
+function paypalFailure(data: { message?: string; details?: { issue?: string; description?: string }[]; debug_id?: string }, status: number) {
+  const detail = data?.details?.[0];
+  const issue = detail?.issue || "";
+  const description = detail?.description || data?.message || "";
+  const summary = [issue, description].filter(Boolean).join(": ") || `PayPal request failed (${status})`;
+  console.error("PayPal request failed", status, issue, description, data?.debug_id || "");
+  const error = new Error(summary);
+  (error as Error & { issue?: string }).issue = issue;
+  return error;
+}
+
 export async function capturePayPalOrder(orderID: string) {
   const accessToken = await getAccessToken();
   const config = getPayPalConfig();
@@ -91,10 +114,18 @@ export async function capturePayPalOrder(orderID: string) {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
+    body: "{}",
   });
-  if (!response.ok) throw new Error("Failed to capture PayPal order");
-  const captureData = await response.json();
-  if (captureData.status !== "COMPLETED") throw new Error("Payment not completed");
+  const captureData = await response.json().catch(() => ({}));
+  const issue = captureData?.details?.[0]?.issue || "";
+  if (!response.ok) {
+    if (issue === "ORDER_ALREADY_CAPTURED") {
+      const again = await readPayPalOrder(orderID);
+      return { captureId: again.captureId || orderID, raw: captureData };
+    }
+    throw paypalFailure(captureData, response.status);
+  }
+  if (captureData.status !== "COMPLETED") throw paypalFailure(captureData, response.status);
   const capture = captureData.purchase_units?.[0]?.payments?.captures?.[0];
   return { captureId: (capture?.id as string | undefined) || orderID, raw: captureData };
 }
@@ -119,7 +150,12 @@ type PayPalOrder = {
       phone_number?: { national_number?: string };
     };
   };
-  purchase_units?: { payments?: { captures?: { id?: string }[] } }[];
+  purchase_units?: {
+    custom_id?: string;
+    invoice_id?: string;
+    amount?: { value?: string };
+    payments?: { captures?: { id?: string }[] };
+  }[];
 };
 
 export type CardInput = {
@@ -200,14 +236,19 @@ export function venmoPayLink(amountCents: number, note: string) {
 export async function readPayPalOrder(orderID: string) {
   const order = await paypal<PayPalOrder>(`/v2/checkout/orders/${orderID}`);
   const apple = order.payment_source?.apple_pay;
+  const unit = order.purchase_units?.[0];
   const fullName = String(apple?.name || "").trim().split(/\s+/).filter(Boolean);
+  const amount = Number(unit?.amount?.value);
   return {
     status: order.status || "",
-    captureId: order.purchase_units?.[0]?.payments?.captures?.[0]?.id,
+    captureId: unit?.payments?.captures?.[0]?.id,
     email: apple?.email_address || order.payer?.email_address || "",
     firstName: order.payer?.name?.given_name || fullName[0] || "",
     lastName: order.payer?.name?.surname || fullName.slice(1).join(" ") || "",
     phone: apple?.phone_number?.national_number || order.payer?.phone?.phone_number?.national_number || "",
+    customId: unit?.custom_id || "",
+    invoiceId: unit?.invoice_id || "",
+    amountCents: Number.isFinite(amount) ? Math.round(amount * 100) : 0,
   };
 }
 
