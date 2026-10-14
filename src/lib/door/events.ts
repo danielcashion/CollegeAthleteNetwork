@@ -44,6 +44,7 @@ export type DoorEvent = {
   costCents: number;
   managedGolf: boolean;
   golfEventId: string | null;
+  productType: "GOLF" | "NETWORKING" | null;
   universityName: string;
 };
 
@@ -79,6 +80,7 @@ async function fromCalendar(wanted: string): Promise<{ event: DoorEvent; memberI
     costCents: dollarsToCents(row.cost ?? row.event_cost),
     managedGolf: Boolean(golf) || (eventType === "Golf_Outing" && truthy(row.golf_outing_YN) && Boolean(golf)),
     golfEventId: golf?.event_id || null,
+    productType: golf?.product_type === "NETWORKING" ? "NETWORKING" : golf ? "GOLF" : null,
     universityName: row.university_name || "",
   };
   return { event, memberId: row.member_id ? String(row.member_id) : "DOOR" };
@@ -97,6 +99,7 @@ function fromGolf(outing: GolfEventRow): { event: DoorEvent; memberId: string } 
       costCents: 0,
       managedGolf: true,
       golfEventId: String(outing.event_id),
+      productType: networking ? "NETWORKING" : "GOLF",
       universityName: outing.university_name || "",
     },
     memberId: outing.created_by ? String(outing.created_by) : "DOOR",
@@ -165,6 +168,7 @@ export async function listTodayEvents(organizer: Organizer): Promise<DoorEvent[]
         costCents: dollarsToCents(row.cost ?? row.event_cost),
         managedGolf: Boolean(golf) || (eventType === "Golf_Outing" && truthy(row.golf_outing_YN) && Boolean(golf)),
         golfEventId: golf?.event_id || null,
+        productType: golf?.product_type === "NETWORKING" ? "NETWORKING" : golf ? "GOLF" : null,
         universityName: row.university_name || organizer.university_affiliation,
       } satisfies DoorEvent;
     })

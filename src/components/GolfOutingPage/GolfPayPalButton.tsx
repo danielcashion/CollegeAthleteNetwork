@@ -3,9 +3,10 @@
 import { useRef, useState } from "react";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
-export function paypalFundingMethod(source?: unknown): "paypal" | "venmo" | "card" {
+export function paypalFundingMethod(source?: unknown): "paypal" | "venmo" | "card" | "applepay" {
   const key = (typeof source === "string" ? source : "").toLowerCase();
   if (key === "venmo") return "venmo";
+  if (key === "applepay") return "applepay";
   if (key === "card" || key === "credit" || key === "debit") return "card";
   return "paypal";
 }
@@ -28,7 +29,7 @@ export default function GolfPayPalButton({
   onError: (error: unknown) => void;
 }) {
   const [{ isPending, isRejected }] = usePayPalScriptReducer();
-  const fundingSource = useRef<"paypal" | "venmo" | "card">(forcedFunding || "paypal");
+  const fundingSource = useRef<"paypal" | "venmo" | "card" | "applepay">(forcedFunding || "paypal");
   const [processing, setProcessing] = useState(false);
 
   if (isPending) {

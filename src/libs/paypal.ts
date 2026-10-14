@@ -8,7 +8,7 @@ export const PAYPAL_LIVE_CONFIG = {
   username: process.env.PAYPAL_LIVE_USERNAME,
   password: process.env.PAYPAL_LIVE_PASSWORD,
   components: "buttons,funding-eligibility",
-  "enable-funding": "venmo,card",
+  "enable-funding": "venmo,card,applepay",
   "disable-funding": "paylater,credit",
 };
 
@@ -22,7 +22,7 @@ export const PAYPAL_SANDBOX_CONFIG = {
   username: process.env.PAYPAL_SANDBOX_USERNAME,
   password: process.env.PAYPAL_SANDBOX_PASSWORD,
   components: "buttons,funding-eligibility",
-  "enable-funding": "venmo,card",
+  "enable-funding": "venmo,card,applepay",
   "disable-funding": "paylater,credit",
 };
 

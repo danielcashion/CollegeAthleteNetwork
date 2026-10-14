@@ -45,13 +45,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Ticket type is not available" }, { status: 400 });
   }
 
-  const seats = attendeesPerTicket(ticket.type_name) * quantity;
-  const players = normalizePlayers(body.players);
-  if (players.length !== seats) {
+  const seatsPer =
+    ticket.ticket_kind === "TABLE" || (ticket.seats_per_unit && ticket.seats_per_unit > 1)
+      ? Math.max(1, Number(ticket.seats_per_unit) || 1)
+      : attendeesPerTicket(ticket.type_name);
+  const isTable = ticket.ticket_kind === "TABLE";
+  const players = normalizePlayers(body.players).filter((player) => player.first_name || player.last_name || player.email);
+  if (!isTable && players.length !== seatsPer * quantity) {
     return NextResponse.json({ error: "Roster does not match ticket quantity" }, { status: 400 });
   }
+  if (isTable && players.length < 1) {
+    return NextResponse.json({ error: "The table host needs a name and email" }, { status: 400 });
+  }
   if (players.some((player) => !player.first_name || !player.last_name || !isValidEmail(player.email))) {
-    return NextResponse.json({ error: "Each attendee needs a first name, last name, and valid email" }, { status: 400 });
+    return NextResponse.json({ error: "Each named guest needs a first name, last name, and valid email" }, { status: 400 });
   }
 
   try {
@@ -66,7 +73,7 @@ export async function POST(request: NextRequest) {
       purchaser_email,
       purchaser_phone: String(body.purchaser_phone || "").trim() || null,
       quantity,
-      group_size: attendeesPerTicket(ticket.type_name),
+      group_size: seatsPer,
       team_names: Array.isArray(body.team_names)
         ? body.team_names.map((name: unknown) => String(name || "").trim()).filter(Boolean)
         : [],

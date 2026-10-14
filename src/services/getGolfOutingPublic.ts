@@ -63,6 +63,8 @@ export type GolfTicketPublic = {
   fmv_cents?: number;
   inventory?: number | null;
   requires_golfer_info?: number;
+  ticket_kind?: "INDIVIDUAL" | "TABLE" | null;
+  seats_per_unit?: number | null;
   ticket_type_status: string;
   sort_order?: number;
   is_active_YN?: number;

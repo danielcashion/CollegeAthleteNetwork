@@ -49,7 +49,16 @@ function remainingOf(pkg: GolfPackagePublic) {
 const fieldClass =
   "mt-1.5 w-full rounded-lg border border-[#1C315F]/15 bg-[#fbfbfa] px-3.5 py-2.5 text-sm text-[#1C315F] outline-none transition placeholder:text-[#1C315F]/35 focus:border-[#1C315F] focus:bg-white focus:ring-2 focus:ring-[#1C315F]/10";
 
-function packageIncludes(pkg: GolfPackagePublic) {
+function packageIncludes(pkg: GolfPackagePublic, networking = false) {
+  if (networking) {
+    return [
+      pkg.includes_foursome ? "Includes a reserved table" : null,
+      pkg.includes_public_logo ? "Logo on the public event page" : null,
+      pkg.package_role === "TITLE" ? "Named in the event headline" : null,
+      pkg.package_role === "COCKTAIL" ? "Cocktail hour sponsorship" : null,
+      pkg.package_role === "ATHLETE" ? "Sponsor student athletes" : null,
+    ].filter(Boolean) as string[];
+  }
   return [
     pkg.includes_foursome ? "Included foursome" : null,
     pkg.includes_teebox_signage ? "Tee-box signage" : null,
@@ -68,6 +77,7 @@ export default function GolfSponsorForm({
   packages: GolfPackagePublic[];
   initialPackageId?: number;
 }) {
+  const networking = event.product_type === "NETWORKING";
   const available = useMemo(
     () => sortSponsorshipPackages(packages.filter((pkg) => remainingOf(pkg) > 0)),
     [packages]
@@ -128,6 +138,7 @@ export default function GolfSponsorForm({
   const cartTotal = cart.reduce((sum, item) => sum + item.unit_price_cents * (item.quantity || 1), 0);
   const contactEmailValid = isValidEmail(email);
   const foursomeValid =
+    networking ||
     !modalPkg?.includes_foursome ||
     players.every((player) => player.first_name.trim() && player.last_name.trim() && isValidEmail(player.email));
   const canAdd = Boolean(modalPkg && name.trim() && contactEmailValid && foursomeValid);
@@ -176,8 +187,8 @@ export default function GolfSponsorForm({
         sponsor_name: name.trim(),
         contact_email: email.trim(),
         logo_url: logo.trim() || undefined,
-        team_name: modalPkg.includes_foursome ? resolvedTeamName : undefined,
-        players: modalPkg.includes_foursome ? players : [],
+        team_name: !networking && modalPkg.includes_foursome ? resolvedTeamName : undefined,
+        players: !networking && modalPkg.includes_foursome ? players : [],
         includes_teebox_signage: modalPkg.includes_teebox_signage,
         quantity,
       },
@@ -260,7 +271,7 @@ export default function GolfSponsorForm({
               ? " Hole assignments will be made by the outing committee."
               : ""
           }`}
-          outingHref={`/golf-outing/${event.public_url_slug}`}
+          outingHref={`/${networking ? "networking-event" : "golf-outing"}/${event.public_url_slug}`}
         />
       </div>
     );
@@ -299,11 +310,9 @@ export default function GolfSponsorForm({
                 </span>
               </div>
               <ul className="mt-4 space-y-1.5 text-sm text-[#1C315F]/80">
-                {pkg.includes_foursome ? <li>Includes a foursome</li> : null}
-                {pkg.includes_teebox_signage ? <li>Tee-box signage</li> : null}
-                {pkg.includes_longest_drive ? <li>Longest drive contest</li> : null}
-                {pkg.includes_closest_to_pin ? <li>Closest to the pin contest</li> : null}
-                {pkg.includes_public_logo ? <li>Logo on the public outing page</li> : null}
+                {packageIncludes(pkg, networking).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
               </ul>
               {pkg.description_html && (
                 <div
@@ -385,6 +394,7 @@ export default function GolfSponsorForm({
                 event_name: event.event_name,
                 university_name: event.university_name,
                 outing_slug: event.public_url_slug,
+                product_type: event.product_type || "GOLF",
                 category: "SPONSORSHIP",
                 amount: pending.total_cents,
               }}
@@ -446,9 +456,9 @@ export default function GolfSponsorForm({
             </div>
 
             <div className="space-y-5 overflow-y-auto px-6 py-5">
-              {packageIncludes(modalPkg).length > 0 ? (
+              {packageIncludes(modalPkg, networking).length > 0 ? (
                 <div className="flex flex-wrap gap-2">
-                  {packageIncludes(modalPkg).map((item) => (
+                  {packageIncludes(modalPkg, networking).map((item) => (
                     <span
                       key={item}
                       className="rounded-full border border-[#1C315F]/10 bg-[#f9faf8] px-3 py-1 text-xs font-semibold text-[#1C315F]"
@@ -517,7 +527,7 @@ export default function GolfSponsorForm({
                 />
               )}
 
-              {!!modalPkg.includes_foursome && (
+              {!networking && !!modalPkg.includes_foursome && (
                 <div className="space-y-4 rounded-xl border border-[#1C315F]/10 bg-[#f9faf8] p-4">
                   <div>
                     <p className="text-sm font-bold text-[#1C315F]">Included foursome</p>

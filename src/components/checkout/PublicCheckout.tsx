@@ -36,7 +36,8 @@ export default function PublicCheckout({
     purchaser_email: purchaserEmail,
     purchaser_name: purchaserName,
   };
-  const outingHref = typeof golfData.outing_slug === "string" ? `/golf-outing/${golfData.outing_slug}` : undefined;
+  const publicPath = golfData.product_type === "NETWORKING" ? "networking-event" : "golf-outing";
+  const outingHref = typeof golfData.outing_slug === "string" ? `/${publicPath}/${golfData.outing_slug}` : undefined;
 
   async function handleSuccess() {
     setPaid(true);
@@ -64,7 +65,7 @@ export default function PublicCheckout({
         <p className="text-sm font-semibold uppercase tracking-wide text-[#1C315F]/60">Secure checkout</p>
         <p className="mt-1 text-lg font-bold text-[#1C315F]">Pay {formatCents(amount)}</p>
         <p className="mt-1 text-sm text-[#1C315F]/70">
-          Pay with PayPal, Venmo, or a card. On a computer, Venmo opens a QR code to scan with the Venmo app.
+          Pay with Apple Pay, a card, PayPal, or Venmo. On a computer, Venmo opens a QR code to scan with the Venmo app. Apple Pay appears when this browser and the PayPal account support it.
         </p>
       </div>
       {error ? <p className="rounded-xl bg-[#ED3237]/8 px-3 py-2 text-sm text-[#ED3237]">{error}</p> : null}

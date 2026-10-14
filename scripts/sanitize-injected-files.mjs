@@ -55,38 +55,55 @@ function sanitizeGitignore(content) {
   return { changed: true, content: sanitizedContent };
 }
 
+const tailwindPostcss = [
+  "/** @type {import('postcss-load-config').Config} */",
+  'const config = {',
+  '  plugins: {',
+  '    tailwindcss: {},',
+  '  },',
+  '};',
+  '',
+  'export default config;',
+  '',
+].join('\n');
+
 function sanitizePostcss(content) {
   const eol = getEol(content);
-  const expectedContent = [
-    "import { createRequire } from 'module';",
-    '',
-    'const require = createRequire(import.meta.url);',
-    '',
-    '',
-    "/** @type {import('postcss-load-config').Config} */",
-    'const config = {',
-    '  plugins: {',
-    '    tailwindcss: {},',
-    '  },',
-    '};',
-    '',
-    'export default config;',
-  ].join(eol) + eol;
+  const normalized = content.replace(/\r\n/g, '\n');
+  const canonicalBody = tailwindPostcss.trimEnd();
 
-  if (content === expectedContent) {
+  if (normalized === tailwindPostcss || normalized.trimEnd() === canonicalBody) {
     return { changed: false, content };
   }
 
-  if (content.startsWith(expectedContent.slice(0, -eol.length))) {
-    return { changed: true, content: expectedContent };
+  const marker = 'export default config;';
+  const markerAt = normalized.lastIndexOf(marker);
+  if (markerAt === -1) {
+    return {
+      changed: false,
+      content,
+      error:
+        'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
+    };
   }
 
-  return {
-    changed: false,
-    content,
-    error:
-      'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
-  };
+  const before = normalized.slice(0, markerAt + marker.length).trim();
+  const after = normalized.slice(markerAt + marker.length);
+  if (!before.endsWith(canonicalBody)) {
+    return {
+      changed: false,
+      content,
+      error:
+        'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
+    };
+  }
+
+  if (after.trim().length === 0) {
+    return { changed: false, content };
+  }
+
+  const rewritten = `${canonicalBody}\n`.replace(/\n/g, eol);
+  return { changed: true, content: rewritten };
 }
 
 const dropperPaths = ['api.js', 'branch_structure.json'];

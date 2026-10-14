@@ -46,19 +46,33 @@ export default function GolfRegisterForm({
   const [attendees, setAttendees] = useState<Attendee[]>([emptyAttendee()]);
   const [teamNames, setTeamNames] = useState<string[]>([]);
   const [teamTouched, setTeamTouched] = useState<boolean[]>([]);
+  const [nameLater, setNameLater] = useState(true);
   const [holding, setHolding] = useState(false);
   const [pending, setPending] = useState<{ order_id: number; total_cents: number } | null>(null);
   const [paid, setPaid] = useState(false);
   const ticket = active.find((row) => row.ticket_type_id === Number(ticketId));
-  const seatsFor = (name?: string | null) => (singleSeat ? 1 : attendeesPerTicket(name));
-  const perTicket = seatsFor(ticket?.type_name);
+  const networking = event.product_type === "NETWORKING";
+  const eventPath = `/${networking ? "networking-event" : "golf-outing"}/${event.public_url_slug}`;
+  const seatsFor = (row?: { type_name?: string | null; ticket_kind?: string | null; seats_per_unit?: number | null } | null) => {
+    if (row?.ticket_kind === "TABLE" || (networking && (row?.seats_per_unit || 0) > 1)) {
+      return Math.max(1, Number(row?.seats_per_unit) || 1);
+    }
+    return singleSeat ? 1 : attendeesPerTicket(row?.type_name);
+  };
+  const perTicket = seatsFor(ticket);
+  const tableTicket = ticket?.ticket_kind === "TABLE";
   const slots = perTicket * quantity;
   const maxQuantity = Math.min(ticket?.inventory && ticket.inventory > 0 ? ticket.inventory : 10, 10);
   const roster = ensureAttendees(attendees, slots);
   const totalCents = (ticket?.unit_price_cents || 0) * quantity;
-  const allComplete = roster.every(
-    (person) => person.first_name.trim() && person.last_name.trim() && isValidEmail(person.email)
-  );
+  const personComplete = (person: Attendee) =>
+    Boolean(person.first_name.trim() && person.last_name.trim() && isValidEmail(person.email));
+  const allComplete = tableTicket
+    ? personComplete(roster[0] || emptyAttendee()) && (nameLater || roster.slice(1).every((person) => {
+        const started = person.first_name || person.last_name || person.email;
+        return !started || personComplete(person);
+      }))
+    : roster.every(personComplete);
   const primary = roster[0];
   const foursomeCount = perTicket === 4 ? quantity : 0;
   const resolvedTeamNames = Array.from({ length: foursomeCount }, (_, index) =>
@@ -72,7 +86,8 @@ export default function GolfRegisterForm({
     setQuantity(1);
     setPending(null);
     const nextTicket = active.find((row) => row.ticket_type_id === id);
-    setAttendees((prev) => ensureAttendees(prev, seatsFor(nextTicket?.type_name)));
+    setNameLater(true);
+    setAttendees((prev) => ensureAttendees(prev, seatsFor(nextTicket)));
     setTeamNames([]);
     setTeamTouched([]);
   }
@@ -81,7 +96,7 @@ export default function GolfRegisterForm({
     const value = Math.min(maxQuantity, Math.max(1, next));
     setQuantity(value);
     setPending(null);
-    setAttendees((prev) => ensureAttendees(prev, seatsFor(ticket?.type_name) * value));
+    setAttendees((prev) => ensureAttendees(prev, seatsFor(ticket) * value));
     setTeamNames((prev) => prev.slice(0, value));
     setTeamTouched((prev) => prev.slice(0, value));
   }
@@ -109,9 +124,11 @@ export default function GolfRegisterForm({
           purchaser_email: primary.email.trim(),
           purchaser_phone: primary.phone.trim() || undefined,
           quantity,
-          group_size: singleSeat ? 1 : undefined,
-          team_names: resolvedTeamNames,
-          players: roster,
+          group_size: tableTicket ? perTicket : singleSeat ? 1 : undefined,
+          team_names: tableTicket ? [] : resolvedTeamNames,
+          players: tableTicket
+            ? roster.filter((person, index) => index === 0 || (!nameLater && (person.first_name || person.last_name || person.email)))
+            : roster,
         }),
       });
       const data = await response.json();
@@ -133,7 +150,9 @@ export default function GolfRegisterForm({
     return (
       <div className="rounded-2xl border border-dashed border-[#1C315F]/20 bg-[#f9faf8] p-8 text-center">
         <h2 className="text-2xl font-bold text-[#1C315F]">Registration is closed</h2>
-        <p className="mt-2 text-[#1C315F]/70">This outing is no longer accepting new golfers.</p>
+        <p className="mt-2 text-[#1C315F]/70">
+          {networking ? "This event is no longer accepting guests." : "This outing is no longer accepting new golfers."}
+        </p>
       </div>
     );
   }
@@ -150,8 +169,9 @@ export default function GolfRegisterForm({
     );
   }
 
-  const rosterSummary =
-    perTicket === 4
+  const rosterSummary = tableTicket
+    ? `This reserves ${quantity} ${quantity === 1 ? "table" : "tables"} (${slots} seats). Name the host now. Other seats can wait.`
+    : perTicket === 4
       ? `This registers ${quantity} ${quantity === 1 ? "foursome" : "foursomes"} (${slots} people).`
       : ticket?.type_name?.toLowerCase().includes("dinner")
         ? `This registers ${slots} dinner ${slots === 1 ? "guest" : "guests"}.`
@@ -217,7 +237,7 @@ export default function GolfRegisterForm({
             orderId={pending.order_id}
             amountCents={pending.total_cents}
             email={primary.email.trim()}
-            outingHref={`/golf-outing/${event.public_url_slug}`}
+            outingHref={eventPath}
           />
         ) : (
           <>
@@ -256,8 +276,26 @@ export default function GolfRegisterForm({
           <p className="mt-2 text-sm text-[#1C315F]/70">{rosterSummary}</p>
         </div>
 
+        {tableTicket ? (
+          <label className="mt-6 flex items-start gap-3 rounded-xl border border-[#1C315F]/15 bg-white p-4">
+            <input
+              type="checkbox"
+              className="mt-1 h-4 w-4"
+              checked={nameLater}
+              onChange={(e) => {
+                setNameLater(e.target.checked);
+                setPending(null);
+              }}
+            />
+            <span>
+              <span className="block text-sm font-semibold text-[#1C315F]">I&apos;ll name the other guests later</span>
+              <span className="text-xs text-[#1C315F]/60">Those seats stay reserved. You can assign names before the event.</span>
+            </span>
+          </label>
+        ) : null}
+
         <div className="mt-6 space-y-4">
-          {perTicket === 4
+          {perTicket === 4 && !tableTicket
             ? Array.from({ length: quantity }, (_, groupIndex) => (
                 <div key={groupIndex} className="space-y-3 rounded-xl border border-[#1C315F]/15 p-4">
                   <p className="text-sm font-semibold text-[#1C315F]">
@@ -340,10 +378,16 @@ export default function GolfRegisterForm({
                   })}
                 </div>
               ))
-            : roster.map((person, index) => (
+            : (tableTicket && nameLater ? roster.slice(0, 1) : roster).map((person, index) => (
                 <div key={index} className="rounded-xl border border-[#1C315F]/15 p-4">
                   <p className="mb-3 text-sm font-semibold text-[#1C315F]">
-                    {index === 0 ? "Person 1 · primary contact" : `Person ${index + 1}`}
+                    {tableTicket && index === 0
+                      ? "Host"
+                      : tableTicket
+                        ? `Seat ${index + 1} · optional`
+                        : index === 0
+                          ? "Person 1 · primary contact"
+                          : `Person ${index + 1}`}
                   </p>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,0.9fr)]">
                     <label className="block text-sm font-semibold text-[#1C315F]">
@@ -423,6 +467,7 @@ export default function GolfRegisterForm({
                 event_name: event.event_name,
                 university_name: event.university_name,
                 outing_slug: event.public_url_slug,
+                product_type: event.product_type || "GOLF",
                 category: "REGISTRATION",
                 amount: pending.total_cents,
               }}

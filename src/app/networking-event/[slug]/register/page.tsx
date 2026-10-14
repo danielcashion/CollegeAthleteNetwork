@@ -36,7 +36,7 @@ export default async function NetworkingRegisterPage({
         </div>
       </section>
       <div className="container mx-auto px-4 py-12">
-        <GolfRegisterForm event={event} tickets={tickets} initialTicketId={initialTicketId} singleSeat />
+        <GolfRegisterForm event={event} tickets={tickets} initialTicketId={initialTicketId} />
       </div>
     </div>
   );
