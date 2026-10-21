@@ -31,23 +31,44 @@ const FooterContainer = styled("div")({
   justifyContent: "center",
 });
 
-const MenuList = styled(List)({
+const MenuList = styled(List)(({ theme }) => ({
   display: "flex",
-  flexDirection: "row",
+  flexDirection: "column",
   width: "100%",
   alignItems: "center",
-  justifyContent: "space-between",
-});
+  justifyContent: "center",
+  gap: "4px",
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 0,
+  },
+}));
 
-const MenuListItemLeft = styled(ListItem)({
+const MenuListItemLeft = styled(ListItem)(({ theme }) => ({
   flexDirection: "column",
-  alignItems: "flex-start",
-});
+  alignItems: "center",
+  width: "100%",
+  textAlign: "center",
+  [theme.breakpoints.up("md")]: {
+    alignItems: "flex-start",
+    width: "auto",
+    textAlign: "left",
+  },
+}));
 
-const MenuListItemRight = styled(ListItem)({
+const MenuListItemRight = styled(ListItem)(({ theme }) => ({
   flexDirection: "column",
-  alignItems: "flex-end",
-});
+  alignItems: "center",
+  width: "100%",
+  textAlign: "center",
+  [theme.breakpoints.up("md")]: {
+    alignItems: "flex-end",
+    width: "auto",
+    textAlign: "right",
+  },
+}));
 
 const MenuItemText = styled("a")({
   color: "white",
@@ -140,13 +161,15 @@ const AppFooter: React.FC = () => {
                   <ListItemText primary="Accessibility" />
                 </MenuItemText>
               </MenuListItemLeft>
-              <Image
-                src={Logo}
-                height={110}
-                width={110}
-                alt="Logo"
-                priority={true}
-              />
+              <Box sx={{ order: { xs: -1, md: 0 }, display: "flex", justifyContent: "center" }}>
+                <Image
+                  src={Logo}
+                  height={110}
+                  width={110}
+                  alt="The College Athlete Network"
+                  priority={true}
+                />
+              </Box>
               <MenuListItemRight>
                 <MenuItemText href="/support">
                   <ListItemText primary="Support" />

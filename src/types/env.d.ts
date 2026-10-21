@@ -41,6 +41,15 @@ declare namespace NodeJS {
     MYSQL_SSL_CA_PATH?: string;
     MYSQL_SSL_REJECT_UNAUTHORIZED?: string;
 
+    /** Name of the Renidly enrich Lambda. The API key stays on that function. */
+    AWS_LAMBDA_RENIDLY_FUNCTION?: string;
+    /** Optional override of the Renidly enrich URL, read by the Lambda. */
+    RENIDLY_API_BASE_URL?: string;
+    /** Server-only. Set on the Renidly Lambda, not in the browser. */
+    RENIDLY_API_KEY?: string;
+    /** Optional HMAC secret if claim links use signed tokens. Separate from NEXTAUTH_SECRET. */
+    CLAIM_TOKEN_SECRET?: string;
+
     // External Services
     NEXT_PUBLIC_IPAPI_KEY?: string;
     NEXT_PUBLIC_CLOUDFRONT_S3_CAN_DOMAIN?: string;

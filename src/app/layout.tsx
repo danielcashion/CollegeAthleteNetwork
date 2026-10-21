@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { NextWebVitalsMetric } from "next/app";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
@@ -84,7 +83,6 @@ export default function RootLayout({
             </a>
           </nav>
           <SiteFrame>{children}</SiteFrame>
-          <Analytics />
           <ToasterProvider />
           <GoogleAnalyticsClient />
           {/* WebKit/Safari/Chrome skip link focus fix */}
