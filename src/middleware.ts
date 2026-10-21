@@ -1,5 +1,5 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse, type NextRequest } from "next/server";
+import { withAuth, type NextRequestWithAuth } from "next-auth/middleware";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
 function claimResponse() {
   const response = NextResponse.next();
@@ -41,12 +41,12 @@ const adminAuth = withAuth(
   }
 );
 
-export default function middleware(req: NextRequest) {
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl;
   if (pathname === "/claim" || pathname.startsWith("/claim/")) {
     return claimResponse();
   }
-  return adminAuth(req);
+  return adminAuth(req as NextRequestWithAuth, event);
 }
 
 export const config = {

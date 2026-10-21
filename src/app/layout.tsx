@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import "./globals.css";
-import { NextWebVitalsMetric } from "next/app";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
 import { SiteFrame } from "@/components/tickets/TicketChrome";
 
-export const openSans = Open_Sans({
+const openSans = Open_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-open-sans",
@@ -107,8 +106,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
-
-export function reportWebVitals(metric: NextWebVitalsMetric) {
-  console.log(metric);
 }
