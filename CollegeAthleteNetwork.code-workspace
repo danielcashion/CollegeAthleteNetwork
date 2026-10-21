@@ -4,10 +4,13 @@
 			"path": "."
 		},
 		{
-			"path": "../../CollegeAthleteNetworkMembers/CollegeAthleteNetworkMembers"
+			"path": "../CollegeAthleteNetworkMembers/CollegeAthleteNetworkMembers"
 		},
 		{
-			"path": "../../CollegeAthleteNetworkEvents/CollegeAthleteNetworkEvents"
+			"path": "../CollegeAthleteNetworkFoundation"
+		},
+		{
+			"path": "../CollegeAthleteNetworkUtilities"
 		}
 	],
 	"settings": {}

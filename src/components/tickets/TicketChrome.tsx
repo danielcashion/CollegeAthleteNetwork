@@ -41,6 +41,23 @@ export function TicketActions({
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
   const path = usePathname() || "";
+  const claim = path === "/claim" || path.startsWith("/claim/");
+  if (claim) {
+    return (
+      <div className="flex min-h-screen flex-col bg-[#F4F6FB]">
+        <nav id="site-navigation" aria-label="Site navigation" tabIndex={-1}>
+          <Navbar />
+        </nav>
+        <div className="h-24 shrink-0 bg-gradient-to-r from-[#1C315F] to-[#ED3237]" aria-hidden="true" />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <footer id="site-footer" aria-label="Site footer" role="contentinfo">
+          <Footer />
+        </footer>
+      </div>
+    );
+  }
   const bare = path === "/t" || path.startsWith("/t/") || path.startsWith("/door-pay") || path.startsWith("/receipt");
   if (bare) return <main id="main-content">{children}</main>;
   return (
