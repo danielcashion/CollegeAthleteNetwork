@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { BadgeCheck, GraduationCap, Linkedin, Medal } from "lucide-react";
 import {
@@ -606,9 +607,9 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 {flow.linkedinUrl}
               </li>
             </ul>
-            <a href="/" className={primaryButtonClass}>
+            <Link href="/" className={primaryButtonClass}>
               Go to The College Athlete Network
-            </a>
+            </Link>
           </StatusPanel>
         ) : null}
 
@@ -635,9 +636,9 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
               >
                 Update my LinkedIn
               </button>
-              <a href="/" className={secondaryButtonClass}>
+              <Link href="/" className={secondaryButtonClass}>
                 Go to The College Athlete Network
-              </a>
+              </Link>
             </div>
           </StatusPanel>
         ) : null}
