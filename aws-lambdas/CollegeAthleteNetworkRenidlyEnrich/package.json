@@ -1,0 +1,9 @@
+{
+  "name": "college-athlete-network-renidly-enrich",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.922.0"
+  }
+}

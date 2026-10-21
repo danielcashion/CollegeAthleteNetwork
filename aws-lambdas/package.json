@@ -1,0 +1,8 @@
+{
+  "name": "aws-lambdas",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "adm-zip": "^0.5.16"
+  }
+}

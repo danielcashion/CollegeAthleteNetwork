@@ -1,14 +1,22 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /t/
+Disallow: /api/tickets
+Disallow: /claim
+Disallow: /claim/
 
 # Googlebot
 User-agent: Googlebot
 Allow: /
+Disallow: /claim
+Disallow: /claim/
 
 # Bingbot
 User-agent: Bingbot
 Allow: /
+Disallow: /claim
+Disallow: /claim/
 
 # Host
 Host: https://www.collegeathletenetwork.org

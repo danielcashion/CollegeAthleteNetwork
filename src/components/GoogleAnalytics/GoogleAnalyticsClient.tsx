@@ -1,7 +1,16 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 
 export default function GoogleAnalyticsClient() {
-  return <GoogleAnalytics trackPageViews gaMeasurementId="G-KKM0XYQD3D" />;
+  const pathname = usePathname() || "";
+  if (pathname === "/claim" || pathname.startsWith("/claim/")) return null;
+  return (
+    <>
+      <Analytics />
+      <GoogleAnalytics trackPageViews gaMeasurementId="G-KKM0XYQD3D" />
+    </>
+  );
 }
