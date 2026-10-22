@@ -573,7 +573,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                   disabled={busy || retrieving}
                   onClick={() => onConfirmProfile(flow.profile.profileUrl, flow.rows)}
                 >
-                  {athlete.linkedinVerified ? "Confirm" : "Confirm and verify"}
+                  {athlete.linkedinVerified ? "Confirm and Save" : "Confirm and verify"}
                 </button>
               ) : null}
               <button
