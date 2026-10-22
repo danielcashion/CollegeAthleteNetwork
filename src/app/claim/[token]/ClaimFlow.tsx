@@ -11,6 +11,8 @@ import {
   lookupLinkedIn,
   rejectStoredProfile,
 } from "../actions";
+import { isLinkedInProfileInput, linkedInProfileKey, publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
+import { canLookupLinkedInProfile, recordLinkedInLookup } from "@/lib/claim/lookupLimit";
 import type { AthleteForClaim, LinkedInProfile, RenidlyRows } from "@/lib/claim/types";
 import { canRefreshLinkedIn, recordLinkedInRefresh } from "@/lib/claim/refreshLimit";
 import {
@@ -21,6 +23,8 @@ import {
   LinkedInPanel,
   ProfileRefresh,
   ProfileCard,
+  InvalidLinkedInUrlModal,
+  LastNameWarningModal,
   RefreshLimitModal,
   RetrievingModal,
   secondaryButtonClass,
@@ -59,6 +63,35 @@ function stepIndex(flow: Flow): 0 | 1 | 2 {
   return 0;
 }
 
+function nameToken(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function lastToken(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  return parts.length > 1 ? parts[parts.length - 1] : "";
+}
+
+function renidlyFirst(rows: RenidlyRows, fullName: string): string {
+  const first = nameToken(rows.profile.first_name);
+  if (first) return first;
+  return fullName.trim().split(/\s+/).filter(Boolean)[0] || "";
+}
+
+function renidlyLast(rows: RenidlyRows, fullName: string): string {
+  const last = nameToken(rows.profile.last_name);
+  if (last) return last;
+  return lastToken(fullName);
+}
+
+function handleUrl(...candidates: Array<string | null | undefined>): string | null {
+  for (const candidate of candidates) {
+    const url = publicLinkedInUrl(candidate);
+    if (url) return url;
+  }
+  return null;
+}
+
 export function ClaimFlow({
   token,
   athlete,
@@ -76,12 +109,15 @@ export function ClaimFlow({
   const [busy, setBusy] = useState(false);
   const [retrieving, setRetrieving] = useState(false);
   const [refreshLimited, setRefreshLimited] = useState(false);
+  const [invalidLinkedInUrl, setInvalidLinkedInUrl] = useState(false);
+  const [lookupLimited, setLookupLimited] = useState(false);
+  const [nameWarningOpen, setNameWarningOpen] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
   const [banner, setBanner] = useState<string | null>(null);
   const [live, setLive] = useState("Confirm whether this athlete record is you.");
 
   const welcome = athlete.firstName ? `Welcome, ${athlete.firstName}` : "Welcome";
-  const linkedinLabel = athlete.linkedinUrl?.replace(/^https?:\/\/(www\.)?/, "") || "";
+  const linkedinLabel = publicLinkedInLabel(athlete.linkedinUrl);
 
   async function onConfirmIdentity() {
     setBusy(true);
@@ -183,6 +219,11 @@ export function ClaimFlow({
       reportLookupError(draft, "Enter a LinkedIn profile URL to continue.");
       return false;
     }
+    if (!isLinkedInProfileInput(trimmed)) {
+      setInvalidLinkedInUrl(true);
+      setLive("This needs to be a valid LinkedIn URL.");
+      return false;
+    }
     setRetrieving(true);
     setBanner(null);
     setLive("Retrieving your LinkedIn profile.");
@@ -197,20 +238,21 @@ export function ClaimFlow({
         reportLookupError(trimmed, result.message);
         return false;
       }
+      setNameWarningOpen(!result.lastNameMatches);
       setFlow({
         name: "linkedin",
         mode: "preview",
-        draft: result.profile.profileUrl,
+        draft: trimmed,
         profile: result.profile,
         rows: result.rows,
         simulated: result.simulated,
         lastNameMatches: result.lastNameMatches,
-        error: result.lastNameMatches ? null : "The last name on this LinkedIn profile doesn't match this athlete record. Paste your own profile URL.",
+        error: null,
       });
       setLive(
         result.lastNameMatches
           ? `Found a profile for ${result.profile.fullName}. The last name matches. Confirm it to verify this record.`
-          : "The last name on this LinkedIn profile doesn't match this athlete record.",
+          : "There seems to be something off. The last name on this LinkedIn profile is not close to this athlete record.",
       );
       return true;
     } catch {
@@ -386,7 +428,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                     </div>
                   </div>
                 ) : null}
-                {athlete.linkedinUrl ? (
+                {linkedinLabel && athlete.linkedinUrl ? (
                   <div className="flex items-center gap-3 px-4 py-3.5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4F6FB] text-[#1C315F]">
                       <Linkedin className="h-5 w-5" aria-hidden="true" />
@@ -443,17 +485,18 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
             title="Is this your profile?"
             busy={busy || retrieving}
             howToEdit
-            profileUrl={storedProfile.profileUrl}
+            profileUrl={handleUrl(athlete.linkedinUrl, storedProfile.profileUrl)}
+            refresh={
+              <ProfileRefresh
+                disabled={busy || retrieving || !storedProfile.profileUrl}
+                onRefresh={() => void onRefresh(storedProfile.profileUrl)}
+              />
+            }
           >
             <p className="text-center text-sm leading-6 text-[#3E4E6B]">We already have this profile on file for you.</p>
             <div className="mt-6">
               <ProfileCard profile={storedProfile} hideUrl />
             </div>
-            <ProfileRefresh
-              profileUrl={storedProfile.profileUrl}
-              disabled={busy || retrieving}
-              onRefresh={() => void onRefresh(storedProfile.profileUrl)}
-            />
             <div className="mt-6">
               <PrivacyNote />
             </div>
@@ -483,6 +526,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
             {profileNotice ? <p className="mt-3 text-sm leading-6 text-[#3E4E6B]">{profileNotice}</p> : null}
             <form
               className="mt-5"
+              noValidate
               onSubmit={(event) => {
                 event.preventDefault();
                 if (busy || retrieving) return;
@@ -492,7 +536,20 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                   setLive("Paste your LinkedIn profile URL to continue.");
                   return;
                 }
-                void onLookup(draft);
+                const profileKey = linkedInProfileKey(draft);
+                if (!profileKey) {
+                  setInvalidLinkedInUrl(true);
+                  setLive("This needs to be a valid LinkedIn URL.");
+                  return;
+                }
+                if (!canLookupLinkedInProfile(token, profileKey)) {
+                  setLookupLimited(true);
+                  setLive("You have exceeded the limit of how many different LinkedIn profiles you can look up.");
+                  return;
+                }
+                void onLookup(draft).then((found) => {
+                  if (found) recordLinkedInLookup(token, profileKey);
+                });
               }}
             >
               <label htmlFor="linkedin-url" className="text-sm font-semibold text-[#1C315F]">
@@ -501,7 +558,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
               <input
                 id="linkedin-url"
                 name="linkedinUrl"
-                type="url"
+                type="text"
                 inputMode="url"
                 autoComplete="url"
                 spellCheck={false}
@@ -539,7 +596,13 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
             title="Does this look right?"
             busy={busy || retrieving}
             howToEdit
-            profileUrl={flow.profile.profileUrl}
+            profileUrl={handleUrl(flow.draft, flow.profile.profileUrl, athlete.linkedinUrl)}
+            refresh={
+              <ProfileRefresh
+                disabled={busy || retrieving || !flow.profile.profileUrl}
+                onRefresh={() => void onRefresh(flow.profile.profileUrl)}
+              />
+            }
           >
             <ProfileCard profile={flow.profile} simulated={flow.simulated} hideUrl />
             {!athlete.linkedinVerified && flow.lastNameMatches ? (
@@ -547,21 +610,11 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 The last name matches this athlete record. Confirm to save the profile and mark the LinkedIn URL verified.
               </p>
             ) : null}
-            {!athlete.linkedinVerified && !flow.lastNameMatches ? (
-              <p role="alert" className="mt-4 text-sm font-medium text-[#9D1F24]">
-                {flow.error || "The last name on this LinkedIn profile doesn't match this athlete record. Paste your own profile URL."}
-              </p>
-            ) : null}
-            {athlete.linkedinVerified && flow.error ? (
+            {flow.error ? (
               <p role="alert" className="mt-4 text-sm font-medium text-[#9D1F24]">
                 {flow.error}
               </p>
             ) : null}
-            <ProfileRefresh
-              profileUrl={flow.profile.profileUrl}
-              disabled={busy || retrieving}
-              onRefresh={() => void onRefresh(flow.profile.profileUrl)}
-            />
             <div className="mt-5">
               <PrivacyNote />
             </div>
@@ -573,7 +626,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                   disabled={busy || retrieving}
                   onClick={() => onConfirmProfile(flow.profile.profileUrl, flow.rows)}
                 >
-                  {athlete.linkedinVerified ? "Confirm" : "Confirm and verify"}
+                  {athlete.linkedinVerified ? "Confirm and Save" : "Confirm and verify"}
                 </button>
               ) : null}
               <button
@@ -602,13 +655,15 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 {athlete.school ? `, ${athlete.school}` : ""}
                 {athlete.sport ? `, ${athlete.sport}` : ""}
               </li>
-              <li className="break-all">
-                <span className="text-[#5C6A82]">LinkedIn · </span>
-                {flow.linkedinUrl}
-              </li>
+              {publicLinkedInLabel(flow.linkedinUrl) ? (
+                <li className="break-all">
+                  <span className="text-[#5C6A82]">LinkedIn · </span>
+                  {publicLinkedInLabel(flow.linkedinUrl)}
+                </li>
+              ) : null}
             </ul>
-            <Link href="/" className={primaryButtonClass}>
-              Go to The College Athlete Network
+            <Link href="https://members.collegeathletenetwork.org/login" className={primaryButtonClass}>
+              Login to The College Athlete Network
             </Link>
           </StatusPanel>
         ) : null}
@@ -616,10 +671,10 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
         {flow.name === "already" ? (
           <StatusPanel title="You're all set">
             <p>We already have your confirmation{athlete.firstName ? `, ${athlete.firstName}` : ""}.</p>
-            {athlete.claim.linkedinUrl ? (
+            {publicLinkedInLabel(athlete.claim.linkedinUrl) ? (
               <p className="break-all text-[#1C315F]">
                 <span className="text-[#5C6A82]">LinkedIn · </span>
-                {athlete.claim.linkedinUrl}
+                {publicLinkedInLabel(athlete.claim.linkedinUrl)}
               </p>
             ) : null}
             <div className="flex flex-col gap-3">
@@ -653,7 +708,33 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
         ) : null}
       </div>
       <RetrievingModal open={retrieving} />
+      <InvalidLinkedInUrlModal open={invalidLinkedInUrl} onClose={() => setInvalidLinkedInUrl(false)} />
+      <LastNameWarningModal
+        open={nameWarningOpen}
+        athleteFirst={athlete.firstName}
+        athleteLast={lastToken(athlete.fullName)}
+        linkedInFirst={flow.name === "linkedin" && flow.mode === "preview" ? renidlyFirst(flow.rows, flow.profile.fullName) : ""}
+        linkedInLast={flow.name === "linkedin" && flow.mode === "preview" ? renidlyLast(flow.rows, flow.profile.fullName) : ""}
+        onProceed={() => {
+          setNameWarningOpen(false);
+          setLive("Review this LinkedIn profile, then confirm it if it is yours.");
+        }}
+        onBack={() => {
+          setNameWarningOpen(false);
+          if (flow.name === "linkedin" && flow.mode === "preview") {
+            setFlow({ name: "linkedin", mode: "form", draft: flow.draft, error: null });
+          }
+          setLive("Try a different LinkedIn URL.");
+        }}
+      />
       <RefreshLimitModal open={refreshLimited} onClose={() => setRefreshLimited(false)} />
+      <RefreshLimitModal
+        open={lookupLimited}
+        onClose={() => setLookupLimited(false)}
+        label="lookup"
+        title="Profile lookup limit reached"
+        message="You have exceeded the limit of how many different LinkedIn profiles you can look up. Please contact support if you need help."
+      />
     </ClaimShell>
   );
 }

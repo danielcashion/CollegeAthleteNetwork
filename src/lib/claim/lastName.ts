@@ -48,10 +48,45 @@ function significant(parts: string[]): string[] {
   return name;
 }
 
+function editDistance(left: string, right: string): number {
+  const rows = left.length + 1;
+  const cols = right.length + 1;
+  const grid = Array.from({ length: rows }, () => new Array<number>(cols).fill(0));
+  for (let row = 0; row < rows; row += 1) grid[row][0] = row;
+  for (let col = 0; col < cols; col += 1) grid[0][col] = col;
+  for (let row = 1; row < rows; row += 1) {
+    for (let col = 1; col < cols; col += 1) {
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      grid[row][col] = Math.min(grid[row - 1][col] + 1, grid[row][col - 1] + 1, grid[row - 1][col - 1] + cost);
+    }
+  }
+  return grid[left.length][right.length];
+}
+
+function lastNameOf(value: string): string {
+  const parts = significant(tokens(value));
+  return parts[parts.length - 1] || "";
+}
+
 /** Compare the athlete's last name with the last name returned by Renidly. */
 export function lastNamesMatch(athleteName: string, profileLastName: string): boolean {
-  const athlete = significant(tokens(athleteName));
-  const profile = significant(tokens(profileLastName));
-  if (!athlete.length || !profile.length) return false;
-  return athlete[athlete.length - 1] === profile[profile.length - 1];
+  const athlete = lastNameOf(athleteName);
+  const profile = lastNameOf(profileLastName);
+  if (!athlete || !profile) return false;
+  return athlete === profile;
+}
+
+/**
+ * True when the last names are the same or only a small spelling apart.
+ * Cashion and Cashon are close. Cashion and Georgiou are not.
+ */
+export function lastNamesClose(athleteName: string, profileLastName: string): boolean {
+  const athlete = lastNameOf(athleteName);
+  const profile = lastNameOf(profileLastName);
+  if (!athlete || !profile) return false;
+  if (athlete === profile) return true;
+  const distance = editDistance(athlete, profile);
+  const longest = Math.max(athlete.length, profile.length);
+  if (longest <= 4) return distance <= 1;
+  return distance <= 2 && distance / longest <= 0.34;
 }

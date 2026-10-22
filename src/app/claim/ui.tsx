@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Linkedin } from "lucide-react";
+import { publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
 import type { LinkedInProfile, ProfileBadge } from "@/lib/claim/types";
 
 export const primaryButtonClass =
@@ -165,30 +166,38 @@ export function LinkedInPanel({
   busy = false,
   howToEdit = false,
   profileUrl = null,
+  refresh = null,
 }: {
   kicker: string;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
   busy?: boolean;
   howToEdit?: boolean;
   profileUrl?: string | null;
+  refresh?: ReactNode;
 }) {
   const [helpOpen, setHelpOpen] = useState(false);
+  const toolbar = howToEdit || refresh;
   return (
     <section
       className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]"
       aria-busy={busy}
     >
-      <div className={`relative bg-[#1C315F] px-6 text-center text-white sm:px-8 ${howToEdit ? "pb-8 pt-14" : "py-8"}`}>
-        {howToEdit ? (
-          <button
-            type="button"
-            onClick={() => setHelpOpen(true)}
-            disabled={busy}
-            className="absolute right-4 top-4 rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            How To Edit
-          </button>
+      <div className={`relative bg-[#1C315F] px-6 text-center text-white sm:px-8 ${toolbar ? "pb-8 pt-14" : "py-8"}`}>
+        {toolbar ? (
+          <div className="absolute right-3 top-3 flex items-center gap-2 sm:right-4 sm:top-3.5">
+            {refresh}
+            {howToEdit ? (
+              <button
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                disabled={busy}
+                className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                How To Edit
+              </button>
+            ) : null}
+          </div>
         ) : null}
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">{kicker}</p>
         <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">{title}</h2>
@@ -236,6 +245,8 @@ export function HowToEditModal({
   }, [open, onClose]);
 
   if (!open || !mounted) return null;
+
+  const openUrl = publicLinkedInUrl(profileUrl);
 
   return createPortal(
     <div
@@ -286,9 +297,9 @@ export function HowToEditModal({
           <button type="button" className={primaryButtonClass} onClick={onClose}>
             Got it
           </button>
-          {profileUrl ? (
+          {openUrl ? (
             <a
-              href={profileUrl}
+              href={openUrl}
               target="_blank"
               rel="noopener noreferrer"
               referrerPolicy="no-referrer"
@@ -304,7 +315,128 @@ export function HowToEditModal({
   );
 }
 
-export function RefreshLimitModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function sameName(left: string, right: string): boolean {
+  const normalize = (value: string) =>
+    value
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9]+/g, "");
+  const a = normalize(left);
+  const b = normalize(right);
+  return a.length > 0 && a === b;
+}
+
+function NamePair({
+  label,
+  athlete,
+  linkedIn,
+}: {
+  label: string;
+  athlete: string;
+  linkedIn: string;
+}) {
+  const matches = sameName(athlete, linkedIn);
+  const tone = matches ? "text-[#157A3C]" : "text-[#9D1F24]";
+  return (
+    <div className="border-t border-[#1C315F]/10 px-4 py-3 text-left">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#5C6A82]">{label}</p>
+      <div className="mt-1 grid grid-cols-2 gap-3">
+        <p className={`text-lg font-semibold leading-6 ${tone}`}>{athlete || "—"}</p>
+        <p className={`text-lg font-semibold leading-6 ${tone}`}>{linkedIn || "—"}</p>
+      </div>
+    </div>
+  );
+}
+
+export function LastNameWarningModal({
+  open,
+  onProceed,
+  onBack,
+  athleteFirst,
+  athleteLast,
+  linkedInFirst,
+  linkedInLast,
+}: {
+  open: boolean;
+  onProceed: () => void;
+  onBack: () => void;
+  athleteFirst: string;
+  athleteLast: string;
+  linkedInFirst: string;
+  linkedInLast: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onBack();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      previous?.focus();
+    };
+  }, [open, onBack]);
+
+  if (!open || !mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0E1A33]/55 px-4 backdrop-blur-[2px]">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="linkedin-name-warning-title"
+        aria-describedby="linkedin-name-warning-copy"
+        tabIndex={-1}
+        className="w-full max-w-lg rounded-3xl bg-white px-8 py-10 text-center shadow-[0_30px_80px_rgba(14,26,51,0.28)] outline-none sm:px-10"
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A5A00]">Check this profile</p>
+        <h2 id="linkedin-name-warning-title" className="mt-3 text-2xl font-semibold tracking-tight text-[#1C315F]">
+          There seems to be something off
+        </h2>
+        <p id="linkedin-name-warning-copy" className="mt-4 text-base leading-7 text-[#3E4E6B]">
+          The last name on this LinkedIn profile is not close to this athlete record.
+        </p>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-[#1C315F]/10 text-left">
+          <div className="grid grid-cols-2 gap-3 bg-[#F4F6FB] px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1C315F]">Athlete record</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1C315F]">LinkedIn</p>
+          </div>
+          <NamePair label="First name" athlete={athleteFirst} linkedIn={linkedInFirst} />
+          <NamePair label="Last name" athlete={athleteLast} linkedIn={linkedInLast} />
+        </div>
+        <div className="mt-8 flex flex-col gap-3">
+          <button type="button" className={primaryButtonClass} onClick={onProceed}>
+            Proceed Anyway
+          </button>
+          <button type="button" className={secondaryButtonClass} onClick={onBack}>
+            Go Back
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+export function InvalidLinkedInUrlModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -345,17 +477,94 @@ export function RefreshLimitModal({ open, onClose }: { open: boolean; onClose: (
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="linkedin-refresh-limit-title"
-        aria-describedby="linkedin-refresh-limit-copy"
+        aria-labelledby="linkedin-invalid-url-title"
+        aria-describedby="linkedin-invalid-url-copy"
         tabIndex={-1}
         className="w-full max-w-md rounded-3xl bg-white px-8 py-10 text-center shadow-[0_30px_80px_rgba(14,26,51,0.28)] outline-none"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5C6A82]">LinkedIn</p>
-        <h2 id="linkedin-refresh-limit-title" className="mt-2 text-xl font-semibold tracking-tight text-[#1C315F]">
-          Refresh limit reached
+        <h2 id="linkedin-invalid-url-title" className="mt-2 text-xl font-semibold tracking-tight text-[#1C315F]">
+          Valid LinkedIn URL required
         </h2>
-        <p id="linkedin-refresh-limit-copy" className="mt-3 text-sm leading-6 text-[#3E4E6B]">
-          You have exceeded the limit of how many data refreshes you are allowed. Please contact support if you need help.
+        <p id="linkedin-invalid-url-copy" className="mt-3 text-sm leading-6 text-[#3E4E6B]">
+          This needs to be a valid LinkedIn URL. Paste an address that starts with https://www.linkedin.com/in/ or
+          www.linkedin.com/in/.
+        </p>
+        <div className="mt-8">
+          <button type="button" className={primaryButtonClass} onClick={onClose}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+export function RefreshLimitModal({
+  open,
+  onClose,
+  title = "Refresh limit reached",
+  message = "You have exceeded the limit of how many data refreshes you are allowed. Please contact support if you need help.",
+  label = "refresh",
+}: {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  message?: string;
+  label?: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      previous?.focus();
+    };
+  }, [open, onClose]);
+
+  if (!open || !mounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0E1A33]/55 px-4 backdrop-blur-[2px]"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`linkedin-${label}-limit-title`}
+        aria-describedby={`linkedin-${label}-limit-copy`}
+        tabIndex={-1}
+        className="w-full max-w-md rounded-3xl bg-white px-8 py-10 text-center shadow-[0_30px_80px_rgba(14,26,51,0.28)] outline-none"
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5C6A82]">LinkedIn</p>
+        <h2 id={`linkedin-${label}-limit-title`} className="mt-2 text-xl font-semibold tracking-tight text-[#1C315F]">
+          {title}
+        </h2>
+        <p id={`linkedin-${label}-limit-copy`} className="mt-3 text-sm leading-6 text-[#3E4E6B]">
+          {message}
         </p>
         <div className="mt-8 flex flex-col gap-3">
           <button type="button" className={primaryButtonClass} onClick={onClose}>
@@ -383,6 +592,7 @@ export function ProfileCard({
   hideUrl?: boolean;
 }) {
   const role = [profile.currentTitle, profile.currentCompany].filter(Boolean).join(" · ");
+  const publicUrl = publicLinkedInUrl(profile.profileUrl);
   return (
     <article>
       {compact ? null : (
@@ -441,16 +651,16 @@ export function ProfileCard({
         </section>
       ) : null}
 
-      {profile.profileUrl && !compact && !hideUrl ? (
+      {publicUrl && !compact && !hideUrl ? (
         <p className="mt-4 truncate text-sm">
           <a
-            href={profile.profileUrl}
+            href={publicUrl}
             target="_blank"
             rel="noopener noreferrer"
             referrerPolicy="no-referrer"
             className="font-medium text-[#1C315F] underline decoration-[#1C315F]/30 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2"
           >
-            {profile.profileUrl.replace(/^https?:\/\/(www\.)?/, "")}
+            {publicLinkedInLabel(publicUrl)}
           </a>
         </p>
       ) : null}
@@ -465,35 +675,21 @@ export function ProfileCard({
 }
 
 export function ProfileRefresh({
-  profileUrl,
   onRefresh,
   disabled,
 }: {
-  profileUrl: string;
   onRefresh: () => void;
   disabled: boolean;
 }) {
-  const label = profileUrl.replace(/^https?:\/\/(www\.)?/, "");
   return (
-    <div className="mt-4 flex items-center justify-between gap-3">
-      <a
-        href={profileUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        referrerPolicy="no-referrer"
-        className="min-w-0 truncate text-sm font-medium text-[#1C315F] underline decoration-[#1C315F]/30 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2"
-      >
-        {label}
-      </a>
-      <button
-        type="button"
-        onClick={onRefresh}
-        disabled={disabled}
-        className="inline-flex shrink-0 items-center justify-center rounded-xl bg-[#1C315F] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#152648] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        Refresh
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={onRefresh}
+      disabled={disabled}
+      className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#1C315F] transition hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      Refresh
+    </button>
   );
 }
 
