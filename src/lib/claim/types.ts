@@ -5,6 +5,12 @@ export type LinkedInExperience = {
   company: string;
   dateLabel: string | null;
   logoUrl: string | null;
+  /** YYYY-MM-DD */
+  startDate?: string | null;
+  /** YYYY-MM-DD; null means current. */
+  endDate?: string | null;
+  location?: string | null;
+  description?: string | null;
 };
 
 export type LinkedInEducation = {
@@ -12,6 +18,15 @@ export type LinkedInEducation = {
   detail: string | null;
   dateLabel: string | null;
   logoUrl: string | null;
+  degree?: string | null;
+  fieldOfStudy?: string | null;
+  grade?: string | null;
+  activities?: string | null;
+  description?: string | null;
+  /** YYYY-MM-DD */
+  startDate?: string | null;
+  /** YYYY-MM-DD */
+  endDate?: string | null;
 };
 
 /** Hiring wins when both linkedin_profile flags are 1. */

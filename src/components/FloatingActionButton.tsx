@@ -2,9 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaQuestion, FaTimes, FaEnvelope } from "react-icons/fa";
+import { FaQuestion, FaTimes, FaEnvelope, FaExclamationCircle } from "react-icons/fa";
 
-export default function FloatingActionButton() {
+function dataIssueHref() {
+  const subject = "Data issue on my athlete profile";
+  const body = [
+    "Hi College Athlete Network team,",
+    "",
+    "Something on my athlete record or LinkedIn profile is not right:",
+    "",
+    "",
+    "Page: " + window.location.href,
+  ].join("\n");
+  return `mailto:admin@collegeathletenetwork.org?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export default function FloatingActionButton({ dataIssue = false }: { dataIssue?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
@@ -50,6 +63,20 @@ export default function FloatingActionButton() {
                 <FaPlay size={16} />
               </div>
             </button> */}
+
+            {dataIssue ? (
+              <a
+                href={dataIssueHref()}
+                className="flex items-center gap-3 bg-white text-[#1C315F] px-5 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 group"
+              >
+                <span className="font-semibold text-sm sm:text-base whitespace-nowrap">
+                  Report a data issue
+                </span>
+                <div className="bg-[#ED3237] text-white p-2 rounded-full group-hover:bg-[#1C315F] transition-colors">
+                  <FaExclamationCircle size={16} />
+                </div>
+              </a>
+            ) : null}
 
             {/* Get In Touch */}
             <Link

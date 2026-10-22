@@ -1,5 +1,6 @@
 import "server-only";
 import { publicLinkedInUrl } from "./linkedinDisplay";
+import { isoDate } from "./profileDates";
 import { invokeRenidlyLambda } from "./renidlyLambda";
 import type { LinkedInEducation, LinkedInExperience, LinkedInProfile, ProfileBadge, RenidlyRows } from "./types";
 
@@ -54,6 +55,10 @@ function toCard(rows: RenidlyRows, profileUrl: string): LinkedInProfile {
       company: text(item.company),
       dateLabel: dateSpan(item.start_date, item.end_date),
       logoUrl: text(item.s3_company_logo_url) || text(item.logo_url) || null,
+      startDate: isoDate(item.start_date),
+      endDate: isoDate(item.end_date),
+      location: text(item.location) || null,
+      description: text(item.description) || null,
     }))
     .filter((item) => item.title || item.company);
 
@@ -65,6 +70,13 @@ function toCard(rows: RenidlyRows, profileUrl: string): LinkedInProfile {
         detail: detail || null,
         dateLabel: dateSpan(item.start_date, item.end_date),
         logoUrl: text(item.s3_school_logo_url) || text(item.logo_url) || null,
+        degree: text(item.degree_name) || null,
+        fieldOfStudy: text(item.field_of_study) || null,
+        grade: text(item.grade) || null,
+        activities: text(item.activities_and_societies) || null,
+        description: text(item.description) || null,
+        startDate: isoDate(item.start_date),
+        endDate: isoDate(item.end_date),
       };
     })
     .filter((item) => item.school);

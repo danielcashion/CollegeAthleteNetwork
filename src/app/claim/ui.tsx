@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Linkedin } from "lucide-react";
 import { publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
+import { durationLabel, fullMonthYear } from "@/lib/claim/profileDates";
 import type { LinkedInProfile, ProfileBadge } from "@/lib/claim/types";
 
 export const primaryButtonClass =
@@ -14,7 +15,7 @@ export const secondaryButtonClass =
 
 export function ClaimShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto w-full max-w-[640px] px-4 pb-16 pt-8 text-[#1C315F] sm:px-6 sm:pb-20">
+    <div className="mx-auto w-full max-w-[680px] px-4 pb-16 pt-5 text-[#1C315F] sm:px-6 sm:pb-20">
       {children}
     </div>
   );
@@ -30,7 +31,7 @@ export function Stepper({
   onSelect?: (step: 0 | 1) => void;
 }) {
   return (
-    <ol aria-label="Progress" className="mb-6 grid grid-cols-3 gap-2">
+    <ol aria-label="Progress" className="mb-4 grid grid-cols-3 gap-2">
       {STEPS.map((label, index) => {
         const active = index === current;
         const open = index < 2 && onSelect ? () => onSelect(index as 0 | 1) : null;
@@ -144,24 +145,204 @@ export function Avatar({
 function Logo({ src }: { src: string | null }) {
   const [failed, setFailed] = useState(false);
   if (!src || failed) {
-    return <span className="h-12 w-12 shrink-0 rounded-xl bg-[#F4F6FB] ring-1 ring-[#1C315F]/10" aria-hidden="true" />;
+    return <span className="h-10 w-10 shrink-0 rounded-lg bg-[#F4F6FB] ring-1 ring-[#1C315F]/10" aria-hidden="true" />;
   }
   return (
     <img
       src={src}
       alt=""
-      width={48}
-      height={48}
+      width={40}
+      height={40}
       referrerPolicy="no-referrer"
-      className="h-12 w-12 shrink-0 rounded-xl bg-white object-contain p-1.5 ring-1 ring-[#1C315F]/10"
+      className="h-10 w-10 shrink-0 rounded-lg bg-white object-contain p-1 ring-1 ring-[#1C315F]/10"
       onError={() => setFailed(true)}
     />
   );
 }
 
+function ProfileSection({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <section className="min-w-0" aria-label={label}>
+      <h4 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">{label}</h4>
+      <ul className="mt-2 divide-y divide-[#1C315F]/10 overflow-hidden rounded-2xl border border-[#1C315F]/10 bg-[#F8F9FC]">
+        {children}
+      </ul>
+    </section>
+  );
+}
+
+type RecordFact = { label: string; value: string | null | undefined };
+
+type TooltipPlacement = { top: number; left: number; arrow: number; above: boolean };
+
+function ProfileRow({
+  logoUrl,
+  title,
+  detail,
+  subtitle = null,
+  facts = [],
+  description = null,
+}: {
+  logoUrl: string | null;
+  title: string;
+  detail: string;
+  subtitle?: string | null;
+  facts?: RecordFact[];
+  description?: string | null;
+}) {
+  const rowRef = useRef<HTMLLIElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
+  const timer = useRef<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState<TooltipPlacement | null>(null);
+  const tooltipId = useId();
+  const shownFacts = facts.filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
+
+  const clearTimer = () => {
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = null;
+  };
+  const show = (delay: number) => {
+    clearTimer();
+    timer.current = window.setTimeout(() => setOpen(true), delay);
+  };
+  const hide = () => {
+    clearTimer();
+    timer.current = window.setTimeout(() => {
+      setOpen(false);
+      setPlacement(null);
+    }, 60);
+  };
+
+  useEffect(() => clearTimer, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const row = rowRef.current;
+      const tip = tipRef.current;
+      if (!row || !tip) return;
+      const rect = row.getBoundingClientRect();
+      const width = tip.offsetWidth;
+      const height = tip.offsetHeight;
+      const gap = 10;
+      const margin = 12;
+      const center = rect.left + rect.width / 2;
+      const left = Math.min(Math.max(center - width / 2, margin), window.innerWidth - width - margin);
+      const above = rect.top - gap - height >= margin;
+      setPlacement({
+        top: above ? rect.top - gap - height : rect.bottom + gap,
+        left,
+        arrow: Math.min(Math.max(center - left, 22), width - 22),
+        above,
+      });
+    };
+    place();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      setPlacement(null);
+    };
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <li
+      ref={rowRef}
+      tabIndex={0}
+      aria-describedby={open ? tooltipId : undefined}
+      onMouseEnter={() => show(120)}
+      onMouseLeave={hide}
+      onFocus={() => show(0)}
+      onBlur={hide}
+      className="flex cursor-default items-center gap-3 px-3 py-2 transition-colors hover:bg-white focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1C315F]"
+    >
+      <Logo src={logoUrl} />
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold leading-5 text-[#1C315F]">{title}</p>
+        {detail ? <p className="truncate text-[13px] leading-5 text-[#5C6A82]">{detail}</p> : null}
+      </div>
+      {open
+        ? createPortal(
+            <div
+              ref={tipRef}
+              id={tooltipId}
+              role="tooltip"
+              style={{
+                top: placement?.top ?? 0,
+                left: placement?.left ?? 0,
+                visibility: placement ? "visible" : "hidden",
+              }}
+              className="pointer-events-none fixed z-[70] w-[340px] max-w-[calc(100vw-24px)] motion-safe:animate-fadeIn"
+            >
+              <div className="overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_rgba(14,26,51,0.24)] ring-1 ring-[#1C315F]/10">
+                <div className="flex items-center gap-3 bg-gradient-to-br from-[#1C315F] to-[#2B4B8C] px-4 py-3 text-white">
+                  <Logo src={logoUrl} />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-5">{title}</p>
+                    {subtitle ? <p className="text-[13px] leading-5 text-white/75">{subtitle}</p> : null}
+                  </div>
+                </div>
+                {shownFacts.length > 0 || description ? (
+                  <div className="px-4 py-3">
+                    {shownFacts.length > 0 ? (
+                      <dl className="space-y-1.5">
+                        {shownFacts.map((fact) => (
+                          <div key={fact.label} className="grid grid-cols-[92px_1fr] gap-3">
+                            <dt className="pt-px text-[11px] font-semibold uppercase leading-5 tracking-[0.12em] text-[#5C6A82]">
+                              {fact.label}
+                            </dt>
+                            <dd className="text-[13px] font-medium leading-5 text-[#1C315F]">{fact.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    ) : null}
+                    {description ? (
+                      <p
+                        className={`line-clamp-5 whitespace-pre-line text-[13px] leading-5 text-[#3E4E6B] ${
+                          shownFacts.length > 0 ? "mt-2.5 border-t border-[#1C315F]/10 pt-2.5" : ""
+                        }`}
+                      >
+                        {description}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+              <span
+                aria-hidden="true"
+                style={{ left: (placement?.arrow ?? 0) - 6 }}
+                className={`absolute h-3 w-3 rotate-45 ${
+                  placement?.above
+                    ? "-bottom-1.5 border-b border-r border-[#1C315F]/10 bg-white"
+                    : "-top-1.5 bg-[#22396B]"
+                }`}
+              />
+            </div>,
+            document.body,
+          )
+        : null}
+    </li>
+  );
+}
+
+function dateRange(start: string | null | undefined, end: string | null | undefined, fallback: string | null) {
+  const from = fullMonthYear(start);
+  if (!from) return fallback;
+  return `${from} – ${fullMonthYear(end) || "Present"}`;
+}
+
 export function LinkedInPanel({
   kicker,
   title,
+  description = null,
   children,
   busy = false,
   howToEdit = false,
@@ -170,6 +351,7 @@ export function LinkedInPanel({
 }: {
   kicker: string;
   title: string;
+  description?: string | null;
   children: ReactNode;
   busy?: boolean;
   howToEdit?: boolean;
@@ -183,26 +365,36 @@ export function LinkedInPanel({
       className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]"
       aria-busy={busy}
     >
-      <div className={`relative bg-[#1C315F] px-6 text-center text-white sm:px-8 ${toolbar ? "pb-8 pt-14" : "py-8"}`}>
-        {toolbar ? (
-          <div className="absolute right-3 top-3 flex items-center gap-2 sm:right-4 sm:top-3.5">
-            {refresh}
-            {howToEdit ? (
-              <button
-                type="button"
-                onClick={() => setHelpOpen(true)}
-                disabled={busy}
-                className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                How To Edit
-              </button>
-            ) : null}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#1C315F] via-[#1C315F] to-[#2B4B8C] px-5 py-4 text-white sm:px-7">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-white/[0.06]" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-28 right-32 h-40 w-40 rounded-full bg-[#ED3237]/[0.12]" aria-hidden="true" />
+        <div className="relative flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <div className="min-w-0">
+            <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#ED3237]" aria-hidden="true" />
+              {kicker}
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-[1.4rem]">{title}</h2>
+            {description ? <p className="mt-0.5 text-sm text-white/75">{description}</p> : null}
           </div>
-        ) : null}
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">{kicker}</p>
-        <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">{title}</h2>
+          {toolbar ? (
+            <div className="flex shrink-0 items-center gap-2">
+              {refresh}
+              {howToEdit ? (
+                <button
+                  type="button"
+                  onClick={() => setHelpOpen(true)}
+                  disabled={busy}
+                  className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  How To Edit
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       </div>
-      <div className="px-5 py-6 sm:px-8 sm:py-8">{children}</div>
+      <div className="px-5 pb-5 pt-4 sm:px-7">{children}</div>
       {howToEdit ? <HowToEditModal open={helpOpen} onClose={() => setHelpOpen(false)} profileUrl={profileUrl} /> : null}
     </section>
   );
@@ -596,13 +788,20 @@ export function ProfileCard({
   return (
     <article>
       {compact ? null : (
-        <div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:gap-5 sm:text-left">
-          <Avatar name={profile.fullName} src={profile.photoUrl} size="xl" badge={profile.badge} />
-          <div className="mt-4 min-w-0 sm:mt-0">
-            <h3 className="text-2xl font-semibold tracking-tight">{profile.fullName}</h3>
-            {profile.headline ? <p className="mt-1 text-sm leading-5 text-[#3E4E6B]">{profile.headline}</p> : null}
-            {role ? <p className="mt-2 text-sm font-semibold text-[#1C315F]">{role}</p> : null}
-            {profile.location ? <p className="mt-1 text-sm text-[#5C6A82]">{profile.location}</p> : null}
+        <div className="flex items-center gap-4">
+          <Avatar name={profile.fullName} src={profile.photoUrl} size="lg" badge={profile.badge} />
+          <div className="min-w-0">
+            <h3 className="truncate text-xl font-semibold tracking-tight">{profile.fullName}</h3>
+            {profile.headline ? (
+              <p className="mt-0.5 line-clamp-2 text-sm leading-5 text-[#3E4E6B]">{profile.headline}</p>
+            ) : null}
+            {role || profile.location ? (
+              <p className="mt-0.5 truncate text-[13px] text-[#5C6A82]">
+                {role ? <span className="font-semibold text-[#1C315F]">{role}</span> : null}
+                {role && profile.location ? " · " : null}
+                {profile.location}
+              </p>
+            ) : null}
           </div>
         </div>
       )}
@@ -615,40 +814,48 @@ export function ProfileCard({
         </div>
       ) : null}
 
-      {!compact && profile.experience.length > 0 ? (
-        <section className="mt-6" aria-label="Experience">
-          <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">Experience</h4>
-          <ul className="mt-3 divide-y divide-[#1C315F]/10 overflow-hidden rounded-2xl border border-[#1C315F]/10">
-            {profile.experience.map((item) => (
-              <li key={`${item.title}-${item.company}-${item.dateLabel}`} className="flex items-center gap-4 bg-white px-4 py-3.5">
-                <Logo src={item.logoUrl} />
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold leading-5 text-[#1C315F]">{item.title}</p>
-                  {item.company ? <p className="truncate text-sm text-[#3E4E6B]">{item.company}</p> : null}
-                  {item.dateLabel ? <p className="text-xs font-medium uppercase tracking-[0.08em] text-[#5C6A82]">{item.dateLabel}</p> : null}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      {!compact && profile.education.length > 0 ? (
-        <section className="mt-6" aria-label="Education">
-          <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">Education</h4>
-          <ul className="mt-3 divide-y divide-[#1C315F]/10 overflow-hidden rounded-2xl border border-[#1C315F]/10">
-            {profile.education.map((item) => (
-              <li key={`${item.school}-${item.detail}`} className="flex items-center gap-4 bg-white px-4 py-3.5">
-                <Logo src={item.logoUrl} />
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold leading-5 text-[#1C315F]">{item.school}</p>
-                  {item.detail ? <p className="text-sm text-[#3E4E6B]">{item.detail}</p> : null}
-                  {item.dateLabel ? <p className="text-xs font-medium uppercase tracking-[0.08em] text-[#5C6A82]">{item.dateLabel}</p> : null}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+      {!compact && (profile.experience.length > 0 || profile.education.length > 0) ? (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {profile.experience.length > 0 ? (
+            <ProfileSection label="Experience">
+              {profile.experience.map((item) => (
+                <ProfileRow
+                  key={`${item.title}-${item.company}-${item.dateLabel}`}
+                  logoUrl={item.logoUrl}
+                  title={item.title}
+                  detail={[item.company, item.dateLabel].filter(Boolean).join(" · ")}
+                  subtitle={item.company || null}
+                  facts={[
+                    { label: "Dates", value: dateRange(item.startDate, item.endDate, item.dateLabel) },
+                    { label: "Duration", value: durationLabel(item.startDate, item.endDate) },
+                    { label: "Location", value: item.location },
+                  ]}
+                  description={item.description}
+                />
+              ))}
+            </ProfileSection>
+          ) : null}
+          {profile.education.length > 0 ? (
+            <ProfileSection label="Education">
+              {profile.education.map((item) => (
+                <ProfileRow
+                  key={`${item.school}-${item.detail}`}
+                  logoUrl={item.logoUrl}
+                  title={item.school}
+                  detail={[item.detail, item.dateLabel].filter(Boolean).join(" · ")}
+                  subtitle={item.degree}
+                  facts={[
+                    { label: "Field", value: item.fieldOfStudy },
+                    { label: "Dates", value: dateRange(item.startDate, item.endDate, item.dateLabel) },
+                    { label: "Grade", value: item.grade },
+                    { label: "Activities", value: item.activities },
+                  ]}
+                  description={item.description}
+                />
+              ))}
+            </ProfileSection>
+          ) : null}
+        </div>
       ) : null}
 
       {publicUrl && !compact && !hideUrl ? (
@@ -686,7 +893,7 @@ export function ProfileRefresh({
       type="button"
       onClick={onRefresh}
       disabled={disabled}
-      className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#1C315F] transition hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex shrink-0 items-center justify-center rounded-full border border-white bg-white px-3 py-1.5 text-xs font-semibold tracking-wide text-[#1C315F] transition hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C315F] disabled:cursor-not-allowed disabled:opacity-60"
     >
       Refresh
     </button>
@@ -801,9 +1008,8 @@ export function Unavailable({ retryHref }: { retryHref: string }) {
 
 export function PrivacyNote() {
   return (
-    <p className="rounded-2xl bg-[#F4F6FB] px-4 py-3 text-sm leading-6 text-[#3E4E6B]">
-      We use your LinkedIn profile only to confirm we have the right person and to keep your College Athlete Network
-      record accurate.{" "}
+    <p className="text-center text-xs leading-5 text-[#5C6A82]">
+      We only use LinkedIn to confirm your identity and keep your record accurate.{" "}
       <a
         href="/privacy-policy"
         className="font-semibold text-[#1C315F] underline decoration-[#1C315F]/30 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2"
