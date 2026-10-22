@@ -55,6 +55,7 @@ export function SiteFrame({ children }: { children: React.ReactNode }) {
         <footer id="site-footer" aria-label="Site footer" role="contentinfo">
           <Footer />
         </footer>
+        <FloatingActionButton dataIssue />
       </div>
     );
   }
