@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Linkedin } from "lucide-react";
 import { publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
+import { durationLabel, fullMonthYear } from "@/lib/claim/profileDates";
 import type { LinkedInProfile, ProfileBadge } from "@/lib/claim/types";
 
 export const primaryButtonClass =
@@ -170,22 +171,172 @@ function ProfileSection({ label, children }: { label: string; children: ReactNod
   );
 }
 
-function ProfileRow({ logoUrl, title, detail }: { logoUrl: string | null; title: string; detail: string }) {
+type RecordFact = { label: string; value: string | null | undefined };
+
+type TooltipPlacement = { top: number; left: number; arrow: number; above: boolean };
+
+function ProfileRow({
+  logoUrl,
+  title,
+  detail,
+  subtitle = null,
+  facts = [],
+  description = null,
+}: {
+  logoUrl: string | null;
+  title: string;
+  detail: string;
+  subtitle?: string | null;
+  facts?: RecordFact[];
+  description?: string | null;
+}) {
+  const rowRef = useRef<HTMLLIElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
+  const timer = useRef<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState<TooltipPlacement | null>(null);
+  const tooltipId = useId();
+  const shownFacts = facts.filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
+
+  const clearTimer = () => {
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = null;
+  };
+  const show = (delay: number) => {
+    clearTimer();
+    timer.current = window.setTimeout(() => setOpen(true), delay);
+  };
+  const hide = () => {
+    clearTimer();
+    timer.current = window.setTimeout(() => {
+      setOpen(false);
+      setPlacement(null);
+    }, 60);
+  };
+
+  useEffect(() => clearTimer, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const row = rowRef.current;
+      const tip = tipRef.current;
+      if (!row || !tip) return;
+      const rect = row.getBoundingClientRect();
+      const width = tip.offsetWidth;
+      const height = tip.offsetHeight;
+      const gap = 10;
+      const margin = 12;
+      const center = rect.left + rect.width / 2;
+      const left = Math.min(Math.max(center - width / 2, margin), window.innerWidth - width - margin);
+      const above = rect.top - gap - height >= margin;
+      setPlacement({
+        top: above ? rect.top - gap - height : rect.bottom + gap,
+        left,
+        arrow: Math.min(Math.max(center - left, 22), width - 22),
+        above,
+      });
+    };
+    place();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      setPlacement(null);
+    };
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <li className="flex items-center gap-3 px-3 py-2">
+    <li
+      ref={rowRef}
+      tabIndex={0}
+      aria-describedby={open ? tooltipId : undefined}
+      onMouseEnter={() => show(120)}
+      onMouseLeave={hide}
+      onFocus={() => show(0)}
+      onBlur={hide}
+      className="flex cursor-default items-center gap-3 px-3 py-2 transition-colors hover:bg-white focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1C315F]"
+    >
       <Logo src={logoUrl} />
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold leading-5 text-[#1C315F]" title={title}>
-          {title}
-        </p>
-        {detail ? (
-          <p className="truncate text-[13px] leading-5 text-[#5C6A82]" title={detail}>
-            {detail}
-          </p>
-        ) : null}
+        <p className="truncate text-sm font-semibold leading-5 text-[#1C315F]">{title}</p>
+        {detail ? <p className="truncate text-[13px] leading-5 text-[#5C6A82]">{detail}</p> : null}
       </div>
+      {open
+        ? createPortal(
+            <div
+              ref={tipRef}
+              id={tooltipId}
+              role="tooltip"
+              style={{
+                top: placement?.top ?? 0,
+                left: placement?.left ?? 0,
+                visibility: placement ? "visible" : "hidden",
+              }}
+              className="pointer-events-none fixed z-[70] w-[340px] max-w-[calc(100vw-24px)] motion-safe:animate-fadeIn"
+            >
+              <div className="overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_rgba(14,26,51,0.24)] ring-1 ring-[#1C315F]/10">
+                <div className="flex items-center gap-3 bg-gradient-to-br from-[#1C315F] to-[#2B4B8C] px-4 py-3 text-white">
+                  <Logo src={logoUrl} />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-5">{title}</p>
+                    {subtitle ? <p className="text-[13px] leading-5 text-white/75">{subtitle}</p> : null}
+                  </div>
+                </div>
+                {shownFacts.length > 0 || description ? (
+                  <div className="px-4 py-3">
+                    {shownFacts.length > 0 ? (
+                      <dl className="space-y-1.5">
+                        {shownFacts.map((fact) => (
+                          <div key={fact.label} className="grid grid-cols-[92px_1fr] gap-3">
+                            <dt className="pt-px text-[11px] font-semibold uppercase leading-5 tracking-[0.12em] text-[#5C6A82]">
+                              {fact.label}
+                            </dt>
+                            <dd className="text-[13px] font-medium leading-5 text-[#1C315F]">{fact.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    ) : null}
+                    {description ? (
+                      <p
+                        className={`line-clamp-5 whitespace-pre-line text-[13px] leading-5 text-[#3E4E6B] ${
+                          shownFacts.length > 0 ? "mt-2.5 border-t border-[#1C315F]/10 pt-2.5" : ""
+                        }`}
+                      >
+                        {description}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+              <span
+                aria-hidden="true"
+                style={{ left: (placement?.arrow ?? 0) - 6 }}
+                className={`absolute h-3 w-3 rotate-45 ${
+                  placement?.above
+                    ? "-bottom-1.5 border-b border-r border-[#1C315F]/10 bg-white"
+                    : "-top-1.5 bg-[#22396B]"
+                }`}
+              />
+            </div>,
+            document.body,
+          )
+        : null}
     </li>
   );
+}
+
+function dateRange(start: string | null | undefined, end: string | null | undefined, fallback: string | null) {
+  const from = fullMonthYear(start);
+  if (!from) return fallback;
+  return `${from} – ${fullMonthYear(end) || "Present"}`;
 }
 
 export function LinkedInPanel({
@@ -673,6 +824,13 @@ export function ProfileCard({
                   logoUrl={item.logoUrl}
                   title={item.title}
                   detail={[item.company, item.dateLabel].filter(Boolean).join(" · ")}
+                  subtitle={item.company || null}
+                  facts={[
+                    { label: "Dates", value: dateRange(item.startDate, item.endDate, item.dateLabel) },
+                    { label: "Duration", value: durationLabel(item.startDate, item.endDate) },
+                    { label: "Location", value: item.location },
+                  ]}
+                  description={item.description}
                 />
               ))}
             </ProfileSection>
@@ -685,6 +843,14 @@ export function ProfileCard({
                   logoUrl={item.logoUrl}
                   title={item.school}
                   detail={[item.detail, item.dateLabel].filter(Boolean).join(" · ")}
+                  subtitle={item.degree}
+                  facts={[
+                    { label: "Field", value: item.fieldOfStudy },
+                    { label: "Dates", value: dateRange(item.startDate, item.endDate, item.dateLabel) },
+                    { label: "Grade", value: item.grade },
+                    { label: "Activities", value: item.activities },
+                  ]}
+                  description={item.description}
                 />
               ))}
             </ProfileSection>
