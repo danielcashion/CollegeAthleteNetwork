@@ -63,6 +63,27 @@ function stepIndex(flow: Flow): 0 | 1 | 2 {
   return 0;
 }
 
+function nameToken(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function lastToken(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  return parts.length > 1 ? parts[parts.length - 1] : "";
+}
+
+function renidlyFirst(rows: RenidlyRows, fullName: string): string {
+  const first = nameToken(rows.profile.first_name);
+  if (first) return first;
+  return fullName.trim().split(/\s+/).filter(Boolean)[0] || "";
+}
+
+function renidlyLast(rows: RenidlyRows, fullName: string): string {
+  const last = nameToken(rows.profile.last_name);
+  if (last) return last;
+  return lastToken(fullName);
+}
+
 function handleUrl(...candidates: Array<string | null | undefined>): string | null {
   for (const candidate of candidates) {
     const url = publicLinkedInUrl(candidate);
@@ -90,6 +111,7 @@ export function ClaimFlow({
   const [refreshLimited, setRefreshLimited] = useState(false);
   const [invalidLinkedInUrl, setInvalidLinkedInUrl] = useState(false);
   const [lookupLimited, setLookupLimited] = useState(false);
+  const [nameWarningOpen, setNameWarningOpen] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
   const [banner, setBanner] = useState<string | null>(null);
   const [live, setLive] = useState("Confirm whether this athlete record is you.");
@@ -216,15 +238,16 @@ export function ClaimFlow({
         reportLookupError(trimmed, result.message);
         return false;
       }
+      setNameWarningOpen(!result.lastNameMatches);
       setFlow({
         name: "linkedin",
         mode: "preview",
-        draft: result.profile.profileUrl,
+        draft: trimmed,
         profile: result.profile,
         rows: result.rows,
         simulated: result.simulated,
         lastNameMatches: result.lastNameMatches,
-        error: result.lastNameMatches ? null : "There seems to be something off. The last name on this LinkedIn profile is not close to this athlete record.",
+        error: null,
       });
       setLive(
         result.lastNameMatches
@@ -587,12 +610,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 The last name matches this athlete record. Confirm to save the profile and mark the LinkedIn URL verified.
               </p>
             ) : null}
-            {!flow.lastNameMatches ? (
-              <p role="status" className="mt-4 rounded-xl border border-[#E3B341] bg-[#FFF8E8] px-4 py-3 text-sm font-medium leading-6 text-[#7A4E00]">
-                {flow.error || "There seems to be something off. The last name on this LinkedIn profile is not close to this athlete record."}
-              </p>
-            ) : null}
-            {flow.lastNameMatches && flow.error ? (
+            {flow.error ? (
               <p role="alert" className="mt-4 text-sm font-medium text-[#9D1F24]">
                 {flow.error}
               </p>
@@ -691,6 +709,24 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
       </div>
       <RetrievingModal open={retrieving} />
       <InvalidLinkedInUrlModal open={invalidLinkedInUrl} onClose={() => setInvalidLinkedInUrl(false)} />
+      <LastNameWarningModal
+        open={nameWarningOpen}
+        athleteFirst={athlete.firstName}
+        athleteLast={lastToken(athlete.fullName)}
+        linkedInFirst={flow.name === "linkedin" && flow.mode === "preview" ? renidlyFirst(flow.rows, flow.profile.fullName) : ""}
+        linkedInLast={flow.name === "linkedin" && flow.mode === "preview" ? renidlyLast(flow.rows, flow.profile.fullName) : ""}
+        onProceed={() => {
+          setNameWarningOpen(false);
+          setLive("Review this LinkedIn profile, then confirm it if it is yours.");
+        }}
+        onBack={() => {
+          setNameWarningOpen(false);
+          if (flow.name === "linkedin" && flow.mode === "preview") {
+            setFlow({ name: "linkedin", mode: "form", draft: flow.draft, error: null });
+          }
+          setLive("Try a different LinkedIn URL.");
+        }}
+      />
       <RefreshLimitModal open={refreshLimited} onClose={() => setRefreshLimited(false)} />
       <RefreshLimitModal
         open={lookupLimited}
