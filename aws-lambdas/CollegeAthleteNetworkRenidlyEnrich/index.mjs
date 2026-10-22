@@ -699,6 +699,23 @@ async function rowsForAthlete(table, athleteId) {
   }
 }
 
+function maintenanceSteps(body) {
+  const rows = Array.isArray(body) ? body.flat(2) : [];
+  return rows.filter((row) => row && typeof row === "object" && typeof row.step === "string");
+}
+
+/** Zero is_active_YN on this athlete's current LinkedIn rows before a new set is inserted. */
+async function deactivateCurrentLinkedIn(athleteId) {
+  const body = await apiGet(
+    `/linkedin_maintenance?task=deactivate_athlete_linkedin_data&athlete_id=${encodeURIComponent(athleteId)}`,
+  );
+  const text = JSON.stringify(body ?? "");
+  const steps = maintenanceSteps(body);
+  if (/error:/i.test(text) || !steps.some((row) => /profile/i.test(row.step))) {
+    throw new Error("Could not set the previous LinkedIn profile inactive.");
+  }
+}
+
 async function putActiveFlag(table, row, active) {
   const payload = plainRow(row);
   payload.athlete_id = Number(row.athlete_id);
@@ -844,12 +861,7 @@ async function confirm(event) {
       athlete_experience: await rowsForAthlete("athlete_experience", athleteId),
       athlete_education: await rowsForAthlete("athlete_education", athleteId),
     };
-    for (const [table, rows] of Object.entries(prior)) {
-      for (const row of rows) {
-        if (!isActive(row)) continue;
-        await putActiveFlag(table, row, 0);
-      }
-    }
+    await deactivateCurrentLinkedIn(athleteId);
 
     await apiSend("POST", "/athlete_profile", productionProfile(staged.profile));
     for (const row of staged.experience) await apiSend("POST", "/athlete_experience", productionExperience(row));

@@ -2,7 +2,8 @@
 
 import { getAthleteForClaim, getStoredLinkedInProfile } from "@/lib/claim/athlete";
 import { ClaimDataError } from "@/lib/claim/api";
-import { lastNamesMatch } from "@/lib/claim/lastName";
+import { lastNamesClose, lastNamesMatch } from "@/lib/claim/lastName";
+import { isLinkedInProfileInput } from "@/lib/claim/linkedinDisplay";
 import { linkedInSlug, normalizeLinkedInUrl } from "@/lib/claim/linkedinUrl";
 import { loadRenidlyForAthlete, markLinkedInVerified } from "@/lib/claim/verifyUrl";
 import {
@@ -110,12 +111,13 @@ export async function confirmLinkedInProfile(
     const needsVerification = !athlete.linkedinVerified;
     const slug = linkedInSlug(normalized);
 
+    if (needsVerification && rows && !lastNamesMatch(athlete.fullName, profileLastName(rows))) {
+      return { ok: false, code: "unavailable", message: NAME_MISMATCH };
+    }
+
     if (needsVerification) {
       if (!rows) {
         return { ok: false, code: "unavailable", message: "Paste your LinkedIn profile URL so we can verify it." };
-      }
-      if (!lastNamesMatch(athlete.fullName, profileLastName(rows))) {
-        return { ok: false, code: "unavailable", message: NAME_MISMATCH };
       }
       if (!slug) {
         return { ok: false, code: "invalid_url", message: "That LinkedIn address is too long to save on this record." };
@@ -172,6 +174,10 @@ export async function lookupLinkedIn(token: string, rawUrl: string): Promise<Loo
     return { ok: false, code: "unavailable", message: "Confirm your identity first, then add a LinkedIn URL." };
   }
 
+  if (!isLinkedInProfileInput(rawUrl)) {
+    return { ok: false, code: "invalid_url", message: "This needs to be a valid LinkedIn URL." };
+  }
+
   const normalized = normalizeLinkedInUrl(rawUrl);
   if (!normalized) return { ok: false, code: "invalid_url", message: URL_MESSAGE };
 
@@ -193,9 +199,7 @@ export async function lookupLinkedIn(token: string, rawUrl: string): Promise<Loo
       };
     }
     const athlete = await getAthleteForClaim(athleteId);
-    const lastNameMatches = Boolean(
-      athlete?.linkedinVerified || (athlete && lastNamesMatch(athlete.fullName, profileLastName(lookup.rows))),
-    );
+    const lastNameMatches = Boolean(athlete && lastNamesClose(athlete.fullName, profileLastName(lookup.rows)));
     return { ok: true, profile: lookup.profile, rows: lookup.rows, simulated: false, lastNameMatches };
   } catch (error) {
     console.error("LinkedIn lookup failed", error instanceof Error ? error.message : error);
