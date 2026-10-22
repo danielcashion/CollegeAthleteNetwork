@@ -315,14 +315,57 @@ export function HowToEditModal({
   );
 }
 
+function sameName(left: string, right: string): boolean {
+  const normalize = (value: string) =>
+    value
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9]+/g, "");
+  const a = normalize(left);
+  const b = normalize(right);
+  return a.length > 0 && a === b;
+}
+
+function NamePair({
+  label,
+  athlete,
+  linkedIn,
+}: {
+  label: string;
+  athlete: string;
+  linkedIn: string;
+}) {
+  const matches = sameName(athlete, linkedIn);
+  const tone = matches ? "text-[#157A3C]" : "text-[#9D1F24]";
+  return (
+    <div className="border-t border-[#1C315F]/10 px-4 py-3 text-left">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#5C6A82]">{label}</p>
+      <div className="mt-1 grid grid-cols-2 gap-3">
+        <p className={`text-lg font-semibold leading-6 ${tone}`}>{athlete || "—"}</p>
+        <p className={`text-lg font-semibold leading-6 ${tone}`}>{linkedIn || "—"}</p>
+      </div>
+    </div>
+  );
+}
+
 export function LastNameWarningModal({
   open,
   onProceed,
   onBack,
+  athleteFirst,
+  athleteLast,
+  linkedInFirst,
+  linkedInLast,
 }: {
   open: boolean;
   onProceed: () => void;
   onBack: () => void;
+  athleteFirst: string;
+  athleteLast: string;
+  linkedInFirst: string;
+  linkedInLast: string;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -371,6 +414,14 @@ export function LastNameWarningModal({
         <p id="linkedin-name-warning-copy" className="mt-4 text-base leading-7 text-[#3E4E6B]">
           The last name on this LinkedIn profile is not close to this athlete record.
         </p>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-[#1C315F]/10 text-left">
+          <div className="grid grid-cols-2 gap-3 bg-[#F4F6FB] px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1C315F]">Athlete record</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1C315F]">LinkedIn</p>
+          </div>
+          <NamePair label="First name" athlete={athleteFirst} linkedIn={linkedInFirst} />
+          <NamePair label="Last name" athlete={athleteLast} linkedIn={linkedInLast} />
+        </div>
         <div className="mt-8 flex flex-col gap-3">
           <button type="button" className={primaryButtonClass} onClick={onProceed}>
             Proceed Anyway

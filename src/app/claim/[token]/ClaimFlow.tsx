@@ -662,8 +662,8 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 </li>
               ) : null}
             </ul>
-            <Link href="/" className={primaryButtonClass}>
-              Go to The College Athlete Network
+            <Link href="https://members.collegeathletenetwork.org/login" className={primaryButtonClass}>
+              Login to The College Athlete Network
             </Link>
           </StatusPanel>
         ) : null}
