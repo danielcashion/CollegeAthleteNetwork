@@ -345,17 +345,22 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
     );
   }
 
-  const inProgress = flow.name === "identity" || flow.name === "linkedin";
+  const recordHeadline =
+    storedProfile && athlete.linkedinVerified
+      ? storedProfile.headline ||
+        [storedProfile.currentTitle, storedProfile.currentCompany].filter(Boolean).join(" · ") ||
+        null
+      : null;
 
   return (
     <ClaimShell>
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {live}
       </p>
-      {inProgress ? (
-        <header className="mb-6">
-          <h1 className="text-[1.85rem] font-semibold leading-tight tracking-tight sm:text-4xl">{welcome}</h1>
-          <p className="mt-2 text-base leading-6 text-[#3E4E6B]">
+      {flow.name === "identity" ? (
+        <header className="mb-4">
+          <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-[2rem]">{welcome}</h1>
+          <p className="mt-1.5 text-base leading-6 text-[#3E4E6B]">
             Confirm this record so we can keep your profile accurate. It takes about a minute.
           </p>
         </header>
@@ -379,63 +384,67 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
       <div key={flow.name === "linkedin" ? `linkedin-${flow.mode}` : flow.name} className="motion-safe:animate-fadeIn">
         {flow.name === "identity" ? (
           <section className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]" aria-busy={busy}>
-            <div className="bg-[#1C315F] px-6 pb-20 pt-8 text-center text-white sm:px-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Athlete record</p>
-              <h2 className="mt-2 text-xl font-semibold tracking-tight">Is this you?</h2>
-            </div>
-            <div className="-mt-14 px-5 pb-6 sm:px-8 sm:pb-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="flex items-end justify-center gap-4">
-                  {athlete.schoolLogoUrl && !logoFailed ? (
-                    <img
-                      src={athlete.schoolLogoUrl}
-                      alt={athlete.school ? `${athlete.school} logo` : "University logo"}
-                      width={128}
-                      height={128}
-                      className="h-32 w-32 rounded-3xl bg-white object-contain p-3 shadow-[0_12px_30px_rgba(28,49,95,0.18)] ring-4 ring-white"
-                      onError={() => setLogoFailed(true)}
-                    />
-                  ) : null}
-                  <Avatar name={athlete.fullName} src={athlete.photoUrl} size="xl" alt="" />
+            <div className="relative overflow-hidden bg-gradient-to-br from-[#1C315F] via-[#1C315F] to-[#2B4B8C] px-5 py-4 text-white sm:px-7">
+              <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/[0.06]" aria-hidden="true" />
+              <div className="pointer-events-none absolute -bottom-28 right-28 h-44 w-44 rounded-full bg-[#ED3237]/[0.12]" aria-hidden="true" />
+              <div className="relative flex items-center gap-4 sm:gap-5">
+                <Avatar name={athlete.fullName} src={athlete.photoUrl} size="lg" alt="" />
+                <div className="min-w-0 flex-1">
+                  <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#ED3237]" aria-hidden="true" />
+                    Athlete record
+                  </p>
+                  <h2 className="mt-1 truncate text-2xl font-semibold tracking-tight sm:text-[1.7rem]">{athlete.fullName}</h2>
+                  {recordHeadline ? <p className="mt-0.5 line-clamp-1 text-sm text-white/75">{recordHeadline}</p> : null}
                 </div>
-                <p className="mt-4 text-2xl font-semibold tracking-tight text-[#1C315F]">{athlete.fullName}</p>
+                {athlete.schoolLogoUrl && !logoFailed ? (
+                  <img
+                    src={athlete.schoolLogoUrl}
+                    alt={athlete.school ? `${athlete.school} logo` : "University logo"}
+                    width={72}
+                    height={72}
+                    className="hidden h-[72px] w-[72px] shrink-0 rounded-2xl bg-white object-contain p-2 shadow-[0_10px_24px_rgba(0,0,0,0.18)] sm:block"
+                    onError={() => setLogoFailed(true)}
+                  />
+                ) : null}
               </div>
-              {storedProfile && athlete.linkedinVerified ? (
-                <div className="mt-4 text-left">
-                  <ProfileCard profile={storedProfile} compact />
-                </div>
-              ) : null}
-              <dl className="mt-6 overflow-hidden rounded-2xl border border-[#1C315F]/10">
+            </div>
+            <div className="px-5 pb-5 pt-4 sm:px-7">
+              <dl className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 {athlete.school ? (
-                  <div className="flex items-center gap-3 border-b border-[#1C315F]/10 px-4 py-3.5">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4F6FB] text-[#1C315F]">
-                      <GraduationCap className="h-5 w-5" aria-hidden="true" />
+                  <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-[#1C315F]/10 bg-[#F8F9FC] px-4 py-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#1C315F] ring-1 ring-[#1C315F]/10">
+                      <GraduationCap className="h-[18px] w-[18px]" aria-hidden="true" />
                     </span>
                     <div className="min-w-0 text-left">
-                      <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">University</dt>
-                      <dd className="truncate text-base font-semibold text-[#1C315F]">{athlete.school}</dd>
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">University</dt>
+                      <dd className="truncate text-[15px] font-semibold text-[#1C315F]" title={athlete.school}>
+                        {athlete.school}
+                      </dd>
                     </div>
                   </div>
                 ) : null}
                 {athlete.sport ? (
-                  <div className="flex items-center gap-3 border-b border-[#1C315F]/10 px-4 py-3.5 last:border-b-0">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4F6FB] text-[#1C315F]">
-                      <Medal className="h-5 w-5" aria-hidden="true" />
+                  <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-[#1C315F]/10 bg-[#F8F9FC] px-4 py-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#1C315F] ring-1 ring-[#1C315F]/10">
+                      <Medal className="h-[18px] w-[18px]" aria-hidden="true" />
                     </span>
                     <div className="min-w-0 text-left">
-                      <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">Sport</dt>
-                      <dd className="truncate text-base font-semibold text-[#1C315F]">{athlete.sport}</dd>
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">Sport</dt>
+                      <dd className="truncate text-[15px] font-semibold text-[#1C315F]" title={athlete.sport}>
+                        {athlete.sport}
+                      </dd>
                     </div>
                   </div>
                 ) : null}
                 {linkedinLabel && athlete.linkedinUrl ? (
-                  <div className="flex items-center gap-3 px-4 py-3.5">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4F6FB] text-[#1C315F]">
-                      <Linkedin className="h-5 w-5" aria-hidden="true" />
+                  <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-[#1C315F]/10 bg-[#F8F9FC] px-4 py-2.5 sm:col-span-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#1C315F] ring-1 ring-[#1C315F]/10">
+                      <Linkedin className="h-[18px] w-[18px]" aria-hidden="true" />
                     </span>
                     <div className="min-w-0 flex-1 text-left">
-                      <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">LinkedIn</dt>
-                      <dd className="truncate text-base font-semibold text-[#1C315F]">
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#5C6A82]">LinkedIn</dt>
+                      <dd className="truncate text-[15px] font-semibold text-[#1C315F]">
                         <a
                           href={athlete.linkedinUrl}
                           target="_blank"
@@ -467,13 +476,16 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                   verify the record when the last name matches.
                 </p>
               ) : null}
-              <div className="mt-6 flex flex-col gap-3">
-                <button type="button" className={primaryButtonClass} onClick={onConfirmIdentity} disabled={busy}>
-                  {athlete.linkedinVerified ? "Yes, that's me. Confirm details..." : "Yes, that's me. Add my LinkedIn"}
-                </button>
-                <button type="button" className={secondaryButtonClass} onClick={onDecline} disabled={busy}>
-                  No, this is not me.
-                </button>
+              <div className="mt-4 border-t border-[#1C315F]/10 pt-4">
+                <p className="text-center text-base font-semibold text-[#1C315F] sm:text-left">Is this you?</p>
+                <div className="mt-2.5 grid gap-3 sm:grid-cols-[1.5fr_1fr]">
+                  <button type="button" className={primaryButtonClass} onClick={onConfirmIdentity} disabled={busy}>
+                    {athlete.linkedinVerified ? "Yes, that's me. Confirm details..." : "Yes, that's me. Add my LinkedIn"}
+                  </button>
+                  <button type="button" className={secondaryButtonClass} onClick={onDecline} disabled={busy}>
+                    No, this is not me.
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -481,7 +493,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
 
         {flow.name === "linkedin" && flow.mode === "stored" && storedProfile ? (
           <LinkedInPanel
-            kicker="LinkedIn profile"
+            kicker="LinkedIn profile on file"
             title="Is this your profile?"
             busy={busy || retrieving}
             howToEdit
@@ -493,14 +505,8 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
               />
             }
           >
-            <p className="text-center text-sm leading-6 text-[#3E4E6B]">We already have this profile on file for you.</p>
-            <div className="mt-6">
-              <ProfileCard profile={storedProfile} hideUrl />
-            </div>
-            <div className="mt-6">
-              <PrivacyNote />
-            </div>
-            <div className="mt-6 flex flex-col gap-3">
+            <ProfileCard profile={storedProfile} hideUrl />
+            <div className="mt-4 grid gap-3 border-t border-[#1C315F]/10 pt-4 sm:grid-cols-2">
               <button
                 type="button"
                 className={primaryButtonClass}
@@ -513,12 +519,15 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 This isn&apos;t right — update it
               </button>
             </div>
+            <div className="mt-3">
+              <PrivacyNote />
+            </div>
           </LinkedInPanel>
         ) : null}
 
         {flow.name === "linkedin" && flow.mode === "form" ? (
           <LinkedInPanel kicker="LinkedIn profile" title="Paste your profile URL" busy={retrieving}>
-            <p id="linkedin-help" className="text-center text-sm leading-6 text-[#3E4E6B]">
+            <p id="linkedin-help" className="text-sm leading-6 text-[#3E4E6B]">
               {athlete.linkedinVerified
                 ? "Open LinkedIn, go to your profile, and copy the URL from the address bar. Paste it below."
                 : "Open LinkedIn, go to your profile, and copy the URL from the address bar. We'll pull the profile and continue only when the last name matches this record."}
@@ -615,10 +624,11 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 {flow.error}
               </p>
             ) : null}
-            <div className="mt-5">
-              <PrivacyNote />
-            </div>
-            <div className="mt-6 flex flex-col gap-3">
+            <div
+              className={`mt-4 grid gap-3 border-t border-[#1C315F]/10 pt-4 ${
+                athlete.linkedinVerified || flow.lastNameMatches ? "sm:grid-cols-2" : ""
+              }`}
+            >
               {athlete.linkedinVerified || flow.lastNameMatches ? (
                 <button
                   type="button"
@@ -641,6 +651,9 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 Enter a different URL
               </button>
             </div>
+            <div className="mt-3">
+              <PrivacyNote />
+            </div>
           </LinkedInPanel>
         ) : null}
 
@@ -662,9 +675,9 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 </li>
               ) : null}
             </ul>
-            <Link href="https://members.collegeathletenetwork.org/login" className={primaryButtonClass}>
+            <a href="https://members.collegeathletenetwork.org" className={primaryButtonClass}>
               Login to The College Athlete Network
-            </Link>
+            </a>
           </StatusPanel>
         ) : null}
 

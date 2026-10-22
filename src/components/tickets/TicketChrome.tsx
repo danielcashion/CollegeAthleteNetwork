@@ -48,7 +48,7 @@ export function SiteFrame({ children }: { children: React.ReactNode }) {
         <nav id="site-navigation" aria-label="Site navigation" tabIndex={-1}>
           <Navbar />
         </nav>
-        <div className="h-24 shrink-0 bg-gradient-to-r from-[#1C315F] to-[#ED3237]" aria-hidden="true" />
+        <div className="h-20 shrink-0 bg-gradient-to-r from-[#1C315F] to-[#ED3237]" aria-hidden="true" />
         <main id="main-content" className="flex-1">
           {children}
         </main>
