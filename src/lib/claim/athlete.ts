@@ -1,5 +1,6 @@
 import "server-only";
 import { claimApiGet, rowsOf } from "./api";
+import { publicLinkedInUrl } from "./linkedinDisplay";
 import { normalizeLinkedInUrl } from "./linkedinUrl";
 import { getClaimSnapshot } from "./persist";
 import type { AthleteForClaim, LinkedInEducation, LinkedInExperience, LinkedInProfile, ProfileBadge } from "./types";
@@ -58,11 +59,16 @@ function locationOf(row: Record<string, unknown>): string | null {
   return country || null;
 }
 
-function linkedInUrlFromAthlete(row: Record<string, unknown>): string | null {
-  const raw = text(row.bus_url_1);
-  if (!raw || /^(no link found|manual_entry|null)$/i.test(raw)) return null;
+/** A LinkedIn /in/ URL Renidly can fetch, including a stable entity id. */
+function profileLookupUrl(value: unknown): string {
+  const raw = text(value);
+  if (!raw || /^(no link found|manual_entry|null)$/i.test(raw)) return "";
   const candidate = /linkedin\.com|^https?:\/\//i.test(raw) ? raw : `https://www.linkedin.com/in/${raw}`;
-  return normalizeLinkedInUrl(candidate);
+  return normalizeLinkedInUrl(candidate) || "";
+}
+
+function linkedInUrlFromAthlete(row: Record<string, unknown>): string | null {
+  return publicLinkedInUrl(profileLookupUrl(row.bus_url_1)) || null;
 }
 
 export async function getAthleteForClaim(athleteId: number): Promise<AthleteForClaim | null> {
@@ -121,8 +127,12 @@ export async function getStoredLinkedInProfile(athleteId: number): Promise<Linke
   if (Number(profile.is_active_YN) === 0) return null;
 
   const fullName = text(profile.full_name) || [text(profile.first_name), text(profile.last_name)].filter(Boolean).join(" ");
-  const slug = text(profile.public_identifier);
-  if (!fullName || !slug) return null;
+  if (!fullName) return null;
+  const profileUrl =
+    profileLookupUrl(profile.public_identifier) ||
+    rowsOf(experienceData).map((item) => profileLookupUrl(item.bus_url_1)).find(Boolean) ||
+    rowsOf(educationData).map((item) => profileLookupUrl(item.bus_url_1)).find(Boolean) ||
+    "";
 
   const experience: LinkedInExperience[] = rowsOf(experienceData)
     .filter((item) => Number(item.athlete_id) === athleteId && Number(item.is_active_YN) !== 0)
@@ -164,6 +174,6 @@ export async function getStoredLinkedInProfile(athleteId: number): Promise<Linke
     badge: profileBadge(profile),
     experience,
     education,
-    profileUrl: `https://www.linkedin.com/in/${slug}`,
+    profileUrl,
   };
 }

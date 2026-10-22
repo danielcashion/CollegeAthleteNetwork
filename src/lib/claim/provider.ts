@@ -1,4 +1,5 @@
 import "server-only";
+import { publicLinkedInUrl } from "./linkedinDisplay";
 import { invokeRenidlyLambda } from "./renidlyLambda";
 import type { LinkedInEducation, LinkedInExperience, LinkedInProfile, ProfileBadge, RenidlyRows } from "./types";
 
@@ -102,7 +103,7 @@ export async function lookupLinkedInProfile(profileUrl: string): Promise<LinkedI
     experience: asRecords(result.body.experience),
     education: asRecords(result.body.education),
   };
-  const cardUrl = text(result.body.profileUrl) || profileUrl;
+  const cardUrl = publicLinkedInUrl(text(result.body.profileUrl) || profileUrl) || profileUrl;
   const card = toCard(rows, cardUrl);
   if (!card.fullName) return null;
   return { profile: card, rows };
