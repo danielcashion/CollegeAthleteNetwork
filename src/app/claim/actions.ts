@@ -5,6 +5,7 @@ import { ClaimDataError } from "@/lib/claim/api";
 import { lastNamesClose, lastNamesMatch } from "@/lib/claim/lastName";
 import { isLinkedInProfileInput } from "@/lib/claim/linkedinDisplay";
 import { linkedInSlug, normalizeLinkedInUrl } from "@/lib/claim/linkedinUrl";
+import { markClaimLinkClaimed } from "@/lib/claim/claimLink";
 import { loadRenidlyForAthlete, markLinkedInVerified } from "@/lib/claim/verifyUrl";
 import {
   confirmIdentity as saveIdentity,
@@ -143,6 +144,8 @@ export async function confirmLinkedInProfile(
         const marked = await markLinkedInVerified(athleteId, slug, profileEntityId(rows));
         if (!marked.ok) return { ok: false, code: "unavailable", message: marked.message };
       }
+      const claimed = await markClaimLinkClaimed(athleteId);
+      if (!claimed.ok) return { ok: false, code: "unavailable", message: claimed.message };
       return { ok: true, claim: saveLinkedIn(athleteId, normalized, "submitted"), notice: deactivated.notice };
     }
 
@@ -150,6 +153,8 @@ export async function confirmLinkedInProfile(
     if (stored?.profileUrl !== normalized) {
       return { ok: false, code: "unavailable", message: "Look up that LinkedIn profile again, then confirm it." };
     }
+    const claimed = await markClaimLinkClaimed(athleteId);
+    if (!claimed.ok) return { ok: false, code: "unavailable", message: claimed.message };
     return { ok: true, claim: saveLinkedIn(athleteId, normalized, "stored") };
   } catch {
     return { ok: false, code: "unavailable", message: "We couldn't save that profile. Please try again." };
