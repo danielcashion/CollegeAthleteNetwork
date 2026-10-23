@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Scheduled Lambda that resolves verified LinkedIn handles (university_athletes.bus_url_1)
+  to time-invariant URNs via Renidly and writes them back to RDS MySQL.
+
+Parameters:
+  FunctionName:
+    Type: String
+    Default: CollegeAthleteNetworkRenidlyUrn
+  DbHost:
+    Type: String
+    Description: RDS instance endpoint or RDS Proxy endpoint.
+  DbPort:
+    Type: Number
+    Default: 3306
+  DbName:
+    Type: String
+  DbSecretArn:
+    Type: String
+    Description: Secrets Manager ARN of a JSON secret with username and password.
+    AllowedPattern: "^arn:aws[a-z-]*:secretsmanager:.+"
+  ApiSecretArn:
+    Type: String
+    Description: Secrets Manager ARN holding the Renidly API key (plain string or JSON with api_key).
+    AllowedPattern: "^arn:aws[a-z-]*:secretsmanager:.+"
+  KmsKeyArn:
+    Type: String
+    Default: ""
+    Description: Customer-managed KMS key that encrypts the secrets. Leave empty for the AWS-managed key.
+  UniversityList:
+    Type: String
+    Description: Comma-separated university names, or a JSON array when names contain commas.
+  RenidlyBaseUrl:
+    Type: String
+    Default: https://renidly.com/api/v2/person/resolve-handle
+  ScheduleExpression:
+    Type: String
+    Default: rate(1 day)
+  ScheduleEnabled:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+  BatchSize:
+    Type: Number
+    Default: 20
+    MinValue: 1
+    MaxValue: 200
+  MaxRecordsPerRun:
+    Type: Number
+    Default: 500
+    MinValue: 1
+  SafetyMarginMs:
+    Type: Number
+    Default: 60000
+    MinValue: 0
+  MinRequestIntervalMs:
+    Type: Number
+    Default: 250
+    MinValue: 0
+  ReservedConcurrency:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    Description: FOR UPDATE SKIP LOCKED makes more than one concurrent run safe.
+  SubnetIds:
+    Type: CommaDelimitedList
+    Default: ""
+    Description: Private subnets with a route to Renidly and Secrets Manager (NAT or VPC endpoints). Empty = no VPC.
+  SecurityGroupIds:
+    Type: CommaDelimitedList
+    Default: ""
+  AlarmTopicArn:
+    Type: String
+    Default: ""
+    Description: SNS topic for alarm notifications. Empty = alarm without notification.
+  MetricsNamespace:
+    Type: String
+    Default: CollegeAthleteNetwork/RenidlyUrn
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues: [DEBUG, INFO, WARNING, ERROR]
+  LogRetentionDays:
+    Type: Number
+    Default: 30
+
+Conditions:
+  UseKms: !Not [!Equals [!Ref KmsKeyArn, ""]]
+  UseVpc: !Not [!Equals [!Join ["", !Ref SubnetIds], ""]]
+  UseAlarmTopic: !Not [!Equals [!Ref AlarmTopicArn, ""]]
+  ScheduleOn: !Equals [!Ref ScheduleEnabled, "true"]
+
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${FunctionName}-dlq"
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${FunctionName}"
+      RetentionInDays: !Ref LogRetentionDays
+
+  EnrichFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref FunctionName
+      CodeUri: src/
+      Handler: urn_enrich.handler.handler
+      Runtime: python3.14
+      Architectures: [arm64]
+      Timeout: 900
+      MemorySize: 512
+      ReservedConcurrentExecutions: !Ref ReservedConcurrency
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: !Ref LogGroup
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+        MaximumEventAgeInSeconds: 3600
+      VpcConfig: !If
+        - UseVpc
+        - SubnetIds: !Ref SubnetIds
+          SecurityGroupIds: !Ref SecurityGroupIds
+        - !Ref AWS::NoValue
+      Environment:
+        Variables:
+          DB_HOST: !Ref DbHost
+          DB_PORT: !Ref DbPort
+          DB_NAME: !Ref DbName
+          DB_SECRET_ARN: !Ref DbSecretArn
+          API_SECRET_ARN: !Ref ApiSecretArn
+          UNIVERSITY_LIST: !Ref UniversityList
+          RENIDLY_BASE_URL: !Ref RenidlyBaseUrl
+          BATCH_SIZE: !Ref BatchSize
+          MAX_RECORDS_PER_RUN: !Ref MaxRecordsPerRun
+          SAFETY_MARGIN_MS: !Ref SafetyMarginMs
+          MIN_REQUEST_INTERVAL_MS: !Ref MinRequestIntervalMs
+          METRICS_NAMESPACE: !Ref MetricsNamespace
+          LOG_LEVEL: !Ref LogLevel
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: ReadOnlyTheseSecrets
+              Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource:
+                - !Ref DbSecretArn
+                - !Ref ApiSecretArn
+            - !If
+              - UseKms
+              - Sid: DecryptSecrets
+                Effect: Allow
+                Action: kms:Decrypt
+                Resource: !Ref KmsKeyArn
+                Condition:
+                  StringEquals:
+                    kms:ViaService: !Sub "secretsmanager.${AWS::Region}.amazonaws.com"
+              - !Ref AWS::NoValue
+      Events:
+        Schedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: !Ref ScheduleExpression
+            State: !If [ScheduleOn, ENABLED, DISABLED]
+            RetryPolicy:
+              MaximumRetryAttempts: 0
+            DeadLetterConfig:
+              Arn: !GetAtt DeadLetterQueue.Arn
+
+  ErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${FunctionName}-errors"
+      AlarmDescription: The URN enrichment Lambda raised an error (config, database, or Renidly auth).
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref EnrichFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [UseAlarmTopic, [!Ref AlarmTopicArn], !Ref AWS::NoValue]
+      OKActions: !If [UseAlarmTopic, [!Ref AlarmTopicArn], !Ref AWS::NoValue]
+
+  DeadLetterAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${FunctionName}-dlq-messages"
+      AlarmDescription: Failed asynchronous invocations reached the dead-letter queue.
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt DeadLetterQueue.QueueName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [UseAlarmTopic, [!Ref AlarmTopicArn], !Ref AWS::NoValue]
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt EnrichFunction.Arn
+  DeadLetterQueueUrl:
+    Value: !Ref DeadLetterQueue
+  ErrorsAlarmName:
+    Value: !Ref ErrorsAlarm
