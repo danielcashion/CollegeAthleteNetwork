@@ -1,6 +1,6 @@
 import { getUniversityTeams } from "@/services/UniversityTeams";
 import UniversityFinancialsData from "@/components/UniversityFinancialsPage/UniversityFinancialsData";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import Link from "next/link";
 
@@ -14,7 +14,7 @@ export default async function UniversityFinancials({
   const teams = await getUniversityTeams({ universityName });
 
   if (!teams || teams.length < 1) {
-    redirect("/404");
+    notFound();
   }
 
   return (

@@ -175,9 +175,7 @@ const AppFooter: React.FC = () => {
                   <ListItemText primary="Support" />
                 </MenuItemText>
                 <MenuItemText
-                  href="https://www.collegeathletenetwork.org/about-us/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/about-us"
                 >
                   <ListItemText primary="About" />
                 </MenuItemText>

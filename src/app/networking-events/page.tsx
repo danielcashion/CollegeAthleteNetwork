@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { CalendarDays, CreditCard, Handshake, Ticket, Users } from "lucide-react";
+import PublishedEventsSection from "@/components/seo/PublishedEventsSection";
+import { listPublishedPublicEvents } from "@/services/getGolfOutingPublic";
+import { marketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const revalidate = 3600;
+
+export const metadata = marketingMetadata({
   title: "Networking Event Software for Athletic Departments",
   description:
     "College Athlete Network helps athletic departments host networking dinners with public registration, ticketing, and sponsorships.",
-};
+  path: "/networking-events",
+});
 
 const product = [
   {
@@ -35,7 +41,9 @@ const product = [
   },
 ];
 
-export default function NetworkingEventsMarketingPage() {
+export default async function NetworkingEventsMarketingPage() {
+  const publishedEvents = await listPublishedPublicEvents({ fresh: false });
+
   return (
     <div className="min-h-screen bg-[#f9faf8]">
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-20 pt-28 text-white">
@@ -74,7 +82,11 @@ export default function NetworkingEventsMarketingPage() {
             Registration and sponsorships for the dinners you already host
           </h2>
           <p className="mt-4 text-lg text-[#1C315F]/75">
-            A networking event is a private page your staff share with alumni, parents, and sponsors. It is not listed on the open web.
+            Each published networking dinner gets its own event page, appears in our{" "}
+            <Link href="/events" className="font-semibold text-[#ED3237] underline">
+              events directory
+            </Link>
+            , and can be discovered through search when your department publishes it.
           </p>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -89,6 +101,14 @@ export default function NetworkingEventsMarketingPage() {
           ))}
         </div>
       </section>
+
+      <PublishedEventsSection
+        events={publishedEvents}
+        productType="NETWORKING"
+        title="Published networking events"
+        description="Browse networking dinners that athletic departments have published for registration and sponsorships."
+        listJsonLdName="Published college networking events"
+      />
 
       <section className="bg-[#1C315F] py-16 text-white">
         <div className="container mx-auto px-4 text-center">

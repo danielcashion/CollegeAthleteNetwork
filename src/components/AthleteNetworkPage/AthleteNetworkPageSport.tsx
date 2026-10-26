@@ -9,7 +9,7 @@ const AthleteNetworkPageContent = ({ sportData }: any) => {
   return (
   <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
+      <div className="bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-10 flex flex-col items-center px-[10%] sm:px-[20%]">
         <h1 className="text-4xl font-bold mb-4">
           {sportData.university_name} {sportData.mascot} {sportData.sport}{" "}
           Athlete Network

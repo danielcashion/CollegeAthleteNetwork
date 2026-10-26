@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import Link from "next/link";
+
+export const metadata = marketingMetadata({
+  title: "Data Transparency",
+  description:
+    "Learn how The College Athlete Network sources, refreshes, and protects athlete and alumni professional data.",
+  path: "/data-transparency",
+});
 
 import {
   FaShieldAlt,

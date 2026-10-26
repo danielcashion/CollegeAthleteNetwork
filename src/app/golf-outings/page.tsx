@@ -2,12 +2,18 @@ import Link from "next/link";
 import { CalendarDays, CreditCard, Flag, Gavel, Handshake, Megaphone, Ticket, Users } from "lucide-react";
 import GolfAdminScreenshotCarousel from "@/components/GolfOutingPage/GolfAdminScreenshotCarousel";
 import GolfBudgetWorkbook from "@/components/GolfOutingPage/GolfBudgetWorkbook";
+import PublishedEventsSection from "@/components/seo/PublishedEventsSection";
+import { listPublishedPublicEvents } from "@/services/getGolfOutingPublic";
+import { marketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const revalidate = 3600;
+
+export const metadata = marketingMetadata({
   title: "Golf Outing Software for Athletic Departments",
   description:
     "The College Athlete Network provides the software athletic departments use to create, run, and settle golf outings — registration, sponsorships, auction, and payments in one product.",
-};
+  path: "/golf-outings",
+});
 
 const pillars = [
   {
@@ -65,7 +71,9 @@ const product = [
   },
 ];
 
-export default function GolfOutingsMarketingPage() {
+export default async function GolfOutingsMarketingPage() {
+  const publishedEvents = await listPublishedPublicEvents({ fresh: false });
+
   return (
     <div className="min-h-screen bg-[#f9faf8]">
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-20 pt-28 text-white">
@@ -163,9 +171,12 @@ export default function GolfOutingsMarketingPage() {
               Donors expect to hear from the annual fund. Their catalyst to donate is small. A golf outing changes the dialogue: donors are not only hearing from the annual fund, but the department is organizing a day people want to attend. Sponsors get a visible place on the course and the event page. Guests leave with a story they can retell.
             </p>
             <p className="mt-4 text-lg text-[#1C315F]/75">
-              Our software keeps that story on a page the department controls. Each outing has a
-              private link from the slug staff create in admin. They share it with golfers, sponsors,
-              and bidders — not with the open web.
+              Our software keeps that story on a page the department controls. Published outings
+              appear in our{" "}
+              <Link href="/events" className="font-semibold text-[#ED3237] underline">
+                events directory
+              </Link>{" "}
+              so alumni and sponsors can find them through search as well as direct links.
             </p>
           </div>
           <div className="rounded-2xl bg-[#0B1B3A] p-8 text-white shadow-xl">
@@ -191,6 +202,14 @@ export default function GolfOutingsMarketingPage() {
       </section>
 
       <GolfBudgetWorkbook />
+
+      <PublishedEventsSection
+        events={publishedEvents}
+        productType="GOLF"
+        title="Published golf outings"
+        description="These athletic department golf outings are listed in our public events directory and search engines can index each event page."
+        listJsonLdName="Published college golf outings"
+      />
 
       <section className="bg-[#1C315F] py-16 text-white">
         <div className="container mx-auto px-4 text-center">

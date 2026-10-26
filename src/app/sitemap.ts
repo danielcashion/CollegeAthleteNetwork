@@ -1,18 +1,30 @@
 import { getUniqueUniversityMeta } from "@/services/getUniqueUniversityMeta";
 import { getUniversitySportsList } from "@/services/getUniversitySports";
 import { listPublishedPublicEvents } from "@/services/getGolfOutingPublic";
+import { outingCalendarDate } from "@/components/GolfOutingPage/golfOutingDisplay";
 import { MetadataRoute } from "next";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  return await generateSitemap();
+  return generateSitemap();
 }
 
 async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const universities = await getUniqueUniversityMeta();
-    const sportsList = await getUniversitySportsList();
-    const publishedEvents = await listPublishedPublicEvents().catch(() => []);
+    const [universities, sportsList, publishedEvents] = await Promise.all([
+      getUniqueUniversityMeta(),
+      getUniversitySportsList(),
+      listPublishedPublicEvents({ fresh: false }).catch(() => []),
+    ]);
     const baseUrl = "https://www.collegeathletenetwork.org";
+    const universitiesByName = new Map<string, any>(
+      universities.map((university: any) => [
+        university.university_name,
+        university,
+      ])
+    );
+    const siteLastMod = new Date();
 
     const personaPages = [
       "personas/athletic-department-administration",
@@ -22,12 +34,17 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticPages = [
       "about-us",
+      "accessibility",
       "competitive-landscape",
       "athlete-checklist",
       "communications",
       "contact-us",
       "corporate-partners",
       "data-transparency",
+      "events",
+      "faqs",
+      "fundraising",
+      "infrastructure",
       "join-us",
       ...personaPages,
       "privacy-policy",
@@ -38,59 +55,66 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       "networking-events",
     ];
 
-    const sitemapEntries = [
+    const sitemapEntries: MetadataRoute.Sitemap = [
       {
         url: baseUrl,
         changeFrequency: "daily",
         priority: 1,
+        lastModified: siteLastMod,
       },
 
-      // Persona pages (higher priority conversion pages)
       ...personaPages.map((path) => ({
         url: `${baseUrl}/${path}`,
-        changeFrequency: "monthly",
+        changeFrequency: "monthly" as const,
         priority: 0.8,
+        lastModified: siteLastMod,
       })),
 
-      // Other static pages
       ...staticPages
         .filter((path) => !personaPages.includes(path))
         .map((path) => ({
           url: `${baseUrl}/${path}`,
-          changeFrequency: "monthly",
-          priority: 0.7,
+          changeFrequency: "monthly" as const,
+          priority: path === "events" ? 0.85 : 0.7,
+          lastModified: siteLastMod,
         })),
 
-      // Dynamic university pages
       ...universities.map((university: any) => ({
         url: `${baseUrl}/athlete-network/${university.slug}`,
-        changeFrequency: "weekly",
+        changeFrequency: "weekly" as const,
         priority: 0.7,
+        lastModified: siteLastMod,
       })),
 
-      // Dynamic sport pages
       ...sportsList
         .map(({ university_name, sport }) => {
-          const uni = universities.find(
-            (u: any) => u.university_name === university_name
-          );
+          const uni = universitiesByName.get(university_name);
           if (!uni) return null;
           return {
             url: `${baseUrl}/athlete-network/${uni.slug}/${sport}`,
-            changeFrequency: "weekly",
+            changeFrequency: "weekly" as const,
             priority: 0.6,
+            lastModified: siteLastMod,
           };
         })
         .filter(Boolean),
 
-      ...publishedEvents.map((event) => ({
-        url: `${baseUrl}/${event.product_type === "NETWORKING" ? "networking-event" : "golf-outing"}/${event.public_url_slug}`,
-        changeFrequency: "weekly" as const,
-        priority: 0.6,
-      })),
+      ...publishedEvents.map((event) => {
+        const eventDate = outingCalendarDate(event.event_date);
+        return {
+          url: `${baseUrl}/${event.product_type === "NETWORKING" ? "networking-event" : "golf-outing"}/${event.public_url_slug}`,
+          changeFrequency: "weekly" as const,
+          priority: 0.65,
+          lastModified: eventDate ? new Date(`${eventDate}T12:00:00Z`) : siteLastMod,
+        };
+      }),
     ];
 
-    return sitemapEntries;
+    return Array.from(
+      new Map(
+        sitemapEntries.map((entry) => [entry.url, entry])
+      ).values()
+    );
   } catch (error) {
     console.error("Error generating sitemap:", error);
 

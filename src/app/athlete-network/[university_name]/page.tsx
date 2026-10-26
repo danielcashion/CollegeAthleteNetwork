@@ -1,70 +1,72 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import AthleteNetworkPageContent from "@/components/AthleteNetworkPage/AthleteNetworkPage";
-import { redirect } from "next/navigation";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import {
+  getSportsForUniversity,
+  getUniversityBySlug,
+} from "@/lib/seo/athleteNetworkCache";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ university_name: string }>;
 };
 
-function slugToText(slug: string) {
-  const decoded = decodeURIComponent(slug);
-  let text = decoded.replace(/-/g, " ");
-
-  text = text.replace(/\band\b/g, "&");
-  return text;
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { university_name } = await params;
-
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_meta?university_name=${encodeURIComponent(
-      slugToText(university_name)
-    )}`,
-    {
-      next: { revalidate: 3600 },
-    }
-  );
-  const arr: any = await res.json();
-
-  const uni = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
-
-  if (!uni) {
-    return {
-      title: `${uni.university_name} ${uni.mascot} Athlete Network | Connecting Students & Alumni`,
-      description: `Explore ${uni.university_name} athletes and professional opportunities!`,
-    };
-  }
+  const uni = await getUniversityBySlug(university_name);
+  if (!uni) notFound();
 
   return {
-    title: `${uni.university_name} ${uni.mascot} Athlete Network | The College Athlete Network`,
+    title: `${uni.university_name} ${uni.mascot} Athlete Network`,
     description: `Explore ${uni.university_name}'s athlete and alumni career network.`,
+    alternates: {
+      canonical: `/athlete-network/${uni.slug}`,
+    },
     openGraph: {
       title: `${uni.university_name} ${uni.mascot} Athlete Network`,
       description: `Connect with ${uni.university_name} athletes and alumni.`,
-      images: [uni.logo_url],
+      url: `/athlete-network/${uni.slug}`,
+      images: uni.logo_url ? [uni.logo_url] : undefined,
     },
   };
 }
 
 export default async function UniversityPage({ params }: Props) {
   const { university_name } = await params;
+  const university = await getUniversityBySlug(university_name);
+  if (!university) notFound();
 
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_meta?university_name=${encodeURIComponent(
-      slugToText(university_name)
-    )}`
+  const sports = await getSportsForUniversity(university.university_name);
+
+  return (
+    <>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: `${university.university_name} Athlete Network` },
+        ]}
+      />
+      {sports.length > 0 ? (
+        <section className="container mx-auto px-4 pb-6">
+          <h2 className="text-lg font-semibold text-[#1C315F]">
+            Teams in this network
+          </h2>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {sports.map(({ sport, sportSlug }) => (
+              <li key={sportSlug}>
+                <Link
+                  href={`/athlete-network/${university.slug}/${sportSlug}`}
+                  className="inline-block rounded-full border border-[#1C315F]/20 px-4 py-2 text-sm font-medium text-[#1C315F] hover:border-[#ED3237] hover:text-[#ED3237]"
+                >
+                  {sport}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      <AthleteNetworkPageContent university={university} />
+    </>
   );
-
-  const arr: any = await res.json();
-
-  const university = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
-
-  if (!university) redirect("/404");
-
-  return <AthleteNetworkPageContent university={university} />;
 }

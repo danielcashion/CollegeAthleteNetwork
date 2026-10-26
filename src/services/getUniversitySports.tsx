@@ -29,9 +29,13 @@ export const getUniversitySportsList = async (): Promise<
   }
 
   const rawData: UniversitySportRaw[] = await res.json();
+  const seen = new Set<string>();
 
-  return rawData.map(({ university_name, sport }) => ({
-    university_name,
-    sport: textToSlug(sport),
-  }));
+  return rawData.flatMap(({ university_name, sport }) => {
+    const sportSlug = textToSlug(sport);
+    const key = `${university_name}\0${sportSlug}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ university_name, sport: sportSlug }];
+  });
 };
