@@ -92,7 +92,7 @@ function handleUrl(...candidates: Array<string | null | undefined>): string | nu
   return null;
 }
 
-export function ClaimFlow({
+export function ConfirmFlow({
   token,
   athlete,
   storedProfile,

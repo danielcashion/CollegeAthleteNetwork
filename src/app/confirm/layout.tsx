@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   referrer: "no-referrer",
 };
 
-export default function ClaimLayout({ children }: { children: React.ReactNode }) {
+export default function ConfirmLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

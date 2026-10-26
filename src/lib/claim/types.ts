@@ -1,4 +1,4 @@
-/** Plain data passed to the claim page. No athlete id — the token is the only client handle. */
+/** Plain data passed to the confirm page. No athlete id — the token is the only client handle. */
 
 export type LinkedInExperience = {
   title: string;
