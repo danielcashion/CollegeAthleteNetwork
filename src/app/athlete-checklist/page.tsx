@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+
+export const metadata = marketingMetadata({
+  title: "Athlete Checklist",
+  description:
+    "A practical checklist for student-athletes preparing for careers, networking, and life after college sports.",
+  path: "/athlete-checklist",
+});
 import Link from "next/link";
 import { AthleteChecklistItems } from "@/utils/AthleteChecklist";
 

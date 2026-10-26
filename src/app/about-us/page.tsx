@@ -1,4 +1,12 @@
 import React from "react";
+import { marketingMetadata } from "@/lib/seo/metadata";
+
+export const metadata = marketingMetadata({
+  title: "About Us",
+  description:
+    "Learn how The College Athlete Network helps collegiate athletic programs connect athletes, alumni, and employers.",
+  path: "/about-us",
+});
 import AboutUsTopSection from "@/components/AboutUsPage/AboutUsTopSection";
 import OurStory from "@/components/AboutUsPage/OurStory";
 import OurSolution from "@/components/AboutUsPage/OurSolution";

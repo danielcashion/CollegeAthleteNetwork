@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import axios from "axios";
+
+export const metadata = marketingMetadata({
+  title: "Sample Data",
+  description:
+    "Explore sample athlete network coverage and data tables from The College Athlete Network.",
+  path: "/sample-data",
+});
 import SampleDataTopSection from "@/components/SampleDataPage/SampleDataTopSection";
 import DataTables from "@/components/SampleDataPage/DataTables";
 

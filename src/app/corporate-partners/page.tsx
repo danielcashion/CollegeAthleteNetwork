@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+
+export const metadata = marketingMetadata({
+  title: "Corporate Partners",
+  description:
+    "Partner with The College Athlete Network to support collegiate athletes, alumni engagement, and athletic department outcomes.",
+  path: "/corporate-partners",
+});
 import Link from "next/link";
 import AthletesImage from "../../../public/images/athletes-2.jpg";
 import {

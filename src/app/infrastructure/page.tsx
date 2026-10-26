@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+
+export const metadata = marketingMetadata({
+  title: "Infrastructure",
+  description:
+    "How The College Athlete Network infrastructure supports secure, scalable athlete and alumni networks for athletic departments.",
+  path: "/infrastructure",
+});
 import Link from "next/link";
 import { FaSitemap, FaClipboardCheck, FaLayerGroup, FaShield } from "react-icons/fa6";
 import InfrastructureImage from "../../../public/images/college-athletes-6.jpg";

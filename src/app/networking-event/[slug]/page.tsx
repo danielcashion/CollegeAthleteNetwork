@@ -17,8 +17,10 @@ import {
   type GolfPackagePublic,
   type GolfSponsorPublic,
 } from "@/services/getGolfOutingPublic";
+import JsonLd from "@/lib/seo/JsonLd";
+import { buildEventJsonLd } from "@/lib/seo/eventSchema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 function packageLines(pkg: GolfPackagePublic): string[] {
   const lines = [
@@ -88,6 +90,7 @@ export default async function NetworkingEventPublicPage({
 
   return (
     <div className="min-h-screen bg-[#f9faf8]">
+      <JsonLd data={buildEventJsonLd(event)} />
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-16 pt-28 text-white">
         <div className="container mx-auto px-4">
           <Link

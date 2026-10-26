@@ -1,0 +1,21 @@
+{
+  "default_branch": "master",
+  "branches": [
+    "claim_athlete",
+    "development",
+    "master",
+    "origin"
+  ],
+  "parent": {
+    "claim_athlete": "master",
+    "development": "master",
+    "master": null,
+    "origin": "master"
+  },
+  "order": [
+    "master",
+    "claim_athlete",
+    "development",
+    "origin"
+  ]
+}

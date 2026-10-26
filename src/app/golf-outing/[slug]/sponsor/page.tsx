@@ -1,9 +1,26 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import GolfSponsorForm from "@/components/GolfOutingPage/GolfSponsorForm";
 import { formatOutingDate, venueLine } from "@/components/GolfOutingPage/golfOutingDisplay";
 import { getPublicGolfOutingBySlug, listPublicPackages } from "@/services/getGolfOutingPublic";
+import { noIndexMetadata } from "@/lib/seo/metadata";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getPublicGolfOutingBySlug(slug);
+  if (!event) return { title: "Sponsor" };
+  return noIndexMetadata({
+    title: `Sponsor · ${event.event_name}`,
+    description: `Sponsorship for ${event.event_name}`,
+    canonical: `/golf-outing/${event.public_url_slug}`,
+  });
+}
 
 export default async function PublicGolfSponsorPage({
   params,

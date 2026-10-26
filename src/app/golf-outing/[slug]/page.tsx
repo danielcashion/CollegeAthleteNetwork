@@ -17,8 +17,10 @@ import {
   listPublicSponsors,
   listPublicTickets,
 } from "@/services/getGolfOutingPublic";
+import JsonLd from "@/lib/seo/JsonLd";
+import { buildEventJsonLd } from "@/lib/seo/eventSchema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -73,6 +75,7 @@ export default async function GolfOutingPublicPage({
 
   return (
     <div className="min-h-screen bg-[#f9faf8]">
+      <JsonLd data={buildEventJsonLd(event)} />
       <section className="bg-gradient-to-r from-[#1C315F] to-[#ED3237] pb-16 pt-28 text-white">
         <div className="container mx-auto px-4">
           <Link
