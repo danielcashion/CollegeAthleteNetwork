@@ -1,6 +1,8 @@
 import "../styles/customStyles.css";
 import Carousel from "@/components/LandingPage/Carousel";
 import HeroVideo from "@/components/HeroVideo";
+import JsonLd from "@/lib/seo/JsonLd";
+import { SITE_URL } from "@/lib/seo/site";
 
 import {
   FaDatabase,
@@ -22,8 +24,36 @@ import {
 } from "react-icons/bs";
 import { TbAppWindowFilled } from "react-icons/tb";
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "The College Athlete Network",
+      url: SITE_URL,
+      logo: `${SITE_URL}/Logos/CANLogo1200X1200Color.png`,
+      sameAs: ["https://www.linkedin.com/company/the-college-athlete-network"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "The College Athlete Network",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/events?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
+    <>
+      <JsonLd data={organizationJsonLd} />
     <div className="bg-[#e8e8e8] overflow-x-hidden">
       <main>
         {/* Hero Section */}
@@ -337,6 +367,7 @@ export default function Home() {
         </section>
       </main>
     </div>
+    </>
   );
 }
 

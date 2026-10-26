@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE_PATH } from "@/lib/seo/site";
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import "./globals.css";
 import GoogleAnalyticsClient from "@/components/GoogleAnalytics/GoogleAnalyticsClient";
@@ -39,6 +40,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://www.collegeathletenetwork.org",
+    images: [{ url: DEFAULT_OG_IMAGE_PATH, alt: "The College Athlete Network" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The College Athlete Network",
+    description:
+      "We power the athlete, alumni, and professional opportunity network for college athletic programs.",
+    images: [DEFAULT_OG_IMAGE_PATH],
   },
   icons: {
     icon: "/favicon.ico",

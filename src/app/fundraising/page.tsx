@@ -1,4 +1,12 @@
+import { marketingMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+
+export const metadata = marketingMetadata({
+  title: "Fundraising",
+  description:
+    "Fundraising tools and network outcomes for college athletic departments using The College Athlete Network.",
+  path: "/fundraising",
+});
 import Link from "next/link";
 import {
   FaChartLine,

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import VideoViewerClient from "./VideoViewerClient";
+import { noIndexMetadata } from "@/lib/seo/metadata";
 
 const defaultVideoId = "PPH7AQRz_Jc";
 
@@ -26,21 +27,16 @@ function displayNameFromSlug(slug: string) {
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ university_name: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const { university_name: slug } = await params;
-  const sp = await searchParams;
-  const rawVideoId = pickFirstString(sp, "video_id");
-  const videoId = getSafeVideoId(rawVideoId);
   const displayedUniversityName = displayNameFromSlug(slug);
 
-  return {
-    title: `Video Viewer for the ${displayedUniversityName} Athlete Network`,
-    description: `Video viewer for the ${displayedUniversityName} Athletic Department — video ${videoId}`,
-  };
+  return noIndexMetadata({
+    title: `Video Viewer · ${displayedUniversityName}`,
+    description: `Video viewer for the ${displayedUniversityName} Athletic Department`,
+  });
 }
 
 export default async function VideoViewerPage({

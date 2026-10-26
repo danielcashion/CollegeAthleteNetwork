@@ -191,10 +191,15 @@ export async function listPublicGolfOutings(filters?: {
 
 export async function getPublicGolfOutingBySlug(
   slug: string,
-  productType: "GOLF" | "NETWORKING" = "GOLF"
+  productType: "GOLF" | "NETWORKING" = "GOLF",
+  options?: { fresh?: boolean }
 ): Promise<GolfOutingPublic | null> {
   const rows = (
-    await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug }, { fresh: true })
+    await publicGet<GolfOutingPublic>(
+      "v_golf_outings_public",
+      { public_url_slug: slug },
+      options
+    )
   ).map(withCalendarEventDate);
   return (
     rows.find(
