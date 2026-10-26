@@ -3,16 +3,26 @@ import { getUniversitySportsList } from "@/services/getUniversitySports";
 import { listPublishedPublicEvents } from "@/services/getGolfOutingPublic";
 import { MetadataRoute } from "next";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  return await generateSitemap();
+  return generateSitemap();
 }
 
 async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const universities = await getUniqueUniversityMeta();
-    const sportsList = await getUniversitySportsList();
-    const publishedEvents = await listPublishedPublicEvents().catch(() => []);
+    const [universities, sportsList, publishedEvents] = await Promise.all([
+      getUniqueUniversityMeta(),
+      getUniversitySportsList(),
+      listPublishedPublicEvents({ fresh: false }).catch(() => []),
+    ]);
     const baseUrl = "https://www.collegeathletenetwork.org";
+    const universitiesByName = new Map<string, any>(
+      universities.map((university: any) => [
+        university.university_name,
+        university,
+      ])
+    );
 
     const personaPages = [
       "personas/athletic-department-administration",
@@ -22,12 +32,16 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticPages = [
       "about-us",
+      "accessibility",
       "competitive-landscape",
       "athlete-checklist",
       "communications",
       "contact-us",
       "corporate-partners",
       "data-transparency",
+      "faqs",
+      "fundraising",
+      "infrastructure",
       "join-us",
       ...personaPages,
       "privacy-policy",
@@ -71,9 +85,7 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       // Dynamic sport pages
       ...sportsList
         .map(({ university_name, sport }) => {
-          const uni = universities.find(
-            (u: any) => u.university_name === university_name
-          );
+          const uni = universitiesByName.get(university_name);
           if (!uni) return null;
           return {
             url: `${baseUrl}/athlete-network/${uni.slug}/${sport}`,
@@ -90,7 +102,9 @@ async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
       })),
     ];
 
-    return sitemapEntries;
+    return Array.from(
+      new Map(sitemapEntries.map((entry) => [entry.url, entry])).values()
+    ) as MetadataRoute.Sitemap;
   } catch (error) {
     console.error("Error generating sitemap:", error);
 

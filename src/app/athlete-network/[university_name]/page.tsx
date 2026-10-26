@@ -1,70 +1,47 @@
 import type { Metadata } from "next";
 import AthleteNetworkPageContent from "@/components/AthleteNetworkPage/AthleteNetworkPage";
-import { redirect } from "next/navigation";
+import {
+  getUniqueUniversityMeta,
+  textToSlug,
+} from "@/services/getUniqueUniversityMeta";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ university_name: string }>;
 };
 
-function slugToText(slug: string) {
-  const decoded = decodeURIComponent(slug);
-  let text = decoded.replace(/-/g, " ");
-
-  text = text.replace(/\band\b/g, "&");
-  return text;
+async function getUniversityBySlug(slug: string) {
+  const normalizedSlug = textToSlug(decodeURIComponent(slug));
+  const universities = await getUniqueUniversityMeta();
+  return universities.find(
+    (university: { slug: string }) => university.slug === normalizedSlug
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { university_name } = await params;
-
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_meta?university_name=${encodeURIComponent(
-      slugToText(university_name)
-    )}`,
-    {
-      next: { revalidate: 3600 },
-    }
-  );
-  const arr: any = await res.json();
-
-  const uni = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
-
-  if (!uni) {
-    return {
-      title: `${uni.university_name} ${uni.mascot} Athlete Network | Connecting Students & Alumni`,
-      description: `Explore ${uni.university_name} athletes and professional opportunities!`,
-    };
-  }
+  const uni = await getUniversityBySlug(university_name);
+  if (!uni) notFound();
 
   return {
-    title: `${uni.university_name} ${uni.mascot} Athlete Network | The College Athlete Network`,
+    title: `${uni.university_name} ${uni.mascot} Athlete Network`,
     description: `Explore ${uni.university_name}'s athlete and alumni career network.`,
+    alternates: {
+      canonical: `/athlete-network/${uni.slug}`,
+    },
     openGraph: {
       title: `${uni.university_name} ${uni.mascot} Athlete Network`,
       description: `Connect with ${uni.university_name} athletes and alumni.`,
-      images: [uni.logo_url],
+      url: `/athlete-network/${uni.slug}`,
+      images: uni.logo_url ? [uni.logo_url] : undefined,
     },
   };
 }
 
 export default async function UniversityPage({ params }: Props) {
   const { university_name } = await params;
-
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/publicprod/university_meta?university_name=${encodeURIComponent(
-      slugToText(university_name)
-    )}`
-  );
-
-  const arr: any = await res.json();
-
-  const university = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
-
-  if (!university) redirect("/404");
+  const university = await getUniversityBySlug(university_name);
+  if (!university) notFound();
 
   return <AthleteNetworkPageContent university={university} />;
 }

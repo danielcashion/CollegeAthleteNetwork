@@ -341,6 +341,8 @@ export default function Home() {
 }
 
 export const metadata = {
-  title: 'The College Athlete Network - Home',
-  description: 'Discover and connect with athletes from your university',
+  title: {
+    absolute: "The College Athlete Network",
+  },
+  description: "Discover and connect with athletes from your university",
 };

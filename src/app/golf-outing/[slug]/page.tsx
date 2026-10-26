@@ -28,12 +28,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const event = await getPublicGolfOutingBySlug(slug);
   if (!event) return { title: "Golf outing" };
+  const canonicalPath = `/golf-outing/${event.public_url_slug}`;
   return {
     title: event.event_name,
     description: `${event.university_name} golf outing at ${event.venue_name || "the course"}`,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title: event.event_name,
       description: `${event.university_name} · ${event.venue_name || ""}`,
+      url: canonicalPath,
       images: event.hero_image_url ? [event.hero_image_url] : undefined,
     },
   };

@@ -46,9 +46,19 @@ export async function generateMetadata({
   const { slug } = await params;
   const event = await getPublicGolfOutingBySlug(slug, "NETWORKING");
   if (!event) return { title: "Networking event" };
+  const canonicalPath = `/networking-event/${event.public_url_slug}`;
   return {
     title: event.event_name,
     description: `${event.university_name} networking event`,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title: event.event_name,
+      description: `${event.university_name} networking event`,
+      url: canonicalPath,
+      images: event.hero_image_url ? [event.hero_image_url] : undefined,
+    },
   };
 }
 
