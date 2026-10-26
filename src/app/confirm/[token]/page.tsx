@@ -1,11 +1,11 @@
 import { getAthleteForClaim, getStoredLinkedInProfile } from "@/lib/claim/athlete";
 import { resolveClaimToken } from "@/lib/claim/token";
 import { InvalidLink, Unavailable } from "../ui";
-import { ClaimFlow } from "./ClaimFlow";
+import { ConfirmFlow } from "./ConfirmFlow";
 
 export const dynamic = "force-dynamic";
 
-export default async function ClaimTokenPage({ params }: { params: Promise<{ token: string }> }) {
+export default async function ConfirmTokenPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
 
   try {
@@ -25,7 +25,7 @@ export default async function ClaimTokenPage({ params }: { params: Promise<{ tok
     if (!athlete) return <InvalidLink />;
 
     return (
-      <ClaimFlow
+      <ConfirmFlow
         token={token}
         athlete={athlete.photoUrl || !stored.profile?.photoUrl ? athlete : { ...athlete, photoUrl: stored.profile.photoUrl }}
         storedProfile={stored.profile}
@@ -33,6 +33,6 @@ export default async function ClaimTokenPage({ params }: { params: Promise<{ tok
       />
     );
   } catch {
-    return <Unavailable retryHref={`/claim/${encodeURIComponent(token)}`} />;
+    return <Unavailable retryHref={`/confirm/${encodeURIComponent(token)}`} />;
   }
 }

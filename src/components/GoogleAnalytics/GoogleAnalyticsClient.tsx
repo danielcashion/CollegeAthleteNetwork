@@ -6,7 +6,7 @@ import { GoogleAnalytics } from "nextjs-google-analytics";
 
 export default function GoogleAnalyticsClient() {
   const pathname = usePathname() || "";
-  if (pathname === "/claim" || pathname.startsWith("/claim/")) return null;
+  if (pathname === "/confirm" || pathname.startsWith("/confirm/")) return null;
   return (
     <>
       <Analytics />

@@ -1,6 +1,6 @@
 const { withBotId } = require("botid/next/config");
 
-const claimHeaders = [
+const confirmHeaders = [
   { key: "Referrer-Policy", value: "no-referrer" },
   { key: "X-Robots-Tag", value: "noindex, nofollow" },
   { key: "Cache-Control", value: "private, no-store" },
@@ -29,9 +29,15 @@ const nextConfig = {
   poweredByHeader: false,
   async headers() {
     return [
-      { source: "/claim", headers: claimHeaders },
-      { source: "/claim/:path*", headers: claimHeaders },
+      { source: "/confirm", headers: confirmHeaders },
+      { source: "/confirm/:path*", headers: confirmHeaders },
       ...noIndexPaths.map((source) => ({ source, headers: noIndexHeaders })),
+    ];
+  },
+  async redirects() {
+    return [
+      { source: "/claim", destination: "/confirm", permanent: true },
+      { source: "/claim/:path*", destination: "/confirm/:path*", permanent: true },
     ];
   },
 };

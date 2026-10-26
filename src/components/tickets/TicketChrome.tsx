@@ -41,8 +41,8 @@ export function TicketActions({
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
   const path = usePathname() || "";
-  const claim = path === "/claim" || path.startsWith("/claim/");
-  if (claim) {
+  const confirmProfile = path === "/confirm" || path.startsWith("/confirm/");
+  if (confirmProfile) {
     return (
       <div className="flex min-h-screen flex-col bg-[#F4F6FB]">
         <nav id="site-navigation" aria-label="Site navigation" tabIndex={-1}>
