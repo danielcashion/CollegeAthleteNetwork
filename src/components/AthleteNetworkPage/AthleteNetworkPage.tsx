@@ -6,7 +6,7 @@ const AthleteNetworkPageContent = ({ university }: any) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-24 flex flex-col items-center px-[10%] sm:px-[20%]">
+      <div className="relative bg-gradient-to-r text-center from-[#1C315F] to-[#ED3237] text-white pb-12 pt-10 flex flex-col items-center px-[10%] sm:px-[20%]">
         <div className="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
           <div className="relative">
             <h1 className="text-4xl font-bold mb-4">

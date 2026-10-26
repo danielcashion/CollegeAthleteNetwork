@@ -1,4 +1,4 @@
-function textToSlug(text: string) {
+export function textToSlug(text: string) {
   return text
     .toLowerCase()
     .replace(/\s*&\s*/g, " and ")

@@ -157,8 +157,8 @@ export function isPublishedOuting(row: { event_status?: string | null; is_active
   return row.is_active_YN !== 0 && row.event_status === "PUBLISHED";
 }
 
-export async function listPublishedPublicEvents(): Promise<GolfOutingPublic[]> {
-  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", undefined, { fresh: true })).map(
+export async function listPublishedPublicEvents(options?: { fresh?: boolean }): Promise<GolfOutingPublic[]> {
+  const rows = (await publicGet<GolfOutingPublic>("v_golf_outings_public", undefined, options)).map(
     withCalendarEventDate
   );
   return rows.filter((row) => isPublishedOuting(row) && Boolean(row.public_url_slug));
@@ -191,10 +191,15 @@ export async function listPublicGolfOutings(filters?: {
 
 export async function getPublicGolfOutingBySlug(
   slug: string,
-  productType: "GOLF" | "NETWORKING" = "GOLF"
+  productType: "GOLF" | "NETWORKING" = "GOLF",
+  options?: { fresh?: boolean }
 ): Promise<GolfOutingPublic | null> {
   const rows = (
-    await publicGet<GolfOutingPublic>("v_golf_outings_public", { public_url_slug: slug }, { fresh: true })
+    await publicGet<GolfOutingPublic>(
+      "v_golf_outings_public",
+      { public_url_slug: slug },
+      options
+    )
   ).map(withCalendarEventDate);
   return (
     rows.find(

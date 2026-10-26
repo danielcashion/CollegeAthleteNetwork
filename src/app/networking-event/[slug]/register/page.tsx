@@ -1,10 +1,27 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import GolfRegisterForm from "@/components/GolfOutingPage/GolfRegisterForm";
 import { formatOutingDate, venueLine } from "@/components/GolfOutingPage/golfOutingDisplay";
 import { getPublicGolfOutingBySlug, listPublicTickets } from "@/services/getGolfOutingPublic";
+import { noIndexMetadata } from "@/lib/seo/metadata";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getPublicGolfOutingBySlug(slug, "NETWORKING");
+  if (!event) return { title: "Register" };
+  return noIndexMetadata({
+    title: `Register · ${event.event_name}`,
+    description: `Registration for ${event.event_name}`,
+    canonical: `/networking-event/${event.public_url_slug}`,
+  });
+}
 
 export default async function NetworkingRegisterPage({
   params,
