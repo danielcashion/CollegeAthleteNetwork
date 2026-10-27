@@ -66,3 +66,6 @@ jobs:
 
       - name: Verify protected files are clean
         run: npm run sanitize:protected-files:check
+
+      - name: Verify no obfuscated JavaScript
+        run: npm run security:check-obfuscated-js

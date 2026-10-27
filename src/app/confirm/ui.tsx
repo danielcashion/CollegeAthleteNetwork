@@ -2,10 +2,10 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { Linkedin } from "lucide-react";
+import { Linkedin, Mail } from "lucide-react";
 import { publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
 import { durationLabel, fullMonthYear } from "@/lib/claim/profileDates";
-import type { LinkedInProfile, ProfileBadge } from "@/lib/claim/types";
+import type { AthleteEmailForConfirm, AthleteForClaim, EmailConfirmStatus, LinkedInProfile, ProfileBadge } from "@/lib/claim/types";
 
 export const primaryButtonClass =
   "inline-flex w-full items-center justify-center rounded-xl bg-[#1C315F] px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#152648] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
@@ -21,47 +21,53 @@ export function ClaimShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-const STEPS = ["Identity", "LinkedIn", "Done"] as const;
+const STEPS = ["Match", "Contact", "Identity", "LinkedIn", "Done"] as const;
+export type ConfirmStepIndex = 0 | 1 | 2 | 3 | 4;
 
 export function Stepper({
   current,
   onSelect,
 }: {
-  current: 0 | 1 | 2;
-  onSelect?: (step: 0 | 1) => void;
+  current: ConfirmStepIndex;
+  onSelect?: (step: 0 | 1 | 2 | 3) => void;
 }) {
   return (
-    <ol aria-label="Progress" className="mb-4 grid grid-cols-3 gap-2">
+    <ol aria-label="Progress" className="mb-4 grid grid-cols-5 gap-1 sm:gap-2">
       {STEPS.map((label, index) => {
         const active = index === current;
-        const open = index < 2 && onSelect ? () => onSelect(index as 0 | 1) : null;
+        const completed = index < current;
+        const navigable = completed && index < 4 && onSelect;
         const body = (
           <>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-2">
               <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                  active ? "bg-[#1C315F] text-white" : "bg-white text-[#5C6A82] ring-1 ring-[#1C315F]/15"
+                  active || completed ? "bg-[#1C315F] text-white" : "bg-white text-[#5C6A82] ring-1 ring-[#1C315F]/15"
                 }`}
                 aria-hidden="true"
               >
-                {active && index === 2 ? "✓" : index + 1}
+                {completed && index === 4 ? "✓" : active && index === 4 ? "✓" : index + 1}
               </span>
-              <span className={`truncate text-sm font-semibold ${active || open ? "text-[#1C315F]" : "text-[#5C6A82]"}`}>
+              <span
+                className={`hidden truncate text-xs font-semibold sm:inline sm:text-sm ${
+                  active || completed ? "text-[#1C315F]" : "text-[#5C6A82]"
+                }`}
+              >
                 {label}
               </span>
             </div>
             <div
-              className={`mt-2 h-1 rounded-full ${active ? "bg-[#1C315F]" : "bg-[#1C315F]/10"}`}
+              className={`mt-2 h-1 rounded-full ${active || completed ? "bg-[#1C315F]" : "bg-[#1C315F]/10"}`}
               aria-hidden="true"
             />
           </>
         );
         return (
           <li key={label} className="min-w-0" aria-current={active ? "step" : undefined}>
-            {open ? (
+            {navigable ? (
               <button
                 type="button"
-                onClick={open}
+                onClick={() => onSelect(index as 0 | 1 | 2 | 3)}
                 className="w-full rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C315F] focus-visible:ring-offset-2"
               >
                 {body}
@@ -73,6 +79,197 @@ export function Stepper({
         );
       })}
     </ol>
+  );
+}
+
+const EMAIL_STATUS_OPTIONS: { value: EmailConfirmStatus; label: string; hint: string }[] = [
+  { value: "active", label: "Active", hint: "Best way to reach me" },
+  { value: "inactive", label: "Inactive", hint: "Mine, but don't use" },
+  { value: "inaccurate", label: "Inaccurate", hint: "Not my email" },
+];
+
+export function AthleteMatchPanel({
+  athlete,
+  busy,
+  onYes,
+  onNo,
+}: {
+  athlete: AthleteForClaim;
+  busy: boolean;
+  onYes: () => void;
+  onNo: () => void;
+}) {
+  const yesRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    yesRef.current?.focus();
+  }, []);
+
+  const sportPart = athlete.sport ? ` and you played ${athlete.sport}` : "";
+  const schoolPart = athlete.school ? ` at ${athlete.school}` : "";
+
+  return (
+    <section
+      className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]"
+      aria-busy={busy}
+    >
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#1C315F] via-[#1C315F] to-[#2B4B8C] px-5 py-6 text-white sm:px-7">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/[0.06]" aria-hidden="true" />
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Before we begin</p>
+        <h2 className="mt-2 text-xl font-semibold leading-snug sm:text-2xl">
+          Are you <span className="text-white">{athlete.fullName}</span>
+          {sportPart}
+          {schoolPart}?
+        </h2>
+      </div>
+      <div className="px-5 py-5 sm:px-7">
+        <p className="text-sm leading-6 text-[#3E4E6B]">
+          We use this link to confirm your athlete record and contact details. Please answer honestly so we reach the
+          right person.
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <button type="button" className={secondaryButtonClass} onClick={onNo} disabled={busy}>
+            No
+          </button>
+          <button ref={yesRef} type="button" className={primaryButtonClass} onClick={onYes} disabled={busy}>
+            Yes
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function EmailConfirmPanel({
+  emails,
+  selections,
+  error,
+  busy,
+  onSelect,
+  onNext,
+  onNone,
+}: {
+  emails: AthleteEmailForConfirm[];
+  selections: Record<number, EmailConfirmStatus | undefined>;
+  error: string | null;
+  busy: boolean;
+  onSelect: (rowId: number, status: EmailConfirmStatus) => void;
+  onNext: () => void;
+  onNone: () => void;
+}) {
+  const allRowsSelected = emails.length > 0 && emails.every((row) => Boolean(selections[row.rowId]));
+  const nextDisabled = busy || !allRowsSelected;
+
+  return (
+    <section
+      className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]"
+      aria-busy={busy}
+    >
+      <div className="border-b border-[#1C315F]/10 bg-[#F8F9FC] px-5 py-4 sm:px-7">
+        <div className="flex items-start gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#1C315F] ring-1 ring-[#1C315F]/10">
+            <Mail className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-[#1C315F]">Confirm your contact details</h2>
+            <p className="mt-1 text-sm leading-6 text-[#3E4E6B]">
+              First, help us confirm your contact details. Here are the email addresses we found for you.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden border-b border-[#1C315F]/10 bg-white px-5 py-2 sm:grid sm:grid-cols-[1fr_repeat(3,minmax(0,5.5rem))] sm:gap-2 sm:px-7">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#5C6A82]">Email</span>
+        {EMAIL_STATUS_OPTIONS.map((opt) => (
+          <span key={opt.value} className="text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5C6A82]">
+            {opt.label}
+          </span>
+        ))}
+      </div>
+
+      <ul className="divide-y divide-[#1C315F]/10">
+        {emails.map((row) => {
+          const groupName = `email-status-${row.rowId}`;
+          const selected = selections[row.rowId];
+          return (
+            <li
+              key={row.rowId}
+              className="px-5 py-4 sm:grid sm:grid-cols-[1fr_repeat(3,minmax(0,5.5rem))] sm:items-center sm:gap-2 sm:px-7"
+            >
+              <div className="min-w-0 pr-2">
+                <p className="break-all text-[15px] font-semibold text-[#1C315F]">{row.emailAddress}</p>
+                {row.emailType ? (
+                  <p className="mt-0.5 text-xs capitalize text-[#5C6A82]">{row.emailType.replace(/_/g, " ")}</p>
+                ) : null}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-3 sm:contents sm:mt-0" role="radiogroup" aria-label={`Status for ${row.emailAddress}`}>
+                {EMAIL_STATUS_OPTIONS.map((opt) => (
+                  <label
+                    key={opt.value}
+                    className="flex min-w-[7.5rem] flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#1C315F]/10 bg-[#F8F9FC] px-2 py-2.5 text-center text-xs font-semibold text-[#1C315F] transition has-[:checked]:border-[#1C315F] has-[:checked]:bg-white has-[:checked]:ring-2 has-[:checked]:ring-[#1C315F]/20 sm:min-w-0 sm:flex-none sm:px-1"
+                  >
+                    <input
+                      type="radio"
+                      name={groupName}
+                      value={opt.value}
+                      checked={selected === opt.value}
+                      disabled={busy}
+                      onChange={() => onSelect(row.rowId, opt.value)}
+                      className="h-4 w-4 shrink-0 accent-[#1C315F]"
+                    />
+                    <span className="sm:sr-only">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {error ? (
+        <p role="alert" className="px-5 pb-2 text-sm font-medium text-[#9D1F24] sm:px-7">
+          {error}
+        </p>
+      ) : null}
+
+      <div className="grid gap-3 border-t border-[#1C315F]/10 px-5 py-5 sm:grid-cols-2 sm:px-7">
+        <button type="button" className={secondaryButtonClass} onClick={onNone} disabled={busy}>
+          None of these are me
+        </button>
+        <button
+          type="button"
+          className={primaryButtonClass}
+          onClick={onNext}
+          disabled={nextDisabled}
+          title={allRowsSelected ? undefined : "Select a status for each email to continue"}
+        >
+          Next step
+        </button>
+      </div>
+    </section>
+  );
+}
+
+export function SorryModal({ open }: { open: boolean }) {
+  if (!open) return null;
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1C315F]/40 px-4 backdrop-blur-[2px]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sorry-title"
+        className="w-full max-w-md rounded-3xl border border-[#1C315F]/10 bg-white px-6 py-8 text-center shadow-[0_24px_60px_rgba(28,49,95,0.2)]"
+      >
+        <h2 id="sorry-title" className="text-xl font-semibold text-[#1C315F]">
+          Sorry for the trouble!
+        </h2>
+        <p className="mt-3 text-base leading-7 text-[#3E4E6B]">
+          We will remove you from our distribution list immediately.
+        </p>
+        <p className="mt-4 text-sm text-[#5C6A82]">Taking you to our homepage…</p>
+      </div>
+    </div>,
+    document.body,
   );
 }
 

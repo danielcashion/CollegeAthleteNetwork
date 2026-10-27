@@ -96,3 +96,16 @@ export type ClaimActionResult =
 export type LookupActionResult =
   | { ok: true; profile: LinkedInProfile; rows: RenidlyRows; simulated: boolean; lastNameMatches: boolean }
   | { ok: false; code: ClaimActionErrorCode; message: string };
+
+export type EmailConfirmStatus = "active" | "inactive" | "inaccurate";
+
+export type AthleteEmailForConfirm = {
+  rowId: number;
+  emailAddress: string;
+  emailType: string | null;
+  emailStatus: string | null;
+};
+
+export type EmailActionResult =
+  | { ok: true }
+  | { ok: false; code: ClaimActionErrorCode; message: string };

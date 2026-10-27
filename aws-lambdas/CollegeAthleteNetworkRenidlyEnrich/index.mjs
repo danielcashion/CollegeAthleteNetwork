@@ -683,10 +683,7 @@ function productionExperience(row) {
 }
 
 function productionEducation(row) {
-  const payload = productionExperience(row);
-  delete payload.logo_url;
-  delete payload.s3_school_logo_url;
-  return payload;
+  return productionExperience(row);
 }
 
 async function rowsForAthlete(table, athleteId) {

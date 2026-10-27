@@ -1,0 +1,18 @@
+name: Security - obfuscated JavaScript
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify protected files are clean
+        run: node scripts/sanitize-injected-files.mjs --check
+
+      - name: Verify no obfuscated JavaScript
+        run: node scripts/check-obfuscated-js.mjs

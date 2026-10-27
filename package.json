@@ -9,6 +9,7 @@
     "lint": "next lint",
     "sanitize:protected-files": "node scripts/sanitize-injected-files.mjs",
     "sanitize:protected-files:check": "node scripts/sanitize-injected-files.mjs --check",
+    "security:check-obfuscated-js": "node scripts/check-obfuscated-js.mjs",
     "prepare": "node scripts/install-git-hooks.mjs"
   },
   "dependencies": {
