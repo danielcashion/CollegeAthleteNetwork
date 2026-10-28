@@ -25,16 +25,16 @@ export default function CanEventsAppSection() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]">
             Event day on mobile
           </p>
-          <h2 id="can-events-heading" className="mt-2 text-3xl font-bold text-[#1C315F] md:text-4xl">
-            CAN Events — The mobile app for Event Admins
+          <h2 id="can-events-heading" className="mt-2 text-2xl font-bold text-[#1C315F] md:text-3xl">
+            CAN (College Athlete Newtork) Events — The event-day mobile app for Event Admins
           </h2>
           <p className="mt-4 text-lg text-[#1C315F]/75">
-            Your web admin builds the outing;{" "}
+            Your event planner builds the outing on the website;{" "}
             <a
               href={CAN_EVENTS_APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#ED3237] underline underline-offset-2"
+              className="font-semibold text-[#ED3237] hover:text-[#54f542]/80"
             >
               CAN Events
             </a>{" "}
