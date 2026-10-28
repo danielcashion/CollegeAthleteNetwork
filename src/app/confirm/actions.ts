@@ -18,8 +18,16 @@ import { deactivateAthleteLinkedIn } from "@/lib/claim/deactivate";
 import { priorClause } from "@/lib/claim/deactivateResult";
 import { lookupLinkedInProfile, saveLinkedInProfile } from "@/lib/claim/provider";
 import { rateLimitClaimLookup } from "@/lib/claim/rateLimit";
+import { fetchAthleteEmailsForConfirm, markAllEmailsInaccurate, setEmailStatusesForAthlete } from "@/lib/claim/emails";
+import { rateLimitClaimEmail } from "@/lib/claim/rateLimit";
 import { resolveClaimToken } from "@/lib/claim/token";
-import type { ClaimActionResult, LookupActionResult, RenidlyRows } from "@/lib/claim/types";
+import type {
+  ClaimActionResult,
+  EmailActionResult,
+  EmailConfirmStatus,
+  LookupActionResult,
+  RenidlyRows,
+} from "@/lib/claim/types";
 
 const INVALID: ClaimActionResult = {
   ok: false,
@@ -57,6 +65,58 @@ async function athleteIdFromToken(token: string): Promise<number | null> {
   } catch (error) {
     if (error instanceof ClaimDataError) throw error;
     return null;
+  }
+}
+
+const EMAIL_UNAVAILABLE: EmailActionResult = {
+  ok: false,
+  code: "unavailable",
+  message: "We couldn't save your email choices just now. Please try again.",
+};
+
+const INVALID_EMAIL_LINK: EmailActionResult = {
+  ok: false,
+  code: "invalid_link",
+  message: "This link isn't valid.",
+};
+
+export async function rejectWrongPerson(token: string): Promise<EmailActionResult> {
+  try {
+    const athleteId = await athleteIdFromToken(token);
+    if (!athleteId) return INVALID_EMAIL_LINK;
+    if (!rateLimitClaimEmail(token)) {
+      return { ok: false, code: "rate_limited", message: "Too many updates on this link. Please wait a few minutes." };
+    }
+    await markAllEmailsInaccurate(athleteId);
+    return { ok: true };
+  } catch {
+    return EMAIL_UNAVAILABLE;
+  }
+}
+
+export async function saveEmailStatuses(
+  token: string,
+  selections: { rowId: number; status: EmailConfirmStatus }[],
+): Promise<EmailActionResult> {
+  try {
+    const athleteId = await athleteIdFromToken(token);
+    if (!athleteId) return INVALID_EMAIL_LINK;
+    if (!rateLimitClaimEmail(token)) {
+      return { ok: false, code: "rate_limited", message: "Too many updates on this link. Please wait a few minutes." };
+    }
+
+    const allowed = await fetchAthleteEmailsForConfirm(athleteId);
+    const allowedIds = new Set(allowed.map((row) => row.rowId));
+    for (const sel of selections) {
+      if (!allowedIds.has(sel.rowId)) {
+        return { ok: false, code: "unavailable", message: "One of those email rows is not valid for this link." };
+      }
+    }
+
+    await setEmailStatusesForAthlete(athleteId, selections);
+    return { ok: true };
+  } catch {
+    return EMAIL_UNAVAILABLE;
   }
 }
 

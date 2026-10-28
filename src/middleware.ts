@@ -1,7 +1,7 @@
 import { withAuth, type NextRequestWithAuth } from "next-auth/middleware";
 import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
-function claimResponse() {
+function confirmResponse() {
   const response = NextResponse.next();
   response.headers.set("Referrer-Policy", "no-referrer");
   response.headers.set("X-Robots-Tag", "noindex, nofollow");
@@ -43,12 +43,12 @@ const adminAuth = withAuth(
 
 export default function middleware(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl;
-  if (pathname === "/claim" || pathname.startsWith("/claim/")) {
-    return claimResponse();
+  if (pathname === "/confirm" || pathname.startsWith("/confirm/")) {
+    return confirmResponse();
   }
   return adminAuth(req as NextRequestWithAuth, event);
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/claim", "/claim/:path*"],
+  matcher: ["/admin/:path*", "/confirm", "/confirm/:path*"],
 };

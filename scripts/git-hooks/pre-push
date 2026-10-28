@@ -7,6 +7,13 @@ if [ "$status" -ne 0 ]; then
   exit "$status"
 fi
 
+node scripts/check-obfuscated-js.mjs
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "Push blocked. Remove obfuscated JavaScript before pushing."
+  exit "$status"
+fi
+
 while read -r local_ref local_sha remote_ref remote_sha; do
   if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
     continue
@@ -18,6 +25,12 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   if git show "$local_sha:package.json" 2>/dev/null | grep -q "node api.js"; then
     echo "Push blocked. $local_ref still runs node api.js."
     exit 1
+  fi
+  node scripts/check-obfuscated-js.mjs --revision "$local_sha"
+  status=$?
+  if [ "$status" -ne 0 ]; then
+    echo "Push blocked. $local_ref contains obfuscated JavaScript."
+    exit "$status"
   fi
 done
 

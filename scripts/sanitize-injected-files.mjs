@@ -1,6 +1,7 @@
 import { access, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { analyzeJavaScript } from './lib/obfuscated-js.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,7 +56,7 @@ function sanitizeGitignore(content) {
   return { changed: true, content: sanitizedContent };
 }
 
-const tailwindPostcss = [
+const tailwindPostcssMjs = [
   "/** @type {import('postcss-load-config').Config} */",
   'const config = {',
   '  plugins: {',
@@ -67,42 +68,78 @@ const tailwindPostcss = [
   '',
 ].join('\n');
 
-function sanitizePostcss(content) {
+const tailwindAutoprefixerPostcssMjs = [
+  "/** @type {import('postcss-load-config').Config} */",
+  'const config = {',
+  '  plugins: {',
+  '    tailwindcss: {},',
+  '    autoprefixer: {},',
+  '  },',
+  '};',
+  '',
+  'export default config;',
+  '',
+].join('\n');
+
+const tailwindV4PostcssMjs = [
+  'const config = {',
+  '  plugins: {',
+  '    "@tailwindcss/postcss": {},',
+  '  },',
+  '};',
+  '',
+  'export default config;',
+  '',
+].join('\n');
+
+const tailwindAutoprefixerPostcssJs = [
+  'module.exports = {',
+  '  plugins: {',
+  '    tailwindcss: {},',
+  '    autoprefixer: {},',
+  '  },',
+  '};',
+  '',
+].join('\n');
+
+function pickPostcssTemplate(content, isCjs) {
+  if (isCjs) {
+    return tailwindAutoprefixerPostcssJs;
+  }
+  if (content.includes('@tailwindcss/postcss')) {
+    return tailwindV4PostcssMjs;
+  }
+  if (content.includes('autoprefixer')) {
+    return tailwindAutoprefixerPostcssMjs;
+  }
+  return tailwindPostcssMjs;
+}
+
+function normalizeNewlines(content) {
+  return content.replace(/\r\n/g, '\n').trimEnd();
+}
+
+function sanitizePostcss(content, relativePath) {
+  const isCjs = relativePath.endsWith('.js');
+  const template = pickPostcssTemplate(content, isCjs);
+  const normalized = normalizeNewlines(content);
+  const normalizedTemplate = normalizeNewlines(template);
+
+  if (normalized === normalizedTemplate) {
+    return { changed: false, content };
+  }
+
+  const analysis = analyzeJavaScript(content, relativePath);
+  const hasTrailingPayload =
+    /export default config;[\t ]{8,}\S/.test(content) ||
+    /module\.exports\s*=\s*\{[\s\S]*?\};[\t ]{8,}\S/.test(content);
+
+  if (!analysis.suspicious && !hasTrailingPayload) {
+    return { changed: false, content };
+  }
+
   const eol = getEol(content);
-  const normalized = content.replace(/\r\n/g, '\n');
-  const canonicalBody = tailwindPostcss.trimEnd();
-
-  if (normalized === tailwindPostcss || normalized.trimEnd() === canonicalBody) {
-    return { changed: false, content };
-  }
-
-  const marker = 'export default config;';
-  const markerAt = normalized.lastIndexOf(marker);
-  if (markerAt === -1) {
-    return {
-      changed: false,
-      content,
-      error:
-        'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
-    };
-  }
-
-  const before = normalized.slice(0, markerAt + marker.length).trim();
-  const after = normalized.slice(markerAt + marker.length);
-  if (!before.endsWith(canonicalBody)) {
-    return {
-      changed: false,
-      content,
-      error:
-        'postcss.config.mjs changed unexpectedly and no longer matches the protected baseline.',
-    };
-  }
-
-  if (after.trim().length === 0) {
-    return { changed: false, content };
-  }
-
-  const rewritten = `${canonicalBody}\n`.replace(/\n/g, eol);
+  const rewritten = `${normalizedTemplate}\n`.replace(/\n/g, eol);
   return { changed: true, content: rewritten };
 }
 
@@ -117,24 +154,26 @@ async function fileExists(relativePath) {
   }
 }
 
-const protectedFiles = [
-  {
-    relativePath: '.gitignore',
-    sanitize: sanitizeGitignore,
-  },
-  {
-    relativePath: 'postcss.config.mjs',
-    sanitize: sanitizePostcss,
-  },
+const protectedFileCandidates = [
+  { relativePath: '.gitignore', sanitize: sanitizeGitignore },
+  { relativePath: 'postcss.config.mjs', sanitize: sanitizePostcss },
+  { relativePath: 'postcss.config.js', sanitize: sanitizePostcss },
 ];
 
 const changedFiles = [];
 const erroredFiles = [];
 
-for (const protectedFile of protectedFiles) {
+for (const protectedFile of protectedFileCandidates) {
+  if (!(await fileExists(protectedFile.relativePath))) {
+    continue;
+  }
+
   const absolutePath = path.join(repoRoot, protectedFile.relativePath);
   const originalContent = await readFile(absolutePath, 'utf8');
-  const sanitizedResult = protectedFile.sanitize(originalContent);
+  const sanitizedResult = protectedFile.sanitize(
+    originalContent,
+    protectedFile.relativePath,
+  );
 
   if (sanitizedResult.error) {
     erroredFiles.push(

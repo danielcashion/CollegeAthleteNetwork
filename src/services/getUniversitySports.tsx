@@ -1,10 +1,6 @@
-export function textToSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/\s*&\s*/g, " and ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-+|-+$)/g, "");
-}
+import { textToSlug } from "@/lib/seo/slug";
+
+export { textToSlug } from "@/lib/seo/slug";
 
 export interface UniversitySportRaw {
   university_name: string;

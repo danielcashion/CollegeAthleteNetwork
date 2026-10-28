@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { BadgeCheck, GraduationCap, Linkedin, Medal } from "lucide-react";
@@ -10,14 +10,19 @@ import {
   declineIdentity,
   lookupLinkedIn,
   rejectStoredProfile,
+  rejectWrongPerson,
+  saveEmailStatuses,
 } from "../actions";
 import { isLinkedInProfileInput, linkedInProfileKey, publicLinkedInLabel, publicLinkedInUrl } from "@/lib/claim/linkedinDisplay";
 import { canLookupLinkedInProfile, recordLinkedInLookup } from "@/lib/claim/lookupLimit";
-import type { AthleteForClaim, LinkedInProfile, RenidlyRows } from "@/lib/claim/types";
+import type { AthleteEmailForConfirm, AthleteForClaim, EmailConfirmStatus, LinkedInProfile, RenidlyRows } from "@/lib/claim/types";
 import { canRefreshLinkedIn, recordLinkedInRefresh } from "@/lib/claim/refreshLimit";
 import {
+  AthleteMatchPanel,
   Avatar,
   ClaimShell,
+  ConfirmStepIndex,
+  EmailConfirmPanel,
   primaryButtonClass,
   PrivacyNote,
   LinkedInPanel,
@@ -28,11 +33,36 @@ import {
   RefreshLimitModal,
   RetrievingModal,
   secondaryButtonClass,
+  SorryModal,
   StatusPanel,
   Stepper,
 } from "../ui";
 
+const HOME_URL = "https://www.collegeathletenetwork.org";
+const MEMBERS_BASE = "https://members.collegeathletenetwork.org";
+
+function membersAuthHref(
+  path: "login" | "sign-up",
+  claimToken: string,
+  emails: AthleteEmailForConfirm[],
+  selections: Record<number, EmailConfirmStatus | undefined>,
+): string {
+  const url = new URL(`${MEMBERS_BASE}/${path}`);
+  url.searchParams.set("claim", claimToken);
+  const preferred =
+    emails.find((row) => selections[row.rowId] === "active")?.emailAddress ??
+    emails.find((row) => {
+      const status = row.emailStatus?.toLowerCase();
+      return status === "active" || status === "primary";
+    })?.emailAddress ??
+    emails[0]?.emailAddress;
+  if (preferred) url.searchParams.set("email_address", preferred);
+  return url.toString();
+}
+
 type Flow =
+  | { name: "match" }
+  | { name: "contact"; error: string | null }
   | { name: "identity"; error: string | null }
   | { name: "linkedin"; mode: "stored" }
   | { name: "linkedin"; mode: "form"; draft: string; error: string | null }
@@ -42,7 +72,20 @@ type Flow =
   | { name: "invalid" };
 
 function initialFlow(): Flow {
-  return { name: "identity", error: null };
+  return { name: "match" };
+}
+
+function initialEmailSelections(emails: AthleteEmailForConfirm[]): Record<number, EmailConfirmStatus | undefined> {
+  const init: Record<number, EmailConfirmStatus | undefined> = {};
+  for (const row of emails) {
+    const status = row.emailStatus?.toLowerCase();
+    if (status === "inaccurate" || status === "inactive") {
+      init[row.rowId] = status;
+    } else if (status === "active" || status === "primary") {
+      init[row.rowId] = "active";
+    }
+  }
+  return init;
 }
 
 function defaultLinkedIn(
@@ -57,9 +100,11 @@ function defaultLinkedIn(
     : { name: "linkedin", mode: "form", draft: "", error: null };
 }
 
-function stepIndex(flow: Flow): 0 | 1 | 2 {
-  if (flow.name === "done" || flow.name === "already") return 2;
-  if (flow.name === "linkedin") return 1;
+function stepIndex(flow: Flow): ConfirmStepIndex {
+  if (flow.name === "done" || flow.name === "already") return 4;
+  if (flow.name === "linkedin") return 3;
+  if (flow.name === "identity") return 2;
+  if (flow.name === "contact") return 1;
   return 0;
 }
 
@@ -92,18 +137,23 @@ function handleUrl(...candidates: Array<string | null | undefined>): string | nu
   return null;
 }
 
-export function ClaimFlow({
+export function ConfirmFlow({
   token,
   athlete,
   storedProfile,
   profileNotice,
+  emails,
 }: {
   token: string;
   athlete: AthleteForClaim;
   storedProfile: LinkedInProfile | null;
   profileNotice: string | null;
+  emails: AthleteEmailForConfirm[];
 }) {
   const [flow, setFlow] = useState<Flow>(() => initialFlow());
+  const [maxStep, setMaxStep] = useState<ConfirmStepIndex>(0);
+  const [emailSelections, setEmailSelections] = useState(() => initialEmailSelections(emails));
+  const [sorryOpen, setSorryOpen] = useState(false);
   const lastLinkedIn = useRef<Extract<Flow, { name: "linkedin" }>>(defaultLinkedIn(athlete, storedProfile));
   if (flow.name === "linkedin") lastLinkedIn.current = flow;
   const [busy, setBusy] = useState(false);
@@ -116,8 +166,91 @@ export function ClaimFlow({
   const [banner, setBanner] = useState<string | null>(null);
   const [live, setLive] = useState("Confirm whether this athlete record is you.");
 
-  const welcome = athlete.firstName ? `Welcome, ${athlete.firstName}` : "Welcome";
+  const welcome = athlete.firstName ? `Welcome, ${athlete.firstName}!` : "Welcome";
   const linkedinLabel = publicLinkedInLabel(athlete.linkedinUrl);
+
+  useEffect(() => {
+    if (!sorryOpen) return;
+    const timer = window.setTimeout(() => {
+      window.location.href = HOME_URL;
+    }, 3000);
+    return () => window.clearTimeout(timer);
+  }, [sorryOpen]);
+
+  async function onWrongPersonExit() {
+    setBusy(true);
+    setLive("Updating your preferences.");
+    try {
+      const result = await rejectWrongPerson(token);
+      if (!result.ok) {
+        if (result.code === "invalid_link") {
+          setFlow({ name: "invalid" });
+          setLive("This link isn't valid.");
+          return;
+        }
+        setBanner(result.message);
+        setLive(result.message);
+        return;
+      }
+      setSorryOpen(true);
+      setLive("Removing you from our distribution list.");
+    } catch {
+      const message = "We couldn't save that just now. Please try again.";
+      setBanner(message);
+      setLive(message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function goToContactOrIdentity() {
+    if (emails.length === 0) {
+      setFlow({ name: "identity", error: null });
+      setMaxStep((prev) => (prev < 2 ? 2 : prev));
+      setLive("Confirm whether this athlete record is you.");
+      return;
+    }
+    setFlow({ name: "contact", error: null });
+    setMaxStep((prev) => (prev < 1 ? 1 : prev));
+    setLive("Review the email addresses we have on file.");
+  }
+
+  async function onContactNext() {
+    const missing = emails.some((row) => !emailSelections[row.rowId]);
+    if (missing) {
+      setFlow({ name: "contact", error: "Select a status for each email address, or choose None of these are me." });
+      setLive("Select a status for each email address.");
+      return;
+    }
+    setBusy(true);
+    setLive("Saving your email choices.");
+    try {
+      const selections = emails.map((row) => ({
+        rowId: row.rowId,
+        status: emailSelections[row.rowId] as EmailConfirmStatus,
+      }));
+      const result = await saveEmailStatuses(token, selections);
+      if (!result.ok) {
+        if (result.code === "invalid_link") {
+          setFlow({ name: "invalid" });
+          setLive("This link isn't valid.");
+          return;
+        }
+        setFlow({ name: "contact", error: result.message });
+        setLive(result.message);
+        return;
+      }
+      setFlow({ name: "identity", error: null });
+      setMaxStep((prev) => (prev < 2 ? 2 : prev));
+      setLive("Confirm whether this athlete record is you.");
+    } catch {
+      const message = "We couldn't save your email choices just now. Please try again.";
+      setFlow({ name: "contact", error: message });
+      setLive(message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function onConfirmIdentity() {
     setBusy(true);
@@ -134,6 +267,7 @@ export function ClaimFlow({
         setLive(result.message);
         return;
       }
+      setMaxStep((prev) => (prev < 3 ? 3 : prev));
       if (!athlete.linkedinVerified) {
         setFlow({ name: "linkedin", mode: "form", draft: athlete.linkedinUrl || "", error: null });
         setLive("Identity confirmed. Add your LinkedIn profile URL so we can match the last name.");
@@ -313,6 +447,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
         return;
       }
       setBanner(null);
+      setMaxStep(4);
       setFlow({ name: "done", linkedinUrl: result.claim.linkedinUrl || profileUrl, notice: result.notice || null });
       setLive(result.notice || "You're confirmed. We saved your LinkedIn profile.");
       if (result.notice) showClaimToast("success", result.notice);
@@ -324,6 +459,22 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
     } finally {
       setBusy(false);
     }
+  }
+
+  function showMatch() {
+    setBanner(null);
+    setFlow({ name: "match" });
+    setLive("Confirm whether this athlete record is you.");
+  }
+
+  function showContact() {
+    setBanner(null);
+    if (emails.length === 0) {
+      showIdentity();
+      return;
+    }
+    setFlow({ name: "contact", error: null });
+    setLive("Review the email addresses we have on file.");
   }
 
   function showIdentity() {
@@ -357,11 +508,15 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {live}
       </p>
-      {flow.name === "identity" ? (
+      {flow.name === "match" || flow.name === "contact" || flow.name === "identity" ? (
         <header className="mb-4">
           <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-[2rem]">{welcome}</h1>
           <p className="mt-1.5 text-base leading-6 text-[#3E4E6B]">
-            Confirm this record so we can keep your profile accurate. It takes about a minute.
+            {flow.name === "match"
+              ? "Let's make sure we have the right person before we show your details."
+              : flow.name === "contact"
+                ? "Tell us which email addresses are yours and how we should use them."
+                : "Confirm this record so we can keep your profile accurate. It takes about a minute."}
           </p>
         </header>
       ) : null}
@@ -370,7 +525,10 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
         <Stepper
           current={stepIndex(flow)}
           onSelect={(step) => {
-            if (step === 0) showIdentity();
+            if (step > maxStep) return;
+            if (step === 0) showMatch();
+            else if (step === 1) showContact();
+            else if (step === 2) showIdentity();
             else showLinkedIn();
           }}
         />
@@ -382,6 +540,30 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
       ) : null}
 
       <div key={flow.name === "linkedin" ? `linkedin-${flow.mode}` : flow.name} className="motion-safe:animate-fadeIn">
+        {flow.name === "match" ? (
+          <AthleteMatchPanel
+            athlete={athlete}
+            busy={busy}
+            onYes={goToContactOrIdentity}
+            onNo={() => void onWrongPersonExit()}
+          />
+        ) : null}
+
+        {flow.name === "contact" ? (
+          <EmailConfirmPanel
+            emails={emails}
+            selections={emailSelections}
+            error={flow.error}
+            busy={busy}
+            onSelect={(rowId, status) => {
+              setEmailSelections((prev) => ({ ...prev, [rowId]: status }));
+              if (flow.error) setFlow({ name: "contact", error: null });
+            }}
+            onNext={() => void onContactNext()}
+            onNone={() => void onWrongPersonExit()}
+          />
+        ) : null}
+
         {flow.name === "identity" ? (
           <section className="overflow-hidden rounded-3xl border border-[#1C315F]/10 bg-white shadow-[0_20px_50px_rgba(28,49,95,0.08)]" aria-busy={busy}>
             <div className="relative overflow-hidden bg-gradient-to-br from-[#1C315F] via-[#1C315F] to-[#2B4B8C] px-5 py-4 text-white sm:px-7">
@@ -478,12 +660,12 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
               ) : null}
               <div className="mt-4 border-t border-[#1C315F]/10 pt-4">
                 <p className="text-center text-base font-semibold text-[#1C315F] sm:text-left">Is this you?</p>
-                <div className="mt-2.5 grid gap-3 sm:grid-cols-[1.5fr_1fr]">
-                  <button type="button" className={primaryButtonClass} onClick={onConfirmIdentity} disabled={busy}>
-                    {athlete.linkedinVerified ? "Yes, that's me. Confirm details..." : "Yes, that's me. Add my LinkedIn"}
+                <div className="mt-2.5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <button type="button" className={`${secondaryButtonClass} min-h-[3.25rem]`} onClick={onDecline} disabled={busy}>
+                    No, this is not me. Let&apos;s edit the LinkedIn link...
                   </button>
-                  <button type="button" className={secondaryButtonClass} onClick={onDecline} disabled={busy}>
-                    No, this is not me.
+                  <button type="button" className={`${primaryButtonClass} min-h-[3.25rem]`} onClick={onConfirmIdentity} disabled={busy}>
+                    {athlete.linkedinVerified ? "Yes, that's me! Confirm details..." : "Yes, that's me. Add my LinkedIn"}
                   </button>
                 </div>
               </div>
@@ -675,9 +857,20 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
                 </li>
               ) : null}
             </ul>
-            <a href="https://members.collegeathletenetwork.org" className={primaryButtonClass}>
-              Login to The College Athlete Network
-            </a>
+            <div className="flex flex-col gap-3">
+              <a
+                href={membersAuthHref("login", token, emails, emailSelections)}
+                className={primaryButtonClass}
+              >
+                Log in to The College Athlete Network
+              </a>
+              <a
+                href={membersAuthHref("sign-up", token, emails, emailSelections)}
+                className={secondaryButtonClass}
+              >
+                Create an account
+              </a>
+            </div>
           </StatusPanel>
         ) : null}
 
@@ -691,6 +884,12 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
               </p>
             ) : null}
             <div className="flex flex-col gap-3">
+              <a
+                href={membersAuthHref("login", token, emails, emailSelections)}
+                className={primaryButtonClass}
+              >
+                Log in to The College Athlete Network
+              </a>
               <button type="button" className={secondaryButtonClass} onClick={showIdentity}>
                 Review my record
               </button>
@@ -748,6 +947,7 @@ async function onConfirmProfile(profileUrl: string, rows?: RenidlyRows) {
         title="Profile lookup limit reached"
         message="You have exceeded the limit of how many different LinkedIn profiles you can look up. Please contact support if you need help."
       />
+      <SorryModal open={sorryOpen} />
     </ClaimShell>
   );
 }

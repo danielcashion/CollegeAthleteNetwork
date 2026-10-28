@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import AthleteNetworkPageContentSport from "@/components/AthleteNetworkPage/AthleteNetworkPageSport";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { getSportBySlugs } from "@/lib/seo/athleteNetworkCache";
+import { athleteNetworkSportJsonLd } from "@/lib/seo/athleteNetworkSchema";
+import JsonLd from "@/lib/seo/JsonLd";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -36,9 +38,19 @@ export default async function UniversitySportsPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={athleteNetworkSportJsonLd({
+          universityName: sportData.university_name,
+          universitySlug: sportData.university_slug,
+          sport: sportData.sport,
+          sportSlug: sportData.sport_slug,
+          logoUrl: sportData.logo_url,
+        })}
+      />
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
+          { label: "Athlete networks by school", href: "/athlete-network" },
           {
             label: sportData.university_name,
             href: `/athlete-network/${sportData.university_slug}`,

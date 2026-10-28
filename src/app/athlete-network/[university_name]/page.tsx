@@ -6,6 +6,11 @@ import {
   getSportsForUniversity,
   getUniversityBySlug,
 } from "@/lib/seo/athleteNetworkCache";
+import {
+  athleteNetworkHubDescription,
+  athleteNetworkHubJsonLd,
+} from "@/lib/seo/athleteNetworkSchema";
+import JsonLd from "@/lib/seo/JsonLd";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -17,15 +22,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const uni = await getUniversityBySlug(university_name);
   if (!uni) notFound();
 
+  const description = athleteNetworkHubDescription(uni);
+  const title = uni.mascot
+    ? `${uni.university_name} ${uni.mascot} Athlete Network`
+    : `${uni.university_name} Athlete Network`;
+
   return {
-    title: `${uni.university_name} ${uni.mascot} Athlete Network`,
-    description: `Explore ${uni.university_name}'s athlete and alumni career network.`,
+    title,
+    description,
     alternates: {
       canonical: `/athlete-network/${uni.slug}`,
     },
     openGraph: {
-      title: `${uni.university_name} ${uni.mascot} Athlete Network`,
-      description: `Connect with ${uni.university_name} athletes and alumni.`,
+      title,
+      description,
       url: `/athlete-network/${uni.slug}`,
       images: uni.logo_url ? [uni.logo_url] : undefined,
     },
@@ -39,11 +49,15 @@ export default async function UniversityPage({ params }: Props) {
 
   const sports = await getSportsForUniversity(university.university_name);
 
+  const hubPath = `/athlete-network/${university.slug}`;
+
   return (
     <>
+      <JsonLd data={athleteNetworkHubJsonLd(university, hubPath)} />
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
+          { label: "Athlete networks by school", href: "/athlete-network" },
           { label: `${university.university_name} Athlete Network` },
         ]}
       />

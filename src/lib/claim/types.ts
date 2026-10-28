@@ -1,4 +1,4 @@
-/** Plain data passed to the claim page. No athlete id — the token is the only client handle. */
+/** Plain data passed to the confirm page. No athlete id — the token is the only client handle. */
 
 export type LinkedInExperience = {
   title: string;
@@ -95,4 +95,17 @@ export type ClaimActionResult =
 
 export type LookupActionResult =
   | { ok: true; profile: LinkedInProfile; rows: RenidlyRows; simulated: boolean; lastNameMatches: boolean }
+  | { ok: false; code: ClaimActionErrorCode; message: string };
+
+export type EmailConfirmStatus = "active" | "inactive" | "inaccurate";
+
+export type AthleteEmailForConfirm = {
+  rowId: number;
+  emailAddress: string;
+  emailType: string | null;
+  emailStatus: string | null;
+};
+
+export type EmailActionResult =
+  | { ok: true }
   | { ok: false; code: ClaimActionErrorCode; message: string };
