@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, CreditCard, Flag, Gavel, Handshake, Megaphone, Ticket, Users } from "lucide-react";
+import CanEventsAppSection from "@/components/GolfOutingPage/CanEventsAppSection";
 import GolfAdminScreenshotCarousel from "@/components/GolfOutingPage/GolfAdminScreenshotCarousel";
 import GolfBudgetWorkbook from "@/components/GolfOutingPage/GolfBudgetWorkbook";
 import PublishedEventsSection from "@/components/seo/PublishedEventsSection";
@@ -101,6 +102,12 @@ export default async function GolfOutingsMarketingPage() {
             >
               See the product
             </a>
+            <a
+              href="#can-events-app"
+              className="rounded-full border border-white/60 px-6 py-3 text-lg font-semibold text-white/95 transition duration-200 hover:bg-white/10"
+            >
+              CAN Events app
+            </a>
           </div>
         </div>
       </section>
@@ -139,6 +146,8 @@ export default async function GolfOutingsMarketingPage() {
           ))}
         </div>
       </section>
+
+      <CanEventsAppSection />
 
       <section className="container mx-auto px-4 pb-16 md:pb-20">
         <div className="mx-auto max-w-3xl text-center">
