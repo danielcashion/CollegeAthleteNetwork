@@ -1,0 +1,12 @@
+version = 0.1
+
+[default.global.parameters]
+region = "us-east-1"
+
+[default.deploy.parameters]
+stack_name = "CollegeAthleteNetworkCmuRssSchedule"
+resolve_s3 = true
+s3_prefix = "CollegeAthleteNetworkCmuRssSchedule"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "FunctionName=\"CollegeAthleteNetworkCmuRssSchedule\" UniversityName=\"Carnegie Mellon\" ApiBaseUrl=\"https://api.tourneymaster.org/publicprod\" Season=\"\" ScheduleExpression=\"cron(0 2 * * ? *)\" ScheduleTimezone=\"America/New_York\" ScheduleEnabled=\"true\" DryRun=\"false\" FeedConcurrency=\"4\" LogRetentionDays=\"30\" AlarmTopicArn=\"\""
