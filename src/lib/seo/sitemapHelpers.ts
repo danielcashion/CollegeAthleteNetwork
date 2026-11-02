@@ -24,6 +24,7 @@ export const STATIC_PAGES = [
   "events",
   "faqs",
   "fundraising",
+  "funds-availability",
   "infrastructure",
   "join-us",
   ...PERSONA_PAGES,
