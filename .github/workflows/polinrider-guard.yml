@@ -1,0 +1,115 @@
+name: PolinRider guard
+
+# Dependency-free. Reads files and searches text only. Never installs
+# dependencies and never runs package scripts or any other repository code.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reject PolinRider indicators
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          GUARD=".github/workflows/polinrider-guard.yml"
+          fail=0
+
+          report() {
+            printf '%s\n' "$1" >&2
+            fail=1
+          }
+
+          # This file contains the needles it searches for. Leave it out.
+          exclude=":(exclude)${GUARD}"
+
+          if hits=$(git grep -I -n -F \
+            -e 'A8-5593' \
+            -e 'A8-2350-2' \
+            -e 'A8-2350' \
+            -e 'A8-API' \
+            -e 'A8-2019' \
+            -e '8-2019' \
+            -e '-2616-2' \
+            -- . "$exclude"); then
+            report "Known PolinRider marker strings:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          # var z = '<marker>' (any marker text, not only one campaign id)
+          if hits=$(git grep -I -n -E \
+            -e "var[[:space:]]+z[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]" \
+            -- . "$exclude"); then
+            report "Obfuscated var z marker assignment:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          if hits=$(git grep -I -n -E $'[ \t]{50,}[^ \t]' \
+            -- '*.js' '*.cjs' '*.mjs' '*.ts' "$exclude"); then
+            report "Line with 50+ whitespace characters followed by code:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          if hits=$(git grep -I -n -E \
+            -e '\}\([[:space:]]*global[[:space:]]*,[[:space:]]*require[[:space:]]*\)' \
+            -e 'global[[:space:]]*\[[[:space:]]*['"'"'"`]' \
+            -- . "$exclude"); then
+            report "global/require obfuscation:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          while IFS= read -r -d '' f; do
+            base=$(basename "$f")
+            case "$base" in
+              postcss.config.*|babel.config.*|tailwind.config.*|metro.config.*|eslint.config.*|.eslintrc|.eslintrc.*)
+                size=$(wc -c < "$f" | tr -d '[:space:]')
+                if [ "$size" -gt 2048 ]; then
+                  report "Oversized config (${size} bytes, limit 2048): ${f}"
+                fi
+                ;;
+            esac
+          done < <(git ls-files -z)
+
+          if hits=$(git grep -n -F -e 'node api.js' -- 'package.json' '**/package.json'); then
+            report "package.json script runs node api.js:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          if hits=$(git grep -I -n -F -e 'folderOpen' -- . "$exclude"); then
+            report "folderOpen task indicator:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          if hits=$(git grep -n -E \
+            -e '^/?branch_structure\.json[[:space:]]*$' \
+            -e '^/?temp_auto_push\.bat[[:space:]]*$' \
+            -e '^/?temp_interactive_push\.bat[[:space:]]*$' \
+            -e '^/?config\.bat[[:space:]]*$' \
+            -- '*gitignore'); then
+            report ".gitignore lists a drop-file name:"
+            printf '%s\n' "$hits" >&2
+          fi
+
+          while IFS= read -r -d '' f; do
+            case "$f" in
+              api.js|backend/api.js|branch_structure.json|temp_auto_push.bat|temp_interactive_push.bat|config.bat)
+                report "Tracked dropper file: ${f}"
+                ;;
+            esac
+          done < <(git ls-files -z)
+
+          if [ "$fail" -ne 0 ]; then
+            echo "PolinRider guard failed."
+            exit 1
+          fi
+
+          echo "PolinRider guard passed."
