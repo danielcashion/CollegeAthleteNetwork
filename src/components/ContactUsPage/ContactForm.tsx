@@ -121,6 +121,9 @@ const ContactForm = () => {
         throw new Error(data.message || "Failed to send message");
       }
     } catch (err) {
+      // reCAPTCHA tokens are single-use, so a failed submit needs a fresh challenge
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
       setError(err instanceof Error ? err.message : "Submission error");
     } finally {
       setLoading(false);
