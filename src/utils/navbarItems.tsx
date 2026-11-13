@@ -45,6 +45,11 @@ export const navbarItems: NavItem[] = [
         type: "link",
       },
       {
+        name: "Funds & Payout Availability",
+        link: "/funds-availability",
+        type: "link",
+      },
+      {
         name: "Alumni Engagement Infrastructure",
         link: "/infrastructure",
         type: "link",

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useId } from "react";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { CheckCircle } from "lucide-react";
@@ -14,6 +14,7 @@ export default function ContactSuccessModal({
   onClose,
 }: ContactSuccessModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   const router = useRouter();
 
   useEffect(() => {
@@ -52,45 +53,51 @@ export default function ContactSuccessModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50">
       <div
         ref={modalRef}
-        className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className="relative w-full max-w-md mx-4 overflow-hidden rounded-2xl border border-[#1C315F]/10 bg-white p-8 text-center shadow-[0_20px_40px_rgba(28,49,95,0.15)]"
         style={{ fontFamily: "var(--font-open-sans), sans-serif" }}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-green-600 flex items-center gap-2">
-            <CheckCircle className="h-6 w-6 text-green-600" />
-            Message Sent Successfully!
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            <IoClose size={24} />
-          </button>
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#1C315F] via-[#2563eb] to-[#1C315F]" />
+
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-4 top-4 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]"
+        >
+          <IoClose size={22} />
+        </button>
+
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
+          <CheckCircle className="h-8 w-8 text-emerald-600" />
         </div>
 
-        <div className="mb-6">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-            <p className="text-green-800 font-semibold text-lg mb-2">
-              Thanks! We will get in touch with you within the next 24 hours.
-            </p>
-            <p className="text-green-700 text-sm">
-              Your message has been received and our team will review it promptly. 
-              We appreciate your interest in The College Athlete Network.
-            </p>
-          </div>
+        <h2 id={titleId} className="text-2xl font-bold text-[#1C315F]">
+          Message Sent Successfully!
+        </h2>
+
+        <div className="mt-4 space-y-2">
+          <p className="text-lg font-semibold leading-snug text-slate-800">
+            Thanks! We will get in touch with you within the next 24 hours.
+          </p>
+          <p className="text-sm leading-relaxed text-slate-500">
+            Your message has been received and our team will review it promptly.
+            We appreciate your interest in The College Athlete Network.
+          </p>
         </div>
 
-        <div className="flex justify-end">
-          <button
-            onClick={handleOkClick}
-            className="px-6 py-3 bg-gradient-to-r from-[#1C315F] to-[#2563eb] text-white rounded-lg hover:from-[#142244] hover:to-[#1d4ed8] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-          >
-            Ok
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleOkClick}
+          className="mt-8 w-full rounded-xl bg-gradient-to-r from-[#1C315F] to-[#2563eb] py-3 font-semibold text-white shadow-md transition-all duration-300 hover:from-[#142244] hover:to-[#1d4ed8] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+        >
+          Ok
+        </button>
       </div>
     </div>
   );

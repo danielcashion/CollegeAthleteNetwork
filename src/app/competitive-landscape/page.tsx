@@ -40,7 +40,7 @@ export default function CompetitiveLandscapePage() {
               Competitive Landscape: Athlete Career Networks
             </h1>
             <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto leading-relaxed">
-              A comprehensive comparison of career and engagement platforms—and why The College Athlete Network is the only solution built around the athlete network graph.
+              A comprehensive comparison of career and engagement platforms—and why The College Athlete Network is the only solution that actually works.
             </p>
             <Link
               href="/contact-us?source=competitive-landscape"
@@ -67,7 +67,7 @@ export default function CompetitiveLandscapePage() {
               Student-athletes represent a uniquely valuable talent pool: disciplined, coachable, and trained in leadership and teamwork. Yet the infrastructure to connect athletes with career opportunities—and to sustain that connection after graduation—remains fragmented. Most universities rely on general career platforms, one-way engagement tools (e.g., distribution lists and campaigns), or manual spreadsheets. None are designed around the athlete network graph.
             </p>
             <p className="text-lg text-[#1C315F]/90 mb-4">
-              This analysis compares three approaches: Handshake (a well-known career-center job board), AthleteNetwork.com (athlete focused bring your own data platform), and The College Athlete Network (CAN). The conclusion is clear: athlete career outcomes require a specialized network approach that only CAN provides.
+              This analysis compares three approaches: <strong>Handshake</strong> (a well-known career-center job board), <strong>AthleteNetwork.com</strong> (athlete focused bring your own data platform), and The College Athlete Network (CAN). The conclusion is clear: athlete career outcomes require a specialized network approach that only CAN provides.
             </p>
           </div>
         </section>
@@ -87,7 +87,7 @@ export default function CompetitiveLandscapePage() {
               Universities today face a patchwork of solutions. Career services deploy generic job bulletin boards—Handshake and others—where postings are not specific to a user&apos;s university and applications are cold. No one likes these: they lack the warmth and specificity of an in-network introduction. Athletic departments deploy engagement platforms and alumni communication tools. Neither constructs a true athlete professional network—a roster-based graph that maps athletes to alumni, employers, and career outcomes, and that enables warm intros and hiring within the network.
             </p>
             <p className="text-lg text-[#1C315F]/90">
-              The gap matters. Athletes change jobs every 3.1 years on average in the first 15 years post-graduation. For a network of 3,000 athletes, that means roughly 1,200 updates annually. No career office or athletic department has the bandwidth to maintain that data. The platforms that could help either don&apos;t provide the data or require the institution to supply it. The College Athlete Network is the exception: we provide the data. We maintain it. The institution gets the network.
+              The gap matters. Athletes change jobs every 3.1 years on average in the first 15 years post-graduation. For a network of 6,000 athletes, that means roughly 2,400 changes a year. No career office or athletic department has the bandwidth to maintain that data. The platforms that could help either don&apos;t provide the data or require the institution to supply it. <strong>The College Athlete Network is the exception</strong>: we provide the data. We maintain it. And the Network works.
             </p>
           </div>
         </section>

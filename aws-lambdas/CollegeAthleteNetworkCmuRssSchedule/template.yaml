@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Nightly CMU PrestoSports RSS schedule harvester → games_scrape_stg.
+
+Parameters:
+  FunctionName:
+    Type: String
+    Default: CollegeAthleteNetworkCmuRssSchedule
+  UniversityName:
+    Type: String
+    Default: Carnegie Mellon
+  ApiBaseUrl:
+    Type: String
+    Default: https://api.tourneymaster.org/publicprod
+  Season:
+    Type: String
+    Default: ""
+    Description: Optional override e.g. 2026-27. Empty = per-team roster_year_orig.
+  ScheduleExpression:
+    Type: String
+    Default: cron(0 2 * * ? *)
+  ScheduleTimezone:
+    Type: String
+    Default: America/New_York
+  ScheduleEnabled:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+  DryRun:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+  FeedConcurrency:
+    Type: Number
+    Default: 4
+    MinValue: 1
+    MaxValue: 16
+  LogRetentionDays:
+    Type: Number
+    Default: 30
+  AlarmTopicArn:
+    Type: String
+    Default: ""
+
+Conditions:
+  ScheduleOn: !Equals [!Ref ScheduleEnabled, "true"]
+  UseAlarmTopic: !Not [!Equals [!Ref AlarmTopicArn, ""]]
+
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${FunctionName}-dlq"
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${FunctionName}"
+      RetentionInDays: !Ref LogRetentionDays
+
+  CmuRssFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref FunctionName
+      CodeUri: dist/
+      Handler: handler.handler
+      Runtime: nodejs22.x
+      Architectures: [arm64]
+      Timeout: 300
+      MemorySize: 512
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: !Ref LogGroup
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+        MaximumEventAgeInSeconds: 3600
+      Environment:
+        Variables:
+          API_BASE_URL: !Ref ApiBaseUrl
+          UNIVERSITY_NAME: !Ref UniversityName
+          SEASON: !Ref Season
+          FEED_CONCURRENCY: !Ref FeedConcurrency
+          DRY_RUN: !Ref DryRun
+          CREATED_BY: cmu-rss-lambda
+          LOG_LEVEL: INFO
+      Events:
+        NightlySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: !Ref ScheduleExpression
+            ScheduleExpressionTimezone: !Ref ScheduleTimezone
+            State: !If [ScheduleOn, ENABLED, DISABLED]
+            RetryPolicy:
+              MaximumRetryAttempts: 0
+            DeadLetterConfig:
+              Arn: !GetAtt DeadLetterQueue.Arn
+
+  ErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${FunctionName}-errors"
+      AlarmDescription: CMU RSS schedule Lambda errors.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref CmuRssFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [UseAlarmTopic, [!Ref AlarmTopicArn], !Ref AWS::NoValue]
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt CmuRssFunction.Arn
+  DeadLetterQueueUrl:
+    Value: !Ref DeadLetterQueue

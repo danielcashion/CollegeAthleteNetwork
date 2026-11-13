@@ -179,6 +179,9 @@ const AppFooter: React.FC = () => {
                 >
                   <ListItemText primary="About" />
                 </MenuItemText>
+                <MenuItemText href="/funds-availability">
+                  <ListItemText primary="Funds Availability" />
+                </MenuItemText>
               </MenuListItemRight>
             </MenuList>
             <Divider />

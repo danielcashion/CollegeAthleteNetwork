@@ -12,7 +12,7 @@ const sesClient = new SESClient({
   },
 });
 
-const to_address = "daniel.cashion.nyc@gmail.com; jennifer.stanton@collegeathletenetwork.org" // process.env.EMAIL_TO;
+const to_addresses = ["daniel.cashion.nyc@gmail.com", "jennifer.stanton@collegeathletenetwork.org"]; // process.env.EMAIL_TO;
 const from_address = "admin@collegeathletenetwork.org" //process.env.EMAIL_FROM;
 
 export async function POST(request: NextRequest) {
@@ -24,10 +24,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!to_address || !from_address) {
+  if (!to_addresses.length || !from_address) {
     console.error("Missing EMAIL_TO or EMAIL_FROM environment variables");
     return NextResponse.json(
       { message: "Emails in configuration are not defined." },
+      { status: 500 }
+    );
+  }
+
+  if (!process.env.RECAPTCHA_SECRET_KEY) {
+    console.error("Missing RECAPTCHA_SECRET_KEY environment variable");
+    return NextResponse.json(
+      { message: "reCAPTCHA is not configured." },
       { status: 500 }
     );
   }
@@ -69,7 +77,10 @@ export async function POST(request: NextRequest) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+        body: new URLSearchParams({
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: recaptchaToken,
+        }),
       }
     );
 
@@ -109,7 +120,7 @@ export async function POST(request: NextRequest) {
   const emailParams = {
     Source: `College Athlete Network Admin <${from_address}>`,
     Destination: {
-      ToAddresses: [to_address],
+      ToAddresses: to_addresses,
     },
     Message: {
       Subject: {

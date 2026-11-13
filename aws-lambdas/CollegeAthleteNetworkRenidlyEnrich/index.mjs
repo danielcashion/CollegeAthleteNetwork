@@ -683,7 +683,7 @@ function productionExperience(row) {
 }
 
 function productionEducation(row) {
-  return productionExperience(row);
+  return payload;
 }
 
 async function rowsForAthlete(table, athleteId) {
